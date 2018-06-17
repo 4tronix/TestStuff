@@ -1,7 +1,7 @@
 {
-    "name": "3dPixels",
+    "name": "cubebit",
     "version": "0.0.1",
-    "description": "A 3D Pixels package for pxt-microbit",
+    "description": "A Cube:Bit package for pxt-microbit",
     "license": "Apache",
     "dependencies": {
         "core": "*",
