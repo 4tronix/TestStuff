@@ -76,7 +76,7 @@ namespace cubebit {
      * @param rgb RGB color of the LED
      */
     //% blockId="cubebit_set_xyz_color" block="set pixel color at (%x|, %y|, %z|)to %rgb=neopixel_colors"
-    //% weight=80
+    //% weight=95
     export function setXYZColor(x: number, y: number, z: number, rgb: number): void {
         neo(3).setPixelColor(pixelMap(x,y,z), rgb);
     }
