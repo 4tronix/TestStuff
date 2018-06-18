@@ -39,10 +39,15 @@ namespace cubebit {
      * Create a Cube:Bit cube on Pin0
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_neo" block="create cube with side %side"
+    //% blockId="cubebit_create" block="create cube with side %side"
     //% weight=99
     //% side.min=3 side.max=8
-    export function neo(side: number): neopixel.Strip {
+    export function create(side: number): void
+    {
+        neo(side);
+    }
+
+    function neo(side: number): neopixel.Strip {
         if (!nCube)
         {
             cubeSide = side;
@@ -75,7 +80,7 @@ namespace cubebit {
      * @param z position from bottom to top (z dimension)
      * @param rgb RGB color of the LED
      */
-    //% blockId="cubebit_set_xyz_color" block="set pixel color at (%x|, %y|, %z|)to %rgb=neopixel_colors"
+    //% blockId="cubebit_set_xyz_color" block="set pixel color at (x=%x, y=%y, z=%z)to %rgb=neopixel_colors"
     //% weight=95
     export function setXYZColor(x: number, y: number, z: number, rgb: number): void {
         neo(3).setPixelColor(pixelMap(x,y,z), rgb);
