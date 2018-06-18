@@ -36,10 +36,10 @@ namespace cubebit {
     let cubeSide: number;
 
     /**
-     * Create a Cube:Bit cube
+     * Create a Cube:Bit cube on Pin0
      */
-    //% blockId="cubebit_neo" block="create cube on Pin0 with side %side"
-    //% weight=5
+    //% blockId="cubebit_neo" block="create cube with side %side"
+    //% weight=99
     //% side.min=3 side.max=8
     export function neo(side: number): neopixel.Strip {
 	if (!nCube)
