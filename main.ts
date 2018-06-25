@@ -87,6 +87,19 @@ namespace cubebit {
     }
 
     /**
+     * Get the pixel ID from x, y, z coordinates
+     *
+     * @param x position from left to right (x dimension)
+     * @param y position from front to back (y dimension)
+     * @param z position from bottom to top (z dimension)
+     */
+    //% blockId="cubebit_map_pixel" block="map from x %x|y %y|z %z"
+    //% weight=93
+    export function mapPixel(x: number, y: number, z: number): number {
+        return pixelMap(x,y,z);
+    }
+
+    /**
      * Set a pixel to a given colour (using colour names).
      *
      * @param ID location of the pixel in the cube from 0
