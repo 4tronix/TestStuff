@@ -69,8 +69,8 @@ namespace cubebit {
 
     function pixelMap(x: number, y: number, z: number): number
     {
-        let newx = 0;
-        let newy = 0;
+        let newx = x;
+        let newy = y;
         switch (cubeSide)
         {
 	    case 5:
@@ -95,7 +95,6 @@ namespace cubebit {
                         newx = y;
                     }
                 }
-                break;
             default: newx = x;
         }
         return (z*cubeSide*cubeSide + newy*cubeSide + newx);
