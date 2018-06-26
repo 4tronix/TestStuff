@@ -94,6 +94,7 @@ namespace cubebit {
                         newy = 4-x;
                         newx = y;
                     }
+                }
                 break;
             default: newx = x;
         }
