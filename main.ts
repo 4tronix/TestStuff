@@ -90,6 +90,7 @@ namespace cubebit {
                     else
                         newy = 4-x;
                 }
+                break;
             default: newx = x;
         }
         return (z*cubeSide*cubeSide + newy*cubeSide + newx);
