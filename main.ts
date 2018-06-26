@@ -85,10 +85,10 @@ namespace cubebit {
                 else
                 {
                     newy = y;
-		    if (y==0 || y==2 || y==4)
-                        newx = x;
+		    if (x==0 || x==2 || x==4)
+                        newy = x;
                     else
-                        newx = 4-x;
+                        newy = 4-x;
                 }
             default: newx = x;
         }
