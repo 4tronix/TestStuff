@@ -69,7 +69,19 @@ namespace cubebit {
 
     function pixelMap(x: number, y: number, z: number): number
     {
-        return (z*cubeSide*cubeSide + y*cubeSide + x);
+        let newx = 0;
+        let newy = 0;
+        switch (cubeSide)
+        {
+	    case 5:
+		if (y==0 || y==2 || y==4)
+                    newx = x;
+                else
+                    newx = 4-x;
+                break;
+            default: newx = x;
+        }
+        return (z*cubeSide*cubeSide + y*cubeSide + newx);
     }
 
     /**
