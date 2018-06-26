@@ -84,7 +84,10 @@ namespace cubebit {
                 else
                 {
 		    if (x==0 || x==2 || x==4)
+                    {
                         newy = x;
+                        newx = y;
+                    }
                     else
                         newy = 4-x;
                 }
