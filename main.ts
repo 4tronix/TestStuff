@@ -74,14 +74,30 @@ namespace cubebit {
         switch (cubeSide)
         {
 	    case 5:
-		if (y==0 || y==2 || y==4)
-                    newx = x;
+                if (z==0 || z==2 || z==4)
+                {
+                    newy = y;
+		    if (y==0 || y==2 || y==4)
+                        newx = x;
+                    else
+                        newx = 4-x;
+                }
                 else
-                    newx = 4-x;
+                {
+                    if (x==0 || x==2 || x==4)
+                    {
+                        newy = x;
+                        newx = y;
+                    }
+                    else
+                    {
+                        newy = 4-x;
+                        newx = y;
+                    }
                 break;
             default: newx = x;
         }
-        return (z*cubeSide*cubeSide + y*cubeSide + newx);
+        return (z*cubeSide*cubeSide + newy*cubeSide + newx);
     }
 
     /**
