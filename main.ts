@@ -82,6 +82,14 @@ namespace cubebit {
                     else
                         newx = 4-x;
                 }
+                else
+                {
+                    newy = y;
+		    if (y==0 || y==2 || y==4)
+                        newx = x;
+                    else
+                        newx = 4-x;
+                }
             default: newx = x;
         }
         return (z*cubeSide*cubeSide + newy*cubeSide + newx);
