@@ -76,7 +76,6 @@ namespace cubebit {
 	    case 5:
                 if (z==0 || z==2 || z==4)
                 {
-                    newy = y;
 		    if (y==0 || y==2 || y==4)
                         newx = x;
                     else
@@ -84,7 +83,6 @@ namespace cubebit {
                 }
                 else
                 {
-                    newy = y;
 		    if (x==0 || x==2 || x==4)
                         newy = x;
                     else
