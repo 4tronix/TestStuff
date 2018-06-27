@@ -39,7 +39,7 @@ namespace cubebit {
      * Create a Cube:Bit cube on Pin0
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 22cube on pin0 with side %side"
+    //% blockId="cubebit_create" block="create 23cube on pin0 with side %side"
     //% weight=99
     //% side.min=3 side.max=8
     export function create(side: number): void
@@ -87,7 +87,7 @@ namespace cubebit {
                     q = (cubeSide - 1 - x) * cubeSide + y;
             }
         }
-        return q;
+        return z*cubeSide*cubeSide + q;
     }
 
     /**
