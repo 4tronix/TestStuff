@@ -39,7 +39,7 @@ namespace cubebit {
      * Create a Cube:Bit cube on Pin0
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 20cube with side %side"
+    //% blockId="cubebit_create" block="create 21cube on pin0 with side %side"
     //% weight=99
     //% side.min=3 side.max=8
     export function create(side: number): void
@@ -69,35 +69,25 @@ namespace cubebit {
 
     function pixelMap(x: number, y: number, z: number): number
     {
-        let newx = x;
-        let newy = y;
-        switch (cubeSide)
+        let q;
+        if (x<cubeSide && y<cubeSide && z<cubeSide && x>=0 && y>=0 && z>=0)
         {
-	    case 5:
-                if (z==0 || z==2 || z==4)
-                {
-		    if (y==0 || y==2 || y==4)
-                        newx = x;
-                    else
-                        newx = 4-x;
-                }
+            if (z==0 || z==2 || z==4)
+            {
+                if (y==0 || y==2 || y==4)
+                    q = y * cubeSide + x;
                 else
-                {
-		    if (x==0 || x==2 || x==4)
-                    {
-                        newy = 4-x;
-                        newx = 4-y;
-                    }
-                    else
-                    {
-                        newy = 4-x;
-                        newx = 4-y;
-                    }
-                }
-                break;
-            default: newx = x;
+                    q = y * cubeSide + cubeSide - 1 - x;
+            }
+            else
+            {
+                if (x==0 || x==2 || x==4)
+                    q = cubeSide * (cubeSide - x) - 1 - y;
+                else
+                    q = (cubeSide - 1 - x) * cubeSide + y;
+            }
         }
-        return (z*cubeSide*cubeSide + newy*cubeSide + newx);
+        return q;
     }
 
     /**
