@@ -29,7 +29,7 @@ enum BCJoystick {
 /**
  * Custom blocks
  */
-//% weight=10 color=#e7660b icon="\uf185"
+//% weight=10 color=#e7660b icon="\uf247"
 namespace cubebit {
 
     let nCube: neopixel.Strip;
@@ -39,7 +39,7 @@ namespace cubebit {
      * Create a Cube:Bit cube on Pin0
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 23cube on pin0 with side %side"
+    //% blockId="cubebit_create" block="create 24cube on pin0 with side %side"
     //% weight=99
     //% side.min=3 side.max=8
     export function create(side: number): void
@@ -88,20 +88,6 @@ namespace cubebit {
             }
         }
         return z*cubeSide*cubeSide + q;
-    }
-
-    /**
-     * Set a pixel to a given colour using x, y, z coordinates
-     *
-     * @param x position from left to right (x dimension)
-     * @param y position from front to back (y dimension)
-     * @param z position from bottom to top (z dimension)
-     * @param rgb RGB color of the LED
-     */
-    //% blockId="cubebit_set_xyz_color" block="set pixel at x %x|y %y|z %z| to %rgb=neopixel_colors"
-    //% weight=95
-    export function setXYZColor(x: number, y: number, z: number, rgb: number): void {
-        neo(3).setPixelColor(pixelMap(x,y,z), rgb);
     }
 
     /**
