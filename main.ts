@@ -1,30 +1,19 @@
 ﻿
 /**
-  * Enumeration of buttons
+  * Enumeration of pins
   */
-enum BCButtons {
-    //% block="red"
-    Red,
-    //% block="yellow"
-    Yellow,
-    //% block="green"
-    Green,
-    //% block="blue"
-    Blue,
-    //% block="joystick"
-    Joystick
+enum CBPins {
+    //% block="Pin0"
+    pin1,
+    //% block="Pin2"
+    pin2,
+    //% block="Pin3"
+    pin3,
+    //% block="Pin4"
+    pin4,
+    //% block="Pin5"
+    pin5
 }
-
-/**
-  * Enumeration of joystick axes
-  */
-enum BCJoystick {
-    //% block="x"
-    X,
-    //% block="y"
-    Y
-}
-
 
 /**
  * Custom blocks
@@ -39,10 +28,10 @@ namespace cubebit {
      * Create a Cube:Bit cube on Pin0
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 24cube on pin0 with side %side"
+    //% blockId="cubebit_create" block="create 25Cube:Bit on %mypin| with side %side"
     //% weight=99
     //% side.min=3 side.max=8
-    export function create(side: number): void
+    export function create(mypin: CBPins, side: number): void
     {
         neo(side);
     }
@@ -97,7 +86,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number {
         return pixelMap(x,y,z);
@@ -118,7 +107,7 @@ namespace cubebit {
     /**
       * Show pixels
       */
-    //% blockId="cubebit_show" block="show pixels"
+    //% blockId="cubebit_show" block="show Cube:Bit changes"
     //% weight=76
     export function neoShow(): void {
         neo(3).show();
@@ -136,7 +125,7 @@ namespace cubebit {
     /**
       * Shows a rainbow pattern on all pixels
       */
-    //% blockId="cubebit_rainbow" block="set pixel rainbow"
+    //% blockId="cubebit_rainbow" block="set Cube:Bit rainbow"
     //% weight=70
     export function neoRainbow(): void {
         neo(3).showRainbow(1, 360);
@@ -165,7 +154,7 @@ namespace cubebit {
      *
      * @param brightness a measure of LED brightness in 0-255. eg: 255
      */
-    //% blockId="cubebit_brightness" block="set led brightness %brightness"
+    //% blockId="cubebit_brightness" block="set Cube:Bit brightness %brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=10
     export function neoBrightness(brightness: number): void {
