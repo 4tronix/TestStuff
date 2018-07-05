@@ -24,9 +24,10 @@ namespace cubebit {
 
     /**
      * Create a Cube:Bit cube on Pin0
+     * @param mypin pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 26Cube:Bit on %mypin| with side %side"
+    //% blockId="cubebit_create" block="create 27Cube:Bit on %mypin| with side %side"
     //% weight=99
     //% side.min=3 side.max=8
     export function create(mypin: CBPins, side: number): void
