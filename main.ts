@@ -4,11 +4,11 @@
   */
 enum CBPins {
     //% block="Pin0"
-    0,
+    pin0,
     //% block="Pin1"
-    1,
+    pin1,
     //% block="Pin2"
-    2
+    pin2
 }
 
 /**
@@ -27,15 +27,15 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 28Cube:Bit on %pin=CBPins| with side %side"
+    //% blockId="cubebit_create" block="create Cube:Bit on %pin| with side %side"
     //% weight=99
     //% side.min=3 side.max=8
-    export function create(pin: number, side: number): void
+    export function create(pin: CBPins, side: number): void
     {
         neo(pin, side);
     }
 
-    function neo(pin: number, side: number): neopixel.Strip
+    function neo(pin: CBPins, side: number): neopixel.Strip
     {
         if (!nCube)
         {
@@ -44,9 +44,9 @@ namespace cubebit {
             cubeSide3 = side * side * side;
             switch (pin)
             {
-                case 0: nCube = neopixel.create(DigitalPin.P0, cubeSide3, NeoPixelMode.RGB); break;
-                case 1: nCube = neopixel.create(DigitalPin.P0, cubeSide3, NeoPixelMode.RGB); break;
-                case 2: nCube = neopixel.create(DigitalPin.P0, cubeSide3, NeoPixelMode.RGB); break;
+                case CBPins.Pin0: nCube = neopixel.create(DigitalPin.P0, cubeSide3, NeoPixelMode.RGB); break;
+                case CBPins.Pin1: nCube = neopixel.create(DigitalPin.P1, cubeSide3, NeoPixelMode.RGB); break;
+                case CBPins.Pin2: nCube = neopixel.create(DigitalPin.P2, cubeSide3, NeoPixelMode.RGB); break;
             }
             nCube.setBrightness(40);
         }
@@ -61,7 +61,7 @@ namespace cubebit {
     //% blockId="cubebit_set_color" block="set all pixels to %rgb=neopixel_colors"
     //% weight=80
     export function setColor(rgb: number) {
-        neo(0,3).showColor(rgb);
+        neo(CBPins.Pin0,3).showColor(rgb);
     }
 
     function pixelMap(x: number, y: number, z: number): number
@@ -94,7 +94,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 29ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number {
         return pixelMap(x,y,z);
@@ -109,7 +109,7 @@ namespace cubebit {
     //% blockId="cubebit_set_pixel_color" block="set pixel color at %ID|to %rgb=neopixel_colors"
     //% weight=80
     export function setPixelColor(ID: number, rgb: number): void {
-        neo(0,3).setPixelColor(ID, rgb);
+        neo(CBPins.Pin0,3).setPixelColor(ID, rgb);
     }
 
     /**
@@ -118,7 +118,7 @@ namespace cubebit {
     //% blockId="cubebit_show" block="show Cube:Bit changes"
     //% weight=76
     export function neoShow(): void {
-        neo(0,3).show();
+        neo(CBPins.Pin0,3).show();
     }
 
     /**
@@ -127,7 +127,7 @@ namespace cubebit {
     //% blockId="cubebit_clear" block="clear all pixels"
     //% weight=75
     export function neoClear(): void {
-        neo(0,3).clear();
+        neo(CBPins.Pin0,3).clear();
     }
 
     /**
@@ -136,7 +136,7 @@ namespace cubebit {
     //% blockId="cubebit_rainbow" block="set Cube:Bit rainbow"
     //% weight=70
     export function neoRainbow(): void {
-        neo(0,3).showRainbow(1, 360);
+        neo(CBPins.Pin0,3).showRainbow(1, 360);
     }
 
     /**
@@ -145,7 +145,7 @@ namespace cubebit {
     //% blockId="cubebit_shift" block="shift pixels"
     //% weight=66
     export function neoShift(): void {
-        neo(0,3).shift(1);
+        neo(CBPins.Pin0,3).shift(1);
     }
 
     /**
@@ -154,7 +154,7 @@ namespace cubebit {
     //% blockId="cubebit_rotate" block="rotate pixels"
     //% weight=65
     export function neoRotate(): void {
-        neo(0,3).rotate(1);
+        neo(CBPins.Pin0,3).rotate(1);
     }
 
     /**
@@ -166,7 +166,7 @@ namespace cubebit {
     //% brightness.min=0 brightness.max=255
     //% weight=10
     export function neoBrightness(brightness: number): void {
-        neo(0,3).setBrightness(brightness);
+        neo(CBPins.Pin0,3).setBrightness(brightness);
     }
 
 
