@@ -24,15 +24,15 @@ namespace cubebit {
 
     /**
      * Create a Cube:Bit cube on Pin0
-     * @param mypin pin to connect to Cube:Bit
+     * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 27Cube:Bit on %mypin| with side %side"
+    //% blockId="cubebit_create" block="create 28Cube:Bit on %pin=CBPins| with side %side"
     //% weight=99
     //% side.min=3 side.max=8
-    export function create(mypin: CBPins, side: number): void
+    export function create(pin: number, side: number): void
     {
-        neo(mypin, side);
+        neo(pin, side);
     }
 
     function neo(pin: number, side: number): neopixel.Strip
@@ -84,7 +84,7 @@ namespace cubebit {
                     q = (cubeSide - 1 - x) * cubeSide + y;
             }
         }
-        return z*cubeSide*cubeSide + q;
+        return z*cubeSide2 + q;
     }
 
     /**
