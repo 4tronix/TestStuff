@@ -90,7 +90,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 33ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 34ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number {
         return pixelMap(x,y,z);
@@ -119,7 +119,7 @@ namespace cubebit {
     //% blockId="cubebit_set_pixel_color" block="set pixel color at %ID|to r %r| g %g| b %b"
     //% weight=80
     export function setPixelColor(ID: number, r: number, g: number, b: number): void {
-        neo(DigitalPin.P0,3).setPixelColor(ID, r<<16 + g<<8 + b);
+        neo(DigitalPin.P0,3).setPixelColor(ID, ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF));
     }
 
     /**
