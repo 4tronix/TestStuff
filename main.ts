@@ -40,7 +40,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_make" block="create Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_make" block="make Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function make(pin: DigitalPin, side: number): void
@@ -55,7 +55,7 @@ namespace cubebit {
             cubeSide = side;
             cubeSide2 = side * side;
             cubeSide3 = side * side * side;
-            nCube = neopixel.create(pin, cubeSide3, NeoPixelMode.RGB); break;
+            nCube = neopixel.create(pin, cubeSide3, NeoPixelMode.RGB);
             nCube.setBrightness(40);
         }
         return nCube;
@@ -120,7 +120,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 31ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 32ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number {
         return pixelMap(x,y,z);
