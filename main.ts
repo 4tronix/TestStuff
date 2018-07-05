@@ -4,11 +4,11 @@
   */
 enum CBPins {
     //% block="Pin0"
-    pin0,
+    Pin0,
     //% block="Pin1"
-    pin1,
+    Pin1,
     //% block="Pin2"
-    pin2
+    Pin2
 }
 
 /**
@@ -94,7 +94,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 29ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 30ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number {
         return pixelMap(x,y,z);
