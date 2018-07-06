@@ -90,9 +90,10 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 34ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 35ID from x %x|y %y|z %z"
     //% weight=93
-    export function mapPixel(x: number, y: number, z: number): number {
+    export function mapPixel(x: number, y: number, z: number): number
+    {
         return pixelMap(x,y,z);
     }
 
@@ -104,22 +105,23 @@ namespace cubebit {
      */
     //% blockId="cubebit_set_pixel_color" block="set pixel color at %ID|to %rgb=neopixel_colors"
     //% weight=80
-    export function setPixelColor(ID: number, rgb: number): void {
+    export function setPixelColor(ID: number, rgb: number): void
+    {
         neo(DigitalPin.P0,3).setPixelColor(ID, rgb);
     }
 
     /**
-     * Set a pixel to a given colour (using RGB values).
+     * Convert from RGB values to colour number
      *
-     * @param ID location of the pixel in the cube from 0
-     * @param r Red value of the LED 0:255
-     * @param g Green value of the LED 0:255
-     * @param b Blue value of the LED 0:255
+     * @param red Red value of the LED 0:255
+     * @param green Green value of the LED 0:255
+     * @param blue Blue value of the LED 0:255
      */
-    //% blockId="cubebit_set_pixel_color" block="set pixel color at %ID|to r %r| g %g| b %b"
+    //% blockId="cubebit_convertRGB" block="convert from red %red| green %green| blue %bblue"
     //% weight=80
-    export function setPixelColor(ID: number, r: number, g: number, b: number): void {
-        neo(DigitalPin.P0,3).setPixelColor(ID, ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF));
+    export function convertRGB(r: number, g: number, b: number): number
+    {
+        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
 
     /**
@@ -127,7 +129,8 @@ namespace cubebit {
       */
     //% blockId="cubebit_show" block="show Cube:Bit changes"
     //% weight=76
-    export function neoShow(): void {
+    export function neoShow(): void
+    {
         neo(DigitalPin.P0,3).show();
     }
 
@@ -136,7 +139,8 @@ namespace cubebit {
       */
     //% blockId="cubebit_clear" block="clear all pixels"
     //% weight=75
-    export function neoClear(): void {
+    export function neoClear(): void
+    {
         neo(DigitalPin.P0,3).clear();
     }
 
@@ -145,7 +149,8 @@ namespace cubebit {
       */
     //% blockId="cubebit_rainbow" block="set Cube:Bit rainbow"
     //% weight=70
-    export function neoRainbow(): void {
+    export function neoRainbow(): void
+    {
         neo(DigitalPin.P0,3).showRainbow(1, 360);
     }
 
@@ -154,7 +159,8 @@ namespace cubebit {
      */
     //% blockId="cubebit_shift" block="shift pixels"
     //% weight=66
-    export function neoShift(): void {
+    export function neoShift(): void
+    {
         neo(DigitalPin.P0,3).shift(1);
     }
 
@@ -163,7 +169,8 @@ namespace cubebit {
      */
     //% blockId="cubebit_rotate" block="rotate pixels"
     //% weight=65
-    export function neoRotate(): void {
+    export function neoRotate(): void
+    {
         neo(DigitalPin.P0,3).rotate(1);
     }
 
@@ -175,7 +182,8 @@ namespace cubebit {
     //% blockId="cubebit_brightness" block="set Cube:Bit brightness %brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=10
-    export function neoBrightness(brightness: number): void {
+    export function neoBrightness(brightness: number): void
+    {
         neo(DigitalPin.P0,3).setBrightness(brightness);
     }
 
