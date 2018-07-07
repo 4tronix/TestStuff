@@ -1,14 +1,14 @@
 ﻿
 /**
-  * Enumeration of pins
+  * Enumeration of dimensions
   */
-enum CBPins {
-    //% block="Pin0"
-    Pin0,
-    //% block="Pin1"
-    Pin1,
-    //% block="Pin2"
-    Pin2
+enum CBDims {
+    //% block="x"
+    0,
+    //% block="y"
+    1,
+    //% block="z"
+    2
 }
 
 /**
@@ -49,13 +49,27 @@ namespace cubebit {
     }
 
     /**
-      * Sets all pixels to a given colour (using colour names).
+      * Sets all pixels to a given colour
       *
       * @param rgb RGB colour of the pixel
       */
     //% blockId="cubebit_set_color" block="set all pixels to %rgb=neopixel_colors"
     //% weight=80
     export function setColor(rgb: number)
+    {
+        neo(DigitalPin.P0,3).showColor(rgb);
+    }
+
+    /**
+      * Sets a plane of pixels to given colour
+      *
+      * @param plane number of plane from 0 to size of cube
+      * @param dim dimension (x,y,z) of no change within plane
+      * @param rgb RGB colour of the pixel
+      */
+    //% blockId="cubebit_set_plane" block="set plane %plane| on dimension %dim=CBDims| to %rgb=neopixel_colors"
+    //% weight=80
+    export function setColor(plane: number, dim: number, rgb: number)
     {
         neo(DigitalPin.P0,3).showColor(rgb);
     }
@@ -90,7 +104,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 35ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 36ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
