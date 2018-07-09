@@ -18,6 +18,7 @@ enum CBDims {
 namespace cubebit {
 
     let nCube: neopixel.Strip;
+    let cubeHeight: number;
     let cubeSide: number;
     let cubeSide2: number;
     let cubeSide3: number;
@@ -39,9 +40,11 @@ namespace cubebit {
     {
         if (!nCube)
         {
+            if (! cubeHeight)
+                cubeHeight = side;
             cubeSide = side;
             cubeSide2 = side * side;
-            cubeSide3 = side * side * side;
+            cubeSide3 = side * side * cubeHeight;
             nCube = neopixel.create(pin, cubeSide3, NeoPixelMode.RGB);
             nCube.setBrightness(40);
         }
@@ -58,6 +61,19 @@ namespace cubebit {
     export function setColor(rgb: number)
     {
         neo(DigitalPin.P0,3).showColor(rgb);
+    }
+
+    /**
+      * Defines a custom height for the Cube (height>0)
+      *
+      * @param height number of slices in the tower
+      */
+    //% blockId="cubebit_set_height" block="set height of tower to %height"
+    //% weight=80
+    export function setHeight(height: number)
+    {
+        if (! cubeHeight)
+            cubeHeight = height;
     }
 
     /**
@@ -79,22 +95,22 @@ namespace cubebit {
         let q=0;
         if (x<cubeSide && y<cubeSide && z<cubeSide && x>=0 && y>=0 && z>=0)
         {
-            if (z==0 || z==2 || z==4)
+            if ((z%2) == 0)
             {
-                if (y==0 || y==2 || y==4)
+                if ((y%2) == 0)
                     q = y * cubeSide + x;
                 else
                     q = y * cubeSide + cubeSide - 1 - x;
             }
             else
             {
-                if (x==0 || x==2 || x==4)
+                if ((x%2) == 0)
                     q = cubeSide * (cubeSide - x) - 1 - y;
                 else
                     q = (cubeSide - 1 - x) * cubeSide + y;
             }
         }
-        return z*cubeSide2 + q;
+        return z*cubeSide*cubeHeight + q;
     }
 
     /**
@@ -104,7 +120,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 36ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 37ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
