@@ -4,11 +4,11 @@
   */
 enum CBAxis {
     //% block="x"
-    dimX = 0,
+    axisX,
     //% block="y"
-    dimY = 1,
+    axisY,
     //% block="z"
-    dimZ = 2
+    axisZ
 }
 
 /**
@@ -94,7 +94,7 @@ namespace cubebit {
       */
     //% blockId="cubebit_set_plane" block="set plane %plane| on axis %axis=CBAxis| to %rgb=neopixel_colors"
     //% weight=79
-    export function setPlane(plane: number, axis: number, rgb: number)
+    export function setPlane(plane: number, axis: CBAxis, rgb: number)
     {
         neo(DigitalPin.P0,3).showColor(rgb);
     }
@@ -106,7 +106,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 41ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 42ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
