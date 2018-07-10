@@ -4,11 +4,11 @@
   */
 enum CBDims {
     //% block="x"
-    0,
+    x=0,
     //% block="y"
-    1,
+    y=1,
     //% block="z"
-    2
+    z=2
 }
 
 /**
@@ -70,6 +70,7 @@ namespace cubebit {
       */
     //% blockId="cubebit_set_height" block="set height of tower to %height"
     //% weight=80
+    /% deprecated=true
     export function setHeight(height: number)
     {
         if (! cubeHeight)
@@ -120,7 +121,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 37ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 38ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
