@@ -4,11 +4,11 @@
   */
 enum CBAxis {
     //% block="x"
-    axisX,
+    X,
     //% block="y"
-    axisY,
+    Y,
     //% block="z"
-    axisZ
+    Z
 }
 
 /**
@@ -100,13 +100,27 @@ namespace cubebit {
     }
 
     /**
+      * Defines a custom height for the Cube (height>0)
+      *
+      * @param height number of slices in the tower
+      */
+    //% blockId="cubebit_set_height" block="set height of tower to %height"
+    //% weight=80
+    /% deprecated=true
+    export function setHeight(height: number)
+    {
+        if (! cubeHeight)
+            cubeHeight = height;
+    }
+
+    /**
      * Get the pixel ID from x, y, z coordinates
      *
      * @param x position from left to right (x dimension)
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 42ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 43ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
