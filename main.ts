@@ -4,11 +4,11 @@
   */
 enum CBDims {
     //% block="x"
-    x=0,
+    dimX = 0,
     //% block="y"
-    y=1,
+    dimY = 1,
     //% block="z"
-    z=2
+    dimZ = 2
 }
 
 /**
@@ -40,8 +40,7 @@ namespace cubebit {
     {
         if (!nCube)
         {
-            if (! cubeHeight)
-                cubeHeight = side;
+            cubeHeight = side;
             cubeSide = side;
             cubeSide2 = side * side;
             cubeSide3 = side * side * cubeHeight;
@@ -121,7 +120,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 38ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 39ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
