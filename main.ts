@@ -62,34 +62,6 @@ namespace cubebit {
         neo(DigitalPin.P0,3).showColor(rgb);
     }
 
-    /**
-      * Defines a custom height for the Cube (height>0)
-      *
-      * @param height number of slices in the tower
-      */
-    //% blockId="cubebit_set_height" block="set height of tower to %height"
-    //% weight=80
-    /% deprecated=true
-    export function setHeight(height: number)
-    {
-        if (! cubeHeight)
-            cubeHeight = height;
-    }
-
-    /**
-      * Sets a plane of pixels to given colour
-      *
-      * @param plane number of plane from 0 to size of cube
-      * @param dim dimension (x,y,z) of no change within plane
-      * @param rgb RGB colour of the pixel
-      */
-    //% blockId="cubebit_set_plane" block="set plane %plane| on dimension %dim=CBDims| to %rgb=neopixel_colors"
-    //% weight=80
-    export function setColor(plane: number, dim: number, rgb: number)
-    {
-        neo(DigitalPin.P0,3).showColor(rgb);
-    }
-
     function pixelMap(x: number, y: number, z: number): number
     {
         let q=0;
@@ -120,7 +92,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 39ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 40ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
