@@ -1,8 +1,8 @@
 ﻿
 /**
-  * Enumeration of dimensions
+  * Enumeration of axes
   */
-enum CBDims {
+enum CBAxis {
     //% block="x"
     dimX = 0,
     //% block="y"
@@ -86,13 +86,27 @@ namespace cubebit {
     }
 
     /**
+      * Sets a plane of pixels to given colour
+      *
+      * @param plane number of plane from 0 to size of cube
+      * @param axis axis (x,y,z) of no change within plane
+      * @param rgb RGB colour of the pixel
+      */
+    //% blockId="cubebit_set_plane" block="set plane %plane| on axis %axis=CBAxis| to %rgb=neopixel_colors"
+    //% weight=79
+    export function setPlane(plane: number, axis: number, rgb: number)
+    {
+        neo(DigitalPin.P0,3).showColor(rgb);
+    }
+
+    /**
      * Get the pixel ID from x, y, z coordinates
      *
      * @param x position from left to right (x dimension)
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 40ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 41ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
