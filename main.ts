@@ -40,7 +40,8 @@ namespace cubebit {
     {
         if (!nCube)
         {
-            cubeHeight = side;
+            if (! cubeHeight)
+                cubeHeight = side;
             cubeSide = side;
             cubeSide2 = side * side;
             cubeSide3 = side * side * cubeHeight;
@@ -106,7 +107,7 @@ namespace cubebit {
       */
     //% blockId="cubebit_set_height" block="set height of tower to %height"
     //% weight=80
-    /% deprecated=true
+    //% deprecated=true
     export function setHeight(height: number)
     {
         if (! cubeHeight)
@@ -120,7 +121,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 43ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 44ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
