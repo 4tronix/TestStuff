@@ -97,7 +97,24 @@ namespace cubebit {
     //% weight=79
     export function setPlane(plane: number, axis: CBAxis, rgb: number)
     {
-        neo(DigitalPin.P0,3).showColor(rgb);
+        if (axis == CBAxis.X)
+        {
+            for (let y=0; y<cubeSide; y++)
+                for (let z=0; z<cubeheight; z++)
+                    nCube.setPixelColor(pixelMap(plane,y,z), rgb);
+        }
+        else if (axis == CBAxis.Y)
+        {
+            for (let x=0; x<cubeSide; x++)
+                for (let z=0; z<cubeHeight; z++)
+                    nCube.setPixelColor(pixelMap(x,plane,z), rgb);
+        }
+        else if (axis == CBAxis.Z)
+        {
+            for (let x=0; x<cubeSide; x++)
+                for (let y=0; y<cubeSide; y++)
+                    nCube.setPixelColor(pixelMap(x,y,plane), rgb);
+        }
     }
 
     /**
@@ -121,7 +138,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 44ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 45ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
