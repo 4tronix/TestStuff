@@ -83,7 +83,7 @@ namespace cubebit {
                     q = (cubeSide - 1 - x) * cubeSide + y;
             }
         }
-        return z*cubeSide*cubeHeight + q;
+        return z*cubeSide2 + q;
     }
 
     /**
@@ -138,7 +138,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 50ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 51ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
