@@ -97,6 +97,12 @@ namespace cubebit {
     //% weight=79
     export function setPlane(plane: number, axis: CBAxis, rgb: number): void
     {
+        if (axis == CBAxis.X)
+        {
+            for (let y=0; y<cubeSide; y++)
+                for (let z=0; z<cubeheight; z++)
+                    nCube.setPixelColor(pixelMap(plane,y,z), rgb);
+        }
         if (axis == CBAxis.Z)
         {
             for (let x=0; x<cubeSide; x++)
@@ -126,7 +132,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 47ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 48ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
