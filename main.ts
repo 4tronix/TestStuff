@@ -36,7 +36,7 @@ namespace cubebit {
         neo(pin, side);
     }
 
-    function neo(pin: DigitalPin, side: number)
+    function neo(pin: DigitalPin, side: number): neopixel.Strip
     {
         if (!nCube)
         {
@@ -58,7 +58,7 @@ namespace cubebit {
       */
     //% blockId="cubebit_set_color" block="set all pixels to %rgb=neopixel_colors"
     //% weight=80
-    export function setColor(rgb: number)
+    export function setColor(rgb: number): void
     {
         neo(DigitalPin.P0,3).showColor(rgb);
     }
@@ -95,26 +95,8 @@ namespace cubebit {
       */
     //% blockId="cubebit_set_plane" block="set plane %plane| on axis %axis=CBAxis| to %rgb=neopixel_colors"
     //% weight=79
-    export function setPlane(plane: number, axis: CBAxis, rgb: number)
+    export function setPlane(plane: number, axis: CBAxis, rgb: number): void
     {
-        if (axis == CBAxis.X)
-        {
-            for (let y=0; y<cubeSide; y++)
-                for (let z=0; z<cubeheight; z++)
-                    nCube.setPixelColor(pixelMap(plane,y,z), rgb);
-        }
-        else if (axis == CBAxis.Y)
-        {
-            for (let x=0; x<cubeSide; x++)
-                for (let z=0; z<cubeHeight; z++)
-                    nCube.setPixelColor(pixelMap(x,plane,z), rgb);
-        }
-        else if (axis == CBAxis.Z)
-        {
-            for (let x=0; x<cubeSide; x++)
-                for (let y=0; y<cubeSide; y++)
-                    nCube.setPixelColor(pixelMap(x,y,plane), rgb);
-        }
     }
 
     /**
@@ -125,7 +107,7 @@ namespace cubebit {
     //% blockId="cubebit_set_height" block="set height of tower to %height"
     //% weight=80
     //% deprecated=true
-    export function setHeight(height: number)
+    export function setHeight(height: number): void
     {
         if (! cubeHeight)
             cubeHeight = height;
@@ -138,7 +120,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 45ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 46ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
