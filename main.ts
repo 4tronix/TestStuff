@@ -66,7 +66,7 @@ namespace cubebit {
     function pixelMap(x: number, y: number, z: number): number
     {
         let q=0;
-        if (x<cubeSide && y<cubeSide && z<cubeSide && x>=0 && y>=0 && z>=0)
+        if (x<cubeSide && y<cubeSide && z<cubeHeight && x>=0 && y>=0 && z>=0)
         {
             if ((z%2) == 0)
             {
@@ -138,7 +138,7 @@ namespace cubebit {
      * @param y position from front to back (y dimension)
      * @param z position from bottom to top (z dimension)
      */
-    //% blockId="cubebit_map_pixel" block="map 51ID from x %x|y %y|z %z"
+    //% blockId="cubebit_map_pixel" block="map 52ID from x %x|y %y|z %z"
     //% weight=93
     export function mapPixel(x: number, y: number, z: number): number
     {
