@@ -11,15 +11,6 @@ enum CBAxis {
     YZ
 }
 
-/*
- * character array blocks cube size dependent
- * var multi:number[][] = [[1,2,3],[23,24,25]]
- */
-var font3:number[][] = [
-[1,0,0,1,1,0,1,1,1],
-[0,1,1,0,0,1,0,0,0]
-]
-
 /**
  * Custom blocks
  */
@@ -32,12 +23,18 @@ namespace cubebit {
     let cubeSide2: number;
     let cubeSide3: number;
 
+    var font3:number[][] = [
+    [1,0,0,1,1,0,1,1,1],
+    [0,1,1,0,0,1,0,0,0]
+    ]
+
+
     /**
      * Create a Cube:Bit cube (default 3x3x3) on Selected Pin (default Pin0)
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 53 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 54 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
