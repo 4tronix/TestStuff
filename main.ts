@@ -31,7 +31,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 56 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 57 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -69,7 +69,7 @@ namespace cubebit {
     /**
       * Plot character on plane in selected colour
       *
-      * @parame char character to plot
+      * @param char character to plot
       * @param rgb RGB colour of the pixel
       */
     //% blockId="cubebit_plot_char" block="plot character %char| to %rgb=neopixel_colors"
@@ -79,7 +79,7 @@ namespace cubebit {
         for (let x=0; x<cubeSide; x++)
                 for (let y=0; y<cubeSide; y++)
                 {
-                    if(font3[x][y] == 1)
+                    if(font3[char][y*cubeSide + x] == 1)
                         nCube.setPixelColor(pixelMap(x,y,cubeSide-1), rgb);
                     else
                         nCube.setPixelColor(pixelMap(x,y,cubeSide-1), 0);
