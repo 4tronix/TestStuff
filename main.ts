@@ -11,6 +11,15 @@ enum CBAxis {
     YZ
 }
 
+/*
+ * character array blocks cube size dependent
+ * var multi:number[][] = [[1,2,3],[23,24,25]]
+ */
+var font3:number[][] = [
+[1,0,0,1,1,0,1,1,1],
+[0,1,1,0,0,1,0,0,0]
+]
+
 /**
  * Custom blocks
  */
@@ -61,6 +70,26 @@ namespace cubebit {
     export function setColor(rgb: number): void
     {
         neo(DigitalPin.P0,3).showColor(rgb);
+    }
+
+    /**
+      * Plot character on plane in selected colour
+      *
+      * @parame char character to plot
+      * @param rgb RGB colour of the pixel
+      */
+    //% blockId="cubebit_plot_char" block="plot character %char| to %rgb=neopixel_colors"
+    //% weight=80
+    export function plotChar(char:number, rgb: number): void
+    {
+        for (let x=0; x<cubeSide; x++)
+                for (let y=0; y<cubeSide; y++)
+                {
+                    if(font3[x][y] == 1)
+                        nCube.setPixelColor(pixelMap(x,y,cubeSide-1), rgb);
+                    else
+                        nCube.setPixelColor(pixelMap(x,y,cubeSide-1), 0);
+                }
     }
 
     function pixelMap(x: number, y: number, z: number): number
