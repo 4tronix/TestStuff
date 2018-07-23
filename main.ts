@@ -23,10 +23,7 @@ namespace cubebit {
     let cubeSide2: number;
     let cubeSide3: number;
 
-    var font3:number[][] = [
-    [1,0,0,1,1,0,1,1,1],
-    [0,1,1,0,0,1,0,0,0]
-    ]
+    var font3:number[][] = [[1,0,0,1,1,0,1,1,1],[0,1,1,0,0,1,0,0,0]];
 
 
     /**
@@ -34,7 +31,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 54 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 55 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
