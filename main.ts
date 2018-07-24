@@ -23,34 +23,34 @@ namespace cubebit {
     let cubeSide2: number;
     let cubeSide3: number;
 
-    let font3:boolean[][] = [
+    let font3:number[][] = [
         [0,0,0,0,0,0,0,0,0],	// 0x40 @
         [1,0,1,1,1,1,0,1,0],	// 0x41 A
         [1,1,0,1,1,1,1,1,0],	// 0x42 B
         [0,1,1,1,0,0,0,1,1],	// 0x43 C
         [1,1,0,1,0,1,1,1,0],	// 0x44 D
-        [0,1,1,0,0,1,0,0,0],	// 0x45 E
-        [0,1,1,0,0,1,0,0,0],	// 0x46 F
-        [0,1,1,0,0,1,0,0,0],	// 0x47 G
-        [0,1,1,0,0,1,0,0,0],	// 0x48 H
-        [0,1,1,0,0,1,0,0,0],	// 0x49 I
-        [0,1,1,0,0,1,0,0,0],	// 0x4A J
-        [0,1,1,0,0,1,0,0,0],	// 0x4B K
-        [0,1,1,0,0,1,0,0,0],	// 0x4C L
-        [0,1,1,0,0,1,0,0,0],	// 0x4D M
-        [0,1,1,0,0,1,0,0,0],	// 0x4E N
-        [0,1,1,0,0,1,0,0,0],	// 0x4F O
-        [0,1,1,0,0,1,0,0,0],	// 0x50 P
-        [0,1,1,0,0,1,0,0,0],	// 0x51 Q
-        [0,1,1,0,0,1,0,0,0],	// 0x52 R
-        [0,1,1,0,0,1,0,0,0],	// 0x53 S
-        [0,1,1,0,0,1,0,0,0],	// 0x54 T
-        [0,1,1,0,0,1,0,0,0],	// 0x55 U
-        [0,1,1,0,0,1,0,0,0],	// 0x56 V
-        [0,1,1,0,0,1,0,0,0],	// 0x57 W
-        [0,1,1,0,0,1,0,0,0],	// 0x58 X
-        [0,1,1,0,0,1,0,0,0],	// 0x59 Y
-        [0,1,1,0,0,1,0,0,0]	// 0x5A Z
+        [1,1,1,1,1,0,1,1,1],	// 0x45 E
+        [1,0,0,1,1,0,1,1,1],	// 0x46 F
+        [1,1,1,1,0,1,1,1,0],	// 0x47 G
+        [1,0,1,1,1,1,1,0,1],	// 0x48 H
+        [1,1,1,0,1,0,1,1,1],	// 0x49 I
+        [1,1,0,0,0,1,0,0,1],	// 0x4A J
+        [1,0,1,1,1,0,1,0,1],	// 0x4B K
+        [1,1,1,1,0,0,1,0,0],	// 0x4C L
+        [1,0,1,1,1,1,1,1,1],	// 0x4D M
+        [1,0,1,1,0,1,1,1,0],	// 0x4E N
+        [1,1,1,1,0,1,1,1,1],	// 0x4F O
+        [1,0,0,1,1,1,1,1,1],	// 0x50 P
+        [1,1,0,1,0,1,1,1,1],	// 0x51 Q
+        [1,0,1,1,1,1,1,1,0],	// 0x52 R
+        [1,1,0,0,1,0,0,1,1],	// 0x53 S
+        [0,1,0,0,1,0,1,1,1],	// 0x54 T
+        [1,1,1,1,0,1,1,0,1],	// 0x55 U
+        [0,1,1,1,0,1,1,0,1],	// 0x56 V
+        [1,1,1,1,1,1,1,0,1],	// 0x57 W
+        [1,0,1,0,1,0,1,0,1],	// 0x58 X
+        [0,1,0,0,1,0,1,0,1],	// 0x59 Y
+        [0,1,1,0,1,0,1,1,0]	// 0x5A Z
         ];
 
 
@@ -59,7 +59,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 60 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 61 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -94,6 +94,17 @@ namespace cubebit {
         neo(DigitalPin.P0,3).showColor(rgb);
     }
 
+    function getChar(inChar: number): number
+    {
+	if (inChar>=0x61 && inChar<=0x7A)
+            inChar -= 0x20;	// convert to Upper case
+        if (inChar>=0x41 && inChar<=0x5A)
+            inChar -= 0x40;	// convert to 0 based
+        else
+            inChar = 0;
+        return inChar;
+    }
+
     /**
       * Plot character on plane in selected colour
       *
@@ -104,10 +115,11 @@ namespace cubebit {
     //% weight=80
     export function plotChar(char:number, rgb: number): void
     {
+        let myChar = getChar(char);
         for (let x=0; x<cubeSide; x++)
                 for (let y=0; y<cubeSide; y++)
                 {
-                    if(font3[char][y*cubeSide + x] == 1)
+                    if(font3[myChar][y*cubeSide + x] == 1)
                         nCube.setPixelColor(pixelMap(x,y,cubeSide-1), rgb);
                     else
                         nCube.setPixelColor(pixelMap(x,y,cubeSide-1), 0);
