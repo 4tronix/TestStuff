@@ -75,7 +75,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 65 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 66 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -132,17 +132,17 @@ namespace cubebit {
     export function printString(text:string, rgb: number): void
     {
         let myChar;
-	for (let s=0; s<text.length; s++)
+	for (let s=0; s<4; s++)
         {
-            myChar = getChar(text.charCodeAt(0));
+            myChar = getChar(text.charCodeAt(s));
             for (let x=0; x<cubeSide; x++)
-                    for (let y=0; y<cubeSide; y++)
-                    {
-                        if(font3[myChar][y*cubeSide + x] == 1)
-                            nCube.setPixelColor(pixelMap(x,y,cubeSide-1), rgb);
-                        else
-                            nCube.setPixelColor(pixelMap(x,y,cubeSide-1), 0);
-                    }
+                for (let y=0; y<cubeSide; y++)
+                {
+                    if(font3[myChar][y*cubeSide + x] == 1)
+                        nCube.setPixelColor(pixelMap(x,y,cubeSide-1), rgb);
+                    else
+                        nCube.setPixelColor(pixelMap(x,y,cubeSide-1), 0);
+                }
             basic.pause(1000);
         }
     }
