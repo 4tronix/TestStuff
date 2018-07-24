@@ -75,7 +75,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 62 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 63 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -122,16 +122,16 @@ namespace cubebit {
     }
 
     /**
-      * Plot character on plane in selected colour
+      * Print string on plane in selected colour
       *
-      * @param char character to plot
+      * @param text string to print
       * @param rgb RGB colour of the pixel
       */
-    //% blockId="cubebit_plot_char" block="plot character %char| to %rgb=neopixel_colors"
+    //% blockId="cubebit_print_string" block="print %text="hello"| to %rgb=neopixel_colors"
     //% weight=80
-    export function plotChar(char:number, rgb: number): void
+    export function printString(text:string, rgb: number): void
     {
-        let myChar = getChar(char);
+        let myChar = getChar(text.charCodeAt(0));
         for (let x=0; x<cubeSide; x++)
                 for (let y=0; y<cubeSide; y++)
                 {
