@@ -24,8 +24,33 @@ namespace cubebit {
     let cubeSide3: number;
 
     let font3:number[][] = [
-        [1,0,0,1,1,0,1,1,1],
-        [0,1,1,0,0,1,0,0,0]
+        [0,0,0,0,0,0,0,0,0],	// 0x40 @
+        [1,0,1,1,1,1,0,1,0],	// 0x41 A
+        [1,1,0,1,1,1,1,1,0],	// 0x42 B
+        [0,1,1,1,0,0,0,1,1],	// 0x43 C
+        [1,1,0,1,0,1,1,1,0],	// 0x44 D
+        [0,1,1,0,0,1,0,0,0],	// 0x45 E
+        [0,1,1,0,0,1,0,0,0],	// 0x46 F
+        [0,1,1,0,0,1,0,0,0],	// 0x47 G
+        [0,1,1,0,0,1,0,0,0],	// 0x48 H
+        [0,1,1,0,0,1,0,0,0],	// 0x49 I
+        [0,1,1,0,0,1,0,0,0],	// 0x4A J
+        [0,1,1,0,0,1,0,0,0],	// 0x4B K
+        [0,1,1,0,0,1,0,0,0],	// 0x4C L
+        [0,1,1,0,0,1,0,0,0],	// 0x4D M
+        [0,1,1,0,0,1,0,0,0],	// 0x4E N
+        [0,1,1,0,0,1,0,0,0],	// 0x4F O
+        [0,1,1,0,0,1,0,0,0],	// 0x50 P
+        [0,1,1,0,0,1,0,0,0],	// 0x51 Q
+        [0,1,1,0,0,1,0,0,0],	// 0x52 R
+        [0,1,1,0,0,1,0,0,0],	// 0x53 S
+        [0,1,1,0,0,1,0,0,0],	// 0x54 T
+        [0,1,1,0,0,1,0,0,0],	// 0x55 U
+        [0,1,1,0,0,1,0,0,0],	// 0x56 V
+        [0,1,1,0,0,1,0,0,0],	// 0x57 W
+        [0,1,1,0,0,1,0,0,0],	// 0x58 X
+        [0,1,1,0,0,1,0,0,0],	// 0x59 Y
+        [0,1,1,0,0,1,0,0,0]	// 0x5A Z
         ];
 
 
@@ -34,7 +59,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 58 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 59 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
