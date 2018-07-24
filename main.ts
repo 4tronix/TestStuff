@@ -24,7 +24,23 @@ namespace cubebit {
     let cubeSide3: number;
 
     let font3:number[][] = [
-        [0,0,0,0,0,0,0,0,0],	// 0x40 @
+        [1,1,1,1,0,1,1,1,1],	// 0x30 0
+        [1,1,1,0,1,0,1,1,0],	// 0x31 1
+        [0,1,1,0,1,0,1,1,0],	// 0x32 2
+        [1,1,0,0,1,1,1,1,0],	// 0x33 3
+        [0,0,1,1,1,1,1,0,1],	// 0x34 4
+        [1,1,0,0,1,0,0,1,1],	// 0x35 5
+        [1,1,1,1,1,1,1,0,0],	// 0x36 6
+        [0,0,1,0,0,1,1,1,1],	// 0x37 7
+        [1,1,1,1,1,1,1,1,1],	// 0x38 8
+        [0,0,1,1,1,1,1,1,1],	// 0x39 9
+        [1,1,0,0,0,1,0,0,1],	// 0x3A 
+        [1,0,1,1,1,0,1,0,1],	// 0x3B 
+        [1,1,1,1,0,0,1,0,0],	// 0x3C 
+        [1,0,1,1,1,1,1,1,1],	// 0x3D 
+        [1,0,1,1,0,1,1,1,0],	// 0x3E 
+        [1,1,1,1,0,1,1,1,1],	// 0x3F 
+        [0,0,0,0,0,0,0,0,0],	// 0x40 
         [1,0,1,1,1,1,0,1,0],	// 0x41 A
         [1,1,0,1,1,1,1,1,0],	// 0x42 B
         [0,1,1,1,0,0,0,1,1],	// 0x43 C
@@ -59,7 +75,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 61 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 62 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -98,10 +114,10 @@ namespace cubebit {
     {
 	if (inChar>=0x61 && inChar<=0x7A)
             inChar -= 0x20;	// convert to Upper case
-        if (inChar>=0x41 && inChar<=0x5A)
-            inChar -= 0x40;	// convert to 0 based
+        if (inChar>=0x30 && inChar<=0x5A)
+            inChar -= 0x30;	// convert to 0 based
         else
-            inChar = 0;
+            inChar = 0x10;
         return inChar;
     }
 
