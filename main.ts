@@ -75,7 +75,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 63 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 64 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -127,7 +127,7 @@ namespace cubebit {
       * @param text string to print
       * @param rgb RGB colour of the pixel
       */
-    //% blockId="cubebit_print_string" block="print %text="hello"| to %rgb=neopixel_colors"
+    //% blockId="cubebit_print_string" block="print %text| with %rgb=neopixel_colors"
     //% weight=80
     export function printString(text:string, rgb: number): void
     {
