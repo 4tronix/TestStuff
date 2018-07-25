@@ -75,7 +75,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 68 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 69 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -142,6 +142,7 @@ namespace cubebit {
                     else
                         nCube.setPixelColor(pixelMap(x,y,cubeSide-1), 0);
                 }
+            neo(DigitalPin.P0,3).show();
             basic.pause(1000);
         }
     }
