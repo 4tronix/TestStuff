@@ -75,7 +75,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 72 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 73 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -176,26 +176,28 @@ namespace cubebit {
         }
     }
 
-    function pMap(x: number, y: number, z: number, s: number): number
+    function pMap(x: number, y: number, z: number, side: number): number
     {
         let q=0;
-        if (x<s && y<s && z<cubeHeight && x>=0 && y>=0 && z>=0)
+        if (x<side && y<side && z<cubeHeight && x>=0 && y>=0 && z>=0)
         {
             if ((z%2) == 0)
             {
+                if (side%2 =0)
+                    y = side - y - 1;
                 if ((y%2) == 0)
-                    q = y * s + x;
+                    q = y * side + x;
                 else
-                    q = y * s + s - 1 - x;
+                    q = y * side + side - 1 - x;
             }
             else
             {
                 if ((x%2) == 0)
-                    q = s * (s - x) - 1 - y;
+                    q = side * (side - x) - 1 - y;
                 else
-                    q = (s - 1 - x) * s + y;
+                    q = (side - 1 - x) * side + y;
             }
-            return z*s*s + q;
+            return z*side*side + q;
         }
         return cubeSide3;    // extra non-existent pixel for out of bounds
     }
