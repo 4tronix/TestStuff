@@ -168,7 +168,7 @@ namespace cubebit {
         }
         else if (x<4 && y>=4)  // column 2 (back left)
         {
-            return 511 - pMap(y-7, x, z, 4);
+            return 511 - pMap(7-y, x, z, 4);
         }
         else  // column 3 (back right)
         {
