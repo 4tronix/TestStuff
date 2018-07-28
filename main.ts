@@ -75,7 +75,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 69 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 70 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -92,7 +92,7 @@ namespace cubebit {
             cubeSide = side;
             cubeSide2 = side * side;
             cubeSide3 = side * side * cubeHeight;
-            nCube = neopixel.create(pin, cubeSide3, NeoPixelMode.RGB);
+            nCube = neopixel.create(pin, cubeSide3+1, NeoPixelMode.RGB);
             nCube.setBrightness(40);
         }
         return nCube;
@@ -149,25 +149,55 @@ namespace cubebit {
 
     function pixelMap(x: number, y: number, z: number): number
     {
+        if (cubeSide == 8)
+            return pMap8(x, y, z);
+        else
+            return pMap(x, y, z, cubeSide);
+    }
+
+    //pMap8 is mapping function for 8x8 built out of 4x4 slices. 0,0,0 is not ID=0, it is in fact 268
+    function pMap8(x: number, y: number, z: number): number
+    {
+        if (x<4 && y<4)  // column 0 (front left)
+        {
+            return 256 + pMap(3-x, 3-y, z, 4);
+        }
+        else if (y<4)  // column 1 (front right)
+        {
+            return 255 - pMap(x-4, y-4, z, 4);
+        }
+        else if (x<4 && y>=4)  // column 2 (back left)
+        {
+            return 511 - pMap(3-x, 3-y, z, 4);
+        }
+        else  // column 3 (back right)
+        {
+            return pMap(x-4, y-4, z, 4);
+        }
+    }
+
+    function pMap(x: number, y: number, z: number, s: number): number
+    {
         let q=0;
-        if (x<cubeSide && y<cubeSide && z<cubeHeight && x>=0 && y>=0 && z>=0)
+        if (x<s && y<s && z<cubeHeight && x>=0 && y>=0 && z>=0)
         {
             if ((z%2) == 0)
             {
                 if ((y%2) == 0)
-                    q = y * cubeSide + x;
+                    q = y * s + x;
                 else
-                    q = y * cubeSide + cubeSide - 1 - x;
+                    q = y * s + s - 1 - x;
             }
             else
             {
                 if ((x%2) == 0)
-                    q = cubeSide * (cubeSide - x) - 1 - y;
+                    q = s * (s - x) - 1 - y;
                 else
-                    q = (cubeSide - 1 - x) * cubeSide + y;
+                    q = (s - 1 - x) * s + y;
             }
+            return z*s*s + q;
         }
-        return z*cubeSide2 + q;
+        return cubeSide3;    // extra non-existent pixel for out of bounds
     }
 
     /**
