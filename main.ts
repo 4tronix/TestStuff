@@ -94,7 +94,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 88 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 89 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -266,7 +266,7 @@ namespace cubebit {
     //% blockId="cubebit_set_height" block="set height of tower to %height"
     //% weight=80
     //% deprecated=true
-    export function setBase(base: CBBase): void
+    export function setHeight(height: number): void
     {
         if (! cubeHeight)
             cubeHeight = height;
