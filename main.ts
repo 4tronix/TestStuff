@@ -94,7 +94,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 83 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 84 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -170,8 +170,8 @@ namespace cubebit {
     {
         switch (cubeBase)
         {
-            case XY: break;
-            case YX: x = cubeSide-x-1; break;
+            case CBBase.XY: break;
+            case CBBase.YX: x = cubeSide-x-1; break;
         }
         if (cubeSide == 8)
             return pMap8(x, y, z);
