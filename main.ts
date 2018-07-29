@@ -94,7 +94,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 90 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 91 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -171,6 +171,10 @@ namespace cubebit {
         switch (cubeBase)
         {
             case CBBase.YX: z = cubeSide - z - 1;
+            case CBBase.XZ: let t = cubeSide - z - 1; z = y; y = t;
+            case CBBase.ZX: let t = cubeSide - y - 1; y = z; z = t;
+            case CBBase.YZ: let t1 = cubeSide - y - 1; let t2 = cubeSide - z - 1; z = x; y = t2; x = t1;
+            case CBBase.ZY: let t = cubeSide - z - 1; z = cubeSide - x - 1; x = y; y = t;
             default: z = z;
         }
 
