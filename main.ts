@@ -12,6 +12,24 @@ enum CBAxis {
 }
 
 /**
+  * Enumeration of bases
+  */
+enum CBBase {
+    //% block="xy"
+    XY,
+    //% block="xz"
+    XZ,
+    //% block="yz"
+    YZ,
+    //% block="yx"
+    YX,
+    //% block="zx"
+    ZX
+    //% block="zy"
+    ZY
+}
+
+/**
  * Custom blocks
  */
 //% weight=10 color=#e7660b icon="\uf247"
@@ -22,6 +40,7 @@ namespace cubebit {
     let cubeSide: number;
     let cubeSide2: number;
     let cubeSide3: number;
+    let cubeBase = CBBase.XY;
 
     let font3:number[][] = [
         [1,1,1,1,0,1,1,1,1],	// 0x30 0
@@ -75,7 +94,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side
      */
-    //% blockId="cubebit_create" block="create 82 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 83 Cube:Bit on %pin| with side %side"
     //% weight=98
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -149,6 +168,11 @@ namespace cubebit {
 
     function pixelMap(x: number, y: number, z: number): number
     {
+        switch (cubeBase)
+        {
+            case XY: break;
+            case YX: x = cubeSide-x-1; break;
+        }
         if (cubeSide == 8)
             return pMap8(x, y, z);
         else
@@ -247,10 +271,22 @@ namespace cubebit {
     //% blockId="cubebit_set_height" block="set height of tower to %height"
     //% weight=80
     //% deprecated=true
-    export function setHeight(height: number): void
+    export function setBase(base: CBBase): void
     {
         if (! cubeHeight)
             cubeHeight = height;
+    }
+
+    /**
+      * Defines the base plane for Cube
+      *
+      * @param base plane of the base <xy, xz, yz, yx, zx, zy>
+      */
+    //% blockId="cubebit_set_base" block="set base to %base=CBBase"
+    //% weight=80
+    export function setBase(base: CBBase): void
+    {
+        cubeBase = base;
     }
 
     /**
