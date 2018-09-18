@@ -1,20 +1,4 @@
 ﻿/**
-  * Enumeration of neopixel colors
-  */
-enum RBColours {
-    //% block="Red"
-    0xff000,
-    //% block="Green"
-    0x00ff00,
-    //% block="Blue"
-    0x0000ff,
-    //% block="White"
-    0xffffff
-}
-
-
-
-/**
   * Enumeration of motors.
   */
 enum RBMotor {
@@ -80,11 +64,8 @@ enum RBPingUnit {
 //% weight=10 color=#e7660b icon="\uf1ba"
 namespace robobit {
 
-    let ledBar: neopixel.Strip;	// ledBar is an 8-pixel neopixel strip
-    let ledCount = 8;		// number of LEDs in LedBar
-    let larsson = 0; 		// current position of scanner
-    let scanInc = 1;		// incrememnt/decrement scan position
-    let model: RBModel;		// model defines pins used
+    let ledBar: neopixel.Strip;
+    let model: RBModel;
 
     /**
       * Drive robot forward (or backward) at speed.
@@ -270,7 +251,7 @@ namespace robobit {
     {
         if (!ledBar)
         {
-            ledBar = neopixel.create(DigitalPin.P13, ledCount, NeoPixelMode.RGB);
+            ledBar = neopixel.create(DigitalPin.P13, 8, NeoPixelMode.RGB);
             ledBar.setBrightness(40);
         }
         return ledBar;
@@ -395,7 +376,5 @@ namespace robobit {
     {
         neo().setBrightness(brightness);
     }
-
-  
 
 }

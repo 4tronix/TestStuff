@@ -1,7 +1,7 @@
 {
-    "name": "cubebit",
+    "name": "robobit",
     "version": "0.0.1",
-    "description": "A Cube:Bit package for pxt-microbit",
+    "description": "A RoboBit package for pxt-microbit",
     "license": "Apache",
     "dependencies": {
         "core": "*",
