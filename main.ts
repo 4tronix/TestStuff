@@ -371,7 +371,7 @@ namespace robobit {
      */
     //% subcategory=LedBar
     //% group=LedBar
-    //% blockId="robobit_brightness" block="set 07Led Bar brightness %brightness"
+    //% blockId="robobit_brightness" block="set 08Led Bar brightness %brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=10
     export function neoBrightness(brightness: number): void
@@ -379,4 +379,30 @@ namespace robobit {
         neo().setBrightness(brightness);
     }
 
+    /**
+     * Use centre 6 LEDs as Larsson Scanner. Each call progresses one pixel
+     */
+    //% subcategory=LedBar
+    //% group=LedBar
+    //% blockId="robobit_ledScan" block="scan centre pixels"
+    //% weight=60
+    export function ledScan(): void
+    {
+        larsson += scandir;
+        if (larsson == (ledCount - 2))
+            scandir = -1;
+        else if (larsson == 1)
+            scandir = 1;
+        for (let x = 1; x < (ledCount-1); x++)
+        {
+            if ((x == (larsson - 2)) || (x == (larsson + 2)))
+                setPixel(x, 0x0f0000);
+            else if ((x == (larrson - 1)) || (x == (larsson + 1)))
+                setPixel(x, 0x1f0000);
+            else if (x == larsson)
+                setPixel(x, 0xff0000);
+            else
+                setPixel(x, 0);
+        }
+    }
 }
