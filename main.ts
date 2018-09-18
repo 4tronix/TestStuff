@@ -1,120 +1,279 @@
-﻿
-/**
-  * Enumeration of axes
+﻿/**
+  * Enumeration of neopixel colors
   */
-enum CBAxis {
-    //% block="xy"
-    XY,
-    //% block="xz"
-    XZ,
-    //% block="yz"
-    YZ
+enum RBColours {
+    //% block="Red"
+    0xff000,
+    //% block="Green"
+    0x00ff00,
+    //% block="Blue"
+    0x0000ff,
+    //% block="White"
+    0xffffff
+}
+
+
+
+/**
+  * Enumeration of motors.
+  */
+enum RBMotor {
+    //% block="left"
+    Left,
+    //% block="right"
+    Right,
+    //% block="all"
+    All
 }
 
 /**
-  * Enumeration of bases
+  * Enumeration of directions.
   */
-enum CBBase {
-    //% block="xy"
-    XY,
-    //% block="xz"
-    XZ,
-    //% block="yz"
-    YZ,
-    //% block="yx"
-    YX,
-    //% block="zx"
-    ZX,
-    //% block="zy"
-    ZY
+enum RBRobotDirection {
+    //% block="left"
+    Left,
+    //% block="right"
+    Right
+}
+
+/**
+  * Enumeration of line sensors.
+  */
+enum RBLineSensor {
+    //% block="left"
+    Left,
+    //% block="right"
+    Right
+}
+
+
+/**
+  * Enumeration of Robobit Models and Options
+  */
+enum RBModel {
+    //% block="Mk1"
+    MK1,
+    //% block="Mk2"
+    MK2, 
+    //% block="Mk2/LedBar"
+    MK2L,
+    //% block="Mk3"
+    MK3
+}
+
+/**
+ * Ping unit for sensor
+ */
+enum RBPingUnit {
+    //% block="μs"
+    MicroSeconds,
+    //% block="cm"
+    Centimeters,
+    //% block="inches"
+    Inches
 }
 
 /**
  * Custom blocks
  */
-//% weight=10 color=#e7660b icon="\uf247"
-namespace cubebit {
+/** //% weight=10 color=#0fbc11 icon="\uf1ba" */
+//% weight=10 color=#e7660b icon="\uf1ba"
+namespace robobit {
 
-    let nCube: neopixel.Strip;
-    let cubeHeight: number;
-    let cubeSide: number;
-    let cubeSide2: number;
-    let cubeSide3: number;
-    let cubeBase = CBBase.XY;
+    let ledBar: neopixel.Strip;	// ledBar is an 8-pixel neopixel strip
+    let ledCount = 8;		// number of LEDs in LedBar
+    let larsson = 0; 		// current position of scanner
+    let scanInc = 1;		// incrememnt/decrement scan position
+    let model: RBModel;		// model defines pins used
 
-    let font3:number[][] = [
-        [1,1,1,1,0,1,1,1,1],	// 0x30 0
-        [1,1,1,0,1,0,1,1,0],	// 0x31 1
-        [0,1,1,0,1,0,1,1,0],	// 0x32 2
-        [1,1,0,0,1,1,1,1,0],	// 0x33 3
-        [0,0,1,1,1,1,1,0,1],	// 0x34 4
-        [1,1,0,0,1,0,0,1,1],	// 0x35 5
-        [1,1,1,1,1,1,1,0,0],	// 0x36 6
-        [0,0,1,0,0,1,1,1,1],	// 0x37 7
-        [1,1,1,1,1,1,1,1,1],	// 0x38 8
-        [0,0,1,1,1,1,1,1,1],	// 0x39 9
-        [1,1,0,0,0,1,0,0,1],	// 0x3A 
-        [1,0,1,1,1,0,1,0,1],	// 0x3B 
-        [1,1,1,1,0,0,1,0,0],	// 0x3C 
-        [1,0,1,1,1,1,1,1,1],	// 0x3D 
-        [1,0,1,1,0,1,1,1,0],	// 0x3E 
-        [1,1,1,1,0,1,1,1,1],	// 0x3F 
-        [0,0,0,0,0,0,0,0,0],	// 0x40 
-        [1,0,1,1,1,1,0,1,0],	// 0x41 A
-        [1,1,0,1,1,1,1,1,0],	// 0x42 B
-        [0,1,1,1,0,0,0,1,1],	// 0x43 C
-        [1,1,0,1,0,1,1,1,0],	// 0x44 D
-        [1,1,1,1,1,0,1,1,1],	// 0x45 E
-        [1,0,0,1,1,0,1,1,1],	// 0x46 F
-        [1,1,1,1,0,1,1,1,0],	// 0x47 G
-        [1,0,1,1,1,1,1,0,1],	// 0x48 H
-        [1,1,1,0,1,0,1,1,1],	// 0x49 I
-        [1,1,0,0,0,1,0,0,1],	// 0x4A J
-        [1,0,1,1,1,0,1,0,1],	// 0x4B K
-        [1,1,1,1,0,0,1,0,0],	// 0x4C L
-        [1,0,1,1,1,1,1,1,1],	// 0x4D M
-        [1,0,1,1,0,1,1,1,0],	// 0x4E N
-        [1,1,1,1,0,1,1,1,1],	// 0x4F O
-        [1,0,0,1,1,1,1,1,1],	// 0x50 P
-        [1,1,0,1,0,1,1,1,1],	// 0x51 Q
-        [1,0,1,1,1,1,1,1,0],	// 0x52 R
-        [1,1,0,0,1,0,0,1,1],	// 0x53 S
-        [0,1,0,0,1,0,1,1,1],	// 0x54 T
-        [1,1,1,1,0,1,1,0,1],	// 0x55 U
-        [0,1,1,1,0,1,1,0,1],	// 0x56 V
-        [1,1,1,1,1,1,1,0,1],	// 0x57 W
-        [1,0,1,0,1,0,1,0,1],	// 0x58 X
-        [0,1,0,0,1,0,1,0,1],	// 0x59 Y
-        [0,1,1,0,1,0,1,1,0]	// 0x5A Z
-        ];
+    /**
+      * Drive robot forward (or backward) at speed.
+      *
+      * @param speed speed of motor between -1023 and 1023.
+      */
+    //% subcategory=Motors
+    //% group=Motors
+    //% blockId="robobit_motor_forward" block="drive at speed %speed"
+    //% speed.min=-1023 speed.max=1023
+    //% weight=110
+    export function drive(speed: number): void {
+        motor(RBMotor.All, speed);
+    }
+
+    /**
+      * Drive robot forward (or backward) at speed for milliseconds.
+      *
+      * @param speed speed of motor between -1023 and 1023.
+      * @param milliseconds duration in milliseconds to drive forward for, then stop.
+      */
+    //% subcategory=Motors
+    //% group=Motors
+    //% blockId="robobit_motor_forward_milliseconds" block="drive at speed %speed| for milliseconds %milliseconds"
+    //% speed.min=-1023 speed.max=1023
+    //% weight=131
+    export function driveMilliseconds(speed: number, milliseconds: number): void {
+        drive(speed);
+        basic.pause(milliseconds);
+        drive(0);
+    }
+
+    /**
+      * Turn robot in direction at speed.
+      *
+      * @param direction direction to turn.
+      * @param speed speed of motor between 0 and 1023.
+      */
+    //% subcategory=Motors
+    //% group=Motors
+    //% blockId="robobit_turn" block="turn in direction %direction|speed %speed"
+    //% speed.min=0 speed.max=1023
+    //% weight=109
+    export function driveTurn(direction: RBRobotDirection, speed: number): void {
+        if (speed < 0) speed = 0;
+
+        if (direction == RBRobotDirection.Left) {
+            motor(RBMotor.Left, -speed);
+            motor(RBMotor.Right, speed);
+        } else if (direction == RBRobotDirection.Right) {
+            motor(RBMotor.Left, speed);
+            motor(RBMotor.Right, -speed);
+        }
+    }
+
+    /**
+      * Turn robot in direction at speed for milliseconds.
+      *
+      * @param direction direction to turn.
+      * @param speed speed of motor between 0 and 1023.
+      * @param milliseconds duration in milliseconds to turn for, then stop.
+      */
+    //% subcategory=Motors
+    //% group=Motors
+    //% blockId="robobit_turn_milliseconds" block="turn in direction %direction|speed %speed| for milliseconds %milliseconds"
+    //% speed.min=0 speed.max=1023
+    //% weight=130
+    export function driveTurnMilliseconds(direction: RBRobotDirection, speed: number, milliseconds: number): void {
+        driveTurn(direction, speed)
+        basic.pause(milliseconds)
+        motor(RBMotor.All, 0)
+    }
+
+    /**
+      * Drive motor(s) forward or reverse.
+      *
+      * @param motor motor to drive.
+      * @param speed speed of motor
+      */
+    //% subcategory=Motors
+    //% group=Motors
+    //% blockId="robobit_motor" block="drive motor %motor|speed %speed"
+    //% weight=100
+    export function motor(motor: RBMotor, speed: number): void {
+        let forward = (speed >= 0);
+
+        if (speed > 1023) {
+            speed = 1023;
+        } else if (speed < -1023) {
+            speed = -1023;
+        }
+
+        let realSpeed = speed;
+        if (!forward) {
+            if (realSpeed >= -200)
+                realSpeed = (realSpeed * 19) / 6;
+            else if (realSpeed >= -400)
+                realSpeed = realSpeed * 2;
+            else if (realSpeed >= -600)
+                realSpeed = (realSpeed * 3) / 2;
+            else if (realSpeed >= -800)
+                realSpeed = (realSpeed * 5) / 4;
+            realSpeed = 1023 + realSpeed; // realSpeed is negative!
+        }
+
+        if ((motor == RBMotor.Left) || (motor == RBMotor.All)) {
+            pins.analogWritePin(AnalogPin.P0, realSpeed);
+            pins.digitalWritePin(DigitalPin.P8, forward ? 0 : 1);
+        }
+
+        if ((motor == RBMotor.Right) || (motor == RBMotor.All)) {
+            pins.analogWritePin(AnalogPin.P1, realSpeed);
+            pins.digitalWritePin(DigitalPin.P12, forward ? 0 : 1);
+        }
+    }
+
+    /**
+      * Read line sensor.
+      *
+      * @param sensor Line sensor to read.
+      */
+    //% subcategory=Sensors
+    //% group=Sensors
+    //% blockId="robobit_read_line" block="read line sensor %sensor"
+    //% weight=90
+    export function readLine(sensor: RBLineSensor): number {
+        if (sensor == RBLineSensor.Left) {
+            return pins.digitalReadPin(DigitalPin.P11);
+        } else {
+            return pins.digitalReadPin(DigitalPin.P5);
+        }
+    }
 
 
     /**
-     * Create a Cube:Bit cube (default 3x3x3) on Selected Pin (default Pin0)
-     * @param pin Micro:Bit pin to connect to Cube:Bit
-     * @param side number of pixels on each side
-     */
-    //% blockId="cubebit_create" block="create 97 Cube:Bit on %pin| with side %side"
-    //% weight=98
-    //% side.min=3 side.max=8
-    export function create(pin: DigitalPin, side: number): void
-    {
-        neo(pin, side);
+    * Read distance from sonar module connected to accessory connector.
+    *
+    * @param unit desired conversion unit
+    */
+    //% subcategory=Sensors
+    //% group=Sensors
+    //% blockId="robobit_sonar" block="read sonar as %unit"
+    //% weight=7
+    export function sonar(unit: RBPingUnit): number {
+        // send pulse
+        let trig = DigitalPin.P13;
+        let echo = DigitalPin.P13;
+
+        let maxCmDistance = 500;
+
+        pins.setPull(trig, PinPullMode.PullNone);
+        pins.digitalWritePin(trig, 0);
+        control.waitMicros(2);
+        pins.digitalWritePin(trig, 1);
+        control.waitMicros(10);
+        pins.digitalWritePin(trig, 0);
+
+        // read pulse
+        let d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+
+        switch (unit) {
+            case RBPingUnit.Centimeters: return d / 58;
+            case RBPingUnit.Inches: return d / 148;
+            default: return d;
+        }
     }
 
-    function neo(pin: DigitalPin, side: number): neopixel.Strip
+    /**
+      * Adjust opening of Claw attachment
+      *
+      * @param degrees Degrees to open Claw.
+      */
+    //% subcategory=Sensors
+    //% group=Sensors
+    //% blockId="robobit_set_claw" block="Set claw %degrees"
+    //% weight=90
+    export function setClaw(degrees: number): void
     {
-        if (!nCube)
+        pins.servoWritePin(AnalogPin.P13, Math.clamp(0, 80, degrees))
+    }
+
+    function neo(): neopixel.Strip
+    {
+        if (!ledBar)
         {
-            if (! cubeHeight)
-                cubeHeight = side;
-            cubeSide = side;
-            cubeSide2 = side * side;
-            cubeSide3 = side * side * cubeHeight;
-            nCube = neopixel.create(pin, cubeSide3+1, NeoPixelMode.RGB);
-            nCube.setBrightness(40);
+            ledBar = neopixel.create(DigitalPin.P13, ledCount, NeoPixelMode.RGB);
+            ledBar.setBrightness(40);
         }
-        return nCube;
+        return ledBar;
     }
 
     /**
@@ -122,191 +281,13 @@ namespace cubebit {
       *
       * @param rgb RGB colour of the pixel
       */
+    //% subcategory=LedBar
+    //% group=LedBar
     //% blockId="cubebit_set_color" block="set all pixels to %rgb=neopixel_colors"
     //% weight=80
     export function setColor(rgb: number): void
     {
-        neo(DigitalPin.P0,3).showColor(rgb);
-    }
-
-    function getChar(inChar: number): number
-    {
-	if (inChar>=0x61 && inChar<=0x7A)
-            inChar -= 0x20;	// convert to Upper case
-        if (inChar>=0x30 && inChar<=0x5A)
-            inChar -= 0x30;	// convert to 0 based
-        else
-            inChar = 0x10;
-        return inChar;
-    }
-
-    /**
-      * Print string on plane in selected colour
-      *
-      * @param text string to print
-      * @param rgb RGB colour of the pixel
-      */
-    //% blockId="cubebit_print_string" block="print %text| with %rgb=neopixel_colors"
-    //% weight=80
-    export function printString(text: string, rgb: number): void
-    {
-	for (let s=0; s<4; s++)
-        {
-            let myChar = getChar(text.charCodeAt(s));
-            for (let x=0; x<cubeSide; x++)
-                for (let y=0; y<cubeSide; y++)
-                {
-                    if(font3[myChar][y*cubeSide + x] == 1)
-                        nCube.setPixelColor(pixelMap(x,y,cubeSide-1), rgb);
-                    else
-                        nCube.setPixelColor(pixelMap(x,y,cubeSide-1), 0);
-                }
-            neo(DigitalPin.P0,3).show();
-            basic.pause(1000);
-        }
-    }
-
-    function pixelMap(x: number, y: number, z: number): number
-    {
-        let t: number;
-        switch (cubeBase)
-        {
-            case CBBase.YX: z = cubeSide - z - 1; break;
-            case CBBase.XZ: t = cubeSide - z - 1; z = cubeSide - x - 1; x = y; y = t; break;
-            case CBBase.ZX: t = cubeSide - x - 1; x = z; z = t; break;
-            case CBBase.YZ: t = cubeSide - y - 1; y = z; z = x; x = t; break;
-            case CBBase.ZY: t = cubeSide - z - 1; z = cubeSide - x - 1; x = y; y = t; break;
-            default: z = z;
-        }
-
-        if (cubeSide == 8)
-            return pMap8(x, y, z);
-        else
-            return pMap(x, y, z, cubeSide);
-    }
-
-    //pMap8 is mapping function for 8x8 built out of 4x4 slices. 0,0,0 is not ID=0, it is in fact 268
-    function pMap8(x: number, y: number, z: number): number
-    {
-        if (x<4 && y<4)  // column 0 (front left)
-        {
-            return 256 + pMap(3-x, 3-y, z, 4);
-        }
-        else if (x>=4 && y<4)  // column 1 (front right)
-        {
-            if ((z%2) == 0)
-                return 255 - pMap(y, x-4, z, 4);
-            else
-                return 255 - pMap(3-y, 7-x, z, 4);
-        }
-        else if (x<4 && y>=4)  // column 2 (back left)
-        {
-            if ((z%2) == 0)
-                return 511 - pMap(7-y, 3-x, z, 4);
-            else
-                return 511 - pMap(y-4, x, z, 4);
-        }
-        else  // column 3 (back right)
-        {
-            return pMap(x-4, y-4, z, 4);
-        }
-    }
-
-    function pMap(x: number, y: number, z: number, side: number): number
-    {
-        let q=0;
-        if (x<side && y<side && z<cubeHeight && x>=0 && y>=0 && z>=0)
-        {
-            if ((z%2) == 0)
-            {
-                if ((y%2) == 0)
-                    q = y * side + x;
-                else
-                    q = y * side + side - 1 - x;
-            }
-            else
-            {
-                if ((side%2) == 0)
-                    y = side - y - 1;
-                if ((x%2) == 0)
-                    q = side * (side - x) - 1 - y;
-                else
-                    q = (side - 1 - x) * side + y;
-            }
-            return z*side*side + q;
-        }
-        return cubeSide3;    // extra non-existent pixel for out of bounds
-    }
-
-    /**
-      * Sets a plane of pixels to given colour
-      *
-      * @param plane number of plane from 0 to size of cube
-      * @param axis axis (xy,xz,yz) of the plane
-      * @param rgb RGB colour of the pixel
-      */
-    //% blockId="cubebit_set_plane" block="set plane %plane| on axis %axis=CBAxis| to %rgb=neopixel_colors"
-    //% weight=79
-    export function setPlane(plane: number, axis: CBAxis, rgb: number): void
-    {
-        if (axis == CBAxis.YZ)
-        {
-            for (let y=0; y<cubeSide; y++)
-                for (let z=0; z<cubeHeight; z++)
-                    nCube.setPixelColor(pixelMap(plane,y,z), rgb);
-        }
-        else if (axis == CBAxis.XZ)
-        {
-            for (let x=0; x<cubeSide; x++)
-                for (let z=0; z<cubeHeight; z++)
-                    nCube.setPixelColor(pixelMap(x,plane,z), rgb);
-        }
-        else if (axis == CBAxis.XY)
-        {
-            for (let x=0; x<cubeSide; x++)
-                for (let y=0; y<cubeSide; y++)
-                    nCube.setPixelColor(pixelMap(x,y,plane), rgb);
-        }
-    }
-
-    /**
-      * Defines a custom height for the Cube (height>0)
-      *
-      * @param height number of slices in the tower
-      */
-    //% blockId="cubebit_set_height" block="set height of tower to %height"
-    //% weight=80
-    //% deprecated=true
-    export function setHeight(height: number): void
-    {
-        if (! cubeHeight)
-            cubeHeight = height;
-    }
-
-    /**
-      * Defines the base plane for Cube
-      *
-      * @param base plane of the base <xy, xz, yz, yx, zx, zy>
-      */
-    //% blockId="cubebit_set_base" block="set base to %base=CBBase"
-    //% weight=80
-    export function setBase(base: CBBase): void
-    {
-        cubeBase = base;
-    }
-
-    /**
-     * Get the pixel ID from x, y, z coordinates
-     *
-     * @param x position from left to right (x dimension)
-     * @param y position from front to back (y dimension)
-     * @param z position from bottom to top (z dimension)
-     */
-    //% blockId="cubebit_map_pixel" block="map ID from x %x|y %y|z %z"
-    //% weight=93
-    export function mapPixel(x: number, y: number, z: number): number
-    {
-        return pixelMap(x,y,z);
+        neo().showColor(rgb);
     }
 
     /**
@@ -315,11 +296,13 @@ namespace cubebit {
      * @param ID location of the pixel in the cube from 0
      * @param rgb RGB color of the LED
      */
-    //% blockId="cubebit_set_pixel_color" block="set pixel color at %ID|to %rgb=neopixel_colors"
+    //% subcategory=LedBar
+    //% group=LedBar
+    //% blockId="robobit_set_pixel_color" block="set pixel color at %ID|to %rgb=neopixel_colors"
     //% weight=80
-    export function setPixelColor(ID: number, rgb: number): void
+    export function setPixel(ID: number, rgb: number): void
     {
-        neo(DigitalPin.P0,3).setPixelColor(ID, rgb);
+        neo().setPixelColor(ID, rgb);
     }
 
     /**
@@ -329,7 +312,9 @@ namespace cubebit {
      * @param green Green value of the LED 0:255
      * @param blue Blue value of the LED 0:255
      */
-    //% blockId="cubebit_convertRGB" block="convert from red %red| green %green| blue %bblue"
+    //% subcategory=LedBar
+    //% group=LedBar
+    //% blockId="robobit_convertRGB" block="convert from red %red| green %green| blue %bblue"
     //% weight=80
     export function convertRGB(r: number, g: number, b: number): number
     {
@@ -339,65 +324,78 @@ namespace cubebit {
     /**
       * Show pixels
       */
-    //% blockId="cubebit_show" block="show Cube:Bit changes"
+    //% subcategory=LedBar
+    //% group=LedBar
+    //% blockId="robobit_show" block="show Led Bar changes"
     //% weight=76
     export function neoShow(): void
     {
-        neo(DigitalPin.P0,3).show();
+        neo().show();
     }
 
     /**
       * Clear leds.
       */
-    //% blockId="cubebit_clear" block="clear all pixels"
+    //% subcategory=LedBar
+    //% group=LedBar
+    //% blockId="robobit_clear" block="clear all pixels"
     //% weight=75
     export function neoClear(): void
     {
-        neo(DigitalPin.P0,3).clear();
+        neo().clear();
     }
 
     /**
       * Shows a rainbow pattern on all pixels
       */
-    //% blockId="cubebit_rainbow" block="set Cube:Bit rainbow"
+    //% subcategory=LedBar
+    //% group=LedBar
+    //% blockId="robobit_rainbow" block="set Led Bar rainbow"
     //% weight=70
     export function neoRainbow(): void
     {
-        neo(DigitalPin.P0,3).showRainbow(1, 360);
+        neo().showRainbow(1, 360);
     }
 
     /**
      * Shift LEDs forward and clear with zeros.
      */
-    //% blockId="cubebit_shift" block="shift pixels"
+    //% subcategory=LedBar
+    //% group=LedBar
+    //% blockId="robobit_shift" block="shift pixels"
     //% weight=66
     export function neoShift(): void
     {
-        neo(DigitalPin.P0,3).shift(1);
+        neo().shift(1);
     }
 
     /**
      * Rotate LEDs forward.
      */
-    //% blockId="cubebit_rotate" block="rotate pixels"
+    //% subcategory=LedBar
+    //% group=LedBar
+    //% blockId="robobit_rotate" block="rotate pixels"
     //% weight=65
     export function neoRotate(): void
     {
-        neo(DigitalPin.P0,3).rotate(1);
+        neo().rotate(1);
     }
 
     /**
-     * Set the brightness of the cube. Note this only applies to future writes to the strip.
+     * Set the brightness of the Led Bar. Note this only applies to future writes to the strip.
      *
      * @param brightness a measure of LED brightness in 0-255. eg: 255
      */
-    //% blockId="cubebit_brightness" block="set Cube:Bit brightness %brightness"
+    //% subcategory=LedBar
+    //% group=LedBar
+    //% blockId="robobit_brightness" block="set Led Bar brightness %brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=10
     export function neoBrightness(brightness: number): void
     {
-        neo(DigitalPin.P0,3).setBrightness(brightness);
+        neo().setBrightness(brightness);
     }
 
+  
 
 }
