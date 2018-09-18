@@ -66,6 +66,8 @@ namespace robobit {
 
     let ledBar: neopixel.Strip;
     let model: RBModel;
+    let larsson=1;
+    let scandir=1;
 
     /**
       * Drive robot forward (or backward) at speed.
