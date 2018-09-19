@@ -68,6 +68,7 @@ namespace robobit {
     let model: RBModel;
     let larsson: number;
     let scandir: number;
+    let ledCount=8;
 
     /**
       * Drive robot forward (or backward) at speed.
@@ -371,7 +372,7 @@ namespace robobit {
      */
     //% subcategory=LedBar
     //% group=LedBar
-    //% blockId="robobit_brightness" block="set 12Led Bar brightness %brightness"
+    //% blockId="robobit_brightness" block="set 13Led Bar brightness %brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=10
     export function neoBrightness(brightness: number): void
