@@ -404,7 +404,7 @@ namespace robobit {
             if ((x == (larsson - 2)) || (x == (larsson + 2)))
                 setPixel(x, 0x070000);
             else if ((x == (larsson - 1)) || (x == (larsson + 1)))
-                setPixel(x, 0x0f0000);
+                setPixel(x, 0x1f0000);
             else if (x == larsson)
                 setPixel(x, 0xff0000);
             else
