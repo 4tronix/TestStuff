@@ -372,7 +372,7 @@ namespace robobit {
      */
     //% subcategory=LedBar
     //% group=LedBar
-    //% blockId="robobit_brightness" block="set 16Led Bar brightness %brightness"
+    //% blockId="robobit_brightness" block="set Led Bar brightness %brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=10
     export function neoBrightness(brightness: number): void
@@ -402,9 +402,9 @@ namespace robobit {
         for (let x = 1; x < (ledCount-1); x++)
         {
             if ((x == (larsson - 2)) || (x == (larsson + 2)))
-                setPixel(x, 0x0f0000);
+                setPixel(x, 0x070000);
             else if ((x == (larsson - 1)) || (x == (larsson + 1)))
-                setPixel(x, 0x1f0000);
+                setPixel(x, 0x0f0000);
             else if (x == larsson)
                 setPixel(x, 0xff0000);
             else
