@@ -65,10 +65,21 @@ enum RBPingUnit {
 namespace robobit {
 
     let ledBar: neopixel.Strip;
-    let model: RBModel;
+    let _model: RBModel;
     let larsson: number;
     let scandir: number;
     let ledCount=8;
+
+    /**
+      * Select Model of Robobit (Determines Pin usage)
+      *
+      * @param model Model of Robobit buggy. Mk2, or Mk3
+      */
+    //% blockId="robobit_model" block="select Robobit model %model"
+    //% weight=110
+    export function select_model(model: RBModel): void {
+        _model = model;
+    }
 
     /**
       * Drive robot forward (or backward) at speed.
@@ -404,7 +415,7 @@ namespace robobit {
             if ((x == (larsson - 2)) || (x == (larsson + 2)))
                 setPixel(x, 0x070000);
             else if ((x == (larsson - 1)) || (x == (larsson + 1)))
-                setPixel(x, 0x1f0000);
+                setPixel(x, 0x0f0000);
             else if (x == larsson)
                 setPixel(x, 0xff0000);
             else
