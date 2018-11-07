@@ -39,8 +39,6 @@ enum RBModel {
     MK1,
     //% block="Mk2"
     MK2, 
-    //% block="Mk2/LedBar"
-    MK2L,
     //% block="Mk3"
     MK3
 }
@@ -73,9 +71,9 @@ namespace robobit {
     /**
       * Select Model of Robobit (Determines Pin usage)
       *
-      * @param model Model of Robobit buggy. Mk2, or Mk3
+      * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 1Robobit model %model"
+    //% blockId="robobit_model" block="select 2Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
@@ -206,10 +204,18 @@ namespace robobit {
     //% blockId="robobit_read_line" block="read line sensor %sensor"
     //% weight=90
     export function readLine(sensor: RBLineSensor): number {
-        if (sensor == RBLineSensor.Left) {
-            return pins.digitalReadPin(DigitalPin.P11);
-        } else {
-            return pins.digitalReadPin(DigitalPin.P5);
+        if (sensor == RBLineSensor.Left)
+	{
+	    if (_model == RBModel.Mk3)
+            	return pins.digitalReadPin(DigitalPin.P16);
+	    else
+            	return pins.digitalReadPin(DigitalPin.P11);
+        } else
+	{
+	    if (_model == RBModel.Mk3)
+            	return pins.digitalReadPin(DigitalPin.P14);
+	    else
+            	return pins.digitalReadPin(DigitalPin.P5);
         }
     }
 
@@ -226,7 +232,9 @@ namespace robobit {
     export function sonar(unit: RBPingUnit): number {
         // send pulse
         let trig = DigitalPin.P13;
-        let echo = DigitalPin.P13;
+	if (_model == RBModel.Mk3)
+	    trig = DigitalPin.P15;
+        let echo = trig;
 
         let maxCmDistance = 500;
 
