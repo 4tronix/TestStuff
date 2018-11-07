@@ -36,11 +36,11 @@ enum RBLineSensor {
   */
 enum RBModel {
     //% block="Mk1"
-    MK1,
+    Mk1,
     //% block="Mk2"
-    MK2, 
+    Mk2, 
     //% block="Mk3"
-    MK3
+    Mk3
 }
 
 /**
@@ -73,7 +73,7 @@ namespace robobit {
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 2Robobit model %model"
+    //% blockId="robobit_model" block="select 3Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
