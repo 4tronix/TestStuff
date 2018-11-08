@@ -240,7 +240,7 @@ namespace robobit {
         let echo = trig;
 
         let maxCmDistance = 500;
-
+        let d=10;
         pins.setPull(trig, PinPullMode.PullNone);
         for (let x=0; x<10; x++)
         {
@@ -251,7 +251,7 @@ namespace robobit {
             pins.digitalWritePin(trig, 0);
 
             // read pulse
-            let d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
             if (d>0)
                 break;
         }
