@@ -73,7 +73,7 @@ namespace robobit {
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 4Robobit model %model"
+    //% blockId="robobit_model" block="select 5Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
@@ -242,14 +242,19 @@ namespace robobit {
         let maxCmDistance = 500;
 
         pins.setPull(trig, PinPullMode.PullNone);
-        pins.digitalWritePin(trig, 0);
-        control.waitMicros(2);
-        pins.digitalWritePin(trig, 1);
-        control.waitMicros(10);
-        pins.digitalWritePin(trig, 0);
+        for (let x=0; x<10; x++)
+        {
+            pins.digitalWritePin(trig, 0);
+            control.waitMicros(2);
+            pins.digitalWritePin(trig, 1);
+            control.waitMicros(10);
+            pins.digitalWritePin(trig, 0);
 
-        // read pulse
-        let d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            // read pulse
+            let d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            if (d>0)
+                break;
+        }
 
         switch (unit) {
             case RBPingUnit.Centimeters: return d / 58;
