@@ -73,7 +73,7 @@ namespace robobit {
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 3Robobit model %model"
+    //% blockId="robobit_model" block="select 4Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
@@ -89,7 +89,9 @@ namespace robobit {
     //% blockId="robobit_motor_forward" block="drive at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=110
-    export function drive(speed: number): void {
+    export function drive(speed: number): void
+    {
+        setPWM(speed);
         motor(RBMotor.All, speed);
     }
 
@@ -104,7 +106,8 @@ namespace robobit {
     //% blockId="robobit_motor_forward_milliseconds" block="drive at speed %speed| for milliseconds %milliseconds"
     //% speed.min=-1023 speed.max=1023
     //% weight=131
-    export function driveMilliseconds(speed: number, milliseconds: number): void {
+    export function driveMilliseconds(speed: number, milliseconds: number): void
+    {
         drive(speed);
         basic.pause(milliseconds);
         drive(0);
@@ -267,6 +270,11 @@ namespace robobit {
     export function setClaw(degrees: number): void
     {
         pins.servoWritePin(AnalogPin.P13, Math.clamp(0, 80, degrees))
+    }
+
+    function setPWM(speed: number): void
+    {
+        pins.analogSetPeriod(AnalogPin.P0, 40000);
     }
 
     function neo(): neopixel.Strip
