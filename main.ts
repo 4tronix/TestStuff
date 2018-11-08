@@ -73,7 +73,7 @@ namespace robobit {
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 5Robobit model %model"
+    //% blockId="robobit_model" block="select 6Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
