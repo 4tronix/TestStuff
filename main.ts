@@ -2,21 +2,21 @@
   * Enumeration of servos
   */
 enum SVServos {
-    //% block="FL Hip"
+    //% block="FL_Hip"
     0,
-    //% block="FL Knee"
+    //% block="FL_Knee"
     1,
-    //% block="RL Hip"
+    //% block="RL_Hip"
     2,
-    //% block="RL Knee"
+    //% block="RL_Knee"
     3,
-    //% block="RR Hip"
+    //% block="RR_Hip"
     4,
-    //% block="RR Knee"
+    //% block="RR_Knee"
     5,
-    //% block="FR Hip"
+    //% block="FR_Hip"
     6,
-    //% block="FR Knee"
+    //% block="FR_Knee"
     7
 }
 
