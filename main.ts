@@ -39,6 +39,8 @@ enum RBModel {
     Mk1,
     //% block="Mk2"
     Mk2, 
+    //% block="Mk2/LedBar"
+    Mk2A, 
     //% block="Mk3"
     Mk3
 }
@@ -73,7 +75,7 @@ namespace robobit {
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 6Robobit model %model"
+    //% blockId="robobit_model" block="select Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
@@ -236,6 +238,8 @@ namespace robobit {
         // send pulse
         let trig = DigitalPin.P13;
 	if (_model == RBModel.Mk3)
+	    trig = DigitalPin.P15;
+	if (_model == RBModel.Mk2A)
 	    trig = DigitalPin.P15;
         let echo = trig;
 
