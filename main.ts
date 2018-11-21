@@ -1,29 +1,23 @@
 ﻿/**
   * Enumeration of servos
   */
-enum SVServos {
-    //% block="FL_Hip"
-    0,
-    //% block="FL_Knee"
-    1,
-    //% block="RL_Hip"
-    2,
-    //% block="RL_Knee"
-    3,
-    //% block="RR_Hip"
-    4,
-    //% block="RR_Knee"
-    5,
-    //% block="FR_Hip"
-    6,
-    //% block="FR_Knee"
-    7
+enum SVServos
+{
+    FL_Hip,
+    FL_Knee,
+    RL_Hip,
+    RL_Knee,
+    RR_Hip,
+    RR_Knee,
+    FR_Hip,
+    FR_Knee,
 }
 
 /**
   * Enumeration of directions.
   */
-enum SVRobotDirection {
+enum SVRobotDirection
+{
     //% block="left"
     Left,
     //% block="right"
@@ -36,13 +30,13 @@ enum SVRobotDirection {
  */
 
 //% weight=10 color=#e7660b icon="\uf709"
-namespace servos {
-
+namespace servos
+{
     let PCA = 0x40;
     let initI2C = false;
     let SERVOS = 0x06; // first servo address for start byte low
 
-// Helper functions
+    // Helper functions
     function initPCA(): void
     {
         let i2cData = pins.createBuffer(2);
@@ -72,8 +66,10 @@ namespace servos {
     //% weight = 60
     export function setServo(servo: number, angle: number): void
     {
-        if (! initI2C)
+        if (initI2C == false)
+        {
             initPCA();
+        }
         let i2cData = pins.createBuffer(2);
         // two bytes need setting for start and stop positions of the servo
         // servos start at SERVOS (0x06) and are then consecutive bloocks of 4 bytes
