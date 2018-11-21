@@ -40,7 +40,7 @@ namespace servos {
 
     let PCA = 0x40;
     let init = false;
-    let SERVOS = 0x06; // first servo address for start byte low
+    let SERVOS = 0x08; // first servo address
 
 // Helper functions
     function initPCA(): void
