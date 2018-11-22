@@ -39,6 +39,7 @@ namespace servos
     // Helper functions
     function initPCA(): void
     {
+/*
         let i2cData = pins.createBuffer(2);
         initI2C = true;
 
@@ -53,6 +54,7 @@ namespace servos
         i2cData[0] = 0;		// Mode 1 register
         i2cData[1] = 0x81;	// Wake up
         pins.i2cWriteBuffer(PCA, i2cData, false);
+*/
     }
 
 
@@ -65,7 +67,7 @@ namespace servos
     //% blockId="setServo" block="set servo %servo| to angle %angle"
     //% weight = 60
     export function setServo(servo: number, angle: number): void
-    {
+    {/*
         if (initI2C == false)
         {
             initPCA();
@@ -91,7 +93,7 @@ namespace servos
         i2cData[0] = SERVOS + servo*4 + 3;	// Servo register
         i2cData[1] = (stop >> 8);			// high byte stop
         pins.i2cWriteBuffer(PCA, i2cData, false);
-
+*/
     }
 
 
