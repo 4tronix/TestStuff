@@ -75,7 +75,7 @@ namespace Animoid {
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 15Robobit model %model"
+    //% blockId="robobit_model" block="select 16Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
