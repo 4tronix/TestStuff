@@ -1,7 +1,7 @@
 {
-    "name": "Servos",
+    "name": "Animoid",
     "version": "0.0.1",
-    "description": "Microsoft MakeCode package for 4tronix Servos",
+    "description": "Microsoft MakeCode package for Animoid",
     "license": "MIT",
     "dependencies": {
         "core": "*",

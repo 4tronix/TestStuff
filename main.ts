@@ -1,7 +1,7 @@
 ﻿/**
   * Enumeration of servos
   */
-enum SVServos
+enum ANServos
 {
     FL_Hip,
     FL_Knee,
@@ -16,7 +16,7 @@ enum SVServos
 /**
   * Enumeration of directions.
   */
-enum SVRobotDirection
+enum ANRobotDirection
 {
     //% block="left"
     Left,
@@ -30,7 +30,7 @@ enum SVRobotDirection
  */
 
 //% weight=10 color=#e7660b icon="\uf709"
-namespace servos
+namespace Animoid
 {
     let PCA = 0x40;
     let initI2C = false;
@@ -66,7 +66,7 @@ namespace servos
       */
     //% blockId="setServo" block="set servo %servo| to angle %angle"
     //% weight = 60
-    export function setServo(servo: number, angle: number): void
+    export function ANsetServo(servo: number, angle: number): void
     {/*
         if (initI2C == false)
         {
