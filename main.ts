@@ -61,7 +61,7 @@ enum RBPingUnit {
  * Custom blocks
  */
 
-//% weight=10 color=#e7660b icon="\uf709"
+//% weight=10 color=#e7660b icon="\uf6d3"
 namespace Animoid {
 
     let ledBar: neopixel.Strip;
@@ -75,7 +75,7 @@ namespace Animoid {
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 14Robobit model %model"
+    //% blockId="robobit_model" block="select 15Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
