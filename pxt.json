@@ -1,7 +1,7 @@
 {
-    "name": "RoboBit",
+    "name": "Animoid",
     "version": "1.1.1",
-    "description": "Microsoft MakeCode package for 4tronix RoboBit Buggy",
+    "description": "Microsoft MakeCode package for 4tronix Animoid",
     "license": "Apache",
     "dependencies": {
         "core": "*",
@@ -10,7 +10,6 @@
     "files": [
         "README.md",
         "main.ts",
-        "_locales/no/robobit-strings.json"
     ],
     "testFiles": [
         "tests.ts"
