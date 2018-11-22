@@ -1,8 +1,8 @@
 {
-    "name": "Animoid",
-    "version": "0.0.1",
-    "description": "Microsoft MakeCode package for Animoid",
-    "license": "MIT",
+    "name": "RoboBit",
+    "version": "1.1.1",
+    "description": "Microsoft MakeCode package for 4tronix RoboBit Buggy",
+    "license": "Apache",
     "dependencies": {
         "core": "*",
         "neopixel": "github:microsoft/pxt-neopixel#v0.6.2"
@@ -10,6 +10,7 @@
     "files": [
         "README.md",
         "main.ts",
+        "_locales/no/robobit-strings.json"
     ],
     "testFiles": [
         "tests.ts"
