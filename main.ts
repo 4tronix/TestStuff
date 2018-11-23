@@ -65,137 +65,16 @@ enum RBPingUnit {
 namespace Animoid {
 
     let _model: RBModel;
-    let larsson: number;
-    let scandir: number;
-    let ledCount=8;
 
     /**
       * Select Model of Robobit (Determines Pin usage)
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 18Robobit model %model"
+    //% blockId="robobit_model" block="select 19Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
-    }
-
-    /**
-      * Drive robot forward (or backward) at speed.
-      *
-      * @param speed speed of motor between -1023 and 1023.
-      */
-    //% subcategory=Motors
-    //% group=Motors
-    //% blockId="robobit_motor_forward" block="drive at speed %speed"
-    //% speed.min=-1023 speed.max=1023
-    //% weight=110
-    export function drive(speed: number): void
-    {
-        setPWM(speed);
-        motor(RBMotor.All, speed);
-    }
-
-    /**
-      * Drive robot forward (or backward) at speed for milliseconds.
-      *
-      * @param speed speed of motor between -1023 and 1023.
-      * @param milliseconds duration in milliseconds to drive forward for, then stop.
-      */
-    //% subcategory=Motors
-    //% group=Motors
-    //% blockId="robobit_motor_forward_milliseconds" block="drive at speed %speed| for milliseconds %milliseconds"
-    //% speed.min=-1023 speed.max=1023
-    //% weight=131
-    export function driveMilliseconds(speed: number, milliseconds: number): void
-    {
-        drive(speed);
-        basic.pause(milliseconds);
-        drive(0);
-    }
-
-    /**
-      * Turn robot in direction at speed.
-      *
-      * @param direction direction to turn.
-      * @param speed speed of motor between 0 and 1023.
-      */
-    //% subcategory=Motors
-    //% group=Motors
-    //% blockId="robobit_turn" block="turn in direction %direction|speed %speed"
-    //% speed.min=0 speed.max=1023
-    //% weight=109
-    export function driveTurn(direction: RBRobotDirection, speed: number): void {
-        if (speed < 0) speed = 0;
-
-        if (direction == RBRobotDirection.Left) {
-            motor(RBMotor.Left, -speed);
-            motor(RBMotor.Right, speed);
-        } else if (direction == RBRobotDirection.Right) {
-            motor(RBMotor.Left, speed);
-            motor(RBMotor.Right, -speed);
-        }
-    }
-
-    /**
-      * Turn robot in direction at speed for milliseconds.
-      *
-      * @param direction direction to turn.
-      * @param speed speed of motor between 0 and 1023.
-      * @param milliseconds duration in milliseconds to turn for, then stop.
-      */
-    //% subcategory=Motors
-    //% group=Motors
-    //% blockId="robobit_turn_milliseconds" block="turn in direction %direction|speed %speed| for milliseconds %milliseconds"
-    //% speed.min=0 speed.max=1023
-    //% weight=130
-    export function driveTurnMilliseconds(direction: RBRobotDirection, speed: number, milliseconds: number): void {
-        driveTurn(direction, speed)
-        basic.pause(milliseconds)
-        motor(RBMotor.All, 0)
-    }
-
-    /**
-      * Drive motor(s) forward or reverse.
-      *
-      * @param motor motor to drive.
-      * @param speed speed of motor
-      */
-    //% subcategory=Motors
-    //% group=Motors
-    //% blockId="robobit_motor" block="drive motor %motor|speed %speed"
-    //% weight=100
-    export function motor(motor: RBMotor, speed: number): void {
-        let forward = (speed >= 0);
-
-        if (speed > 1023) {
-            speed = 1023;
-        } else if (speed < -1023) {
-            speed = -1023;
-        }
-
-        let realSpeed = speed;
-        if (!forward) {
-            if (realSpeed >= -200)
-                realSpeed = (realSpeed * 19) / 6;
-            else if (realSpeed >= -400)
-                realSpeed = realSpeed * 2;
-            else if (realSpeed >= -600)
-                realSpeed = (realSpeed * 3) / 2;
-            else if (realSpeed >= -800)
-                realSpeed = (realSpeed * 5) / 4;
-            realSpeed = 1023 + realSpeed; // realSpeed is negative!
-        }
-
-        if ((motor == RBMotor.Left) || (motor == RBMotor.All)) {
-            pins.analogWritePin(AnalogPin.P0, realSpeed);
-            pins.digitalWritePin(DigitalPin.P8, forward ? 0 : 1);
-        }
-
-        if ((motor == RBMotor.Right) || (motor == RBMotor.All)) {
-            pins.analogWritePin(AnalogPin.P1, realSpeed);
-            pins.digitalWritePin(DigitalPin.P12, forward ? 0 : 1);
-        }
     }
 
     /**
