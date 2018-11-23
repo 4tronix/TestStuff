@@ -64,7 +64,6 @@ enum RBPingUnit {
 //% weight=10 color=#e7660b icon="\uf188"
 namespace Animoid {
 
-    let ledBar: neopixel.Strip;
     let _model: RBModel;
     let larsson: number;
     let scandir: number;
@@ -75,7 +74,7 @@ namespace Animoid {
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 17Robobit model %model"
+    //% blockId="robobit_model" block="select 18Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
@@ -286,165 +285,5 @@ namespace Animoid {
         pins.analogSetPeriod(AnalogPin.P0, 40000);
     }
 
-    function neo(): neopixel.Strip
-    {
-        if (!ledBar)
-        {
-            ledBar = neopixel.create(DigitalPin.P13, 8, NeoPixelMode.RGB);
-            ledBar.setBrightness(40);
-        }
-        return ledBar;
-    }
 
-    /**
-      * Sets all pixels to a given colour
-      *
-      * @param rgb RGB colour of the pixel
-      */
-    //% subcategory=LedBar
-    //% group=LedBar
-    //% blockId="cubebit_set_color" block="set all pixels to %rgb=neopixel_colors"
-    //% weight=80
-    export function setColor(rgb: number): void
-    {
-        neo().showColor(rgb);
-    }
-
-    /**
-     * Set a pixel to a given colour (using colour names).
-     *
-     * @param ID location of the pixel in the cube from 0
-     * @param rgb RGB color of the LED
-     */
-    //% subcategory=LedBar
-    //% group=LedBar
-    //% blockId="robobit_set_pixel_color" block="set pixel color at %ID|to %rgb=neopixel_colors"
-    //% weight=80
-    export function setPixel(ID: number, rgb: number): void
-    {
-        neo().setPixelColor(ID, rgb);
-    }
-
-    /**
-     * Convert from RGB values to colour number
-     *
-     * @param red Red value of the LED 0:255
-     * @param green Green value of the LED 0:255
-     * @param blue Blue value of the LED 0:255
-     */
-    //% subcategory=LedBar
-    //% group=LedBar
-    //% blockId="robobit_convertRGB" block="convert from red %red| green %green| blue %bblue"
-    //% weight=80
-    export function convertRGB(r: number, g: number, b: number): number
-    {
-        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
-    }
-
-    /**
-      * Show pixels
-      */
-    //% subcategory=LedBar
-    //% group=LedBar
-    //% blockId="robobit_show" block="show Led Bar changes"
-    //% weight=76
-    export function neoShow(): void
-    {
-        neo().show();
-    }
-
-    /**
-      * Clear leds.
-      */
-    //% subcategory=LedBar
-    //% group=LedBar
-    //% blockId="robobit_clear" block="clear all pixels"
-    //% weight=75
-    export function neoClear(): void
-    {
-        neo().clear();
-    }
-
-    /**
-      * Shows a rainbow pattern on all pixels
-      */
-    //% subcategory=LedBar
-    //% group=LedBar
-    //% blockId="robobit_rainbow" block="set Led Bar rainbow"
-    //% weight=70
-    export function neoRainbow(): void
-    {
-        neo().showRainbow(1, 360);
-    }
-
-    /**
-     * Shift LEDs forward and clear with zeros.
-     */
-    //% subcategory=LedBar
-    //% group=LedBar
-    //% blockId="robobit_shift" block="shift pixels"
-    //% weight=66
-    export function neoShift(): void
-    {
-        neo().shift(1);
-    }
-
-    /**
-     * Rotate LEDs forward.
-     */
-    //% subcategory=LedBar
-    //% group=LedBar
-    //% blockId="robobit_rotate" block="rotate pixels"
-    //% weight=65
-    export function neoRotate(): void
-    {
-        neo().rotate(1);
-    }
-
-    /**
-     * Set the brightness of the Led Bar. Note this only applies to future writes to the strip.
-     *
-     * @param brightness a measure of LED brightness in 0-255. eg: 255
-     */
-    //% subcategory=LedBar
-    //% group=LedBar
-    //% blockId="robobit_brightness" block="set Led Bar brightness %brightness"
-    //% brightness.min=0 brightness.max=255
-    //% weight=10
-    export function neoBrightness(brightness: number): void
-    {
-        neo().setBrightness(brightness);
-    }
-
-    /**
-     * Use centre 6 LEDs as Larsson Scanner. Each call moves the scan by one pixel
-     */
-    //% subcategory=LedBar
-    //% group=LedBar
-    //% blockId="robobit_ledScan" block="scan centre pixels"
-    //% weight=60
-    export function ledScan(): void
-    {
-        if (!larsson)
-        {
-            larsson = 1;
-            scandir = 1;
-        }
-        larsson += scandir;
-        if (larsson >= (ledCount - 2))
-            scandir = -1;
-        else if (larsson <= 1)
-            scandir = 1;
-        for (let x = 1; x < (ledCount-1); x++)
-        {
-            if ((x == (larsson - 2)) || (x == (larsson + 2)))
-                setPixel(x, 0x070000);
-            else if ((x == (larsson - 1)) || (x == (larsson + 1)))
-                setPixel(x, 0x0f0000);
-            else if (x == larsson)
-                setPixel(x, 0xff0000);
-            else
-                setPixel(x, 0);
-        }
-    }
 }
