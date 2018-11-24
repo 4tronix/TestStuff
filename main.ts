@@ -73,7 +73,7 @@ namespace Animoid {
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 21Robobit model %model"
+    //% blockId="robobit_model" block="select 22Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
@@ -96,6 +96,44 @@ namespace Animoid {
 
         i2cData[0] = 0;		// Mode 1 register
         i2cData[1] = 0x81;	// Wake up
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+*/
+    }
+
+    /**
+      * Set Servo Position
+      *
+      * @param servo Servo number (0 to 15)
+      * @param angle degrees to turn servo (-90 to +90)
+      */
+    //% blockId="setServo" block="set servo %servo| to angle %angle"
+    //% weight = 60
+    export function ANsetServo(servo: number, angle: number): void
+    {/*
+        if (initI2C == false)
+        {
+            initPCA();
+        }
+        let i2cData = pins.createBuffer(2);
+        // two bytes need setting for start and stop positions of the servo
+        // servos start at SERVOS (0x06) and are then consecutive bloocks of 4 bytes
+        let start = 0;
+        let stop = 175 + ((angle + 90) * 400) / 180;
+
+        i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
+        i2cData[1] = 0x00;			// low byte start - always 0
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
+        i2cData[1] = 0x00;			// high byte start - always 0
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = SERVOS + servo*4 + 2;	// Servo register
+        i2cData[1] = (stop & 0xff);		// low byte stop
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = SERVOS + servo*4 + 3;	// Servo register
+        i2cData[1] = (stop >> 8);			// high byte stop
         pins.i2cWriteBuffer(PCA, i2cData, false);
 */
     }
