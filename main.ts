@@ -73,7 +73,7 @@ namespace Animoid {
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 22Robobit model %model"
+    //% blockId="robobit_model" block="select 23Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
@@ -82,7 +82,7 @@ namespace Animoid {
     // Helper functions
     function initPCA(): void
     {
-/*
+
         let i2cData = pins.createBuffer(2);
         initI2C = true;
 
@@ -97,7 +97,7 @@ namespace Animoid {
         i2cData[0] = 0;		// Mode 1 register
         i2cData[1] = 0x81;	// Wake up
         pins.i2cWriteBuffer(PCA, i2cData, false);
-*/
+
     }
 
     /**
@@ -109,7 +109,7 @@ namespace Animoid {
     //% blockId="setServo" block="set servo %servo| to angle %angle"
     //% weight = 60
     export function ANsetServo(servo: number, angle: number): void
-    {/*
+    {
         if (initI2C == false)
         {
             initPCA();
@@ -135,7 +135,7 @@ namespace Animoid {
         i2cData[0] = SERVOS + servo*4 + 3;	// Servo register
         i2cData[1] = (stop >> 8);			// high byte stop
         pins.i2cWriteBuffer(PCA, i2cData, false);
-*/
+
     }
 
 }
