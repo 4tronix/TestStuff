@@ -67,13 +67,14 @@ namespace Animoid {
     let _model: RBModel;
     let PCA = 0x40;
     let initI2C = false;
+    let SERVOS = 0x06; // first servo address for start byte low
 
     /**
       * Select Model of Robobit (Determines Pin usage)
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 23Robobit model %model"
+    //% blockId="robobit_model" block="select 24Robobit model %model"
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
