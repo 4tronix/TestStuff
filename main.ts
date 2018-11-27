@@ -72,12 +72,12 @@ namespace Animoid {
     /**
       * Select Model of Robobit (Determines Pin usage)
       *
-      * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
+      * @param i2c Address of PC9685 (64 or 106)
       */
-    //% blockId="robobit_model" block="select 25Robobit model %model"
+    //% blockId="i2c_address" block="select 26 I2C address %i2c"
     //% weight=110
-    export function select_model(model: RBModel): void {
-        _model = model;
+    export function i2c_address(i2c: number): void {
+        PCA = i2c;
     }
 
     // Helper functions
