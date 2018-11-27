@@ -65,16 +65,16 @@ enum RBPingUnit {
 namespace Animoid {
 
     let _model: RBModel;
-    let PCA = 0x6A;
+    let PCA = 0x6A;	// i2c address of 4tronix Animoid servo controller
     let initI2C = false;
     let SERVOS = 0x06; // first servo address for start byte low
 
     /**
-      * Select Model of Robobit (Determines Pin usage)
+      * Select I2C Address of PCA9685 chip
       *
-      * @param i2c Address of PC9685 (64 or 106)
+      * @param i2c Address of PCA9685 (64 or 106)
       */
-    //% blockId="i2c_address" block="select 26 I2C address %i2c"
+    //% blockId="i2c_address" block="select 27 I2C address %i2c"
     //% weight=110
     export function i2c_address(i2c: number): void {
         PCA = i2c;
