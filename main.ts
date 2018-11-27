@@ -74,7 +74,7 @@ namespace Animoid {
       *
       * @param i2c Address of PCA9685 (64 or 106)
       */
-    //% blockId="i2c_address" block="select 29 I2C address %i2c"
+    //% blockId="i2c_address" block="select 30 I2C address %i2c"
     //% weight=110
     export function i2c_address(i2c: number): void {
         PCA = i2c;
@@ -121,7 +121,7 @@ namespace Animoid {
         // servos start at SERVOS (0x06) and are then consecutive bloocks of 4 bytes
         let start = 0;
 //        let stop = 175 + ((angle + 90) * 750) / 180;
-        let stop = 369 + angle * 246 / 90;
+        let stop = 369 + angle * 275 / 90;
 
         i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
         i2cData[1] = 0x00;			// low byte start - always 0
