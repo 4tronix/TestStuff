@@ -12,6 +12,21 @@ enum RBMotor {
 }
 
 /**
+  * Enumeration of servos
+  */
+enum Servos
+{
+    FL_Hip,
+    FL_Knee,
+    RL_Hip,
+    RL_Knee,
+    RR_Hip,
+    RR_Knee,
+    FR_Hip,
+    FR_Knee
+}
+
+/**
   * Enumeration of directions.
   */
 enum RBRobotDirection {
@@ -70,21 +85,6 @@ namespace Animoid {
     let initI2C = false;
     let SERVOS = 0x06; // first servo address for start byte low
 
-    /**
-      * Enumeration of servos
-      */
-    export enum Servos
-    {
-        FL_Hip,
-        FL_Knee,
-        RL_Hip,
-        RL_Knee,
-        RR_Hip,
-        RR_Knee,
-        FR_Hip,
-        FR_Knee
-    }
-
     // Helper functions
 
     /**
@@ -92,7 +92,7 @@ namespace Animoid {
       *
       * @param i2c Address of PCA9685. eg: 106
       */
-    //% blockId="i2c_address" block="select 32 I2C address %i2c"
+    //% blockId="i2c_address" block="select 33 I2C address %i2c"
     //% weight=90
     export function i2c_address(i2c: number): void
     {
