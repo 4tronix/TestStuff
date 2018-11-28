@@ -97,8 +97,10 @@ namespace Animoid {
     let PCA = 0x6A;	// i2c address of 4tronix Animoid servo controller
     let initI2C = false;
     let SERVOS = 0x06; // first servo address for start byte low
-    let lowerLength = 57;	// distance from servo shaft to tip of leg/foot
-    let upperLength = 46;	// distance between servo shafts
+    let lLower = 57;	// distance from servo shaft to tip of leg/foot
+    let lUpper = 46;	// distance between servo shafts
+    let lLower2 = lLower * lLower;	// no point in doing this every time
+    let lUpper2 = lUpper * lUpper;
 
     // Helper functions
 
@@ -107,7 +109,7 @@ namespace Animoid {
       *
       * @param i2c Address of PCA9685. eg: 106
       */
-    //% blockId="i2c_address" block="select 34 I2C address %i2c"
+    //% blockId="i2c_address" block="select 35 I2C address %i2c"
     //% weight=90
     export function i2c_address(i2c: number): void
     {
@@ -189,13 +191,20 @@ namespace Animoid {
       * Inverse kinematics from learnaboutrobots.com/inverseKinematics.htm
       *
       * @param limb Determines which limb to move. eg. FrontLeft
-      * @param xAxis Position on X-axis in mm
+      * @param xpos Position on X-axis in mm
       * @param height Height of hip servo shaft above foot
       */
-    //% blockId="setLimb" block="set %limb| to position %xAxis| height %height"
+    //% blockId="setLimb" block="set %limb| to position %xxpos| height %height"
     //% weight = 60
-    export function setLimb(limb: Limbs, xAxis: number, height: number): void
+    export function setLimb(limb: Limbs, xpos: number, height: number): void
     {
+        let B2 = xpos*xpos + height*height;	// from: B2 = Xhand2 + Yhand2
+        let q1 = Math.atan2(height/xpos);	// from: q1 = ATan2(Yhand/Xhand)
+        let q2 = Math.acos((lUpper2 - lLower2 + B2) / (2 * lUpper * Math.sqrt(B2)));
+        let hip = q1 + q2;
+        let knee = Math.acos((lUpper2 + lLower2 - B2) / (2 * lUpper * lLower));
+        setServo(limb*2, hip);
+        setServo(limb*2+1, knee);
     }
 
 }
