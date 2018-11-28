@@ -109,7 +109,7 @@ namespace Animoid {
       *
       * @param i2c Address of PCA9685. eg: 106
       */
-    //% blockId="i2c_address" block="select 35 I2C address %i2c"
+    //% blockId="i2c_address" block="select 36 I2C address %i2c"
     //% weight=90
     export function i2c_address(i2c: number): void
     {
@@ -194,7 +194,7 @@ namespace Animoid {
       * @param xpos Position on X-axis in mm
       * @param height Height of hip servo shaft above foot
       */
-    //% blockId="setLimb" block="set %limb| to position %xxpos| height %height"
+    //% blockId="setLimb" block="set %limb| to position %xpos| height %height"
     //% weight = 60
     export function setLimb(limb: Limbs, xpos: number, height: number): void
     {
