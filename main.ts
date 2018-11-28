@@ -73,7 +73,7 @@ namespace Animoid {
     /**
       * Enumeration of servos
       */
-    export enum ANServos
+    export enum Servos
     {
         FL_Hip,
         FL_Knee,
@@ -85,19 +85,32 @@ namespace Animoid {
         FR_Knee
     }
 
+    // Helper functions
+
     /**
       * Select I2C Address of PCA9685 chip
       *
-      * @param i2c Address of PCA9685 (64 or 106)
+      * @param i2c Address of PCA9685. eg: 106
       */
-    //% blockId="i2c_address" block="select 31 I2C address %i2c"
-    //% weight=110
+    //% blockId="i2c_address" block="select 32 I2C address %i2c"
+    //% weight=90
     export function i2c_address(i2c: number): void
     {
         PCA = i2c;
     }
 
-    // Helper functions
+    /**
+      * Return servo number from name
+      *
+      * @param value servo name
+      */
+    //% blockId="getServo" block="%value"
+    //% weight=80
+    export function getServo(value: Servos): number
+    {
+        return value;
+    }
+
     function initPCA(): void
     {
 
@@ -127,7 +140,7 @@ namespace Animoid {
     //% blockId="setServo" block="set servo %servo| to angle %angle"
     //% angle.min = -90 angle.max = 90
     //% weight = 60
-    export function ANsetServo(servo: number, angle: number): void
+    export function setServo(servo: number, angle: number): void
     {
         if (initI2C == false)
         {
