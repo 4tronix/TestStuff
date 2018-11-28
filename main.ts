@@ -23,7 +23,20 @@ enum Servos
     RR_Hip,
     RR_Knee,
     FR_Hip,
-    FR_Knee
+    FR_Knee,
+    Head,
+    Tail
+}
+
+/**
+  * Enumeration of limbs
+  */
+enum Limbs
+{
+    FrontLeft,
+    RearLeft,
+    RearRight,
+    FrontRight
 }
 
 /**
@@ -84,6 +97,8 @@ namespace Animoid {
     let PCA = 0x6A;	// i2c address of 4tronix Animoid servo controller
     let initI2C = false;
     let SERVOS = 0x06; // first servo address for start byte low
+    let lowerLength = 57;	// distance from servo shaft to tip of leg/foot
+    let upperLength = 46;	// distance between servo shafts
 
     // Helper functions
 
@@ -92,7 +107,7 @@ namespace Animoid {
       *
       * @param i2c Address of PCA9685. eg: 106
       */
-    //% blockId="i2c_address" block="select 33 I2C address %i2c"
+    //% blockId="i2c_address" block="select 34 I2C address %i2c"
     //% weight=90
     export function i2c_address(i2c: number): void
     {
@@ -132,14 +147,14 @@ namespace Animoid {
     }
 
     /**
-      * Set Servo Position
+      * Set Servo Position by Angle
       *
       * @param servo Servo number (0 to 15)
       * @param angle degrees to turn servo (-90 to +90)
       */
     //% blockId="setServo" block="set servo %servo| to angle %angle"
     //% angle.min = -90 angle.max = 90
-    //% weight = 60
+    //% weight = 70
     export function setServo(servo: number, angle: number): void
     {
         if (initI2C == false)
@@ -167,7 +182,20 @@ namespace Animoid {
         i2cData[0] = SERVOS + servo*4 + 3;	// Servo register
         i2cData[1] = (stop >> 8);			// high byte stop
         pins.i2cWriteBuffer(PCA, i2cData, false);
+    }
 
+    /**
+      * Set Position of Foot in mm from hip servo shaft
+      * Inverse kinematics from learnaboutrobots.com/inverseKinematics.htm
+      *
+      * @param limb Determines which limb to move. eg. FrontLeft
+      * @param xAxis Position on X-axis in mm
+      * @param height Height of hip servo shaft above foot
+      */
+    //% blockId="setLimb" block="set %limb| to position %xAxis| height %height"
+    //% weight = 60
+    export function setLimb(limb: Limbs, xAxis: number, height: number): void
+    {
     }
 
 }
