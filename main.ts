@@ -109,7 +109,7 @@ namespace Animoid {
       *
       * @param i2c Address of PCA9685 (64 or 106)
       */
-    //% blockId="i2c_address" block="select 46 I2C address %i2c"
+    //% blockId="i2c_address" block="select 47 I2C address %i2c"
     //% weight=90
     export function i2c_address(i2c: number = 64): void
     {
@@ -206,8 +206,8 @@ namespace Animoid {
         let knee = Math.floor(k*180/Math.PI);
         basic.showNumber(hip);
         basic.showNumber(knee);
-        setServo(limb*2, hip);
-        setServo(limb*2+1, knee);
+        setServo(limb*2, hip-90);
+        setServo(limb*2+1, knee-90);
     }
 
 }
