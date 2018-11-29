@@ -109,7 +109,7 @@ namespace Animoid {
       *
       * @param i2c Address of PCA9685 (64 or 106)
       */
-    //% blockId="i2c_address" block="select 45 I2C address %i2c"
+    //% blockId="i2c_address" block="select 46 I2C address %i2c"
     //% weight=90
     export function i2c_address(i2c: number = 64): void
     {
@@ -201,10 +201,11 @@ namespace Animoid {
         let B2 = xpos*xpos + height*height;	// from: B2 = Xhand2 + Yhand2
         let q1 = Math.atan2(height, xpos);	// from: q1 = ATan2(Yhand/Xhand)
         let q2 = Math.acos((lUpper2 - lLower2 + B2) / (2 * lUpper * Math.sqrt(B2)));
-        let hip = Math.floor(q1 + q2);
-        let knee = Math.acos((lUpper2 + lLower2 - B2) / (2 * lUpper * lLower));
-        basic.showNumber(limb*2);
+        let hip = Math.floor((q1 + q2)*180/Math.PI);	// convert from radians to integer degrees
+        let k = Math.acos((lUpper2 + lLower2 - B2) / (2 * lUpper * lLower));
+        let knee = Math.floor(k*180/Math.PI);
         basic.showNumber(hip);
+        basic.showNumber(knee);
         setServo(limb*2, hip);
         setServo(limb*2+1, knee);
     }
