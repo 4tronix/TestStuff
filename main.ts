@@ -40,6 +40,15 @@ enum Limbs
 }
 
 /**
+  * Enumeration of servo enables
+  */
+enum States
+{
+    Enable,
+    Disable
+}
+
+/**
   * Enumeration of directions.
   */
 enum RBRobotDirection {
@@ -94,7 +103,7 @@ enum RBPingUnit {
 namespace Animoid {
 
     let _model: RBModel;
-    let PCA = 0x6A;	// i2c address of 4tronix Animoid servo controller
+    let PCA = 0x40;	// i2c address of 4tronix Animoid servo controller
     let initI2C = false;
     let SERVOS = 0x06; // first servo address for start byte low
     let lLower = 57;	// distance from servo shaft to tip of leg/foot
@@ -105,15 +114,15 @@ namespace Animoid {
     // Helper functions
 
     /**
-      * Select I2C Address of PCA9685 chip
+      * Enable/Disable Servos
       *
-      * @param i2c Address of PCA9685 (64 or 106)
+      * @param state Select Enabled or Disabled
       */
-    //% blockId="i2c_address" block="select 47 I2C address %i2c"
+    //% blockId="enableServos" block="%state all 48 servos"
     //% weight=90
-    export function i2c_address(i2c: number = 64): void
+    export function enableServos(state: States): void
     {
-        PCA = i2c;
+        pins.digitalWritePin(DigitalPin.P16, state);
     }
 
     /**
@@ -146,6 +155,7 @@ namespace Animoid {
         i2cData[1] = 0x81;	// Wake up
         pins.i2cWriteBuffer(PCA, i2cData, false);
 
+	pins.digitalWritePin(DigitalPin.P16, 0);	// enable servos at start
     }
 
     /**
