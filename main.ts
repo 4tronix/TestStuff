@@ -71,6 +71,7 @@ namespace robobit {
     let ledCount = 8;
     let leftSpeed = 0;
     let rightSpeed = 0;
+    let _scanning = false;
 
     /**
       * Select Model of Robobit (Determines Pins used)
@@ -81,6 +82,38 @@ namespace robobit {
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
+    }
+
+    /**
+      * Start Scanner
+      *
+      */
+    //% block
+    export function startScanner(): void
+    {
+        if(_scanning == false)
+        {
+            _scanning = true;
+            control.inBackground(() =>
+            {
+                while (_scanning)
+                {                                
+                    ledScan();
+                    neoShow();
+                    basic.pause(50);
+                }
+            })
+        }
+    }
+
+    /**
+      * Stop Scanner
+      *
+      */
+    //% block
+    export function stopScanner(): void
+    {
+        _scanning = false;
     }
 
     /**
