@@ -87,9 +87,11 @@ namespace robobit {
     /**
       * Start Scanner
       *
+      * @param delay time in ms between scan steps. eg: 100, 50, 200, 500
       */
     //% block
-    export function startScanner(): void
+    //% delay.min=1 delay.max=10000
+    export function startScanner(delay): void
     {
         if(_scanning == false)
         {
@@ -100,7 +102,7 @@ namespace robobit {
                 {                                
                     ledScan();
                     neoShow();
-                    basic.pause(50);
+                    basic.pause(delay);
                 }
             })
         }
