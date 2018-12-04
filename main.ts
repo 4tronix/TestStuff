@@ -476,7 +476,7 @@ namespace robobit {
       * @param color the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 19 scan %color=RBColors| with %delay|(ms)"
+    //% blockId="rb_startScanner" block="start 20 scan %color=RBColors| with %delay|(ms)"
     //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
@@ -506,9 +506,9 @@ namespace robobit {
       */
     function reduce(color: number, reducer: number): number
     {
-        let red = ((color & 0xff0000) / reducer) & 0xff0000);
-        let green = ((color & 0x00ff00) / reducer) & 0x00ff00);
-        let blue = ((color & 0x0000ff) / reducer) & 0x0000ff);
+        let red = ((color & 0xff0000) / reducer) & 0xff0000;
+        let green = ((color & 0x00ff00) / reducer) & 0x00ff00;
+        let blue = ((color & 0x0000ff) / reducer) & 0x0000ff;
         return red + green + blue;
     }
 
