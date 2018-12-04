@@ -473,11 +473,10 @@ namespace robobit {
       * Start Scanner
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 12 scanner speed %delay"
+    //% blockId="rb_startScanner" block="start 13 scanner speed %delay"
     //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
-    //% weight=90 blockGap=8
     export function startScanner(delay: number): void
     {
         if(_scanning == false)
@@ -502,6 +501,7 @@ namespace robobit {
     //% block
     //% subcategory=LedBar
     //% group=LedBar
+    //% weight=90 blockGap=8
     export function stopScanner(): void
     {
         _scanning = false;
