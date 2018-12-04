@@ -58,6 +58,32 @@ enum RBPingUnit {
 }
 
 /**
+ * Pre-Defined pixel colours
+ */
+enum RBColors {
+    //% block=red
+    Red = 0xff0000,
+    //% block=orange
+    Orange = 0xffa500,
+    //% block=yellow
+    Yellow = 0xffff00,
+    //% block=green
+    Green = 0x00ff00,
+    //% block=blue
+    Blue = 0x0000ff,
+    //% block=indigo
+    Indigo = 0x4b0082,
+    //% block=violet
+    Violet = 0x8a2be2,
+    //% block=purple
+    Purple = 0xff00ff,
+    //% block=white
+    White = 0xffffff,
+    //% block=black
+    Black = 0x000000
+}
+
+/**
  * Custom blocks
  */
 /** //% weight=10 color=#0fbc11 icon="\uf1ba" */
@@ -82,40 +108,6 @@ namespace robobit {
     //% weight=110
     export function select_model(model: RBModel): void {
         _model = model;
-    }
-
-    /**
-      * Start Scanner
-      *
-      * @param delay time in ms between scan steps. eg: 100, 50, 200, 500
-      */
-    //% blockId="rb_startScanner" block="start 05 scanner with delay %delay"
-    //% delay.min=1 delay.max=10000
-    export function startScanner(delay: number): void
-    {
-        if(_scanning == false)
-        {
-            _scanning = true;
-            control.inBackground(() =>
-            {
-                while (_scanning)
-                {                                
-                    ledScan();
-                    neoShow();
-                    basic.pause(delay);
-                }
-            })
-        }
-    }
-
-    /**
-      * Stop Scanner
-      *
-      */
-    //% block
-    export function stopScanner(): void
-    {
-        _scanning = false;
     }
 
     /**
@@ -462,6 +454,53 @@ namespace robobit {
     export function neoBrightness(brightness: number): void
     {
         neo().setBrightness(brightness);
+    }
+
+    /**
+      * Choose Colour
+      *
+      * @param color Standard RGB Led Colours
+      */
+    //% block
+    export function getColour(color: RBColors): number
+    {
+        return color;
+    }
+
+    /**
+      * Start Scanner
+      *
+      * @param delay time in ms between scan steps, eg: 100,50,200,500
+      */
+    //% blockId="rb_startScanner" block="start 06 scanner with delay %delay"
+    //% group=LedBar
+    //% delay.min=1 delay.max=10000
+    export function startScanner(delay: number): void
+    {
+        if(_scanning == false)
+        {
+            _scanning = true;
+            control.inBackground(() =>
+            {
+                while (_scanning)
+                {                                
+                    ledScan();
+                    neoShow();
+                    basic.pause(delay);
+                }
+            })
+        }
+    }
+
+    /**
+      * Stop Scanner
+      *
+      */
+    //% block
+    //% group=LedBar
+    export function stopScanner(): void
+    {
+        _scanning = false;
     }
 
     /**
