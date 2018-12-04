@@ -89,9 +89,9 @@ namespace robobit {
       *
       * @param delay time in ms between scan steps. eg: 100, 50, 200, 500
       */
-    //% block
+    //% blockId="rb_startScanner" block="start 05 scanner with delay %delay"
     //% delay.min=1 delay.max=10000
-    export function startScanner(delay): void
+    export function startScanner(delay: number): void
     {
         if(_scanning == false)
         {
