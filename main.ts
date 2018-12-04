@@ -457,11 +457,13 @@ namespace robobit {
     }
 
     /**
-      * Choose Colour
+      * Gets numeric value of colour
       *
       * @param color Standard RGB Led Colours
       */
-    //% block
+    //% subcategory=LedBar
+    //% group=LedBar
+    //% block=%color
     export function getColour(color: RBColors): number
     {
         return color;
@@ -472,7 +474,8 @@ namespace robobit {
       *
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 06 scanner with delay %delay"
+    //% blockId="rb_startScanner" block="start 07 scanner with delay %delay"
+    //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
     export function startScanner(delay: number): void
@@ -497,6 +500,7 @@ namespace robobit {
       *
       */
     //% block
+    //% subcategory=LedBar
     //% group=LedBar
     export function stopScanner(): void
     {
