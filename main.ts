@@ -473,7 +473,7 @@ namespace robobit {
       * Start Scanner
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 11 scanner speed %delay|(ms)"
+    //% blockId="rb_startScanner" block="start 12 scanner speed %delay"
     //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
