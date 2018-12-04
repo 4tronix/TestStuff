@@ -98,6 +98,9 @@ namespace robobit {
     let leftSpeed = 0;
     let rightSpeed = 0;
     let _scanning = false;
+    let scanColor1 = 0xff0000;
+    let scanColor2 = 0x0f0000;
+    let scanColor3 = 0x030000;
 
     /**
       * Select Model of Robobit (Determines Pins used)
@@ -242,7 +245,7 @@ namespace robobit {
     //% subcategory=Sensors
     //% group=Sensors
     //% blockId="robobit_read_line" block="read line sensor %sensor"
-    //% weight=90
+    //% weight=80
     export function readLine(sensor: RBLineSensor): number {
         if (sensor == RBLineSensor.Left)
 	{
@@ -268,7 +271,7 @@ namespace robobit {
     //% subcategory=Sensors
     //% group=Sensors
     //% blockId="robobit_sonar" block="read sonar as %unit"
-    //% weight=7
+    //% weight=90
     export function sonar(unit: RBPingUnit): number {
         // send pulse
         let trig = DigitalPin.P13;
@@ -304,13 +307,12 @@ namespace robobit {
 
     /**
       * Adjust opening of Claw attachment
-      *
-      * @param degrees Degrees to open Claw.
+      * @param degrees Degrees to open Claw. eg: 30
       */
     //% subcategory=Sensors
     //% group=Sensors
     //% blockId="robobit_set_claw" block="Set claw %degrees"
-    //% weight=90
+    //% weight=70
     export function setClaw(degrees: number): void
     {
         pins.servoWritePin(AnalogPin.P13, Math.clamp(0, 80, degrees))
@@ -344,7 +346,7 @@ namespace robobit {
     //% subcategory=LedBar
     //% group=LedBar
     //% blockId="cubebit_set_color" block="set all pixels to %rgb=neopixel_colors"
-    //% weight=80
+    //% weight=90
     export function setColor(rgb: number): void
     {
         neo().showColor(rgb);
@@ -359,7 +361,7 @@ namespace robobit {
     //% subcategory=LedBar
     //% group=LedBar
     //% blockId="robobit_set_pixel_color" block="set pixel color at %ID|to %rgb=neopixel_colors"
-    //% weight=80
+    //% weight=85
     export function setPixel(ID: number, rgb: number): void
     {
         neo().setPixelColor(ID, rgb);
@@ -375,7 +377,7 @@ namespace robobit {
     //% subcategory=LedBar
     //% group=LedBar
     //% blockId="robobit_convertRGB" block="convert from red %red| green %green| blue %bblue"
-    //% weight=80
+    //% weight=55
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
@@ -387,7 +389,7 @@ namespace robobit {
     //% subcategory=LedBar
     //% group=LedBar
     //% blockId="robobit_show" block="show Led Bar changes"
-    //% weight=76
+    //% weight=95
     export function neoShow(): void
     {
         neo().show();
@@ -399,7 +401,7 @@ namespace robobit {
     //% subcategory=LedBar
     //% group=LedBar
     //% blockId="robobit_clear" block="clear all pixels"
-    //% weight=75
+    //% weight=80
     export function neoClear(): void
     {
         neo().clear();
@@ -411,7 +413,7 @@ namespace robobit {
     //% subcategory=LedBar
     //% group=LedBar
     //% blockId="robobit_rainbow" block="set Led Bar rainbow"
-    //% weight=70
+    //% weight=75
     export function neoRainbow(): void
     {
         neo().showRainbow(1, 360);
@@ -423,7 +425,7 @@ namespace robobit {
     //% subcategory=LedBar
     //% group=LedBar
     //% blockId="robobit_shift" block="shift pixels"
-    //% weight=66
+    //% weight=65
     export function neoShift(): void
     {
         neo().shift(1);
@@ -435,7 +437,7 @@ namespace robobit {
     //% subcategory=LedBar
     //% group=LedBar
     //% blockId="robobit_rotate" block="rotate pixels"
-    //% weight=65
+    //% weight=70
     export function neoRotate(): void
     {
         neo().rotate(1);
@@ -443,14 +445,13 @@ namespace robobit {
 
     /**
      * Set the brightness of the Led Bar. Note this only applies to future writes to the strip.
-     *
-     * @param brightness a measure of LED brightness in 0-255. eg: 255
+     * @param brightness a measure of LED brightness in 0-255. eg: 40
      */
     //% subcategory=LedBar
     //% group=LedBar
     //% blockId="robobit_brightness" block="set Led Bar brightness %brightness"
     //% brightness.min=0 brightness.max=255
-    //% weight=10
+    //% weight=92
     export function neoBrightness(brightness: number): void
     {
         neo().setBrightness(brightness);
@@ -464,6 +465,7 @@ namespace robobit {
     //% subcategory=LedBar
     //% group=LedBar
     //% block=%color
+    //% weight=60
     export function getColour(color: RBColors): number
     {
         return color;
@@ -471,13 +473,14 @@ namespace robobit {
 
     /**
       * Start Scanner
-      *
+      * param color the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 16 scanner delay %delay"
+    //% blockId="rb_startScanner" block="start 17 scan %color=RBColors| with %delay|(ms)"
     //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
+    //% weight=78
     export function startScanner(delay: number): void
     {
         if(_scanning == false)
@@ -497,12 +500,11 @@ namespace robobit {
 
     /**
       * Stop Scanner
-      *
       */
     //% block
     //% subcategory=LedBar
     //% group=LedBar
-    //% weight=90 blockGap=8
+    //% weight=76
     export function stopScanner(): void
     {
         _scanning = false;
@@ -514,7 +516,7 @@ namespace robobit {
     //% subcategory=LedBar
     //% group=LedBar
     //% blockId="robobit_ledScan" block="scan centre pixels"
-    //% weight=60
+    //% weight=50
     export function ledScan(): void
     {
         if (!larsson)
