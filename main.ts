@@ -473,15 +473,15 @@ namespace robobit {
 
     /**
       * Start Scanner
-      * param color the colour to use for scanning
+      * @param color the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 17 scan %color=RBColors| with %delay|(ms)"
+    //% blockId="rb_startScanner" block="start 18 scan %color=RBColors| with %delay|(ms)"
     //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
     //% weight=78
-    export function startScanner(delay: number): void
+    export function startScanner(color: RBColors, delay: number): void
     {
         if(_scanning == false)
         {
