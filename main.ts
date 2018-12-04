@@ -473,7 +473,7 @@ namespace robobit {
       * Start Scanner
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 14 scanner delay %delay"
+    //% blockId="rb_startScanner" block="start 15 scanner delay %delay"
     //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
@@ -505,17 +505,6 @@ namespace robobit {
     export function stopScanner(): void
     {
         _scanning = false;
-    }
-
-    /**
-     * Create a new NeoPixel driver for `numleds` LEDs.
-     * @param pin the pin where the neopixel is connected.
-     * @param numleds number of leds in the strip, eg: 19,30,60,64
-     */
-    //% blockId="RBcreate" block="Pixel at pin %pin|with %numleds|leds as %mode"
-    //% weight=90 blockGap=8
-    //% trackArgs=0,2
-    export function RBcreate(pin: DigitalPin, numleds: number, mode: number): void {
     }
 
     /**
