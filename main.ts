@@ -345,7 +345,7 @@ namespace robobit {
       */
     //% subcategory=LedBar
     //% group=LedBar
-    //% blockId="cubebit_set_color" block="set all pixels to %rgb=neopixel_colors"
+    //% blockId="cubebit_set_color" block="set all pixels to %rgb=rb_colours"
     //% weight=90
     export function setColor(rgb: number): void
     {
@@ -360,7 +360,7 @@ namespace robobit {
      */
     //% subcategory=LedBar
     //% group=LedBar
-    //% blockId="robobit_set_pixel_color" block="set pixel color at %ID|to %rgb=neopixel_colors"
+    //% blockId="robobit_set_pixel_color" block="set pixel color at %ID|to %rgb=rb_colours"
     //% weight=85
     export function setPixel(ID: number, rgb: number): void
     {
@@ -476,7 +476,7 @@ namespace robobit {
       * @param color the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 26 scan %color=rb_colours| with %delay|(ms)"
+    //% blockId="rb_startScanner" block="start 27 scan %color=rb_colours| with %delay|(ms)"
     //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
