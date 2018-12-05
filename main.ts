@@ -464,7 +464,7 @@ namespace robobit {
       */
     //% subcategory=LedBar
     //% group=LedBar
-    //% blockID="RBColours" block=%color
+    //% blockId="rb_colours" block=%color
     //% weight=60
     export function RBColours(color: RBColors): number
     {
@@ -476,7 +476,7 @@ namespace robobit {
       * @param color the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 25 scan %color=RBColours| with %delay|(ms)"
+    //% blockId="rb_startScanner" block="start 26 scan %color=rb_colours| with %delay|(ms)"
     //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
