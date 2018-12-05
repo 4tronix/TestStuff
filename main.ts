@@ -197,9 +197,8 @@ namespace robobit
 
     /**
       * Drive motor(s) forward or reverse.
-      *
       * @param motor motor to drive.
-      * @param speed speed of motor
+      * @param speed speed of motor eg: 600
       */
     //% subcategory=Motors
     //% group=Motors
@@ -487,7 +486,7 @@ namespace robobit
       * @param color the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 29 scan %color=rb_colours| with %delay|(ms)"
+    //% blockId="rb_startScanner" block="start 30 scan %color=rb_colours| with %delay|(ms)"
     //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
