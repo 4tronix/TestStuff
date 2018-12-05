@@ -115,8 +115,7 @@ namespace robobit {
 
     /**
       * Drive robot forward (or backward) at speed.
-      *
-      * @param speed speed of motor between -1023 and 1023.
+      * @param speed speed of motor between -1023 and 1023. eg: 600
       */
     //% subcategory=Motors
     //% group=Motors
@@ -130,13 +129,12 @@ namespace robobit {
 
     /**
       * Drive robot forward (or backward) at speed for milliseconds.
-      *
-      * @param speed speed of motor between -1023 and 1023.
-      * @param milliseconds duration in milliseconds to drive forward for, then stop.
+      * @param speed speed of motor between -1023 and 1023. eg: 600
+      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 1000
       */
     //% subcategory=Motors
     //% group=Motors
-    //% blockId="robobit_motor_forward_milliseconds" block="drive at speed %speed| for milliseconds %milliseconds"
+    //% blockId="robobit_motor_forward_milliseconds" block="drive at speed %speed| for %milliseconds|(ms)"
     //% speed.min=-1023 speed.max=1023
     //% weight=131
     export function driveMilliseconds(speed: number, milliseconds: number): void
@@ -148,13 +146,12 @@ namespace robobit {
 
     /**
       * Turn robot in direction at speed.
-      *
       * @param direction direction to turn.
-      * @param speed speed of motor between 0 and 1023.
+      * @param speed speed of motor between 0 and 1023. eg: 600
       */
     //% subcategory=Motors
     //% group=Motors
-    //% blockId="robobit_turn" block="turn in direction %direction|speed %speed"
+    //% blockId="robobit_turn" block="spin %direction|at speed %speed"
     //% speed.min=0 speed.max=1023
     //% weight=109
     export function driveTurn(direction: RBRobotDirection, speed: number): void {
@@ -171,14 +168,13 @@ namespace robobit {
 
     /**
       * Turn robot in direction at speed for milliseconds.
-      *
       * @param direction direction to turn.
-      * @param speed speed of motor between 0 and 1023.
-      * @param milliseconds duration in milliseconds to turn for, then stop.
+      * @param speed speed of motor between 0 and 1023. eg: 600
+      * @param milliseconds duration in milliseconds to turn for, then stop. eg: 1000
       */
     //% subcategory=Motors
     //% group=Motors
-    //% blockId="robobit_turn_milliseconds" block="turn in direction %direction|speed %speed| for milliseconds %milliseconds"
+    //% blockId="robobit_turn_milliseconds" block="spin %direction|at speed %speed| for %milliseconds|(ms)"
     //% speed.min=0 speed.max=1023
     //% weight=130
     export function driveTurnMilliseconds(direction: RBRobotDirection, speed: number, milliseconds: number): void {
@@ -476,7 +472,7 @@ namespace robobit {
       * @param color the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 27 scan %color=rb_colours| with %delay|(ms)"
+    //% blockId="rb_startScanner" block="start 28 scan %color=rb_colours| with %delay|(ms)"
     //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
