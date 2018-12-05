@@ -476,7 +476,7 @@ namespace robobit {
       * @param color the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 20 scan %color=RBColors| with %delay|(ms)"
+    //% blockId="rb_startScanner" block="start 21 scan %color=RBColors| with %delay|(ms)"
     //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
@@ -531,6 +531,7 @@ namespace robobit {
     //% group=LedBar
     //% blockId="robobit_ledScan" block="scan centre pixels"
     //% weight=50
+    //% deprecated=true
     export function ledScan(): void
     {
         if (!larsson)
