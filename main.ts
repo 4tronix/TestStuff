@@ -54,12 +54,12 @@ enum RBModel
  */
 enum RBPingUnit
 {
-    //% block="μs"
-    MicroSeconds,
     //% block="cm"
     Centimeters,
     //% block="inches"
-    Inches
+    Inches,
+    //% block="μs"
+    MicroSeconds
 }
 
 /**
@@ -486,7 +486,7 @@ namespace robobit
       * @param color the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start 30 scan %color=rb_colours| with %delay|(ms)"
+    //% blockId="rb_startScanner" block="start 31 scan %color=rb_colours| with %delay|(ms)"
     //% subcategory=LedBar
     //% group=LedBar
     //% delay.min=1 delay.max=10000
