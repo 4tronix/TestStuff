@@ -68,7 +68,7 @@ namespace Animoid {
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 01 servos"
+    //% blockId="enableServos" block="%state all 02 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -109,12 +109,23 @@ namespace Animoid {
     }
 
     /**
+      * Initialise all servos to Angle=0
+      */
+    //% blockId="an_zeroServos"
+    //% block
+    export function zeroServos(): void
+    {
+        for (let i=0; i<16; i++)
+            setServo(i, 0);
+    }
+
+    /**
       * Set Servo Position by Angle
       *
       * @param servo Servo number (0 to 15)
       * @param angle degrees to turn servo (-90 to +90)
       */
-    //% blockId="setServo" block="set servo %servo| to angle %angle"
+    //% blockId="an_setServo" block="set servo %servo| to angle %angle"
     //% angle.min = -90 angle.max = 90
     //% weight = 70
     export function setServo(servo: number, angle: number): void
@@ -146,6 +157,11 @@ namespace Animoid {
         pins.i2cWriteBuffer(PCA, i2cData, false);
     }
 
+    function limbNum(limb: Limbs): number
+    {
+        return limb;
+    }
+
     /**
       * Set Position of Foot in mm from hip servo shaft
       * Inverse kinematics from learnaboutrobots.com/inverseKinematics.htm
@@ -166,8 +182,8 @@ namespace Animoid {
         let knee = Math.floor(k*180/Math.PI);
         basic.showNumber(hip);
         basic.showNumber(knee);
-        setServo(limb*2, hip-90);
-        setServo(limb*2+1, knee-90);
+        setServo(limbNum(limb)*2, hip-90);
+        setServo(limbNum(limb)*2+1, knee-90);
     }
 
 }
