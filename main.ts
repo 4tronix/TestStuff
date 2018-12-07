@@ -68,7 +68,7 @@ namespace Animoid {
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 03 servos"
+    //% blockId="enableServos" block="%state all 04 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -188,12 +188,12 @@ namespace Animoid {
             knee = knee - 90;
         }
         else
-        }
+        {
             hip = hip + 90;
             knee = knee + 90;
         }
-        setServo(limbNum(limb)*2, hip-90);
-        setServo(limbNum(limb)*2+1, knee-90);
+        setServo(limbNum(limb)*2, hip);
+        setServo(limbNum(limb)*2+1, knee);
     }
 
 }
