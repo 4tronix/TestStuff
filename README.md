@@ -1,129 +1,99 @@
-# Robobit
- Package for Microsoft Makecode
+# BitCommander Package for Microsoft PXT
 
-This library provides a Microsoft Makecode package for the Robobit Buggy, see
-https://4tronix.co.uk/robobit/
+This library provides a Microsoft PXT package for Bit:Commander, see
+https://4tronix.co.uk/bitcommander/.
 
-## Driving the robot    
-The simplest way to drive robot is by using the `driveMilliseconds(...)` and `driveTurnMilliseconds(...)` blocks.   
-Note with `driveMilliseconds(...)`, you can specify a negative speed to reverse.   
-```blocks
-// Drive forward for 2000 ms
-robobit.driveMilliseconds(1023, 2000)
+## Reading the buttons
 
-// Drive backwards for 2000 ms
-robobit.driveMilliseconds(-1023, 2000)
+There are 5 buttons that can be checked: `Red`, `Yellow`, `Green` and `Blue` on the left and the `Joystick` on the right can be pressed as well
+If the button is pressed it will return a '1'. If it isn't pressed, then it returns a '0'
+The following code checks the Green button and does something if it is pressed
 
-// Turn left for 200 ms
-robobit.driveTurnMilliseconds(BBRobotDirection.Left, 1023, 200)
-
-// Turn right for 200 ms
-robobit.driveTurnMilliseconds(BBRobotDirection.Right, 1023, 200)
-```   
-
-These blocks are also available in non blocking version. The following example performs the same operation as above.   
-```blocks
-robobit.drive(1023)
-basic.pause(1000)
-
-robobit.drive(0)
-basic.pause(1000)
-
-robobit.driveTurn(BBRobotDirection.Left, 1023)
-basic.pause(250)
-
-robobit.driveTurn(BBRobotDirection.Right, 1023)
-basic.pause(250)
-
-robobit.drive(0)
+```
+// Check Green button
+if (bitcommander.readButton(BCButtons.Green) == 1) {
+    ... do something ...
+}
 ```
 
-## Driving the motor
+## Reading the position of the Dial
 
-If you want more fine grain control of individal motors, use `robobit.motor(..)` to drive motor either forward or reverse. The value
-indicates speed and is between `-1023` to `1023`. Minus indicates reverse.
+When writing code, be aware that the Dial control input is shared with the speaker output and so the input range is limited to around 0 - 850 instead of the normal 0 - 1023. 
+Use the readDial block to get the value (0 to ~850) into a variable, or test the value directly
 
-```blocks
-// Drive 1000 ms forward
-robobit.motor(BBMotor.All, 1023);
-basic.pause(1000);
+```
+// Read the Dial value into the myDial variable
+myDial = bitcommander.readDial()
+if (myDial > 500) {
+   ... do something ...
+}
 
-// Drive 1000 ms reverse
-robobit.motor(BBMotor.All, -1023);
-basic.pause(1000);
+or this is equivalent:
 
-// Drive 1000 ms forward on left and reverse on right
-robobit.motor(BBMotor.Left, 1023);
-robobit.motor(BBMotor.Right, -1023);
-basic.pause(1000);
+if (bitcommander.readDial() > 500) {
+   ... do something ...
+}
 ```
 
-## Read line sensor
+## Reading the position of the Joystick
 
-The Robobit (optionally) has two line-sensors: left and right. To read the value of the
-sensors, use `robobit.readLine(..)` function.
+Both the X and Y axes of the joystick have a range 0 to 1023. Specify the axis as part of the function call.
+Use the readJoystick block to get the value.
 
-```blocks
-// Read left and right line sensor
-let left = robobit.readLine(BBLineSensor.Left);
-let right = robobit.readLine(BBLineSensor.Right);
+```
+// Read the Joystick X axis value in to the xAxis variable
+xAxis = bitcommander.readJoystick(BCJoystick.X)
 ```
 
-## Read sonar value
+## Playing music
 
-If you have mounted the optional sonar sensor for the Robobit you can
-also use the `robobit.sonar(..)` function to read the distance to obstacles.
+There is a small speaker on Bit:Commander wired to Pin 0, which is the default for playing music files. Use the standard Music blocks for this:
 
 ```blocks
-// Read sonar values
-let v1 = robobit.sonar(BBPingUnit.MicroSeconds);
-let v2 = robobit.sonar(BBPingUnit.Centimeters);
-let v3 = robobit.sonar(BBPingUnit.Inches);
+// Play The Entertainer music clip
+music.beginMelody(music.builtInMelody(Melodies.Entertainer), MelodyOptions.Once)
 ```
+
+
 
 ## NeoPixel helpers
 
-The Robobit optionally has 8 NeoPixels mounted on a LEDBar. This library defines some helpers
-for using the NeoPixels.
+The Bit:Commander has 6 NeoPixels
 
 ```blocks
 // Show all leds
-robobit.setColor(neopixel.colors(NeoPixelColors.Red));
-robobit.neoShow();
+bitcommander.neoSetColor(neopixel.colors(NeoPixelColors.Red));
+bitcommander.neoShow();
 
 // Clear all leds
-robobit.neoClear();
-robobit.neoShow();
+bitcommander.neoClear();
+bitcommander.neoShow();
 
-// Show led at position 1 (0 to 7)
-robobit.setPixel(1, neopixel.colors(NeoPixelColors.Red));
-robobit.neoShow();
+// Show led at position 1
+bitcommander.neoSetPixelColor(0, neopixel.colors(NeoPixelColors.Red));
+bitcommander.neoShow();
 
 // Show led rainbow
-robobit.neoRainbow();
-robobit.neoShow();
+bitcommander.neoRainbow();
+bitcommander.neoShow();
 
 // Show led rainbow and shift
-robobit.neoRainbow();
-robobit.neoShift();
-robobit.neoShow();
+bitcommander.neoRainbow();
+bitcommander.neoShift();
+bitcommander.neoShow();
 
 // Show led rainbow and rotate
-robobit.neoRainbow();
-robobit.neoRotate();
-robobit.neoShow();
+bitcommander.neoRainbow();
+bitcommander.neoRotate();
+bitcommander.neoShow();
 
-// Set brightness of leds (0 to 255)
-robobit.neoBrightness(100);
-robobit.neoShow();
+// Set brightness of leds
+bitcommander.neoBrightness(100);
+bitcommander.neoShow();
 
-// Use scanner update regularly in forever loop
-robobit.ledScan();
-robobit.neoShow();
-
-// Define your own colours using convertRGB(red, green, blue)
-robobit.setColor(robobit.convertRGB(40, 50, 200));
-robobit.neoShow();
+// Use neo() variable
+bitcommander.neo().clear();
+bitcommander.neo().show();
 ```
 
 ## Supported targets
@@ -131,5 +101,4 @@ robobit.neoShow();
 * for PXT/microbit
 
 ## License
-
 MIT

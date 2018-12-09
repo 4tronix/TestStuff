@@ -1,199 +1,219 @@
-﻿/**
-  * Enumeration of servos
+﻿
+/**
+  * Enumeration of buttons
   */
-enum Servos
-{
-    FL_Hip,
-    FL_Knee,
-    RL_Hip,
-    RL_Knee,
-    RR_Hip,
-    RR_Knee,
-    FR_Hip,
-    FR_Knee,
-    Head,
-    Tail
+enum BCButtons {
+    //% block="red"
+    Red,
+    //% block="yellow"
+    Yellow,
+    //% block="green"
+    Green,
+    //% block="blue"
+    Blue,
+    //% block="joystick"
+    Joystick
 }
 
 /**
-  * Enumeration of limbs
+  * Enumeration of joystick axes
   */
-enum Limbs
-{
-    FrontLeft,
-    RearLeft,
-    RearRight,
-    FrontRight
+enum BCJoystick {
+    //% block="x"
+    X,
+    //% block="y"
+    Y
 }
 
 /**
-  * Enumeration of servo enables
-  */
-enum States
-{
-    Enable,
-    Disable
+ * Pins used to generate events
+ */
+enum BCPins {
+    //% block="red"
+    P12 = <number>DAL.MICROBIT_ID_IO_P12,
+    //% block="yellow"
+    P16 = DAL.MICROBIT_ID_IO_P16,
+    //% block="green"
+    P14 = DAL.MICROBIT_ID_IO_P14,
+    //% block="blue"
+    P15 = DAL.MICROBIT_ID_IO_P15,
+    //% block="joystick"
+    Joystick = DAL.MICROBIT_ID_IO_P8
 }
 
 /**
-  * Enumeration of directions.
-  */
-enum RBRobotDirection {
-    //% block="left"
-    Left,
-    //% block="right"
-    Right
+ * Button events
+ */
+enum BCEvents {
+    //% block="down"
+    Down = DAL.MICROBIT_BUTTON_EVT_UP,
+    //% block="up"
+    Up = DAL.MICROBIT_BUTTON_EVT_DOWN,
+    //% block="click"
+    Click = DAL.MICROBIT_BUTTON_EVT_CLICK
 }
-
 
 /**
  * Custom blocks
  */
+//% weight=10 color=#e7660b icon="\uf11b"
+namespace bitcommander {
 
-//% weight=10 color=#e7660b icon="\uf188"
-namespace Animoid {
+    //% shim=bitcommander::init
+    function init(): void {
+        return;
+    }
 
-    let PCA = 0x40;	// i2c address of 4tronix Animoid servo controller
-    let initI2C = false;
-    let SERVOS = 0x06; // first servo address for start byte low
-    let lLower = 57;	// distance from servo shaft to tip of leg/foot
-    let lUpper = 46;	// distance between servo shafts
-    let lLower2 = lLower * lLower;	// no point in doing this every time
-    let lUpper2 = lUpper * lUpper;
-
-    // Helper functions
+    let neoStrip: neopixel.Strip;
 
     /**
-      * Enable/Disable Servos
-      *
-      * @param state Select Enabled or Disabled
+     * Return a neo pixel strip.
+     */
+    //% blockId="bitcommander_neo" block="neo strip"
+    //% weight=5
+    function neo(): neopixel.Strip {
+        if (!neoStrip) {
+            neoStrip = neopixel.create(DigitalPin.P13, 6, NeoPixelMode.RGB)
+        }
+
+        return neoStrip;
+    }
+
+    /**
+      * Registers event code
       */
-    //% blockId="enableServos" block="%state all 7 servos"
     //% weight=90
-    export function enableServos(state: States): void
+    //% blockId=bc_onevent block="on 01 button %button|%event"
+    export function onEvent(button: BCPins, event: BCEvents, handler: Action)
     {
-        pins.digitalWritePin(DigitalPin.P16, state);
+        init();
+        control.onEvent(<number>button, <number>event, handler); // register handler
     }
 
     /**
-      * Return servo number from name
+      * Read joystick values
       *
-      * @param value servo name
+      * @param dir Axis to read
       */
-    //% blockId="getServo" block="%value"
+    //% blockId="bitcommander_read_joystick" block="read joystick %axis"
+    //% weight=90
+    export function readJoystick(axis: BCJoystick): number {
+        if (axis == BCJoystick.X) {
+            return pins.analogReadPin(AnalogPin.P1);
+        } else {
+            return pins.analogReadPin(AnalogPin.P2);
+        }
+    }
+
+    /**
+      * check button states
+      *
+      * @param buttonID Button to check
+      */
+    //% blockId="bitcommander_check_button" block="check button %buttonID"
+    //% weight=85
+    export function readButton(buttonID: BCButtons): number {
+	switch (buttonID)
+	{
+            case BCButtons.Red: return pins.digitalReadPin(DigitalPin.P12); break;
+            case BCButtons.Yellow: return pins.digitalReadPin(DigitalPin.P16); break;
+            case BCButtons.Green: return pins.digitalReadPin(DigitalPin.P14); break;
+            case BCButtons.Blue: return pins.digitalReadPin(DigitalPin.P15); break;
+            case BCButtons.Joystick: return pins.digitalReadPin(DigitalPin.P8); break;
+	    default: return 0;
+	}
+    }
+
+
+    /**
+      * Read dial
+      *
+      */
+    //% blockId="bitcommander_read_dial" block="read dial"
+    //% weight=90
+    export function readDial( ): number {
+        return pins.analogReadPin(AnalogPin.P0);
+    }
+
+    /**
+      * Shows all LEDs to a given color (range 0-255 for r, g, b).
+      *
+      * @param rgb RGB color of the LED
+      */
+    //% blockId="bitcommander_neo_set_color" block="set pixels to %rgb=neopixel_colors"
     //% weight=80
-    export function getServo(value: Servos): number
-    {
-        return value;
-    }
-
-    function initPCA(): void
-    {
-
-        let i2cData = pins.createBuffer(2);
-        initI2C = true;
-
-        i2cData[0] = 0;		// Mode 1 register
-        i2cData[1] = 0x10;	// put to sleep
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = 0xFE;	// Prescale register
-        i2cData[1] = 101;	// set to 60 Hz
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = 0;		// Mode 1 register
-        i2cData[1] = 0x81;	// Wake up
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-	pins.digitalWritePin(DigitalPin.P16, 0);	// enable servos at start
+    export function neoSetColor(rgb: number) {
+        neo().showColor(rgb);
     }
 
     /**
-      * Initialise all servos to Angle=0
-      */
-    //% blockId="an_zeroServos"
-    //% block
-    export function zeroServos(): void
-    {
-        for (let i=0; i<16; i++)
-            setServo(i, 0);
+     * Set LED to a given color (range 0-255 for r, g, b).
+     *
+     * @param offset position of the NeoPixel in the strip
+     * @param rgb RGB color of the LED
+     */
+    //% blockId="bitcommander_neo_set_pixel_color" block="set pixel color at %offset|to %rgb=neopixel_colors"
+    //% weight=80
+    export function neoSetPixelColor(offset: number, rgb: number): void {
+        neo().setPixelColor(offset, rgb);
     }
 
     /**
-      * Set Servo Position by Angle
-      *
-      * @param servo Servo number (0 to 15)
-      * @param angle degrees to turn servo (-90 to +90)
+      * Show leds.
       */
-    //% blockId="an_setServo" block="set servo %servo| to angle %angle"
-    //% angle.min = -90 angle.max = 90
-    //% weight = 70
-    export function setServo(servo: number, angle: number): void
-    {
-        if (initI2C == false)
-        {
-            initPCA();
-        }
-        let i2cData = pins.createBuffer(2);
-        // two bytes need setting for start and stop positions of the servo
-        // servos start at SERVOS (0x06) and are then consecutive bloocks of 4 bytes
-        let start = 0;
-        let stop = 369 + angle * 275 / 90;
-
-        i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
-        i2cData[1] = 0x00;			// low byte start - always 0
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
-        i2cData[1] = 0x00;			// high byte start - always 0
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = SERVOS + servo*4 + 2;	// Servo register
-        i2cData[1] = (stop & 0xff);		// low byte stop
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = SERVOS + servo*4 + 3;	// Servo register
-        i2cData[1] = (stop >> 8);			// high byte stop
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-    }
-
-    function limbNum(limb: Limbs): number
-    {
-        return limb;
+    //% blockId="bitcommander_neo_show" block="show leds"
+    //% weight=76
+    export function neoShow(): void {
+        neo().show();
     }
 
     /**
-      * Set Position of Foot in mm from hip servo shaft
-      * Inverse kinematics from learnaboutrobots.com/inverseKinematics.htm
-      *
-      * @param limb Determines which limb to move. eg. FrontLeft
-      * @param xpos Position on X-axis in mm
-      * @param height Height of hip servo shaft above foot
+      * Clear leds.
       */
-    //% blockId="setLimb" block="set %limb| to position %xpos| height %height"
-    //% weight = 60
-    export function setLimb(limb: Limbs, xpos: number, height: number): void
-    {
-        let B2 = xpos*xpos + height*height;	// from: B2 = Xhand2 + Yhand2
-        let q1 = Math.atan2(height, xpos);	// from: q1 = ATan2(Yhand/Xhand)
-        let q2 = Math.acos((lUpper2 - lLower2 + B2) / (2 * lUpper * Math.sqrt(B2)));
-        let hip = Math.floor((q1 + q2)*180/Math.PI);	// convert from radians to integer degrees
-        let k = Math.acos((lUpper2 + lLower2 - B2) / (2 * lUpper * lLower));
-        let knee = Math.floor(k*180/Math.PI);
-        //basic.showNumber(hip);
-        //basic.showNumber(knee);
-	if (limbNum(limb) < 2)
-        {
-            hip = hip - 90;
-            knee = knee - 90;
-        }
-        else
-        {
-            hip = 90 - hip;
-            knee = 90 - knee;
-        }
-        setServo(limbNum(limb)*2, hip);
-        setServo(limbNum(limb)*2+1, knee);
+    //% blockId="bitcommander_neo_clear" block="clear leds"
+    //% weight=75
+    export function neoClear(): void {
+        neo().clear();
     }
+
+    /**
+      * Shows a rainbow pattern on all LEDs.
+      */
+    //% blockId="bitcommander_neo_rainbow" block="set led rainbow"
+    //% weight=70
+    export function neoRainbow(): void {
+        neo().showRainbow(1, 360);
+    }
+
+    /**
+     * Shift LEDs forward and clear with zeros.
+     */
+    //% blockId="bitcommander_neo_shift" block="shift led pixels"
+    //% weight=66
+    export function neoShift(): void {
+        neo().shift(1);
+    }
+
+    /**
+     * Rotate LEDs forward.
+     */
+    //% blockId="bitcommander_neo_rotate" block="rotate led pixels"
+    //% weight=65
+    export function neoRotate(): void {
+        neo().rotate(1);
+    }
+
+    /**
+     * Set the brightness of the strip. Note this only applies to future writes to the strip.
+     *
+     * @param brightness a measure of LED brightness in 0-255. eg: 255
+     */
+    //% blockId="bitcommander_neo_brightness" block="set led brightness %brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=10
+    export function neoBrightness(brightness: number): void {
+        neo().setBrightness(brightness);
+    }
+
 
 }
