@@ -79,22 +79,11 @@ enum BCPins {
     Joystick = DAL.MICROBIT_ID_IO_P8
 }
 
+
 /**
  * Button events
  */
 enum BCEvents {
-    //% block="down"
-    Down = DAL.MICROBIT_BUTTON_EVT_UP,
-    //% block="up"
-    Up = DAL.MICROBIT_BUTTON_EVT_DOWN,
-    //% block="click"
-    Click = DAL.MICROBIT_BUTTON_EVT_CLICK
-}
-
-/**
- * Button new events
- */
-enum BC2Events {
     //% block="down"
     Down = DAL.MICROBIT_PIN_EVT_RISE,
     //% block="up"
@@ -113,12 +102,6 @@ namespace bitcommander
 
 // Inputs. Buttons, Dial and Joystick
 
-    //% shim=bitcommander::init
-    function init(): void
-    {
-        return;
-    }
-
     function initEvents(): void
     {
         if (_initEvents)
@@ -136,26 +119,13 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_onevent block="on 14 button %button|%event"
+    //% blockId=bc_event block="on 15 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
     {
-        init();
-        control.onEvent(<number>button, <number>event, handler); // register handler
-    }
-
-    /**
-      * New event code
-      */
-    //% weight=92
-    //% blockId=bc_newevent block="on button %button|%event"
-    //% subcategory=Inputs
-    //% group=Inputs
-    export function onNewEvent(button: BCPins, event: BC2Events, handler: Action)
-    {
         initEvents();
-        control.onEvent(<number>button, <number>event, handler); // register handler
+        control.onEvent(<number>button, <number>event, handler);
     }
 
     /**
