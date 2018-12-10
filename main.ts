@@ -100,7 +100,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_onevent block="on 02 button %button|%event"
+    //% blockId=bc_onevent block="on 03 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -164,13 +164,33 @@ namespace bitcommander
 
 // LEDs. neopixel blocks
 
+    // create a neopixel strip if not got one already
+    function neo(): neopixel.Strip
+    {
+        if (!neoStrip)
+            neoStrip = neopixel.create(DigitalPin.P13, 6, NeoPixelMode.RGB)
+        return neoStrip;
+    }
+
+    /**
+      * Show LED changes
+      */
+    //% blockId="bitcommander_neo_show" block="show LED changes"
+    //% weight=100
+    //% subcategory=Leds
+    //% group=Leds
+    export function neoShow(): void
+    {
+        neo().show();
+    }
+
     /**
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       *
       * @param rgb RGB color of the LED
       */
-    //% blockId="bitcommander_neo_set_color" block="set LEDs to %rgb=bc_colours"
-    //% weight=80
+    //% blockId="bitcommander_neo_set_color" block="set all LEDs to %rgb=bc_colours"
+    //% weight=95
     //% subcategory=Leds
     //% group=Leds
     export function neoSetColor(rgb: number)
@@ -178,12 +198,95 @@ namespace bitcommander
         neo().showColor(rgb);
     }
 
-    // create a neopixel strip if not got one already
-    function neo(): neopixel.Strip
+    /**
+      * Clear leds.
+      */
+    //% blockId="bitcommander_neo_clear" block="clear LEDs"
+    //% weight=90
+    //% subcategory=Leds
+    //% group=Leds
+    export function neoClear(): void
     {
-        if (!neoStrip)
-            neoStrip = neopixel.create(DigitalPin.P13, 6, NeoPixelMode.RGB)
-        return neoStrip;
+        neo().clear();
+    }
+
+    /**
+     * Set LED to a given color (range 0-255 for r, g, b).
+     *
+     * @param ledId position of the LED (0 to 5)
+     * @param rgb RGB color of the LED
+     */
+    //% blockId="bitcommander_neo_set_pixel_color" block="set LED at %ledId|to %rgb=bc_colours"
+    //% weight=85
+    //% subcategory=Leds
+    //% group=Leds
+    export function neoSetPixelColor(ledId: number, rgb: number): void
+    {
+        neo().setPixelColor(ledId, rgb);
+    }
+
+    /**
+      * Shows a rainbow pattern on all LEDs.
+      */
+    //% blockId="bitcommander_neo_rainbow" block="set led rainbow"
+    //% weight=80
+    //% subcategory=Leds
+    //% group=Leds
+    export function neoRainbow(): void
+    {
+        neo().showRainbow(1, 360);
+    }
+
+    /**
+     * Rotate LEDs forward.
+     */
+    //% blockId="bitcommander_neo_rotate" block="rotate LEDs"
+    //% weight=75
+    //% subcategory=Leds
+    //% group=Leds
+    export function neoRotate(): void
+    {
+        neo().rotate(1);
+    }
+
+    /**
+     * Shift LEDs forward and clear with zeros.
+     */
+    //% blockId="bitcommander_neo_shift" block="shift LEDs"
+    //% weight=70
+    //% subcategory=Leds
+    //% group=Leds
+    export function neoShift(): void
+    {
+        neo().shift(1);
+    }
+
+    /**
+      * Gets numeric value of colour
+      *
+      * @param color Standard RGB Led Colours
+      */
+    //% subcategory=Leds
+    //% group=Leds
+    //% blockId="bc_colours" block=%color
+    //% weight=65
+    export function BCColours(color: BCColors): number
+    {
+        return color;
+    }
+
+    /**
+     * Set the brightness of the LEDs
+     * @param brightness a measure of LED brightness (0 to 255) eg: 40
+     */
+    //% blockId="bitcommander_neo_brightness" block="set led brightness %brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=60
+    //% subcategory=Leds
+    //% group=Leds
+    export function neoBrightness(brightness: number): void
+    {
+        neo().setBrightness(brightness);
     }
 
     /**
@@ -197,110 +300,10 @@ namespace bitcommander
     //% group=Leds
     //% blockId="bitcommander_convertRGB" block="convert from red %red| green %green| blue %bblue"
     //% weight=55
+    //% advanced=true
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
-    }
-
-    /**
-      * Gets numeric value of colour
-      *
-      * @param color Standard RGB Led Colours
-      */
-    //% subcategory=Leds
-    //% group=Leds
-    //% blockId="bc_colours" block=%color
-    //% weight=60
-    export function BCColours(color: BCColors): number
-    {
-        return color;
-    }
-
-    /**
-     * Set LED to a given color (range 0-255 for r, g, b).
-     *
-     * @param ledId position of the LED (0 to 5)
-     * @param rgb RGB color of the LED
-     */
-    //% blockId="bitcommander_neo_set_pixel_color" block="set LED at %ledId|to %rgb=bc_colors"
-    //% weight=80
-    //% subcategory=Leds
-    //% group=Leds
-    export function neoSetPixelColor(ledId: number, rgb: number): void
-    {
-        neo().setPixelColor(ledId, rgb);
-    }
-
-    /**
-      * Show leds.
-      */
-    //% blockId="bitcommander_neo_show" block="show LED changes"
-    //% weight=76
-    //% subcategory=Leds
-    //% group=Leds
-    export function neoShow(): void
-    {
-        neo().show();
-    }
-
-    /**
-      * Clear leds.
-      */
-    //% blockId="bitcommander_neo_clear" block="clear LEDs"
-    //% weight=75
-    //% subcategory=Leds
-    //% group=Leds
-    export function neoClear(): void
-    {
-        neo().clear();
-    }
-
-    /**
-      * Shows a rainbow pattern on all LEDs.
-      */
-    //% blockId="bitcommander_neo_rainbow" block="set led rainbow"
-    //% weight=70
-    export function neoRainbow(): void
-    {
-        neo().showRainbow(1, 360);
-    }
-
-    /**
-     * Shift LEDs forward and clear with zeros.
-     */
-    //% blockId="bitcommander_neo_shift" block="shift LEDs"
-    //% weight=66
-    //% subcategory=Leds
-    //% group=Leds
-    export function neoShift(): void
-    {
-        neo().shift(1);
-    }
-
-    /**
-     * Rotate LEDs forward.
-     */
-    //% blockId="bitcommander_neo_rotate" block="rotate LEDs"
-    //% weight=65
-    //% subcategory=Leds
-    //% group=Leds
-    export function neoRotate(): void
-    {
-        neo().rotate(1);
-    }
-
-    /**
-     * Set the brightness of the LEDs
-     * @param brightness a measure of LED brightness (0 to 255) eg: 40
-     */
-    //% blockId="bitcommander_neo_brightness" block="set led brightness %brightness"
-    //% brightness.min=0 brightness.max=255
-    //% weight=10
-    //% subcategory=Leds
-    //% group=Leds
-    export function neoBrightness(brightness: number): void
-    {
-        neo().setBrightness(brightness);
     }
 
 
