@@ -68,11 +68,11 @@ enum BCColors
  */
 enum BCPins {
     //% block="red"
-    P12 = MICROBIT_ID_IO_P12,
+    P12 = <number>DAL.MICROBIT_ID_IO_P12,
     //% block="yellow"
-    P16 = MICROBIT_ID_IO_P16,
+    P16 = DAL.MICROBIT_ID_IO_P16,
     //% block="green"
-    P14 = MICROBIT_ID_IO_P14,
+    P14 = DAL.MICROBIT_ID_IO_P14,
     //% block="blue"
     P15 = DAL.MICROBIT_ID_IO_P15,
     //% block="joystick"
@@ -96,9 +96,9 @@ enum BCEvents {
  */
 enum BC2Events {
     //% block="down"
-    Down = MICROBIT_PIN_EVT_RISE,
+    Down = DAL.MICROBIT_PIN_EVT_RISE,
     //% block="up"
-    Up = MICROBIT_PIN_EVT_FALL
+    Up = DAL.MICROBIT_PIN_EVT_FALL
 }
 
 /**
@@ -136,13 +136,13 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_onevent block="on 13 button %button|%event"
+    //% blockId=bc_onevent block="on 14 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
     {
         init();
-        control.onEvent(myPin, <number>event, handler); // register handler
+        control.onEvent(<number>button, <number>event, handler); // register handler
     }
 
     /**
@@ -154,20 +154,8 @@ namespace bitcommander
     //% group=Inputs
     export function onNewEvent(button: BCPins, event: BC2Events, handler: Action)
     {
-        let myPin = DigitalPin.P12;
-        let myEvent = EventBusValue.MICROBIT_PIN_EVT_RISE;
-        switch (button)
-        {
-            case BCPins.P12: myPin = DigitalPin.P12; break;
-            case BCPins.P16: myPin = DigitalPin.P16; break;
-            case BCPins.P14: myPin = DigitalPin.P14; break;
-            case BCPins.P15: myPin = DigitalPin.P15; break;
-            case BCPins.P8: myPin = DigitalPin.P8; break;
-        }
-        if (event == BC2Events.Up)
-            myEvent = EventBusValue.MICROBIT_PIN_EVT_FALL;
         initEvents();
-        control.onEvent(myPin, myEvent, handler); // register handler
+        control.onEvent(<number>button, <number>event, handler); // register handler
     }
 
     /**
