@@ -99,6 +99,7 @@ namespace bitcommander
 {
     let neoStrip: neopixel.Strip;
     let _updateMode = BCMode.Auto;
+    let initEvents = true;
 
 // Inputs. Buttons, Dial and Joystick
 
@@ -112,12 +113,28 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_onevent block="on 10 button %button|%event"
+    //% blockId=bc_onevent block="on 11 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
     {
         init();
+        control.onEvent(<number>button, <number>event, handler); // register handler
+    }
+
+    /**
+      * New event code
+      */
+    //% weight=92
+    //% blockId=bc_newevent block="on button %button|%event"
+    //% subcategory=Inputs
+    //% group=Inputs
+    export function onNewEvent(button: BCPins, event: BCEvents, handler: Action)
+    {
+        if (initEvents)
+        {
+            pins.setEvents(button, PinEventType.Edge);
+        }
         control.onEvent(<number>button, <number>event, handler); // register handler
     }
 
