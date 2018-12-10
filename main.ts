@@ -100,7 +100,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_onevent block="on 04 button %button|%event"
+    //% blockId=bc_onevent block="on 05 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -261,19 +261,7 @@ namespace bitcommander
         neo().shift(1);
     }
 
-    /**
-      * Gets numeric value of colour
-      *
-      * @param color Standard RGB Led Colours
-      */
-    //% advanced=true
-    //% blockId="bc_colours" block=%color
-    //% weight=65
-    //% color=#66660b
-    export function BCColours(color: BCColors): number
-    {
-        return color;
-    }
+    // advanced blocks
 
     /**
      * Set the brightness of the LEDs
@@ -289,6 +277,20 @@ namespace bitcommander
     }
 
     /**
+      * Gets numeric value of colour
+      *
+      * @param color Standard RGB Led Colours
+      */
+    //% advanced=true
+    //% blockId="bc_colours" block=%color
+    //% weight=65
+    //% color=#ff760b
+    export function BCColours(color: BCColors): number
+    {
+        return color;
+    }
+
+    /**
      * Convert from RGB values to colour number
      *
      * @param red Red value of the LED 0:255
@@ -299,6 +301,7 @@ namespace bitcommander
     //% blockId="bitcommander_convertRGB" block="convert from red %red| green %green| blue %bblue"
     //% weight=55
     //% advanced=true
+    //% color=#d0660b
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
