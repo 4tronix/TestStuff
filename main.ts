@@ -112,7 +112,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_onevent block="on 09 button %button|%event"
+    //% blockId=bc_onevent block="on 10 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -307,7 +307,7 @@ namespace bitcommander
     }
 
     /**
-      * Gets numeric value of colour
+      * Get numeric value of colour
       *
       * @param color Standard RGB Led Colours
       */
@@ -322,9 +322,9 @@ namespace bitcommander
     /**
       * Convert from RGB values to colour number
       *
-      * @param red Red value of the LED 0:255
-      * @param green Green value of the LED 0:255
-      * @param blue Blue value of the LED 0:255
+      * @param red Red value of the LED (0 to 255)
+      * @param green Green value of the LED (0 to 255)
+      * @param blue Blue value of the LED (0 to 255)
       */
     //% advanced=true
     //% blockId="bitcommander_convertRGB" block="convert from red %red| green %green| blue %bblue"
@@ -335,6 +335,4 @@ namespace bitcommander
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
 
-    /**
-      
 }
