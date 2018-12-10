@@ -92,6 +92,16 @@ enum BCEvents {
 }
 
 /**
+ * Button new events
+ */
+enum BC2Events {
+    //% block="down"
+    Down = DAL.MICROBIT_PIN_EVT_RISE,
+    //% block="up"
+    Up = DAL.MICROBIT_PIN_EVT_FALL
+}
+
+/**
  * Custom blocks
  */
 //% weight=10 color=#e7660b icon="\uf11b"
@@ -113,7 +123,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_onevent block="on 11 button %button|%event"
+    //% blockId=bc_onevent block="on 12 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -129,7 +139,7 @@ namespace bitcommander
     //% blockId=bc_newevent block="on button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
-    export function onNewEvent(button: BCPins, event: BCEvents, handler: Action)
+    export function onNewEvent(button: BCPins, event: BC2Events, handler: Action)
     {
         if (initEvents)
         {
