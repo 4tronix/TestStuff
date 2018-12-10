@@ -112,7 +112,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_onevent block="on 08 button %button|%event"
+    //% blockId=bc_onevent block="on 09 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -288,7 +288,7 @@ namespace bitcommander
     //% brightness.min=0 brightness.max=255
     //% weight=65
     //% advanced=true
-    export function neoBrightness(updateMode: BCMode): void
+    export function setUpdateMode(updateMode: BCMode): void
     {
         _updateMode = updateMode;
     }
