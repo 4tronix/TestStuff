@@ -68,11 +68,11 @@ enum BCColors
  */
 enum BCPins {
     //% block="red"
-    P12 = <number>DAL.MICROBIT_ID_IO_P12,
+    P12 = MICROBIT_ID_IO_P12,
     //% block="yellow"
-    P16 = DAL.MICROBIT_ID_IO_P16,
+    P16 = MICROBIT_ID_IO_P16,
     //% block="green"
-    P14 = DAL.MICROBIT_ID_IO_P14,
+    P14 = MICROBIT_ID_IO_P14,
     //% block="blue"
     P15 = DAL.MICROBIT_ID_IO_P15,
     //% block="joystick"
@@ -96,9 +96,9 @@ enum BCEvents {
  */
 enum BC2Events {
     //% block="down"
-    Down = DAL.MICROBIT_PIN_EVT_RISE,
+    Down = MICROBIT_PIN_EVT_RISE,
     //% block="up"
-    Up = DAL.MICROBIT_PIN_EVT_FALL
+    Up = MICROBIT_PIN_EVT_FALL
 }
 
 /**
@@ -109,7 +109,7 @@ namespace bitcommander
 {
     let neoStrip: neopixel.Strip;
     let _updateMode = BCMode.Auto;
-    let initEvents = true;
+    let _initEvents = true;
 
 // Inputs. Buttons, Dial and Joystick
 
@@ -119,17 +119,30 @@ namespace bitcommander
         return;
     }
 
+    function initEvents(): void
+    {
+        if (_initEvents)
+        {
+            pins.setEvents(DigitalPin.P12, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P16, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P14, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P15, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P8, PinEventType.Edge);
+            _initEvents = false;
+        }
+    }
+
     /**
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_onevent block="on 12 button %button|%event"
+    //% blockId=bc_onevent block="on 13 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
     {
         init();
-        control.onEvent(<number>button, <number>event, handler); // register handler
+        control.onEvent(myPin, <number>event, handler); // register handler
     }
 
     /**
@@ -141,11 +154,20 @@ namespace bitcommander
     //% group=Inputs
     export function onNewEvent(button: BCPins, event: BC2Events, handler: Action)
     {
-        if (initEvents)
+        let myPin = DigitalPin.P12;
+        let myEvent = EventBusValue.MICROBIT_PIN_EVT_RISE;
+        switch (button)
         {
-            pins.setEvents(button, PinEventType.Edge);
+            case BCPins.P12: myPin = DigitalPin.P12; break;
+            case BCPins.P16: myPin = DigitalPin.P16; break;
+            case BCPins.P14: myPin = DigitalPin.P14; break;
+            case BCPins.P15: myPin = DigitalPin.P15; break;
+            case BCPins.P8: myPin = DigitalPin.P8; break;
         }
-        control.onEvent(<number>button, <number>event, handler); // register handler
+        if (event == BC2Events.Up)
+            myEvent = EventBusValue.MICROBIT_PIN_EVT_FALL;
+        initEvents();
+        control.onEvent(myPin, myEvent, handler); // register handler
     }
 
     /**
