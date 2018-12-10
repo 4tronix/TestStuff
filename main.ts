@@ -100,7 +100,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_onevent block="on 06 button %button|%event"
+    //% blockId=bc_onevent block="on 07 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -168,7 +168,10 @@ namespace bitcommander
     function neo(): neopixel.Strip
     {
         if (!neoStrip)
+        {
             neoStrip = neopixel.create(DigitalPin.P13, 6, NeoPixelMode.RGB)
+            neoStrip.setBrightness(40)
+        }
         return neoStrip;
     }
 
