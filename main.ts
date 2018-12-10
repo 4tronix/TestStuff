@@ -119,7 +119,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_event block="on 15 button %button|%event"
+    //% blockId=bc_event block="on 17 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -194,6 +194,13 @@ namespace bitcommander
         return neoStrip;
     }
 
+    // update LEDs if _updateMode set to Auto
+    function updateLEDs(): void
+    {
+        if (_updateMode == BCMode.Auto)
+            neo().show();
+    }
+
     /**
       * Show LED changes
       */
@@ -218,8 +225,7 @@ namespace bitcommander
     export function neoSetColor(rgb: number)
     {
         neo().showColor(rgb);
-        if (_updateMode == BCMode.Auto)
-            neo().show();
+        updateLEDs();
     }
 
     /**
@@ -232,6 +238,7 @@ namespace bitcommander
     export function neoClear(): void
     {
         neo().clear();
+        updateLEDs();
     }
 
     /**
@@ -247,6 +254,7 @@ namespace bitcommander
     export function neoSetPixelColor(ledId: number, rgb: number): void
     {
         neo().setPixelColor(ledId, rgb);
+        updateLEDs();
     }
 
     /**
@@ -259,6 +267,7 @@ namespace bitcommander
     export function neoRainbow(): void
     {
         neo().showRainbow(1, 360);
+        updateLEDs();
     }
 
     /**
@@ -271,6 +280,7 @@ namespace bitcommander
     export function neoRotate(): void
     {
         neo().rotate(1);
+        updateLEDs();
     }
 
     /**
@@ -283,6 +293,7 @@ namespace bitcommander
     export function neoShift(): void
     {
         neo().shift(1);
+        updateLEDs();
     }
 
     // advanced blocks
@@ -311,6 +322,7 @@ namespace bitcommander
     export function neoBrightness(brightness: number): void
     {
         neo().setBrightness(brightness);
+        updateLEDs();
     }
 
     /**
