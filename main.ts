@@ -100,7 +100,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_onevent block="on 03 button %button|%event"
+    //% blockId=bc_onevent block="on 04 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -266,10 +266,10 @@ namespace bitcommander
       *
       * @param color Standard RGB Led Colours
       */
-    //% subcategory=Leds
-    //% group=Leds
+    //% advanced=true
     //% blockId="bc_colours" block=%color
     //% weight=65
+    //% color=#66660b
     export function BCColours(color: BCColors): number
     {
         return color;
@@ -282,8 +282,7 @@ namespace bitcommander
     //% blockId="bitcommander_neo_brightness" block="set led brightness %brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=60
-    //% subcategory=Leds
-    //% group=Leds
+    //% advanced=true
     export function neoBrightness(brightness: number): void
     {
         neo().setBrightness(brightness);
@@ -296,8 +295,7 @@ namespace bitcommander
      * @param green Green value of the LED 0:255
      * @param blue Blue value of the LED 0:255
      */
-    //% subcategory=Leds
-    //% group=Leds
+    //% advanced=true
     //% blockId="bitcommander_convertRGB" block="convert from red %red| green %green| blue %bblue"
     //% weight=55
     //% advanced=true
