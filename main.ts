@@ -119,7 +119,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_event block="on 24 button %button|%event"
+    //% blockId=bc_event block="on 25 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -266,7 +266,7 @@ namespace bitcommander
     //% group=Basic
     export function neoRainbow(): void
     {
-        neoStrip.showRainbow(2, 359)
+        neo().showRainbow(1, 360)
         updateLEDs()
     }
 
