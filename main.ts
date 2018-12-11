@@ -119,7 +119,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_event block="on 21 button %button|%event"
+    //% blockId=bc_event block="on 22 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -229,9 +229,9 @@ namespace bitcommander
     }
 
     /**
-      * Clear leds.
+      * Clear all LEDs.
       */
-    //% blockId="bitcommander_neo_clear" block="clear LEDs"
+    //% blockId="bitcommander_neo_clear" block="clear all LEDs"
     //% weight=90
     //% subcategory=Leds
     //% group=Basic
