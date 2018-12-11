@@ -94,7 +94,6 @@ enum BCEvents {
  * Custom blocks
  */
 //% weight=10 color=#e7660b icon="\uf11b"
-//% groups=['others', 'Basic', 'Advanced']
 namespace bitcommander
 {
     let neoStrip: neopixel.Strip;
@@ -120,7 +119,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_event block="on 20 button %button|%event"
+    //% blockId=bc_event block="on 21 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -307,7 +306,7 @@ namespace bitcommander
     //% brightness.min=0 brightness.max=255
     //% weight=65
     //% subcategory=Leds
-    //% group=Advanced
+    //% group=Extended
     export function setUpdateMode(updateMode: BCMode): void
     {
         _updateMode = updateMode;
@@ -321,7 +320,7 @@ namespace bitcommander
     //% brightness.min=0 brightness.max=255
     //% weight=60
     //% subcategory=Leds
-    //% group=Advanced
+    //% group=Extended
     export function neoBrightness(brightness: number): void
     {
         neo().setBrightness(brightness);
@@ -336,7 +335,7 @@ namespace bitcommander
     //% blockId="bc_colours" block=%color
     //% weight=55
     //% subcategory=Leds
-    //% group=Advanced
+    //% group=Extended
     export function BCColours(color: BCColors): number
     {
         return color;
@@ -352,7 +351,7 @@ namespace bitcommander
     //% blockId="bitcommander_convertRGB" block="convert from red %red| green %green| blue %bblue"
     //% weight=50
     //% subcategory=Leds
-    //% group=Advanced
+    //% group=Extended
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
