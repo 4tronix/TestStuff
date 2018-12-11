@@ -119,7 +119,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_event block="on 18 button %button|%event"
+    //% blockId=bc_event block="on 19 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -207,7 +207,8 @@ namespace bitcommander
     //% blockId="bitcommander_neo_show" block="show LED changes"
     //% weight=100
     //% subcategory=Leds
-    //% group=Leds
+    //% groups=['Basic', 'Advanced']
+    //% group=Basic
     export function neoShow(): void
     {
         neo().show();
@@ -221,7 +222,7 @@ namespace bitcommander
     //% blockId="bitcommander_neo_set_color" block="set all LEDs to %rgb=bc_colours"
     //% weight=95
     //% subcategory=Leds
-    //% group=Leds
+    //% group=Basic
     export function neoSetColor(rgb: number)
     {
         neo().showColor(rgb);
@@ -234,7 +235,7 @@ namespace bitcommander
     //% blockId="bitcommander_neo_clear" block="clear LEDs"
     //% weight=90
     //% subcategory=Leds
-    //% group=Leds
+    //% group=Basic
     export function neoClear(): void
     {
         neo().clear();
@@ -250,7 +251,7 @@ namespace bitcommander
     //% blockId="bitcommander_neo_set_pixel_color" block="set LED at %ledId|to %rgb=bc_colours"
     //% weight=85
     //% subcategory=Leds
-    //% group=Leds
+    //% group=Basic
     export function neoSetPixelColor(ledId: number, rgb: number): void
     {
         neo().setPixelColor(ledId, rgb);
@@ -263,7 +264,7 @@ namespace bitcommander
     //% blockId="bitcommander_neo_rainbow" block="set led rainbow"
     //% weight=80
     //% subcategory=Leds
-    //% group=Leds
+    //% group=Basic
     export function neoRainbow(): void
     {
         neo().showRainbow(1, 360);
@@ -276,7 +277,7 @@ namespace bitcommander
     //% blockId="bitcommander_neo_rotate" block="rotate LEDs"
     //% weight=75
     //% subcategory=Leds
-    //% group=Leds
+    //% group=Basic
     export function neoRotate(): void
     {
         neo().rotate(1);
