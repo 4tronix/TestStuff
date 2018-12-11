@@ -119,7 +119,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_event block="on 22 button %button|%event"
+    //% blockId=bc_event block="on 23 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -133,20 +133,20 @@ namespace bitcommander
       *
       * @param buttonID Button to check
       */
-    //% blockId="bitcommander_check_button" block="button %buttonID"
+    //% blockId="bitcommander_check_button" block="button %buttonID|pressed"
     //% weight=85
     //% subcategory=Inputs
     //% group=Inputs
-    export function readButton(buttonID: BCButtons): number
+    export function readButton(buttonID: BCButtons): boolean
     {
 	switch (buttonID)
 	{
-            case BCButtons.Red: return pins.digitalReadPin(DigitalPin.P12); break;
-            case BCButtons.Yellow: return pins.digitalReadPin(DigitalPin.P16); break;
-            case BCButtons.Green: return pins.digitalReadPin(DigitalPin.P14); break;
-            case BCButtons.Blue: return pins.digitalReadPin(DigitalPin.P15); break;
-            case BCButtons.Joystick: return pins.digitalReadPin(DigitalPin.P8); break;
-	    default: return 0;
+            case BCButtons.Red: return pins.digitalReadPin(DigitalPin.P12)==1; break;
+            case BCButtons.Yellow: return pins.digitalReadPin(DigitalPin.P16)==1; break;
+            case BCButtons.Green: return pins.digitalReadPin(DigitalPin.P14)==1; break;
+            case BCButtons.Blue: return pins.digitalReadPin(DigitalPin.P15)==1; break;
+            case BCButtons.Joystick: return pins.digitalReadPin(DigitalPin.P8)==1; break;
+	    default: return false;
 	}
     }
 
