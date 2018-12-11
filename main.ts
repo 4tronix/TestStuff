@@ -94,6 +94,7 @@ enum BCEvents {
  * Custom blocks
  */
 //% weight=10 color=#e7660b icon="\uf11b"
+//% groups=['others', 'Basic', 'Advanced']
 namespace bitcommander
 {
     let neoStrip: neopixel.Strip;
@@ -119,7 +120,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_event block="on 19 button %button|%event"
+    //% blockId=bc_event block="on 20 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -207,7 +208,6 @@ namespace bitcommander
     //% blockId="bitcommander_neo_show" block="show LED changes"
     //% weight=100
     //% subcategory=Leds
-    //% groups=['Basic', 'Advanced']
     //% group=Basic
     export function neoShow(): void
     {
