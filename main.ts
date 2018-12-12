@@ -145,7 +145,7 @@ namespace cubebit {
     function updateLEDs(): void
     {
         if (_updateMode == CBMode.Auto)
-            neo().show();
+            neo(DigitalPin.P0,3).show();
     }
 
 // Main exported functions
@@ -155,7 +155,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side. eg: 3, 4, 5, 8
      */
-    //% blockId="cubebit_create" block="create 03 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 04 Cube:Bit on %pin| with side %side"
     //% weight=100
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -200,25 +200,13 @@ namespace cubebit {
     }
 
     /**
-      * Clear leds.
-      */
-    //% blockId="cubebit_clear" block="clear all pixels"
-    //% weight=80
-    //% advanced=true
-    export function neoClear(): void
-    {
-        neo(DigitalPin.P0,3).clear();
-        updateLEDs();
-    }
-
-    /**
       * Sets a plane of pixels to given colour
       * @param plane number of plane from 0 to size of cube
       * @param axis axis (xy,xz,yz) of the plane
       * @param rgb RGB colour of the pixel
       */
     //% blockId="cubebit_set_plane" block="set plane %plane| on axis %axis=CBAxis| to %rgb=cb_colours"
-    //% weight=75
+    //% weight=80
     export function setPlane(plane: number, axis: CBAxis, rgb: number): void
     {
         if (axis == CBAxis.YZ)
@@ -243,17 +231,102 @@ namespace cubebit {
     }
 
     /**
-      * Defines a custom height for the Cube (height>0)
-      * define the height BEFORE creating the cube
-      * @param height number of slices in the tower. eg: 4
-      */
-    //% blockId="cubebit_set_height" block="set height of tower to %height"
-    //% weight=70
-    //% advanced=true
-    export function setHeight(height: number): void
+     * Get the pixel ID from x, y, z coordinates
+     *
+     * @param x position from left to right (x dimension)
+     * @param y position from front to back (y dimension)
+     * @param z position from bottom to top (z dimension)
+     */
+    //% blockId="cubebit_map_pixel" block="map ID from x %x|y %y|z %z"
+    //% weight=75
+    export function mapPixel(x: number, y: number, z: number): number
     {
-        if (! cubeHeight)
-            cubeHeight = height;
+        return pixelMap(x,y,z);
+    }
+
+    /**
+      * Shows a rainbow pattern on all pixels
+      */
+    //% blockId="cubebit_rainbow" block="set Cube:Bit rainbow"
+    //% weight=70
+    export function neoRainbow(): void
+    {
+        neo(DigitalPin.P0,3).showRainbow(1, 360);
+        updateLEDs();
+    }
+
+    /**
+     * Rotate LEDs forward.
+     */
+    //% blockId="cubebit_rotate" block="rotate pixels"
+    //% weight=65
+    export function neoRotate(): void
+    {
+        neo(DigitalPin.P0,3).rotate(1);
+        updateLEDs();
+    }
+
+// Advanced blocks
+
+    /**
+      * Set LED update mode (Manual or Automatic)
+      * @param updateMode setting automatic will show LED changes automatically
+      */
+    //% blockId="cubebit_set_updateMode" block="set %updateMode|update mode"
+    //% weight=100
+    //% advanced=true
+    export function setUpdateMode(updateMode: CBMode): void
+    {
+        _updateMode = updateMode;
+    }
+
+    /**
+      * Show all changes
+      */
+    //% blockId="cubebit_show" block="show Cube:Bit changes"
+    //% weight=95
+    //% advanced=true
+    export function neoShow(): void
+    {
+        neo(DigitalPin.P0,3).show();
+    }
+
+    /**
+     * Set the brightness of the cube.
+     * @param brightness a measure of LED brightness in 0-255. eg: 40
+     */
+    //% blockId="cubebit_brightness" block="set Cube:Bit brightness %brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=90
+    //%advanced=true
+    export function neoBrightness(brightness: number): void
+    {
+        neo(DigitalPin.P0,3).setBrightness(brightness);
+        updateLEDs();
+    }
+
+    /**
+      * Clear leds.
+      */
+    //% blockId="cubebit_clear" block="clear all pixels"
+    //% weight=85
+    //% advanced=true
+    export function neoClear(): void
+    {
+        neo(DigitalPin.P0,3).clear();
+        updateLEDs();
+    }
+
+    /**
+     * Shift LEDs forward and clear with zeros.
+     */
+    //% blockId="cubebit_shift" block="shift pixels"
+    //% weight=80
+    //% advanced=true
+    export function neoShift(): void
+    {
+        neo(DigitalPin.P0,3).shift(1);
+        updateLEDs();
     }
 
     /**
@@ -262,25 +335,11 @@ namespace cubebit {
       * @param color Standard RGB Led Colours
       */
     //% blockId="cb_colours" block=%color
-    //% weight=65
+    //% weight=75
     //%advanced=true
     export function CBColours(color: CBColors): number
     {
         return color;
-    }
-
-    /**
-     * Get the pixel ID from x, y, z coordinates
-     *
-     * @param x position from left to right (x dimension)
-     * @param y position from front to back (y dimension)
-     * @param z position from bottom to top (z dimension)
-     */
-    //% blockId="cubebit_map_pixel" block="map ID from x %x|y %y|z %z"
-    //% weight=55
-    export function mapPixel(x: number, y: number, z: number): number
-    {
-        return pixelMap(x,y,z);
     }
 
     /**
@@ -291,7 +350,7 @@ namespace cubebit {
      * @param blue Blue value of the LED 0:255
      */
     //% blockId="cubebit_convertRGB" block="convert from red %red| green %green| blue %bblue"
-    //% weight=50
+    //% weight=70
     //%advanced=true
     export function convertRGB(r: number, g: number, b: number): number
     {
@@ -299,64 +358,17 @@ namespace cubebit {
     }
 
     /**
-      * Shows a rainbow pattern on all pixels
+      * Defines a custom height for the Cube (height>0)
+      * define the height BEFORE creating the cube
+      * @param height number of slices in the tower. eg: 4
       */
-    //% blockId="cubebit_rainbow" block="set Cube:Bit rainbow"
-    //% weight=45
-    export function neoRainbow(): void
-    {
-        neo(DigitalPin.P0,3).showRainbow(1, 360);
-        updateLEDs();
-    }
-
-    /**
-     * Shift LEDs forward and clear with zeros.
-     */
-    //% blockId="cubebit_shift" block="shift pixels"
-    //% weight=40
-    //% advanced=true
-    export function neoShift(): void
-    {
-        neo(DigitalPin.P0,3).shift(1);
-        updateLEDs();
-    }
-
-    /**
-     * Rotate LEDs forward.
-     */
-    //% blockId="cubebit_rotate" block="rotate pixels"
-    //% weight=35
-    export function neoRotate(): void
-    {
-        neo(DigitalPin.P0,3).rotate(1);
-        updateLEDs();
-    }
-
-    /**
-     * Set the brightness of the cube.
-     * @param brightness a measure of LED brightness in 0-255. eg: 40
-     */
-    //% blockId="cubebit_brightness" block="set Cube:Bit brightness %brightness"
-    //% brightness.min=0 brightness.max=255
-    //% weight=30
-    //%advanced=true
-    export function neoBrightness(brightness: number): void
-    {
-        neo(DigitalPin.P0,3).setBrightness(brightness);
-        updateLEDs();
-    }
-
-    /**
-      * Set LED update mode (Manual or Automatic)
-      * @param updateMode setting automatic will show LED changes automatically
-      */
-    //% blockId="cubebit_set_updateMode" block="set %updateMode|update mode"
+    //% blockId="cubebit_set_height" block="set height of tower to %height"
     //% weight=65
     //% advanced=true
-    export function setUpdateMode(updateMode: CBMode): void
+    export function setHeight(height: number): void
     {
-        _updateMode = updateMode;
+        if (! cubeHeight)
+            cubeHeight = height;
     }
-
 
 }
