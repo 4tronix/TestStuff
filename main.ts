@@ -115,14 +115,27 @@ namespace bitbot
 {
     let neoStrip: neopixel.Strip;
     let _updateMode = BBMode.Auto;
+    let leftSpeed = 0;
+    let rightSpeed = 0;
 
 // Motor Blocks
+
+    // slow PWM frequency for slower speeds to improve torque
+    function setPWM(): void
+    {
+        if ((leftSpeed < 400) || (rightSpeed < 400))
+            pins.analogSetPeriod(AnalogPin.P0, 60000);
+        else if ((leftSpeed < 600) || (rightSpeed < 600))
+            pins.analogSetPeriod(AnalogPin.P0, 40000);
+        else
+            pins.analogSetPeriod(AnalogPin.P0, 30000);
+    }
 
     /**
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="bitbot_motor_forward" block="drive 04 at speed %speed"
+    //% blockId="bitbot_motor_forward" block="drive 05 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
@@ -200,6 +213,12 @@ namespace bitbot
     export function motor(motor: BBMotor, speed: number): void
     {
         let forward = (speed >= 0);
+        let absSpeed = Math.abs(speed);
+        if ((motor == RBMotor.Left) || (motor == RBMotor.Both))
+            leftSpeed = absSpeed;
+        if ((motor == RBMotor.Right) || (motor == RBMotor.Both))
+            rightSpeed = absSpeed;
+        setPWM();
 
         if (speed > 1023)
             speed = 1023;
