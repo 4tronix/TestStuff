@@ -1,36 +1,80 @@
 ﻿
 /**
-  * Enumeration of buttons
+  * Enumeration of motors.
   */
-enum BCButtons {
-    //% block="red"
-    Red,
-    //% block="yellow"
-    Yellow,
-    //% block="green"
-    Green,
-    //% block="blue"
-    Blue,
-    //% block="joystick"
-    Joystick
+enum BBMotor
+{
+    //% block="left"
+    Left,
+    //% block="right"
+    Right,
+    //% block="both"
+    Both
 }
 
 /**
-  * Enumeration of joystick axes
+  * Enumeration of directions.
   */
-enum BCJoystick {
-    //% block="x"
-    X,
-    //% block="y"
-    Y
+enum BBRobotDirection
+{
+    //% block="left"
+    Left,
+    //% block="right"
+    Right
+}
+
+/**
+  * Values for buzzer. On or Off
+  */
+enum BBBuzz
+{
+    //% block="on"
+    On,
+    //% block="off"
+    Off
+}
+
+/**
+  * Enumeration of line sensors.
+  */
+enum BBLineSensor
+{
+    //% block="left"
+    Left,
+    //% block="right"
+    Right
+}
+
+/**
+  * Enumeration of light sensors.
+  */
+enum BBLightSensor
+{
+    //% block="left"
+    Left,
+    //% block="right"
+    Right
+}
+
+/**
+ * Ping unit for sensor.
+ */
+enum BBPingUnit
+{
+    //% block="cm"
+    Centimeters,
+    //% block="inches"
+    Inches,
+    //% block="μs"
+    MicroSeconds
 }
 
 /**
   * Update mode for LEDs
-  * setting to Manual requires "show LED changes" blocks
+  * setting to Manual requires show LED changes blocks
   * setting to Auto will update the LEDs everytime they change
   */
-enum BCMode
+enum BBMode
 {
     Manual,
     Auto
@@ -39,7 +83,7 @@ enum BCMode
 /**
   * Pre-Defined LED colours
   */
-enum BCColors
+enum BBColors
 {
     //% block=red
     Red = 0xff0000,
@@ -64,132 +108,239 @@ enum BCColors
 }
 
 /**
- * Pins used to generate events
- */
-enum BCPins {
-    //% block="red"
-    P12 = <number>DAL.MICROBIT_ID_IO_P12,
-    //% block="yellow"
-    P16 = DAL.MICROBIT_ID_IO_P16,
-    //% block="green"
-    P14 = DAL.MICROBIT_ID_IO_P14,
-    //% block="blue"
-    P15 = DAL.MICROBIT_ID_IO_P15,
-    //% block="joystick"
-    Joystick = DAL.MICROBIT_ID_IO_P8
-}
-
-
-/**
- * Button events
- */
-enum BCEvents {
-    //% block="down"
-    Down = DAL.MICROBIT_PIN_EVT_RISE,
-    //% block="up"
-    Up = DAL.MICROBIT_PIN_EVT_FALL
-}
-
-/**
  * Custom blocks
  */
-//% weight=10 color=#e7660b icon="\uf11b"
-namespace bitcommander
-{
+//% weight=50 color=#e7660b icon="\uf1b9"
+namespace bitbot {
+
     let neoStrip: neopixel.Strip;
     let _updateMode = BCMode.Auto;
-    let _initEvents = true;
 
-// Inputs. Buttons, Dial and Joystick
+// Motor Blocks
 
-    function initEvents(): void
+    /**
+      * Drive robot forward (or backward) at speed.
+      * @param speed speed of motor between -1023 and 1023. eg: 600
+      */
+    //% blockId="bitbot_motor_forward" block="drive 01 at speed %speed"
+    //% speed.min=-1023 speed.max=1023
+    //% weight=100
+    //% subcategory=Motors
+    export function drive(speed: number): void
     {
-        if (_initEvents)
+        motor(BBMotor.Both, speed);
+    }
+
+    /**
+      * Drive robot forward (or backward) at speed for milliseconds.
+      * @param speed speed of motor between -1023 and 1023. eg: 600
+      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      */
+    //% blockId="bitbot_motor_forward_milliseconds" block="drive at speed %speed| for %milliseconds|(ms)"
+    //% speed.min=-1023 speed.max=1023
+    //% weight=95
+    //% subcategory=Motors
+    export function driveMilliseconds(speed: number, milliseconds: number): void
+    {
+        drive(speed);
+        basic.pause(milliseconds);
+        drive(0);
+    }
+
+    /**
+      * Turn robot in direction at speed.
+      * @param direction direction to turn.
+      * @param speed speed of motor between 0 and 1023. eg: 600
+      */
+    //% blockId="bitbot_turn" block="spin %direction|at speed %speed"
+    //% speed.min=0 speed.max=1023
+    //% weight=90
+    //% subcategory=Motors
+    export function driveTurn(direction: BBRobotDirection, speed: number): void
+    {
+        if (speed < 0) speed = 0;
+
+        if (direction == BBRobotDirection.Left)
         {
-            pins.setEvents(DigitalPin.P12, PinEventType.Edge);
-            pins.setEvents(DigitalPin.P16, PinEventType.Edge);
-            pins.setEvents(DigitalPin.P14, PinEventType.Edge);
-            pins.setEvents(DigitalPin.P15, PinEventType.Edge);
-            pins.setEvents(DigitalPin.P8, PinEventType.Edge);
-            _initEvents = false;
+            motor(BBMotor.Left, -speed);
+            motor(BBMotor.Right, speed);
+        }
+        else if (direction == BBRobotDirection.Right)
+        {
+            motor(BBMotor.Left, speed);
+            motor(BBMotor.Right, -speed);
         }
     }
 
     /**
-      * Registers event code
+      * Spin robot in direction at speed for milliseconds.
+      * @param direction direction to turn.
+      * @param speed speed of motor between 0 and 1023. eg: 600
+      * @param milliseconds duration in milliseconds to turn for, then stop. eg: 400
       */
-    //% weight=90
-    //% blockId=bc_event block="on 27 button %button|%event"
-    //% subcategory=Inputs
-    //% group=Inputs
-    export function onEvent(button: BCPins, event: BCEvents, handler: Action)
-    {
-        initEvents();
-        control.onEvent(<number>button, <number>event, handler);
-    }
-
-    /**
-      * check button states
-      *
-      * @param buttonID Button to check
-      */
-    //% blockId="bitcommander_check_button" block="button %buttonID|pressed"
+    //% blockId="bitbot_turn_milliseconds" block="spin %direction|at speed %speed| for %milliseconds|(ms)"
+    //% speed.min=0 speed.max=1023
     //% weight=85
-    //% subcategory=Inputs
-    //% group=Inputs
-    export function readButton(buttonID: BCButtons): boolean
+    //% subcategory=Motors
+    export function driveTurnMilliseconds(direction: BBRobotDirection, speed: number, milliseconds: number): void
     {
-	switch (buttonID)
-	{
-            case BCButtons.Red: return pins.digitalReadPin(DigitalPin.P12)==1; break;
-            case BCButtons.Yellow: return pins.digitalReadPin(DigitalPin.P16)==1; break;
-            case BCButtons.Green: return pins.digitalReadPin(DigitalPin.P14)==1; break;
-            case BCButtons.Blue: return pins.digitalReadPin(DigitalPin.P15)==1; break;
-            case BCButtons.Joystick: return pins.digitalReadPin(DigitalPin.P8)==1; break;
-	    default: return false;
-	}
+        driveTurn(direction, speed)
+        basic.pause(milliseconds)
+        motor(BBMotor.Both, 0)
     }
 
     /**
-      * Read dial
-      *
+      * Drive motor(s) forward or reverse.
+      * @param motor motor to drive.
+      * @param speed speed of motor (-1023 to 1023). eg: 600
       */
-    //% blockId="bitcommander_read_dial" block="dial"
-    //% weight=90
-    //% subcategory=Inputs
-    //% group=Inputs
-    export function readDial( ): number
+    //% blockId="bitbot_motor" block="drive %motor|motor(s) at speed %speed"
+    //% weight=80
+    //% subcategory=Motors
+    export function motor(motor: BBMotor, speed: number): void
     {
-        return pins.analogReadPin(AnalogPin.P0);
+        let forward = (speed >= 0);
+
+        if (speed > 1023)
+            speed = 1023;
+        else if (speed < -1023)
+            speed = -1023;
+
+        let realSpeed = speed;
+        if (!forward)
+        {
+            if (realSpeed >= -200)
+                realSpeed = Math.idiv(realSpeed * 19, 6);
+            else if (realSpeed >= -400)
+                realSpeed = realSpeed * 2;
+            else if (realSpeed >= -600)
+                realSpeed = Math.idiv(realSpeed * 3, 2);
+            else if (realSpeed >= -800)
+                realSpeed = Math.idiv(realSpeed * 5, 4);
+            realSpeed = 1023 + realSpeed; // realSpeed is negative!
+        }
+
+        if ((motor == BBMotor.Left) || (motor == BBMotor.Both)) {
+            pins.analogWritePin(AnalogPin.P0, realSpeed);
+            pins.digitalWritePin(DigitalPin.P8, forward ? 0 : 1);
+        }
+
+        if ((motor == BBMotor.Right) || (motor == BBMotor.Both)) {
+            pins.analogWritePin(AnalogPin.P1, realSpeed);
+            pins.digitalWritePin(DigitalPin.P12, forward ? 0 : 1);
+        }
     }
 
+// Sensors and Addons
+
     /**
-      * Read joystick values
-      *
-      * @param axis Axis to read
+      * Sound a buzz.
+      * @param flag state of buzzer (On or Off)
       */
-    //% blockId="bitcommander_read_joystick" block="joystick %axis"
-    //% weight=90
-    //% subcategory=Inputs
-    //% group=Inputs
-    export function readJoystick(axis: BCJoystick): number
+    //% blockId="bitbot_buzz" block="turn buzzer %flag"
+    //% flag.min=0 flag.max=1
+    //% weight=95
+    //% subcategory=Sensors
+    export function buzz(flag: BBBuzz): void
     {
-        if (axis == BCJoystick.X)
-            return pins.analogReadPin(AnalogPin.P1);
+        if (flag==BBBuzz.Off)
+            pins.digitalWritePin(DigitalPin.P14, 0);
         else
-            return pins.analogReadPin(AnalogPin.P2);
+            pins.digitalWritePin(DigitalPin.P14, 1);
     }
 
+    /**
+    * Read distance from sonar module connected to accessory connector.
+    *
+    * @param unit desired conversion unit
+    */
+    //% blockId="bitbot_sonar" block="read sonar as %unit"
+    //% weight=90
+    //% subcategory=Sensors
+    export function sonar(unit: BBPingUnit): number
+    {
+        // send pulse
+        let trig = DigitalPin.P15;
+        let echo = DigitalPin.P15;
+        let maxCmDistance = 500;
+        let d=10;
+        pins.setPull(trig, PinPullMode.PullNone);
+        for (let x=0; x<10; x++)
+        {
+            pins.digitalWritePin(trig, 0);
+            control.waitMicros(2);
+            pins.digitalWritePin(trig, 1);
+            control.waitMicros(10);
+            pins.digitalWritePin(trig, 0);
+            // read pulse
+            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            if (d>0)
+                break;
+        }
+        switch (unit)
+        {
+            case BBPingUnit.Centimeters: return d / 58;
+            case BBPingUnit.Inches: return d / 148;
+            default: return d;
+        }
+    }
 
-// LEDs. neopixel blocks
+    /**
+      * Read line sensor.
+      * @param sensor Line sensor to read.
+      */
+    //% blockId="bitbot_read_line" block="%sensor|line sensor"
+    //% weight=85
+    //% subcategory=Sensors
+    export function readLine(sensor: BBLineSensor): number
+    {
+        if (sensor == BBLineSensor.Left)
+            return pins.digitalReadPin(DigitalPin.P11);
+        else
+            return pins.digitalReadPin(DigitalPin.P5);
+    }
+
+    /**
+      * Read light sensor.
+      * @param sensor Light sensor to read.
+      */
+    //% blockId="bitbot_read_light" block="%sensor|light sensor"
+    //% weight=80
+    //% subcategory=Sensors
+    export function readLight(sensor: BBLightSensor): number
+    {
+        if (sensor == BBLightSensor.Left)
+        {
+            pins.digitalWritePin(DigitalPin.P16, 0);
+            return pins.analogReadPin(AnalogPin.P2);
+        }
+        else
+        {
+            pins.digitalWritePin(DigitalPin.P16, 1);
+            return pins.analogReadPin(AnalogPin.P2);
+        }
+    }
+
+    /**
+      * Adjust opening of Talon attachment
+      * @param degrees Degrees to open Talon (0 to 80). eg: 30
+      */
+    //% blockId="bitbot_set_talon" block="open talon %degrees|degrees"
+    //% weight=75
+    //% degrees.min=0 degrees.max=80
+    //% subcategory=Sensors
+    export function setTalon(degrees: number): void
+    {
+        pins.servoWritePin(AnalogPin.P15, degrees);
+    }
+
+// LED Blocks
 
     // create a neopixel strip if not got one already
     function neo(): neopixel.Strip
     {
-        if (!neoStrip)
-        {
-            neoStrip = neopixel.create(DigitalPin.P13, 6, NeoPixelMode.RGB)
-            neoStrip.setBrightness(40)
+        if (!neoStrip) {
+            neoStrip = neopixel.create(DigitalPin.P13, 12, NeoPixelMode.RGB);
         }
         return neoStrip;
     }
@@ -204,7 +355,7 @@ namespace bitcommander
     /**
       * Show LED changes
       */
-    //% blockId="bitcommander_neo_show" block="show LED changes"
+    //% blockId="bitbot_neo_show" block="show LED changes"
     //% weight=100
     //% subcategory=Leds
     export function neoShow(): void
@@ -214,10 +365,9 @@ namespace bitcommander
 
     /**
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
-      *
       * @param rgb RGB color of the LED
       */
-    //% blockId="bitcommander_neo_set_color" block="set all LEDs to %rgb=bc_colours"
+    //% blockId="bitbot_neo_set_color" block="set all LEDs to %rgb=bb_colours"
     //% weight=95
     //% subcategory=Leds
     export function neoSetColor(rgb: number)
@@ -227,11 +377,10 @@ namespace bitcommander
     }
 
     /**
-      * Clear all LEDs.
+      * Clear all leds.
       */
-    //% blockId="bitcommander_neo_clear" block="clear all LEDs"
+    //% blockId="bitbot_neo_clear" block="clear all LEDs"
     //% weight=90
-    //% subcategory=Leds
     export function neoClear(): void
     {
         neo().clear();
@@ -239,12 +388,12 @@ namespace bitcommander
     }
 
     /**
-      * Set LED to a given color (range 0-255 for r, g, b).
-      *
-      * @param ledId position of the LED (0 to 5)
-      * @param rgb RGB color of the LED
-      */
-    //% blockId="bitcommander_neo_set_pixel_color" block="set LED at %ledId|to %rgb=bc_colours"
+     * Set LED to a given color (range 0-255 for r, g, b).
+     *
+     * @param ledId position of the LED (0 to 11)
+     * @param rgb RGB color of the LED
+     */
+    //% blockId="bitbot_neo_set_pixel_color" block="set LED at %ledId|to %rgb=bb_colours"
     //% weight=85
     //% subcategory=Leds
     export function neoSetPixelColor(ledId: number, rgb: number): void
@@ -256,62 +405,60 @@ namespace bitcommander
     /**
       * Shows a rainbow pattern on all LEDs.
       */
-    //% blockId="bitcommander_neo_rainbow" block="set led rainbow"
+    //% blockId="bitbot_neo_rainbow" block="set led rainbow"
     //% weight=80
     //% subcategory=Leds
     export function neoRainbow(): void
     {
-        neo().showRainbow(1, 360)
+        neo().showRainbow(1, 360);
         updateLEDs()
     }
 
     /**
-      * Rotate LEDs forward.
-      */
-    //% blockId="bitcommander_neo_rotate" block="rotate LEDs"
+     * Rotate LEDs forward.
+     */
+    //% blockId="bitbot_neo_rotate" block="rotate LEDs"
     //% weight=75
-    //% subcategory=Leds
     export function neoRotate(): void
     {
         neo().rotate(1);
-        updateLEDs();
+        updateLEDs()
     }
 
     /**
-      * Shift LEDs forward and clear with zeros.
-      */
-    //% blockId="bitcommander_neo_shift" block="shift LEDs"
+     * Shift LEDs forward and clear with zeros.
+     */
+    //% blockId="bitbot_neo_shift" block="shift LEDs"
     //% weight=70
-    //% subcategory=Leds
     export function neoShift(): void
     {
         neo().shift(1);
-        updateLEDs();
+        updateLEDs()
     }
 
-    // advanced blocks
+    // Advanced blocks
 
     /**
       * Set LED update mode (Manual or Automatic)
       * @param updateMode setting automatic will show LED changes automatically
       */
-    //% blockId="bitcommander_set_updateMode" block="set %updateMode|update mode"
+    //% blockId="bitbot_set_updateMode" block="set %updateMode|update mode"
     //% brightness.min=0 brightness.max=255
     //% weight=65
     //% advanced=true
-    export function setUpdateMode(updateMode: BCMode): void
+    export function setUpdateMode(updateMode: BBMode): void
     {
         _updateMode = updateMode;
     }
 
     /**
-      * Set the brightness of the LEDs
-      * @param brightness a measure of LED brightness (0 to 255) eg: 40
-      */
-    //% blockId="bitcommander_neo_brightness" block="set led brightness %brightness"
+     * Set the brightness of the LEDs
+     * @param brightness a measure of LED brightness in 0-255. eg: 40
+     */
+    //% blockId="bitbot_neo_brightness" block="set LED brightness %brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=60
-    //% advanced=tru
+    //% advanced=true
     export function neoBrightness(brightness: number): void
     {
         neo().setBrightness(brightness);
@@ -326,7 +473,7 @@ namespace bitcommander
     //% blockId="bc_colours" block=%color
     //% weight=55
     //% advanced=true
-    export function BCColours(color: BCColors): number
+    export function BBColours(color: BBColors): number
     {
         return color;
     }
@@ -338,7 +485,7 @@ namespace bitcommander
       * @param green Green value of the LED (0 to 255)
       * @param blue Blue value of the LED (0 to 255)
       */
-    //% blockId="bitcommander_convertRGB" block="convert from red %red| green %green| blue %bblue"
+    //% blockId="bitbot_convertRGB" block="convert from red %red| green %green| blue %bblue"
     //% weight=50
     //% advanced=true
     export function convertRGB(r: number, g: number, b: number): number

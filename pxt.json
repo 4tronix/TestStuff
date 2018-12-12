@@ -1,15 +1,16 @@
 {
-    "name": "bitcommander",
-    "version": "0.0.1",
-    "description": "A BitCommander package for pxt-microbit",
-    "license": "Apache",
+    "name": "bitbot",
+    "version": "1.0.0",
+    "description": "A BitBot package for pxt-microbit",
+    "license": "MIT",
     "dependencies": {
         "core": "*",
         "neopixel": "github:microsoft/pxt-neopixel#v0.6.10"
     },
     "files": [
         "README.md",
-        "main.ts"
+        "main.ts",
+        "_locales/no/bitbot-strings.json"
     ],
     "testFiles": [
         "tests.ts"
