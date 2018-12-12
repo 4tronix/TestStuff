@@ -119,7 +119,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bc_event block="on 25 button %button|%event"
+    //% blockId=bc_event block="on 26 button %button|%event"
     //% subcategory=Inputs
     //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
@@ -207,7 +207,6 @@ namespace bitcommander
     //% blockId="bitcommander_neo_show" block="show LED changes"
     //% weight=100
     //% subcategory=Leds
-    //% group=Basic
     export function neoShow(): void
     {
         neo().show();
@@ -221,7 +220,6 @@ namespace bitcommander
     //% blockId="bitcommander_neo_set_color" block="set all LEDs to %rgb=bc_colours"
     //% weight=95
     //% subcategory=Leds
-    //% group=Basic
     export function neoSetColor(rgb: number)
     {
         neo().showColor(rgb);
@@ -234,7 +232,6 @@ namespace bitcommander
     //% blockId="bitcommander_neo_clear" block="clear all LEDs"
     //% weight=90
     //% subcategory=Leds
-    //% group=Basic
     export function neoClear(): void
     {
         neo().clear();
@@ -250,7 +247,6 @@ namespace bitcommander
     //% blockId="bitcommander_neo_set_pixel_color" block="set LED at %ledId|to %rgb=bc_colours"
     //% weight=85
     //% subcategory=Leds
-    //% group=Basic
     export function neoSetPixelColor(ledId: number, rgb: number): void
     {
         neo().setPixelColor(ledId, rgb);
@@ -263,7 +259,6 @@ namespace bitcommander
     //% blockId="bitcommander_neo_rainbow" block="set led rainbow"
     //% weight=80
     //% subcategory=Leds
-    //% group=Basic
     export function neoRainbow(): void
     {
         neo().showRainbow(1, 360)
@@ -276,7 +271,6 @@ namespace bitcommander
     //% blockId="bitcommander_neo_rotate" block="rotate LEDs"
     //% weight=75
     //% subcategory=Leds
-    //% group=Basic
     export function neoRotate(): void
     {
         neo().rotate(1);
@@ -289,7 +283,6 @@ namespace bitcommander
     //% blockId="bitcommander_neo_shift" block="shift LEDs"
     //% weight=70
     //% subcategory=Leds
-    //% group=Basic
     export function neoShift(): void
     {
         neo().shift(1);
@@ -306,7 +299,7 @@ namespace bitcommander
     //% brightness.min=0 brightness.max=255
     //% weight=65
     //% subcategory=Leds
-    //% group=Extended
+    //% group=Advanced
     export function setUpdateMode(updateMode: BCMode): void
     {
         _updateMode = updateMode;
@@ -320,7 +313,7 @@ namespace bitcommander
     //% brightness.min=0 brightness.max=255
     //% weight=60
     //% subcategory=Leds
-    //% group=Extended
+    //% group=Advanced
     export function neoBrightness(brightness: number): void
     {
         neo().setBrightness(brightness);
@@ -335,7 +328,7 @@ namespace bitcommander
     //% blockId="bc_colours" block=%color
     //% weight=55
     //% subcategory=Leds
-    //% group=Extended
+    //% group=Advanced
     export function BCColours(color: BCColors): number
     {
         return color;
@@ -351,7 +344,7 @@ namespace bitcommander
     //% blockId="bitcommander_convertRGB" block="convert from red %red| green %green| blue %bblue"
     //% weight=50
     //% subcategory=Leds
-    //% group=Extended
+    //% group=Advanced
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
