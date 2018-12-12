@@ -122,7 +122,7 @@ namespace bitbot {
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="bitbot_motor_forward" block="drive 01 at speed %speed"
+    //% blockId="bitbot_motor_forward" block="drive 02 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
@@ -158,8 +158,8 @@ namespace bitbot {
     //% subcategory=Motors
     export function driveTurn(direction: BBRobotDirection, speed: number): void
     {
-        if (speed < 0) speed = 0;
-
+        if (speed < 0)
+            speed = 0;
         if (direction == BBRobotDirection.Left)
         {
             motor(BBMotor.Left, -speed);
@@ -220,12 +220,14 @@ namespace bitbot {
             realSpeed = 1023 + realSpeed; // realSpeed is negative!
         }
 
-        if ((motor == BBMotor.Left) || (motor == BBMotor.Both)) {
+        if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
+        {
             pins.analogWritePin(AnalogPin.P0, realSpeed);
             pins.digitalWritePin(DigitalPin.P8, forward ? 0 : 1);
         }
 
-        if ((motor == BBMotor.Right) || (motor == BBMotor.Both)) {
+        if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
+        {
             pins.analogWritePin(AnalogPin.P1, realSpeed);
             pins.digitalWritePin(DigitalPin.P12, forward ? 0 : 1);
         }
@@ -238,7 +240,6 @@ namespace bitbot {
       * @param flag state of buzzer (On or Off)
       */
     //% blockId="bitbot_buzz" block="turn buzzer %flag"
-    //% flag.min=0 flag.max=1
     //% weight=95
     //% subcategory=Sensors
     export function buzz(flag: BBBuzz): void
@@ -251,7 +252,6 @@ namespace bitbot {
 
     /**
     * Read distance from sonar module connected to accessory connector.
-    *
     * @param unit desired conversion unit
     */
     //% blockId="bitbot_sonar" block="read sonar as %unit"
@@ -348,7 +348,7 @@ namespace bitbot {
     // update LEDs if _updateMode set to Auto
     function updateLEDs(): void
     {
-        if (_updateMode == BCMode.Auto)
+        if (_updateMode == BBMode.Auto)
             neo().show();
     }
 
@@ -419,6 +419,7 @@ namespace bitbot {
      */
     //% blockId="bitbot_neo_rotate" block="rotate LEDs"
     //% weight=75
+    //% subcategory=Leds
     export function neoRotate(): void
     {
         neo().rotate(1);
@@ -430,6 +431,7 @@ namespace bitbot {
      */
     //% blockId="bitbot_neo_shift" block="shift LEDs"
     //% weight=70
+    //% subcategory=Leds
     export function neoShift(): void
     {
         neo().shift(1);
@@ -443,7 +445,6 @@ namespace bitbot {
       * @param updateMode setting automatic will show LED changes automatically
       */
     //% blockId="bitbot_set_updateMode" block="set %updateMode|update mode"
-    //% brightness.min=0 brightness.max=255
     //% weight=65
     //% advanced=true
     export function setUpdateMode(updateMode: BBMode): void
@@ -470,7 +471,7 @@ namespace bitbot {
       *
       * @param color Standard RGB Led Colours
       */
-    //% blockId="bc_colours" block=%color
+    //% blockId="bb_colours" block=%color
     //% weight=55
     //% advanced=true
     export function BBColours(color: BBColors): number
@@ -485,7 +486,7 @@ namespace bitbot {
       * @param green Green value of the LED (0 to 255)
       * @param blue Blue value of the LED (0 to 255)
       */
-    //% blockId="bitbot_convertRGB" block="convert from red %red| green %green| blue %bblue"
+    //% blockId="bitbot_convertRGB" block="convert from red %red| green %green| blue %blue"
     //% weight=50
     //% advanced=true
     export function convertRGB(r: number, g: number, b: number): number
