@@ -111,10 +111,10 @@ enum BBColors
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
-namespace bitbot {
-
+namespace bitbot
+{
     let neoStrip: neopixel.Strip;
-    let _updateMode = BCMode.Auto;
+    let _updateMode = BBMode.Auto;
 
 // Motor Blocks
 
@@ -122,7 +122,7 @@ namespace bitbot {
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="bitbot_motor_forward" block="drive 02 at speed %speed"
+    //% blockId="bitbot_motor_forward" block="drive 03 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
@@ -381,6 +381,7 @@ namespace bitbot {
       */
     //% blockId="bitbot_neo_clear" block="clear all LEDs"
     //% weight=90
+    //% subcategory=Leds
     export function neoClear(): void
     {
         neo().clear();
