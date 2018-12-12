@@ -12,6 +12,17 @@ enum CBAxis {
 }
 
 /**
+  * Update mode for LEDs
+  * setting to Manual requires show LED changes blocks
+  * setting to Auto will update the LEDs everytime they change
+  */
+enum CBMode
+{
+    Manual,
+    Auto
+}
+
+/**
   * Pre-Defined LED colours
   */
 enum CBColors
@@ -50,6 +61,7 @@ namespace cubebit {
     let cubeSide: number;
     let cubeSide2: number;
     let cubeSide3: number;
+    let _updateMode = CBMode.Auto;
 
 // Helper functions
 
@@ -136,7 +148,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side. eg: 3, 4, 5, 8
      */
-    //% blockId="cubebit_create" block="create 01 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 02 Cube:Bit on %pin| with side %side"
     //% weight=100
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -149,6 +161,7 @@ namespace cubebit {
       */
     //% blockId="cubebit_show" block="show Cube:Bit changes"
     //% weight=95
+    //% advanced=true
     export function neoShow(): void
     {
         neo(DigitalPin.P0,3).show();
@@ -156,7 +169,6 @@ namespace cubebit {
 
     /**
       * Sets all pixels to a given colour
-      *
       * @param rgb RGB colour of the pixel
       */
     //% blockId="cubebit_set_color" block="set all pixels to %rgb=cb_colours"
@@ -168,7 +180,6 @@ namespace cubebit {
 
     /**
      * Set a pixel to a given colour.
-     *
      * @param ID location of the pixel in the cube from 0
      * @param rgb RGB color of the LED
      */
@@ -184,6 +195,7 @@ namespace cubebit {
       */
     //% blockId="cubebit_clear" block="clear all pixels"
     //% weight=80
+    //% advanced=true
     export function neoClear(): void
     {
         neo(DigitalPin.P0,3).clear();
@@ -191,7 +203,6 @@ namespace cubebit {
 
     /**
       * Sets a plane of pixels to given colour
-      *
       * @param plane number of plane from 0 to size of cube
       * @param axis axis (xy,xz,yz) of the plane
       * @param rgb RGB colour of the pixel
@@ -222,11 +233,12 @@ namespace cubebit {
 
     /**
       * Defines a custom height for the Cube (height>0)
+      * define the height BEFORE creating the cube
       * @param height number of slices in the tower. eg: 4
       */
     //% blockId="cubebit_set_height" block="set height of tower to %height"
     //% weight=70
-    //% deprecated=true
+    //% advanced=true
     export function setHeight(height: number): void
     {
         if (! cubeHeight)
@@ -240,6 +252,7 @@ namespace cubebit {
       */
     //% blockId="cb_colours" block=%color
     //% weight=65
+    //%advanced=true
     export function CBColours(color: CBColors): number
     {
         return color;
@@ -268,6 +281,7 @@ namespace cubebit {
      */
     //% blockId="cubebit_convertRGB" block="convert from red %red| green %green| blue %bblue"
     //% weight=50
+    //%advanced=true
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
@@ -288,6 +302,7 @@ namespace cubebit {
      */
     //% blockId="cubebit_shift" block="shift pixels"
     //% weight=40
+    //% advanced=true
     export function neoShift(): void
     {
         neo(DigitalPin.P0,3).shift(1);
@@ -310,9 +325,22 @@ namespace cubebit {
     //% blockId="cubebit_brightness" block="set Cube:Bit brightness %brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=30
+    //%advanced=true
     export function neoBrightness(brightness: number): void
     {
         neo(DigitalPin.P0,3).setBrightness(brightness);
+    }
+
+    /**
+      * Set LED update mode (Manual or Automatic)
+      * @param updateMode setting automatic will show LED changes automatically
+      */
+    //% blockId="cubebit_set_updateMode" block="set %updateMode|update mode"
+    //% weight=65
+    //% advanced=true
+    export function setUpdateMode(updateMode: CBMode): void
+    {
+        _updateMode = updateMode;
     }
 
 
