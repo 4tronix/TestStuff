@@ -141,6 +141,13 @@ namespace cubebit {
         return nCube;
     }
 
+    // update LEDs if _updateMode set to Auto
+    function updateLEDs(): void
+    {
+        if (_updateMode == CBMode.Auto)
+            neo().show();
+    }
+
 // Main exported functions
 
     /**
@@ -148,7 +155,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side. eg: 3, 4, 5, 8
      */
-    //% blockId="cubebit_create" block="create 02 Cube:Bit on %pin| with side %side"
+    //% blockId="cubebit_create" block="create 03 Cube:Bit on %pin| with side %side"
     //% weight=100
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -176,6 +183,7 @@ namespace cubebit {
     export function setColor(rgb: number): void
     {
         neo(DigitalPin.P0,3).showColor(rgb);
+        updateLEDs();
     }
 
     /**
@@ -188,6 +196,7 @@ namespace cubebit {
     export function setPixelColor(ID: number, rgb: number): void
     {
         neo(DigitalPin.P0,3).setPixelColor(ID, rgb);
+        updateLEDs();
     }
 
     /**
@@ -199,6 +208,7 @@ namespace cubebit {
     export function neoClear(): void
     {
         neo(DigitalPin.P0,3).clear();
+        updateLEDs();
     }
 
     /**
@@ -229,6 +239,7 @@ namespace cubebit {
                 for (let y=0; y<cubeSide; y++)
                     nCube.setPixelColor(pixelMap(x,y,plane), rgb);
         }
+        updateLEDs();
     }
 
     /**
@@ -295,6 +306,7 @@ namespace cubebit {
     export function neoRainbow(): void
     {
         neo(DigitalPin.P0,3).showRainbow(1, 360);
+        updateLEDs();
     }
 
     /**
@@ -306,6 +318,7 @@ namespace cubebit {
     export function neoShift(): void
     {
         neo(DigitalPin.P0,3).shift(1);
+        updateLEDs();
     }
 
     /**
@@ -316,10 +329,11 @@ namespace cubebit {
     export function neoRotate(): void
     {
         neo(DigitalPin.P0,3).rotate(1);
+        updateLEDs();
     }
 
     /**
-     * Set the brightness of the cube. Note this only applies to future writes to the strip.
+     * Set the brightness of the cube.
      * @param brightness a measure of LED brightness in 0-255. eg: 40
      */
     //% blockId="cubebit_brightness" block="set Cube:Bit brightness %brightness"
@@ -329,6 +343,7 @@ namespace cubebit {
     export function neoBrightness(brightness: number): void
     {
         neo(DigitalPin.P0,3).setBrightness(brightness);
+        updateLEDs();
     }
 
     /**
