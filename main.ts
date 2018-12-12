@@ -122,7 +122,7 @@ namespace bitbot
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="bitbot_motor_forward" block="drive 03 at speed %speed"
+    //% blockId="bitbot_motor_forward" block="drive 04 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
@@ -336,11 +336,13 @@ namespace bitbot
 
 // LED Blocks
 
-    // create a neopixel strip if not got one already
+    // create a neopixel strip if not got one already. Default to brightness 40
     function neo(): neopixel.Strip
     {
-        if (!neoStrip) {
+        if (!neoStrip)
+        {
             neoStrip = neopixel.create(DigitalPin.P13, 12, NeoPixelMode.RGB);
+            neoStrip.setBrightness(40);
         }
         return neoStrip;
     }
