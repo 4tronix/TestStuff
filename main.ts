@@ -135,7 +135,7 @@ namespace bitbot
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="bitbot_motor_forward" block="drive 06 at speed %speed"
+    //% blockId="bitbot_motor_forward" block="drive 07 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
@@ -214,9 +214,9 @@ namespace bitbot
     {
         let forward = (speed >= 0);
         let absSpeed = Math.abs(speed);
-        if ((motor == RBMotor.Left) || (motor == RBMotor.Both))
+        if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
             leftSpeed = absSpeed;
-        if ((motor == RBMotor.Right) || (motor == RBMotor.Both))
+        if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
             rightSpeed = absSpeed;
         setPWM();
 
