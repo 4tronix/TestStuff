@@ -54,8 +54,8 @@ enum CBColors
  * Custom blocks
  */
 //% weight=10 color=#e7660b icon="\uf247"
-namespace cubebit {
-
+namespace cubebit
+{
     let nCube: neopixel.Strip;
     let cubeHeight: number;
     let cubeSide: number;
