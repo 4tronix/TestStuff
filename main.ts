@@ -1,89 +1,20 @@
 ﻿
 /**
-  * Enumeration of motors.
+  * Enumeration of axes
   */
-enum BBMotor
-{
-    //% block="left"
-    Left,
-    //% block="right"
-    Right,
-    //% block="both"
-    Both
-}
-
-/**
-  * Enumeration of directions.
-  */
-enum BBRobotDirection
-{
-    //% block="left"
-    Left,
-    //% block="right"
-    Right
-}
-
-/**
-  * Values for buzzer. On or Off
-  */
-enum BBBuzz
-{
-    //% block="on"
-    On,
-    //% block="off"
-    Off
-}
-
-/**
-  * Enumeration of line sensors.
-  */
-enum BBLineSensor
-{
-    //% block="left"
-    Left,
-    //% block="right"
-    Right
-}
-
-/**
-  * Enumeration of light sensors.
-  */
-enum BBLightSensor
-{
-    //% block="left"
-    Left,
-    //% block="right"
-    Right
-}
-
-/**
- * Ping unit for sensor.
- */
-enum BBPingUnit
-{
-    //% block="cm"
-    Centimeters,
-    //% block="inches"
-    Inches,
-    //% block="μs"
-    MicroSeconds
-}
-
-/**
-  * Update mode for LEDs
-  * setting to Manual requires show LED changes blocks
-  * setting to Auto will update the LEDs everytime they change
-  */
-enum BBMode
-{
-    Manual,
-    Auto
+enum CBAxis {
+    //% block="xy"
+    XY,
+    //% block="xz"
+    XZ,
+    //% block="yz"
+    YZ
 }
 
 /**
   * Pre-Defined LED colours
   */
-enum BBColors
+enum CBColors
 {
     //% block=red
     Red = 0xff0000,
@@ -107,386 +38,199 @@ enum BBColors
     Black = 0x000000
 }
 
+
 /**
  * Custom blocks
  */
-//% weight=50 color=#e7660b icon="\uf1b9"
-namespace bitbot
-{
-    let neoStrip: neopixel.Strip;
-    let _updateMode = BBMode.Auto;
-    let leftSpeed = 0;
-    let rightSpeed = 0;
+//% weight=10 color=#e7660b icon="\uf247"
+namespace cubebit {
 
-// Motor Blocks
+    let nCube: neopixel.Strip;
+    let cubeHeight: number;
+    let cubeSide: number;
+    let cubeSide2: number;
+    let cubeSide3: number;
 
-    // slow PWM frequency for slower speeds to improve torque
-    function setPWM(): void
+// Helper functions
+
+    function pixelMap(x: number, y: number, z: number): number
     {
-        if ((leftSpeed < 200) || (rightSpeed < 200))
-            pins.analogSetPeriod(AnalogPin.P0, 60000);
-        else if ((leftSpeed < 300) || (rightSpeed < 300))
-            pins.analogSetPeriod(AnalogPin.P0, 40000);
+        if (cubeSide == 9)	// need to change to separate flag for cubes built out of smaller slices
+            return pMap8(x, y, z);
         else
-            pins.analogSetPeriod(AnalogPin.P0, 30000);
+            return pMap(x, y, z, cubeSide);
     }
 
+    //pMap8 is mapping function for 8x8 built out of 4x4 slices. 0,0,0 is not ID=0, it is in fact 268
+    function pMap8(x: number, y: number, z: number): number
+    {
+        if (x<4 && y<4)  // column 0 (front left)
+        {
+            return 256 + pMap(3-x, 3-y, z, 4);
+        }
+        else if (x>=4 && y<4)  // column 1 (front right)
+        {
+            if ((z%2) == 0)
+                return 255 - pMap(y, x-4, z, 4);
+            else
+                return 255 - pMap(3-y, 7-x, z, 4);
+        }
+        else if (x<4 && y>=4)  // column 2 (back left)
+        {
+            if ((z%2) == 0)
+                return 511 - pMap(7-y, 3-x, z, 4);
+            else
+                return 511 - pMap(y-4, x, z, 4);
+        }
+        else  // column 3 (back right)
+        {
+            return pMap(x-4, y-4, z, 4);
+        }
+    }
+
+    function pMap(x: number, y: number, z: number, side: number): number
+    {
+        let q=0;
+        if (x<side && y<side && z<cubeHeight && x>=0 && y>=0 && z>=0)
+        {
+            if ((z%2) == 0)
+            {
+                if ((y%2) == 0)
+                    q = y * side + x;
+                else
+                    q = y * side + side - 1 - x;
+            }
+            else
+            {
+                if ((side%2) == 0)
+                    y = side - y - 1;
+                if ((x%2) == 0)
+                    q = side * (side - x) - 1 - y;
+                else
+                    q = (side - 1 - x) * side + y;
+            }
+            return z*side*side + q;
+        }
+        return cubeSide3;    // extra non-existent pixel for out of bounds
+    }
+
+    function neo(pin: DigitalPin, side: number): neopixel.Strip
+    {
+        if (!nCube)
+        {
+            if (! cubeHeight)
+                cubeHeight = side;
+            cubeSide = side;
+            cubeSide2 = side * side;
+            cubeSide3 = side * side * cubeHeight;
+            nCube = neopixel.create(pin, cubeSide3, NeoPixelMode.RGB);
+            nCube.setBrightness(40);
+        }
+        return nCube;
+    }
+
+// Main exported functions
+
     /**
-      * Drive robot forward (or backward) at speed.
-      * @param speed speed of motor between -1023 and 1023. eg: 600
-      */
-    //% blockId="bitbot_motor_forward" block="drive 07 at speed %speed"
-    //% speed.min=-1023 speed.max=1023
+     * Create a Cube:Bit cube (default 3x3x3) on Selected Pin (default Pin0)
+     * @param pin Micro:Bit pin to connect to Cube:Bit
+     * @param side number of pixels on each side. eg: 3, 4, 5, 8
+     */
+    //% blockId="cubebit_create" block="create 01 Cube:Bit on %pin| with side %side"
     //% weight=100
-    //% subcategory=Motors
-    export function drive(speed: number): void
+    //% side.min=3 side.max=8
+    export function create(pin: DigitalPin, side: number): void
     {
-        motor(BBMotor.Both, speed);
+        neo(pin, side);
     }
 
     /**
-      * Drive robot forward (or backward) at speed for milliseconds.
-      * @param speed speed of motor between -1023 and 1023. eg: 600
-      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      * Show all changes
       */
-    //% blockId="bitbot_motor_forward_milliseconds" block="drive at speed %speed| for %milliseconds|(ms)"
-    //% speed.min=-1023 speed.max=1023
+    //% blockId="cubebit_show" block="show Cube:Bit changes"
     //% weight=95
-    //% subcategory=Motors
-    export function driveMilliseconds(speed: number, milliseconds: number): void
-    {
-        drive(speed);
-        basic.pause(milliseconds);
-        drive(0);
-    }
-
-    /**
-      * Turn robot in direction at speed.
-      * @param direction direction to turn.
-      * @param speed speed of motor between 0 and 1023. eg: 600
-      */
-    //% blockId="bitbot_turn" block="spin %direction|at speed %speed"
-    //% speed.min=0 speed.max=1023
-    //% weight=90
-    //% subcategory=Motors
-    export function driveTurn(direction: BBRobotDirection, speed: number): void
-    {
-        if (speed < 0)
-            speed = 0;
-        if (direction == BBRobotDirection.Left)
-        {
-            motor(BBMotor.Left, -speed);
-            motor(BBMotor.Right, speed);
-        }
-        else if (direction == BBRobotDirection.Right)
-        {
-            motor(BBMotor.Left, speed);
-            motor(BBMotor.Right, -speed);
-        }
-    }
-
-    /**
-      * Spin robot in direction at speed for milliseconds.
-      * @param direction direction to turn.
-      * @param speed speed of motor between 0 and 1023. eg: 600
-      * @param milliseconds duration in milliseconds to turn for, then stop. eg: 400
-      */
-    //% blockId="bitbot_turn_milliseconds" block="spin %direction|at speed %speed| for %milliseconds|(ms)"
-    //% speed.min=0 speed.max=1023
-    //% weight=85
-    //% subcategory=Motors
-    export function driveTurnMilliseconds(direction: BBRobotDirection, speed: number, milliseconds: number): void
-    {
-        driveTurn(direction, speed)
-        basic.pause(milliseconds)
-        motor(BBMotor.Both, 0)
-    }
-
-    /**
-      * Drive motor(s) forward or reverse.
-      * @param motor motor to drive.
-      * @param speed speed of motor (-1023 to 1023). eg: 600
-      */
-    //% blockId="bitbot_motor" block="drive %motor|motor(s) at speed %speed"
-    //% weight=80
-    //% subcategory=Motors
-    export function motor(motor: BBMotor, speed: number): void
-    {
-        let forward = (speed >= 0);
-        let absSpeed = Math.abs(speed);
-        if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
-            leftSpeed = absSpeed;
-        if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
-            rightSpeed = absSpeed;
-        setPWM();
-
-        if (speed > 1023)
-            speed = 1023;
-        else if (speed < -1023)
-            speed = -1023;
-
-        let realSpeed = speed;
-        if (!forward)
-        {
-            if (realSpeed >= -200)
-                realSpeed = Math.idiv(realSpeed * 19, 6);
-            else if (realSpeed >= -400)
-                realSpeed = realSpeed * 2;
-            else if (realSpeed >= -600)
-                realSpeed = Math.idiv(realSpeed * 3, 2);
-            else if (realSpeed >= -800)
-                realSpeed = Math.idiv(realSpeed * 5, 4);
-            realSpeed = 1023 + realSpeed; // realSpeed is negative!
-        }
-
-        if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
-        {
-            pins.analogWritePin(AnalogPin.P0, realSpeed);
-            pins.digitalWritePin(DigitalPin.P8, forward ? 0 : 1);
-        }
-
-        if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
-        {
-            pins.analogWritePin(AnalogPin.P1, realSpeed);
-            pins.digitalWritePin(DigitalPin.P12, forward ? 0 : 1);
-        }
-    }
-
-// Sensors and Addons
-
-    /**
-      * Sound a buzz.
-      * @param flag state of buzzer (On or Off)
-      */
-    //% blockId="bitbot_buzz" block="turn buzzer %flag"
-    //% weight=95
-    //% subcategory=Sensors
-    export function buzz(flag: BBBuzz): void
-    {
-        if (flag==BBBuzz.Off)
-            pins.digitalWritePin(DigitalPin.P14, 0);
-        else
-            pins.digitalWritePin(DigitalPin.P14, 1);
-    }
-
-    /**
-    * Read distance from sonar module connected to accessory connector.
-    * @param unit desired conversion unit
-    */
-    //% blockId="bitbot_sonar" block="read sonar as %unit"
-    //% weight=90
-    //% subcategory=Sensors
-    export function sonar(unit: BBPingUnit): number
-    {
-        // send pulse
-        let trig = DigitalPin.P15;
-        let echo = DigitalPin.P15;
-        let maxCmDistance = 500;
-        let d=10;
-        pins.setPull(trig, PinPullMode.PullNone);
-        for (let x=0; x<10; x++)
-        {
-            pins.digitalWritePin(trig, 0);
-            control.waitMicros(2);
-            pins.digitalWritePin(trig, 1);
-            control.waitMicros(10);
-            pins.digitalWritePin(trig, 0);
-            // read pulse
-            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
-            if (d>0)
-                break;
-        }
-        switch (unit)
-        {
-            case BBPingUnit.Centimeters: return d / 58;
-            case BBPingUnit.Inches: return d / 148;
-            default: return d;
-        }
-    }
-
-    /**
-      * Read line sensor.
-      * @param sensor Line sensor to read.
-      */
-    //% blockId="bitbot_read_line" block="%sensor|line sensor"
-    //% weight=85
-    //% subcategory=Sensors
-    export function readLine(sensor: BBLineSensor): number
-    {
-        if (sensor == BBLineSensor.Left)
-            return pins.digitalReadPin(DigitalPin.P11);
-        else
-            return pins.digitalReadPin(DigitalPin.P5);
-    }
-
-    /**
-      * Read light sensor.
-      * @param sensor Light sensor to read.
-      */
-    //% blockId="bitbot_read_light" block="%sensor|light sensor"
-    //% weight=80
-    //% subcategory=Sensors
-    export function readLight(sensor: BBLightSensor): number
-    {
-        if (sensor == BBLightSensor.Left)
-        {
-            pins.digitalWritePin(DigitalPin.P16, 0);
-            return pins.analogReadPin(AnalogPin.P2);
-        }
-        else
-        {
-            pins.digitalWritePin(DigitalPin.P16, 1);
-            return pins.analogReadPin(AnalogPin.P2);
-        }
-    }
-
-    /**
-      * Adjust opening of Talon attachment
-      * @param degrees Degrees to open Talon (0 to 80). eg: 30
-      */
-    //% blockId="bitbot_set_talon" block="open talon %degrees|degrees"
-    //% weight=75
-    //% degrees.min=0 degrees.max=80
-    //% subcategory=Sensors
-    export function setTalon(degrees: number): void
-    {
-        pins.servoWritePin(AnalogPin.P15, degrees);
-    }
-
-// LED Blocks
-
-    // create a neopixel strip if not got one already. Default to brightness 40
-    function neo(): neopixel.Strip
-    {
-        if (!neoStrip)
-        {
-            neoStrip = neopixel.create(DigitalPin.P13, 12, NeoPixelMode.RGB);
-            neoStrip.setBrightness(40);
-            neo().show();
-        }
-        return neoStrip;
-    }
-
-    // update LEDs if _updateMode set to Auto
-    function updateLEDs(): void
-    {
-        if (_updateMode == BBMode.Auto)
-            neo().show();
-    }
-
-    /**
-      * Show LED changes
-      */
-    //% blockId="bitbot_neo_show" block="show LED changes"
-    //% weight=100
-    //% subcategory=Leds
     export function neoShow(): void
     {
-        neo().show();
+        neo(DigitalPin.P0,3).show();
     }
 
     /**
-      * Sets all LEDs to a given color (range 0-255 for r, g, b).
-      * @param rgb RGB color of the LED
+      * Sets all pixels to a given colour
+      *
+      * @param rgb RGB colour of the pixel
       */
-    //% blockId="bitbot_neo_set_color" block="set all LEDs to %rgb=bb_colours"
-    //% weight=95
-    //% subcategory=Leds
-    export function neoSetColor(rgb: number)
-    {
-        neo().showColor(rgb);
-        updateLEDs();
-    }
-
-    /**
-      * Clear all leds.
-      */
-    //% blockId="bitbot_neo_clear" block="clear all LEDs"
+    //% blockId="cubebit_set_color" block="set all pixels to %rgb=cb_colours"
     //% weight=90
-    //% subcategory=Leds
-    export function neoClear(): void
+    export function setColor(rgb: number): void
     {
-        neo().clear();
-        updateLEDs();
+        neo(DigitalPin.P0,3).showColor(rgb);
     }
 
     /**
-     * Set LED to a given color (range 0-255 for r, g, b).
+     * Set a pixel to a given colour.
      *
-     * @param ledId position of the LED (0 to 11)
+     * @param ID location of the pixel in the cube from 0
      * @param rgb RGB color of the LED
      */
-    //% blockId="bitbot_neo_set_pixel_color" block="set LED at %ledId|to %rgb=bb_colours"
+    //% blockId="cubebit_set_pixel_color" block="set pixel color at %ID|to %rgb=cb_colours"
     //% weight=85
-    //% subcategory=Leds
-    export function neoSetPixelColor(ledId: number, rgb: number): void
+    export function setPixelColor(ID: number, rgb: number): void
     {
-        neo().setPixelColor(ledId, rgb);
-        updateLEDs();
+        neo(DigitalPin.P0,3).setPixelColor(ID, rgb);
     }
 
     /**
-      * Shows a rainbow pattern on all LEDs.
+      * Clear leds.
       */
-    //% blockId="bitbot_neo_rainbow" block="set led rainbow"
+    //% blockId="cubebit_clear" block="clear all pixels"
     //% weight=80
-    //% subcategory=Leds
-    export function neoRainbow(): void
+    export function neoClear(): void
     {
-        neo().showRainbow(1, 360);
-        updateLEDs()
+        neo(DigitalPin.P0,3).clear();
     }
 
     /**
-     * Rotate LEDs forward.
-     */
-    //% blockId="bitbot_neo_rotate" block="rotate LEDs"
-    //% weight=75
-    //% subcategory=Leds
-    export function neoRotate(): void
-    {
-        neo().rotate(1);
-        updateLEDs()
-    }
-
-    /**
-     * Shift LEDs forward and clear with zeros.
-     */
-    //% blockId="bitbot_neo_shift" block="shift LEDs"
-    //% weight=70
-    //% subcategory=Leds
-    export function neoShift(): void
-    {
-        neo().shift(1);
-        updateLEDs()
-    }
-
-    // Advanced blocks
-
-    /**
-      * Set LED update mode (Manual or Automatic)
-      * @param updateMode setting automatic will show LED changes automatically
+      * Sets a plane of pixels to given colour
+      *
+      * @param plane number of plane from 0 to size of cube
+      * @param axis axis (xy,xz,yz) of the plane
+      * @param rgb RGB colour of the pixel
       */
-    //% blockId="bitbot_set_updateMode" block="set %updateMode|update mode"
-    //% weight=65
-    //% advanced=true
-    export function setUpdateMode(updateMode: BBMode): void
+    //% blockId="cubebit_set_plane" block="set plane %plane| on axis %axis=CBAxis| to %rgb=cb_colours"
+    //% weight=75
+    export function setPlane(plane: number, axis: CBAxis, rgb: number): void
     {
-        _updateMode = updateMode;
+        if (axis == CBAxis.YZ)
+        {
+            for (let y=0; y<cubeSide; y++)
+                for (let z=0; z<cubeHeight; z++)
+                    nCube.setPixelColor(pixelMap(plane,y,z), rgb);
+        }
+        else if (axis == CBAxis.XZ)
+        {
+            for (let x=0; x<cubeSide; x++)
+                for (let z=0; z<cubeHeight; z++)
+                    nCube.setPixelColor(pixelMap(x,plane,z), rgb);
+        }
+        else if (axis == CBAxis.XY)
+        {
+            for (let x=0; x<cubeSide; x++)
+                for (let y=0; y<cubeSide; y++)
+                    nCube.setPixelColor(pixelMap(x,y,plane), rgb);
+        }
     }
 
     /**
-     * Set the brightness of the LEDs
-     * @param brightness a measure of LED brightness in 0-255. eg: 40
-     */
-    //% blockId="bitbot_neo_brightness" block="set LED brightness %brightness"
-    //% brightness.min=0 brightness.max=255
-    //% weight=60
-    //% advanced=true
-    export function neoBrightness(brightness: number): void
+      * Defines a custom height for the Cube (height>0)
+      * @param height number of slices in the tower. eg: 4
+      */
+    //% blockId="cubebit_set_height" block="set height of tower to %height"
+    //% weight=70
+    //% deprecated=true
+    export function setHeight(height: number): void
     {
-        neo().setBrightness(brightness);
-        updateLEDs();
+        if (! cubeHeight)
+            cubeHeight = height;
     }
 
     /**
@@ -494,27 +238,82 @@ namespace bitbot
       *
       * @param color Standard RGB Led Colours
       */
-    //% blockId="bb_colours" block=%color
-    //% weight=55
-    //% advanced=true
-    export function BBColours(color: BBColors): number
+    //% blockId="cb_colours" block=%color
+    //% weight=65
+    export function CBColours(color: CBColors): number
     {
         return color;
     }
 
     /**
-      * Convert from RGB values to colour number
-      *
-      * @param red Red value of the LED (0 to 255)
-      * @param green Green value of the LED (0 to 255)
-      * @param blue Blue value of the LED (0 to 255)
-      */
-    //% blockId="bitbot_convertRGB" block="convert from red %red| green %green| blue %blue"
+     * Get the pixel ID from x, y, z coordinates
+     *
+     * @param x position from left to right (x dimension)
+     * @param y position from front to back (y dimension)
+     * @param z position from bottom to top (z dimension)
+     */
+    //% blockId="cubebit_map_pixel" block="map ID from x %x|y %y|z %z"
+    //% weight=55
+    export function mapPixel(x: number, y: number, z: number): number
+    {
+        return pixelMap(x,y,z);
+    }
+
+    /**
+     * Convert from RGB values to colour number
+     *
+     * @param red Red value of the LED 0:255
+     * @param green Green value of the LED 0:255
+     * @param blue Blue value of the LED 0:255
+     */
+    //% blockId="cubebit_convertRGB" block="convert from red %red| green %green| blue %bblue"
     //% weight=50
-    //% advanced=true
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
+
+    /**
+      * Shows a rainbow pattern on all pixels
+      */
+    //% blockId="cubebit_rainbow" block="set Cube:Bit rainbow"
+    //% weight=45
+    export function neoRainbow(): void
+    {
+        neo(DigitalPin.P0,3).showRainbow(1, 360);
+    }
+
+    /**
+     * Shift LEDs forward and clear with zeros.
+     */
+    //% blockId="cubebit_shift" block="shift pixels"
+    //% weight=40
+    export function neoShift(): void
+    {
+        neo(DigitalPin.P0,3).shift(1);
+    }
+
+    /**
+     * Rotate LEDs forward.
+     */
+    //% blockId="cubebit_rotate" block="rotate pixels"
+    //% weight=35
+    export function neoRotate(): void
+    {
+        neo(DigitalPin.P0,3).rotate(1);
+    }
+
+    /**
+     * Set the brightness of the cube. Note this only applies to future writes to the strip.
+     * @param brightness a measure of LED brightness in 0-255. eg: 40
+     */
+    //% blockId="cubebit_brightness" block="set Cube:Bit brightness %brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=30
+    export function neoBrightness(brightness: number): void
+    {
+        neo(DigitalPin.P0,3).setBrightness(brightness);
+    }
+
 
 }
