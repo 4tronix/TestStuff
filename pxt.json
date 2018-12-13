@@ -1,11 +1,11 @@
 {
-    "name": "cubebit",
+    "name": "Animoid",
     "version": "1.0.0",
-    "description": "A Cube:Bit package for pxt-microbit",
+    "description": "Microsoft MakeCode package for 4tronix Animoid",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "neopixel": "github:microsoft/pxt-neopixel#v0.6.10"
+        "neopixel": "*"
     },
     "files": [
         "README.md",

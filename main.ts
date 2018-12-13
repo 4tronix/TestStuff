@@ -1,362 +1,198 @@
-﻿
-/**
-  * Enumeration of axes
+﻿/**
+  * Enumeration of servos
   */
-enum CBAxis {
-    //% block="xy"
-    XY,
-    //% block="xz"
-    XZ,
-    //% block="yz"
-    YZ
+enum Servos
+{
+    FL_Hip,
+    FL_Knee,
+    RL_Hip,
+    RL_Knee,
+    RR_Hip,
+    RR_Knee,
+    FR_Hip,
+    FR_Knee,
+    Head,
+    Tail
 }
 
 /**
-  * Update mode for LEDs
-  * setting to Manual requires show LED changes blocks
-  * setting to Auto will update the LEDs everytime they change
+  * Enumeration of limbs
   */
-enum CBMode
+enum Limbs
 {
-    Manual,
-    Auto
+    FrontLeft,
+    RearLeft,
+    RearRight,
+    FrontRight
 }
 
 /**
-  * Pre-Defined LED colours
+  * Enumeration of servo enable states
   */
-enum CBColors
+enum States
 {
-    //% block=red
-    Red = 0xff0000,
-    //% block=orange
-    Orange = 0xffa500,
-    //% block=yellow
-    Yellow = 0xffff00,
-    //% block=green
-    Green = 0x00ff00,
-    //% block=blue
-    Blue = 0x0000ff,
-    //% block=indigo
-    Indigo = 0x4b0082,
-    //% block=violet
-    Violet = 0x8a2be2,
-    //% block=purple
-    Purple = 0xff00ff,
-    //% block=white
-    White = 0xffffff,
-    //% block=black
-    Black = 0x000000
+    Enable,
+    Disable
+}
+
+/**
+  * Enumeration of directions.
+  */
+enum RBRobotDirection
+{
+    //% block="left"
+    Left,
+    //% block="right"
+    Right
 }
 
 
 /**
  * Custom blocks
  */
-//% weight=10 color=#e7660b icon="\uf247"
-namespace cubebit
+
+//% weight=10 color=#e7660b icon="\uf188"
+namespace Animoid
 {
-    let nCube: neopixel.Strip;
-    let cubeHeight: number;
-    let cubeSide: number;
-    let cubeSide2: number;
-    let cubeSide3: number;
-    let _updateMode = CBMode.Auto;
+    let PCA = 0x40;	// i2c address of 4tronix Animoid servo controller
+    let initI2C = false;
+    let SERVOS = 0x06; // first servo address for start byte low
+    let lLower = 57;	// distance from servo shaft to tip of leg/foot
+    let lUpper = 46;	// distance between servo shafts
+    let lLower2 = lLower * lLower;	// no point in doing this every time
+    let lUpper2 = lUpper * lUpper;
 
-// Helper functions
-
-    function pixelMap(x: number, y: number, z: number): number
-    {
-        if (cubeSide == 9)	// need to change to separate flag for cubes built out of smaller slices
-            return pMap8(x, y, z);
-        else
-            return pMap(x, y, z, cubeSide);
-    }
-
-    //pMap8 is mapping function for 8x8 built out of 4x4 slices. 0,0,0 is not ID=0, it is in fact 268
-    function pMap8(x: number, y: number, z: number): number
-    {
-        if (x<4 && y<4)  // column 0 (front left)
-        {
-            return 256 + pMap(3-x, 3-y, z, 4);
-        }
-        else if (x>=4 && y<4)  // column 1 (front right)
-        {
-            if ((z%2) == 0)
-                return 255 - pMap(y, x-4, z, 4);
-            else
-                return 255 - pMap(3-y, 7-x, z, 4);
-        }
-        else if (x<4 && y>=4)  // column 2 (back left)
-        {
-            if ((z%2) == 0)
-                return 511 - pMap(7-y, 3-x, z, 4);
-            else
-                return 511 - pMap(y-4, x, z, 4);
-        }
-        else  // column 3 (back right)
-        {
-            return pMap(x-4, y-4, z, 4);
-        }
-    }
-
-    function pMap(x: number, y: number, z: number, side: number): number
-    {
-        let q=0;
-        if (x<side && y<side && z<cubeHeight && x>=0 && y>=0 && z>=0)
-        {
-            if ((z%2) == 0)
-            {
-                if ((y%2) == 0)
-                    q = y * side + x;
-                else
-                    q = y * side + side - 1 - x;
-            }
-            else
-            {
-                if ((side%2) == 0)
-                    y = side - y - 1;
-                if ((x%2) == 0)
-                    q = side * (side - x) - 1 - y;
-                else
-                    q = (side - 1 - x) * side + y;
-            }
-            return z*side*side + q;
-        }
-        return cubeSide3;    // extra non-existent pixel for out of bounds
-    }
-
-    function neo(pin: DigitalPin, side: number): neopixel.Strip
-    {
-        if (!nCube)
-        {
-            if (! cubeHeight)
-                cubeHeight = side;
-            cubeSide = side;
-            cubeSide2 = side * side;
-            cubeSide3 = side * side * cubeHeight;
-            nCube = neopixel.create(pin, cubeSide3, NeoPixelMode.RGB);
-            nCube.setBrightness(40);
-        }
-        return nCube;
-    }
-
-    // update LEDs if _updateMode set to Auto
-    function updateLEDs(): void
-    {
-        if (_updateMode == CBMode.Auto)
-            neo(DigitalPin.P0,3).show();
-    }
-
-// Main exported functions
+    // Helper functions
 
     /**
-     * Create a Cube:Bit cube (default 3x3x3) on Selected Pin (default Pin0)
-     * @param pin Micro:Bit pin to connect to Cube:Bit
-     * @param side number of pixels on each side. eg: 3, 4, 5, 8
-     */
-    //% blockId="cubebit_create" block="create 05 Cube:Bit on %pin| with side %side"
-    //% weight=100
-    //% side.min=3 side.max=8
-    export function create(pin: DigitalPin, side: number): void
-    {
-        neo(pin, side);
-    }
-
-    /**
-      * Sets all pixels to a given colour
-      * @param rgb RGB colour of the pixel
-      */
-    //% blockId="cubebit_set_color" block="set all pixels to %rgb=cb_colours"
-    //% weight=90
-    export function setColor(rgb: number): void
-    {
-        neo(DigitalPin.P0,3).showColor(rgb);
-        updateLEDs();
-    }
-
-    /**
-     * Set a pixel to a given colour.
-     * @param ID location of the pixel in the cube from 0
-     * @param rgb RGB color of the LED
-     */
-    //% blockId="cubebit_set_pixel_color" block="set pixel color at %ID|to %rgb=cb_colours"
-    //% weight=85
-    export function setPixelColor(ID: number, rgb: number): void
-    {
-        neo(DigitalPin.P0,3).setPixelColor(ID, rgb);
-        updateLEDs();
-    }
-
-    /**
-      * Sets a plane of pixels to given colour
-      * @param plane number of plane from 0 to size of cube
-      * @param axis axis (xy,xz,yz) of the plane
-      * @param rgb RGB colour of the pixel
-      */
-    //% blockId="cubebit_set_plane" block="set plane %plane| on axis %axis=CBAxis| to %rgb=cb_colours"
-    //% weight=80
-    export function setPlane(plane: number, axis: CBAxis, rgb: number): void
-    {
-        if (axis == CBAxis.YZ)
-        {
-            for (let y=0; y<cubeSide; y++)
-                for (let z=0; z<cubeHeight; z++)
-                    nCube.setPixelColor(pixelMap(plane,y,z), rgb);
-        }
-        else if (axis == CBAxis.XZ)
-        {
-            for (let x=0; x<cubeSide; x++)
-                for (let z=0; z<cubeHeight; z++)
-                    nCube.setPixelColor(pixelMap(x,plane,z), rgb);
-        }
-        else if (axis == CBAxis.XY)
-        {
-            for (let x=0; x<cubeSide; x++)
-                for (let y=0; y<cubeSide; y++)
-                    nCube.setPixelColor(pixelMap(x,y,plane), rgb);
-        }
-        updateLEDs();
-    }
-
-    /**
-     * Get the pixel ID from x, y, z coordinates
-     * @param x position from left to right (x dimension)
-     * @param y position from front to back (y dimension)
-     * @param z position from bottom to top (z dimension)
-     */
-    //% blockId="cubebit_map_pixel" block="map ID from x %x|y %y|z %z"
-    //% weight=75
-    export function mapPixel(x: number, y: number, z: number): number
-    {
-        return pixelMap(x,y,z);
-    }
-
-    /**
-      * Shows a rainbow pattern on all pixels
-      */
-    //% blockId="cubebit_rainbow" block="set Cube:Bit rainbow"
-    //% weight=70
-    export function neoRainbow(): void
-    {
-        neo(DigitalPin.P0,3).showRainbow(1, 360);
-        updateLEDs();
-    }
-
-    /**
-     * Rotate LEDs forward.
-     */
-    //% blockId="cubebit_rotate" block="rotate pixels"
-    //% weight=65
-    export function neoRotate(): void
-    {
-        neo(DigitalPin.P0,3).rotate(1);
-        updateLEDs();
-    }
-
-// Advanced blocks
-
-    /**
-      * Set LED update mode (Manual or Automatic)
-      * @param updateMode setting automatic will show LED changes automatically
-      */
-    //% blockId="cubebit_set_updateMode" block="set %updateMode|update mode"
-    //% weight=100
-    //% advanced=true
-    export function setUpdateMode(updateMode: CBMode): void
-    {
-        _updateMode = updateMode;
-    }
-
-    /**
-      * Show all changes
-      */
-    //% blockId="cubebit_show" block="show Cube:Bit changes"
-    //% weight=95
-    //% advanced=true
-    export function neoShow(): void
-    {
-        neo(DigitalPin.P0,3).show();
-    }
-
-    /**
-     * Set the brightness of the cube.
-     * @param brightness a measure of LED brightness in 0-255. eg: 40
-     */
-    //% blockId="cubebit_brightness" block="set Cube:Bit brightness %brightness"
-    //% brightness.min=0 brightness.max=255
-    //% weight=90
-    //%advanced=true
-    export function neoBrightness(brightness: number): void
-    {
-        neo(DigitalPin.P0,3).setBrightness(brightness);
-        updateLEDs();
-    }
-
-    /**
-      * Clear leds.
-      */
-    //% blockId="cubebit_clear" block="clear all pixels"
-    //% weight=85
-    //% advanced=true
-    export function neoClear(): void
-    {
-        neo(DigitalPin.P0,3).clear();
-        updateLEDs();
-    }
-
-    /**
-     * Shift LEDs forward and clear with zeros.
-     */
-    //% blockId="cubebit_shift" block="shift pixels"
-    //% weight=80
-    //% advanced=true
-    export function neoShift(): void
-    {
-        neo(DigitalPin.P0,3).shift(1);
-        updateLEDs();
-    }
-
-    /**
-      * Get numeric value of colour
+      * Enable/Disable Servos
       *
-      * @param color Standard RGB Led Colours
+      * @param state Select Enabled or Disabled
       */
-    //% blockId="cb_colours" block=%color
-    //% weight=75
-    //%advanced=true
-    export function CBColours(color: CBColors): number
+    //% blockId="enableServos" block="%state all 08 servos"
+    //% weight=90
+    export function enableServos(state: States): void
     {
-        return color;
+        pins.digitalWritePin(DigitalPin.P16, state);
     }
 
     /**
-     * Convert from RGB values to colour number
-     *
-     * @param red Red value of the LED 0:255
-     * @param green Green value of the LED 0:255
-     * @param blue Blue value of the LED 0:255
-     */
-    //% blockId="cubebit_convertRGB" block="convert from red %red| green %green| blue %bblue"
-    //% weight=70
-    //%advanced=true
-    export function convertRGB(r: number, g: number, b: number): number
+      * Return servo number from name
+      *
+      * @param value servo name
+      */
+    //% blockId="getServo" block="%value"
+    //% weight=80
+    export function getServo(value: Servos): number
     {
-        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+        return value;
+    }
+
+    function initPCA(): void
+    {
+
+        let i2cData = pins.createBuffer(2);
+        initI2C = true;
+
+        i2cData[0] = 0;		// Mode 1 register
+        i2cData[1] = 0x10;	// put to sleep
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = 0xFE;	// Prescale register
+        i2cData[1] = 101;	// set to 60 Hz
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = 0;		// Mode 1 register
+        i2cData[1] = 0x81;	// Wake up
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+	pins.digitalWritePin(DigitalPin.P16, 0);	// enable servos at start
     }
 
     /**
-      * Defines a custom height for the Cube (height>0)
-      * define the height BEFORE creating the cube
-      * @param height number of slices in the tower. eg: 4
+      * Initialise all servos to Angle=0
       */
-    //% blockId="cubebit_set_height" block="set height of tower to %height"
-    //% weight=65
-    //% advanced=true
-    export function setHeight(height: number): void
+    //% blockId="an_zeroServos"
+    //% block
+    export function zeroServos(): void
     {
-        if (! cubeHeight)
-            cubeHeight = height;
+        for (let i=0; i<16; i++)
+            setServo(i, 0);
+    }
+
+    /**
+      * Set Servo Position by Angle
+      * @param servo Servo number (0 to 15)
+      * @param angle degrees to turn servo (-90 to +90)
+      */
+    //% blockId="an_setServo" block="set servo %servo| to angle %angle"
+    //% angle.min = -90 angle.max = 90
+    //% weight = 70
+    export function setServo(servo: number, angle: number): void
+    {
+        if (initI2C == false)
+        {
+            initPCA();
+        }
+        let i2cData = pins.createBuffer(2);
+        // two bytes need setting for start and stop positions of the servo
+        // servos start at SERVOS (0x06) and are then consecutive bloocks of 4 bytes
+        let start = 0;
+        let stop = 369 + angle * 275 / 90;
+
+        i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
+        i2cData[1] = 0x00;			// low byte start - always 0
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
+        i2cData[1] = 0x00;			// high byte start - always 0
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = SERVOS + servo*4 + 2;	// Servo register
+        i2cData[1] = (stop & 0xff);		// low byte stop
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = SERVOS + servo*4 + 3;	// Servo register
+        i2cData[1] = (stop >> 8);			// high byte stop
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+    }
+
+    function limbNum(limb: Limbs): number
+    {
+        return limb;
+    }
+
+    /**
+      * Set Position of Foot in mm from hip servo shaft
+      * Inverse kinematics from learnaboutrobots.com/inverseKinematics.htm
+      * @param limb Determines which limb to move. eg. FrontLeft
+      * @param xpos Position on X-axis in mm
+      * @param height Height of hip servo shaft above foot. eg: 60
+      */
+    //% blockId="setLimb" block="set %limb| to position %xpos|(mm) height %height|(mm)"
+    //% weight = 60
+    export function setLimb(limb: Limbs, xpos: number, height: number): void
+    {
+        let B2 = xpos*xpos + height*height;	// from: B2 = Xhand2 + Yhand2
+        let q1 = Math.atan2(height, xpos);	// from: q1 = ATan2(Yhand/Xhand)
+        let q2 = Math.acos((lUpper2 - lLower2 + B2) / (2 * lUpper * Math.sqrt(B2)));
+        let hip = Math.floor((q1 + q2)*180/Math.PI);	// convert from radians to integer degrees
+        let k = Math.acos((lUpper2 + lLower2 - B2) / (2 * lUpper * lLower));
+        let knee = Math.floor(k*180/Math.PI);
+        //basic.showNumber(hip);
+        //basic.showNumber(knee);
+	if (limbNum(limb) < 2)
+        {
+            hip = hip - 90;
+            knee = knee - 90;
+        }
+        else
+        {
+            hip = 90 - hip;
+            knee = 90 - knee;
+        }
+        setServo(limbNum(limb)*2, hip);
+        setServo(limbNum(limb)*2+1, knee);
     }
 
 }
