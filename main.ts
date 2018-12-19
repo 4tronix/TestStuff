@@ -70,7 +70,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 11 servos"
+    //% blockId="enableServos" block="%state all 12 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -126,6 +126,8 @@ namespace Animoid
       * @param limb Determines which limb is being defined eg. FrontLeft
       * @param gaitString data for up down as 4 character string. U for Up, D for Down
       */
+    //% blockId="an_setGait"
+    //% block
     export function setGait(limb: Limbs, gaitString: string): void
     {
     }
