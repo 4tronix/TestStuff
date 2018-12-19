@@ -70,7 +70,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 10 servos"
+    //% blockId="enableServos" block="%state all 11 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -122,6 +122,15 @@ namespace Animoid
     }
 
     /**
+      * Define Gait up/down positions
+      * @param limb Determines which limb is being defined eg. FrontLeft
+      * @param gaitString data for up down as 4 character string. U for Up, D for Down
+      */
+    export function setGait(limb: Limbs, gaitString: string): void
+    {
+    }
+
+    /**
       * Set Servo Position by Angle
       * @param servo Servo number (0 to 15)
       * @param angle degrees to turn servo (-90 to +90)
@@ -129,7 +138,6 @@ namespace Animoid
     //% blockId="an_setServo" block="set servo %servo| to angle %angle"
     //% angle.min = -90 angle.max = 90
     //% weight = 70
-    //% blockExternalInputs==true
     export function setServo(servo: number, angle: number): void
     {
         if (initI2C == false)
