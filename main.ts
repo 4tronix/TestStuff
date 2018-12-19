@@ -61,6 +61,7 @@ namespace Animoid
     let lUpper = 46;	// distance between servo shafts
     let lLower2 = lLower * lLower;	// no point in doing this every time
     let lUpper2 = lUpper * lUpper;
+    let gait: number[][][]
 
     // Helper functions
 
@@ -69,7 +70,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 09 servos"
+    //% blockId="enableServos" block="%state all 10 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -128,6 +129,7 @@ namespace Animoid
     //% blockId="an_setServo" block="set servo %servo| to angle %angle"
     //% angle.min = -90 angle.max = 90
     //% weight = 70
+    //% blockExternalInputs==true
     export function setServo(servo: number, angle: number): void
     {
         if (initI2C == false)
