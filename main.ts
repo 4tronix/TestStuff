@@ -61,8 +61,8 @@ namespace Animoid
     let lUpper = 46;	// distance between servo shafts
     let lLower2 = lLower * lLower;	// no point in doing this every time
     let lUpper2 = lUpper * lUpper;
-    let gait: number[][][] = []
-    let initGait = false
+    let gait: number[][][] = [];
+    let initGait = false;
     let height = 30;	// default standing height
 
     // Helper functions
@@ -72,7 +72,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 15 servos"
+    //% blockId="enableServos" block="%state all 16 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -89,24 +89,6 @@ namespace Animoid
     export function getServo(value: Servos): number
     {
         return value;
-    }
-
-    /**
-      * Initialise the gait array
-      * 4 limbs, 2 dimensions (x, height), 16 steps
-      */
-    function initGait(): void
-    {
-        if (! initGait)
-        {
-            initGait = true;
-            for (let i=0; i<4; i++)
-            {
-                gait[i] = []
-                for (let j=0; j<2; j++)
-                    gait[i][j] = []
-            }
-        }
     }
 
     function initPCA(): void
@@ -139,66 +121,6 @@ namespace Animoid
     {
         for (let i=0; i<16; i++)
             setServo(i, 0);
-    }
-
-    /**
-      * Define Gait up/down positions
-      * @param limb Determines which limb is being defined eg. FrontLeft
-      * @param gDown beat number (0 to 3) that the leg is first put down
-      * @param gUp beat number (0 to 3) that the leg is first lifted up
-      */
-    //% blockId="an_setGait"
-    //% block
-    //% gDown.min=0 gDown.max=3
-    //% gUp.min=0 gUp.max=3
-    export function setGait(limb: Limbs, gDown: number, gUp: number): void
-    {
-        let nBeats = 4;		// number of beats in a cycle
-        let nSteps = 4;		// number of mini-steps per beat
-        let stride = 80;	// total distance moved in one cycle
-        let offset = 20;	// forward-most point of leg
-
-        let tUp = gDown - gUp;	// number of beats leg is raised
-        if (tUp<0)
-            tUp += nBeats;	// fix for gDown earlier than gUp
-        let tDown = nBeats - tUp;	// number of beats leg is down
-
-        let rStep = stride/(nSteps * nBeats);	// distance moved backwards per mini-step to move forward
-        let fStep = (stride/(nSteps*nBeats))*(tDown/tUp);	// distance moved forward per mini-step for suspended leg
-        
-        initGait();
-        for (let i=0; i<nSteps*tUp; i++)	// set mini-steps for raised forward movement of leg
-        {
-            let j = (i + gDown*4) % (nSteps*nBeats);	// wrap round at end of array
-            gait[<number>limb][0][j] = height-10;	// set height of raised leg
-            gait[<number>limb][1][j] = offset - (stride * tDown / nBeats) + (i * fStep);	// set x position of leg
-        }
-        for (let i=0; i<(nSteps*tDown); i++)	// set mini-steps for down rearward movement of leg
-        {
-            let j = (i + gUp*4) % (nSteps*nBeats);	// wrap round at end of array
-            gait[<number>limb][0][j] = height;	/	/ set height of raised leg
-            gait[<number>limb][1][j] = offset - (i * rStep);	// set x position of leg
-        }
-    }
-
-    /**
-      * Walk a fixed number of steps using selected Gait
-      * @param steps Number of steps to walk. eg: 1
-      */
-    //% blockId="an_walk"
-    //% block
-    //% steps.min=1
-    export function walk(steps: number): void
-    {
-        let nSteps = 16;	// number of mini-steps per cycle
-        for (let i=0; i<nSteps; i++)
-        {
-            for (let j=0; j<4; j++)	// for each limb
-            {
-                setLimb(j, gait[j][0][i], gait[j][1][i]);
-            }
-            basic.pause(100);
-        }
     }
 
     /**
@@ -238,8 +160,10 @@ namespace Animoid
         pins.i2cWriteBuffer(PCA, i2cData, false);
     }
 
-    //% blockId="an_limbs"
-    //% block
+    /**
+      * Get numeric value of Limb
+      * @param limb name of limb eg FrontLeft
+    //% blockId="an_limbs" block=%limb
     function limbNum(limb: Limbs): number
     {
         return limb;
