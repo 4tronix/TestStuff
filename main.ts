@@ -72,11 +72,29 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 18 servos"
+    //% blockId="enableServos" block="%state all 19 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
         pins.digitalWritePin(DigitalPin.P16, state);
+    }
+
+    /**
+      * Initialise the gait array
+      * 4 limbs, 2 dimensions (x, height), 16 steps
+      */
+    function initGait(): void
+    {
+        if (! initGait)
+        {
+            initGait = true;
+            for (let i=0; i<4; i++)
+            {
+                gait[i] = [];
+                for (let j=0; j<2; j++)
+                    gait[i][j] = [];
+            }
+        }
     }
 
     /**
