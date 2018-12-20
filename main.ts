@@ -72,7 +72,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 14 servos"
+    //% blockId="enableServos" block="%state all 15 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -238,7 +238,7 @@ namespace Animoid
         pins.i2cWriteBuffer(PCA, i2cData, false);
     }
 
-    //% blockID="an_limbs"
+    //% blockId="an_limbs"
     //% block
     function limbNum(limb: Limbs): number
     {
