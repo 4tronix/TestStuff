@@ -72,7 +72,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 16 servos"
+    //% blockId="enableServos" block="%state all 17 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -163,6 +163,7 @@ namespace Animoid
     /**
       * Get numeric value of Limb
       * @param limb name of limb eg FrontLeft
+      */
     //% blockId="an_limbs" block=%limb
     function limbNum(limb: Limbs): number
     {
