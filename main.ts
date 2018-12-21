@@ -72,7 +72,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 23 servos"
+    //% blockId="enableServos" block="%state all 24 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -103,10 +103,10 @@ namespace Animoid
       * @param gDown beat number (0 to 3) that the leg is first put down
       * @param gUp beat number (0 to 3) that the leg is first lifted up
       */
-    //% blockId="an_setGait" block="set %limb| down at %gDown| up at %gUp"
+    //% blockId="an_setGait" block="set %limb=an_limbs| down at %gDown| up at %gUp"
     //% gDown.min=0 gDown.max=3
     //% gUp.min=0 gUp.max=3
-    export function setGait(limb: Limbs, gDown: number, gUp: number): void
+    export function setGait(limb: number, gDown: number, gUp: number): void
     {
         let nBeats = 4;		// number of beats in a cycle
         let nSteps = 4;		// number of mini-steps per beat
