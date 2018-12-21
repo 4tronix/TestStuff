@@ -62,7 +62,7 @@ namespace Animoid
     let lLower2 = lLower * lLower;	// no point in doing this every time
     let lUpper2 = lUpper * lUpper;
     let gait: number[][][] = [];
-    let initGait = false;
+    let gInit = false;
     let height = 30;	// default standing height
 
     // Helper functions
@@ -72,7 +72,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 19 servos"
+    //% blockId="enableServos" block="%state all 20 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -85,9 +85,9 @@ namespace Animoid
       */
     function initGait(): void
     {
-        if (! initGait)
+        if (! gInit)
         {
-            initGait = true;
+            gInit = true;
             for (let i=0; i<4; i++)
             {
                 gait[i] = [];
