@@ -72,7 +72,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 28 servos"
+    //% blockId="enableServos" block="%state all 29 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -122,17 +122,17 @@ namespace Animoid
         let fStep = (stride/(nSteps*nBeats))*(tDown/tUp);	// distance moved forward per mini-step for suspended leg
         
         initGait();
-        for (let i=0; i<nSteps*tUp; i++)	// set mini-steps for raised forward movement of leg
+        for (let i=0; i<(nSteps*tUp); i++)		// set mini-steps for raised forward movement of leg
         {
             let j = (i + gDown*4) % (nSteps*nBeats);	// wrap round at end of array
-            gait[<number>limb][0][j] = height-10;	// set height of raised leg
-            gait[<number>limb][1][j] = offset - (stride * tDown / nBeats) + (i * fStep);	// set x position of leg
+            gait[limb][0][j] = height-10;		// set height of raised leg
+            gait[limb][1][j] = offset - (stride * tDown / nBeats) + (i * fStep);	// set x position of leg
         }
-        for (let i=0; i<(nSteps*tDown); i++)	// set mini-steps for down rearward movement of leg
+        for (let i=0; i<(nSteps*tDown); i++)		// set mini-steps for down rearward movement of leg
         {
             let j = (i + gUp*4) % (nSteps*nBeats);	// wrap round at end of array
-            gait[<number>limb][0][j] = height;		// set height of raised leg
-            gait[<number>limb][1][j] = offset - (i * rStep);	// set x position of leg
+            gait[limb][0][j] = height;			// set height of down leg
+            gait[limb][1][j] = offset - (i * rStep);	// set x position of leg
         }
     }
 
@@ -146,13 +146,16 @@ namespace Animoid
     export function walk(steps: number): void
     {
         let nSteps = 16;	// number of mini-steps per cycle
-        for (let i=0; i<nSteps; i++)
+        for (let count=0; count<steps; count++)
         {
-            for (let j=0; j<4; j++)	// for each limb
+            for (let i=0; i<nSteps; i++)
             {
-                setLimb(j, gait[j][0][i], gait[j][1][i]);
+                for (let j=0; j<4; j++)	// for each limb
+                {
+                    setLimb(j, gait[j][0][i], gait[j][1][i]);
+                }
+                basic.pause(100);
             }
-            basic.pause(100);
         }
     }
 
@@ -264,8 +267,6 @@ namespace Animoid
         let hip = Math.floor((q1 + q2)*180/Math.PI);	// convert from radians to integer degrees
         let k = Math.acos((lUpper2 + lLower2 - B2) / (2 * lUpper * lLower));
         let knee = Math.floor(k*180/Math.PI);
-        //basic.showNumber(hip);
-        //basic.showNumber(knee);
 	if (limbNum(limb) < 2)
         {
             hip = hip - 90;
@@ -276,8 +277,8 @@ namespace Animoid
             hip = 90 - hip;
             knee = 90 - knee;
         }
-        setServo(<number>limb * 2, hip);
-        setServo(limbNum(limb)*2+1, knee);
+        setServo(limb * 2, hip);
+        setServo(limb*2 + 1, knee);
     }
 
 }
