@@ -72,7 +72,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 29 servos"
+    //% blockId="enableServos" block="%state all 30 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -152,9 +152,9 @@ namespace Animoid
             {
                 for (let j=0; j<4; j++)	// for each limb
                 {
-                    setLimb(j, gait[j][0][i], gait[j][1][i]);
+                    setLimb(j, gait[j][1][i], gait[j][0][i]);
                 }
-                basic.pause(100);
+                basic.pause(500);
             }
         }
     }
@@ -267,7 +267,7 @@ namespace Animoid
         let hip = Math.floor((q1 + q2)*180/Math.PI);	// convert from radians to integer degrees
         let k = Math.acos((lUpper2 + lLower2 - B2) / (2 * lUpper * lLower));
         let knee = Math.floor(k*180/Math.PI);
-	if (limbNum(limb) < 2)
+	if (limb < 2)
         {
             hip = hip - 90;
             knee = knee - 90;
