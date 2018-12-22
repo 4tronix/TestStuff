@@ -72,7 +72,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 26 servos"
+    //% blockId="enableServos" block="%state all 27 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -133,6 +133,26 @@ namespace Animoid
             let j = (i + gUp*4) % (nSteps*nBeats);	// wrap round at end of array
             gait[<number>limb][0][j] = height;		// set height of raised leg
             gait[<number>limb][1][j] = offset - (i * rStep);	// set x position of leg
+        }
+    }
+
+   /**
+      * Walk a fixed number of steps using selected Gait
+      * @param steps Number of steps to walk. eg: 1
+      */
+    //% blockId="an_walk"
+    //% block
+    //% steps.min=1
+    export function walk(steps: number): void
+    {
+        let nSteps = 16;	// number of mini-steps per cycle
+        for (let i=0; i<nSteps; i++)
+        {
+            for (let j=0; j<4; j++)	// for each limb
+            {
+                setLimb(j, gait[j][0][i], gait[j][1][i]);
+            }
+            basic.pause(100);
         }
     }
 
