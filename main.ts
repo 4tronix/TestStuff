@@ -63,7 +63,7 @@ namespace Animoid
     let lUpper2 = lUpper * lUpper;
     let gait: number[][][] = [];
     let gInit = false;
-    let height = 30;	// default standing height
+    let height = 60;	// default standing height
 
     // Helper functions
 
@@ -72,7 +72,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 27 servos"
+    //% blockId="enableServos" block="%state all 28 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
