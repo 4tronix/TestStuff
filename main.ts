@@ -73,7 +73,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 31 servos"
+    //% blockId="enableServos" block="%state all 32 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -152,7 +152,7 @@ namespace Animoid
                 {
                     setLimb(j, gait[j][1][i], gait[j][0][i]);
                 }
-                basic.pause(500);
+                basic.pause(50);
             }
         }
     }
