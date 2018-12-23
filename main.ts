@@ -64,6 +64,7 @@ namespace Animoid
     let gait: number[][][] = [];
     let gInit = false;
     let height = 60;	// default standing height
+    let nBeats = 16;	// number of beats in a cycle
 
     // Helper functions
 
@@ -72,7 +73,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 30 servos"
+    //% blockId="enableServos" block="%state all 31 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -100,37 +101,35 @@ namespace Animoid
     /**
       * Define Gait up/down positions
       * @param limb Determines which limb is being defined eg. FrontLeft
-      * @param gDown beat number (0 to 3) that the leg is first put down
-      * @param gUp beat number (0 to 3) that the leg is first lifted up
+      * @param gDown beat number (0 to 15) that the leg is first put down
+      * @param gUp beat number (0 to 15) that the leg is first lifted up
       */
     //% blockId="an_setGait" block="set %limb=an_limbs| down at %gDown| up at %gUp"
-    //% gDown.min=0 gDown.max=3
-    //% gUp.min=0 gUp.max=3
+    //% gDown.min=0 gDown.max=15
+    //% gUp.min=0 gUp.max=15
     export function setGait(limb: number, gDown: number, gUp: number): void
     {
-        let nBeats = 4;		// number of beats in a cycle
-        let nSteps = 4;		// number of mini-steps per beat
-        let stride = 80;	// total distance moved in one cycle
-        let offset = 20;	// forward-most point of leg
+        let stride = 80;		// total distance moved in one cycle
+        let offset = 20;		// forward-most point of leg
 
-        let tUp = gDown - gUp;	// number of beats leg is raised
+        let tUp = gDown - gUp;		// number of beats leg is raised
         if (tUp<0)
-            tUp += nBeats;	// fix for gDown earlier than gUp
+            tUp += nBeats;		// fix for gDown earlier than gUp
         let tDown = nBeats - tUp;	// number of beats leg is down
 
-        let rStep = stride/(nSteps * nBeats);	// distance moved backwards per mini-step to move forward
-        let fStep = (stride/(nSteps*nBeats))*(tDown/tUp);	// distance moved forward per mini-step for suspended leg
+        let rStep = stride/nBeats;			// distance moved backwards per mini-step to move forward
+        let fStep = (stride/nBeats)*(tDown/tUp);	// distance moved forward per mini-step for raised leg
         
         initGait();
-        for (let i=0; i<(nSteps*tUp); i++)		// set mini-steps for raised forward movement of leg
+        for (let i=0; i < tUp; i++)		// set mini-steps for raised forward movement of leg
         {
-            let j = (i + gDown*4) % (nSteps*nBeats);	// wrap round at end of array
-            gait[limb][0][j] = height-10;		// set height of raised leg
-            gait[limb][1][j] = offset - (stride * tDown / nBeats) + (i * fStep);	// set x position of leg
+            let j = (i + gUp) % nBeats;	// wrap round at end of array
+            gait[limb][0][j] = height - 10;		// set height of raised leg
+            gait[limb][1][j] = offset - stride*(tDown/nBeats) + (i * fStep);	// set x position of leg
         }
-        for (let i=0; i<(nSteps*tDown); i++)		// set mini-steps for down rearward movement of leg
+        for (let i=0; i < tDown; i++)		// set mini-steps for down rearward movement of leg
         {
-            let j = (i + gUp*4) % (nSteps*nBeats);	// wrap round at end of array
+            let j = (i + gDown) % nBeats;	// wrap round at end of array
             gait[limb][0][j] = height;			// set height of down leg
             gait[limb][1][j] = offset - (i * rStep);	// set x position of leg
         }
@@ -145,10 +144,9 @@ namespace Animoid
     //% steps.min=1
     export function walk(steps: number): void
     {
-        let nSteps = 16;	// number of mini-steps per cycle
         for (let count=0; count<steps; count++)
         {
-            for (let i=0; i<nSteps; i++)
+            for (let i=0; i<nBeats; i++)
             {
                 for (let j=0; j<4; j++)	// for each limb
                 {
