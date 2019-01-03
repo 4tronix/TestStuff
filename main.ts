@@ -79,7 +79,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 36 servos"
+    //% blockId="enableServos" block="%state all 37 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -110,7 +110,7 @@ namespace Animoid
       * @param raised height of raised leg. eg: 50
       */
     //% blockId="an_setHeights" block="set lowered %height|mm raised %raised|mm"
-    export function configGait(stride: number, offset: number, delay: number): void
+    export function setHeights(height: number, raised: number): void
     {
         _height = height;
         _raised = raised;
@@ -122,7 +122,7 @@ namespace Animoid
       * @param offset Distance from centre of hip that foot is placed down. eg: 20
       * @param delay Time delay ms between beats
       */
-    //% blockId="an_configGait" block="set stride %stride|mm offset %offset|mm %delay|ms"
+    //% blockId="an_configGait" block="set stride %stride|mm offset %offset|mm delay %delay|ms"
     //% stride.min=0
     //% delay.min=0
     export function configGait(stride: number, offset: number, delay: number): void
