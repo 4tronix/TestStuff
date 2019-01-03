@@ -63,8 +63,14 @@ namespace Animoid
     let lUpper2 = lUpper * lUpper;
     let gait: number[][][] = [];
     let gInit = false;
-    let height = 60;	// default standing height
+    let radTOdeg = 180 / Math.PI;
+
     let nBeats = 16;	// number of beats in a cycle
+    let _height = 60;	// default standing height of lowered legs
+    let _raised = 50;	// default height of raised legs
+    let _stride = 80;	// total distance moved in one cycle
+    let _offset = 20;	// forward-most point of leg
+    let _delay = 20;	// ms to pause at end of each beat
 
     // Helper functions
 
@@ -73,7 +79,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 35 servos"
+    //% blockId="enableServos" block="%state all 36 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -99,6 +105,35 @@ namespace Animoid
     }
 
     /**
+      * Define gait default (leg down) and raised heights
+      * @param height height of body when legs down eg: 60
+      * @param raised height of raised leg. eg: 50
+      */
+    //% blockId="an_setHeights" block="set lowered %height|mm raised %raised|mm"
+    export function configGait(stride: number, offset: number, delay: number): void
+    {
+        _height = height;
+        _raised = raised;
+    }
+
+    /**
+      * Define Gait distances and speeds
+      * @param stride Sets length in mm of complete sequence. eg: 80
+      * @param offset Distance from centre of hip that foot is placed down. eg: 20
+      * @param delay Time delay ms between beats
+      */
+    //% blockId="an_configGait" block="set stride %stride|mm offset %offset|mm %delay|ms"
+    //% stride.min=0
+    //% delay.min=0
+    export function configGait(stride: number, offset: number, delay: number): void
+    {
+        _stride = stride;
+        _offset = offset;
+        _delay = delay;
+    }
+
+
+    /**
       * Define Gait up/down positions
       * @param limb Determines which limb is being defined eg. FrontLeft
       * @param gDown beat number (0 to 15) that the leg is first put down
@@ -109,29 +144,26 @@ namespace Animoid
     //% gUp.min=0 gUp.max=15
     export function setGait(limb: number, gDown: number, gUp: number): void
     {
-        let stride = 80;		// total distance moved in one cycle
-        let offset = 20;		// forward-most point of leg
-
         let tUp = gDown - gUp;		// number of beats leg is raised
         if (tUp<0)
             tUp += nBeats;		// fix for gDown earlier than gUp
         let tDown = nBeats - tUp;	// number of beats leg is down
 
-        let rStep = stride/nBeats;			// distance moved backwards per mini-step to move forward
-        let fStep = (stride/nBeats)*(tDown/tUp);	// distance moved forward per mini-step for raised leg
+        let rStep = _stride/nBeats;			// distance moved backwards per mini-step to move forward
+        let fStep = (_stride/nBeats)*(tDown/tUp);	// distance moved forward per mini-step for raised leg
         
         initGait();
-        for (let i=0; i < tUp; i++)		// set mini-steps for raised forward movement of leg
+        for (let i=0; i < tUp; i++)			// set mini-steps for raised forward movement of leg
         {
-            let j = (i + gUp) % nBeats;	// wrap round at end of array
-            gait[limb][0][j] = height - 10;		// set height of raised leg
-            gait[limb][1][j] = offset - stride*(tDown/nBeats) + (i * fStep);	// set x position of leg
+            let j = (i + gUp) % nBeats;			// wrap round at end of array
+            gait[limb][0][j] = _raised;			// set height of raised leg
+            gait[limb][1][j] = _offset - _stride*(tDown/nBeats) + (i * fStep);	// set x position of leg
         }
-        for (let i=0; i < tDown; i++)		// set mini-steps for down rearward movement of leg
+        for (let i=0; i < tDown; i++)			// set mini-steps for down rearward movement of leg
         {
-            let j = (i + gDown) % nBeats;	// wrap round at end of array
-            gait[limb][0][j] = height;			// set height of down leg
-            gait[limb][1][j] = offset - (i * rStep);	// set x position of leg
+            let j = (i + gDown) % nBeats;		// wrap round at end of array
+            gait[limb][0][j] = _height;			// set height of down leg
+            gait[limb][1][j] = _offset - (i * rStep);	// set x position of leg
         }
     }
 
@@ -152,7 +184,7 @@ namespace Animoid
                 {
                     setLimb(j, gait[j][1][i], gait[j][0][i]);
                 }
-                basic.pause(1);
+                basic.pause(_delay);
             }
         }
     }
@@ -262,9 +294,9 @@ namespace Animoid
         let B2 = xpos*xpos + height*height;	// from: B2 = Xhand2 + Yhand2
         let q1 = Math.atan2(height, xpos);	// from: q1 = ATan2(Yhand/Xhand)
         let q2 = Math.acos((lUpper2 - lLower2 + B2) / (2 * lUpper * Math.sqrt(B2)));
-        let hip = Math.floor((q1 + q2)*180/Math.PI);	// convert from radians to integer degrees
+        let hip = Math.floor((q1 + q2)*radTOdeg);	// convert from radians to integer degrees
         let k = Math.acos((lUpper2 + lLower2 - B2) / (2 * lUpper * lLower));
-        let knee = Math.floor(k*180/Math.PI);
+        let knee = Math.floor(k*radTOdeg);
 	if (limb < 2)
         {
             hip = hip - 90;
