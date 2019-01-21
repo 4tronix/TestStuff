@@ -55,6 +55,7 @@ enum RBRobotDirection
 namespace Animoid
 {
     let PCA = 0x40;	// i2c address of 4tronix Animoid servo controller
+    let EEROM = 0x50;	// i2c address of EEROM
     let initI2C = false;
     let SERVOS = 0x06; // first servo address for start byte low
     let lLower = 57;	// distance from servo shaft to tip of leg/foot
@@ -79,7 +80,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 37 servos"
+    //% blockId="enableServos" block="%state all 38 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -120,7 +121,7 @@ namespace Animoid
       * Define Gait distances and speeds
       * @param stride Sets length in mm of complete sequence. eg: 80
       * @param offset Distance from centre of hip that foot is placed down. eg: 20
-      * @param delay Time delay ms between beats
+      * @param delay Time delay ms between beats. eg: 20
       */
     //% blockId="an_configGait" block="set stride %stride|mm offset %offset|mm delay %delay|ms"
     //% stride.min=0
@@ -309,6 +310,38 @@ namespace Animoid
         }
         setServo(limb * 2, hip);
         setServo(limb*2 + 1, knee);
+    }
+
+    /**
+      * Write a byte of data to EEROM at selected address
+      * @param address Location in EEROM to write to
+      * @param data Byte of data to write
+      */
+    //% blockId="writeEEROM" block="write %data| to address %address"
+    export function writeEEROM(data: number, address: number): void
+    {
+        let i2cData = pins.createBuffer(3);
+
+        i2cData[0] = address>>8;	// address MSB
+        i2cData[1] = address & 0xff;	// address LSB
+        i2cData[2] = data;
+        pins.i2cWriteBuffer(EEROM, i2cData, false);
+        basic.pause(1);			// needs a short pause. << 1ms ok?
+    }
+
+    /**
+      * Read a byte of data from EEROM at selected address
+      * @param address Location in EEROM to read from
+      */
+    //% blockId="readEEROM" block="read EEROM address %address"
+    export function readEEROM(address: number): number
+    {
+        let i2cRead = pins.createBuffer(2);
+
+        i2cData[0] = address>>8;	// address MSB
+        i2cData[1] = address & 0xff;	// address LSB
+        pins.i2cWriteBuffer(EEROM, i2cRead, false);
+        return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);
     }
 
 }
