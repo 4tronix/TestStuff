@@ -80,7 +80,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 38 servos"
+    //% blockId="enableServos" block="%state all 39 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -338,8 +338,8 @@ namespace Animoid
     {
         let i2cRead = pins.createBuffer(2);
 
-        i2cData[0] = address>>8;	// address MSB
-        i2cData[1] = address & 0xff;	// address LSB
+        i2cRead[0] = address>>8;	// address MSB
+        i2cRead[1] = address & 0xff;	// address LSB
         pins.i2cWriteBuffer(EEROM, i2cRead, false);
         return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);
     }
