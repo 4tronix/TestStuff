@@ -65,6 +65,7 @@ namespace Animoid
     let gait: number[][][] = [];
     let gInit = false;
     let radTOdeg = 180 / Math.PI;
+    let servoOffset: number[] = [];
 
     let nBeats = 16;	// number of beats in a cycle
     let _height = 60;	// default standing height of lowered legs
@@ -80,7 +81,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 41 servos"
+    //% blockId="enableServos" block="%state all 42 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -202,6 +203,7 @@ namespace Animoid
         return value;
     }
 
+    // initialise the servo driver and the offset array values
     function initPCA(): void
     {
 
@@ -221,6 +223,9 @@ namespace Animoid
         pins.i2cWriteBuffer(PCA, i2cData, false);
 
 	pins.digitalWritePin(DigitalPin.P16, 0);	// enable servos at start
+
+	for (let i=0; i<16; i++)
+            servoOffset[i] = readEEROM(i);
     }
 
     /**
@@ -250,9 +255,9 @@ namespace Animoid
         }
         let i2cData = pins.createBuffer(2);
         // two bytes need setting for start and stop positions of the servo
-        // servos start at SERVOS (0x06) and are then consecutive bloocks of 4 bytes
+        // servos start at SERVOS (0x06) and are then consecutive blocks of 4 bytes
         let start = 0;
-        let stop = 369 + angle * 275 / 90;
+        let stop = 369 + (angle + servoOffset[servo]) * 275 / 90;
 
         i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
         i2cData[1] = 0x00;			// low byte start - always 0
@@ -267,7 +272,7 @@ namespace Animoid
         pins.i2cWriteBuffer(PCA, i2cData, false);
 
         i2cData[0] = SERVOS + servo*4 + 3;	// Servo register
-        i2cData[1] = (stop >> 8);			// high byte stop
+        i2cData[1] = (stop >> 8);		// high byte stop
         pins.i2cWriteBuffer(PCA, i2cData, false);
     }
 
@@ -327,6 +332,7 @@ namespace Animoid
         i2cData[1] = address & 0xff;	// address LSB
         i2cData[2] = data & 0xff;
         pins.i2cWriteBuffer(EEROM, i2cData, false);
+        servoOffset[address] = data & 0xff;	// update servo offset as well - lazy coding
         basic.pause(1);			// needs a short pause. << 1ms ok?
     }
 
