@@ -81,7 +81,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 42 servos"
+    //% blockId="enableServos" block="%state all 43 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -245,7 +245,6 @@ namespace Animoid
       * @param angle degrees to turn servo (-90 to +90)
       */
     //% blockId="an_setServo" block="set servo %servo| to angle %angle"
-    //% angle.min = -90 angle.max = 90
     //% weight = 70
     export function setServo(servo: number, angle: number): void
     {
@@ -257,7 +256,7 @@ namespace Animoid
         // two bytes need setting for start and stop positions of the servo
         // servos start at SERVOS (0x06) and are then consecutive blocks of 4 bytes
         let start = 0;
-        let stop = 369 + (angle + servoOffset[servo]) * 275 / 90;
+        let stop = 369 + (angle + servoOffset[servo]) * 223 / 90;
 
         i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
         i2cData[1] = 0x00;			// low byte start - always 0
