@@ -81,7 +81,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 45 servos"
+    //% blockId="enableServos" block="%state all 46 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -333,7 +333,7 @@ namespace Animoid
         i2cData[1] = address & 0xff;	// address LSB
         i2cData[2] = data & 0xff;
         pins.i2cWriteBuffer(EEROM, i2cData, false);
-        servoOffset[address] = data & 0xff;	// update servo offset as well - lazy coding
+        servoOffset[address] = data;	// update servo offset as well - lazy coding
         basic.pause(1);			// needs a short pause. << 1ms ok?
     }
 
