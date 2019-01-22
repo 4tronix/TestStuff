@@ -82,7 +82,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 48 servos"
+    //% blockId="enableServos" block="%state all 49 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -137,6 +137,7 @@ namespace Animoid
     {
         _height = height;
         _raised = raised;
+        initGait();
         configureGait();
     }
 
@@ -154,6 +155,7 @@ namespace Animoid
         _stride = stride;
         _offset = offset;
         _delay = delay;
+        initGait();
         configureGait();
     }
 
@@ -177,7 +179,7 @@ namespace Animoid
         let rStep = _stride/nBeats;			// distance moved backwards per mini-step to move forward
         let fStep = (_stride/nBeats)*(tDown/tUp);	// distance moved forward per mini-step for raised leg
         
-        createGaitArray();
+        initGait();
         for (let i=0; i < tUp; i++)			// set mini-steps for raised forward movement of leg
         {
             let j = (i + gUp) % nBeats;			// wrap round at end of array
