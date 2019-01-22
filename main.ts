@@ -81,7 +81,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 46 servos"
+    //% blockId="enableServos" block="%state all 47 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -222,6 +222,17 @@ namespace Animoid
         i2cData[1] = 0x81;	// Wake up
         pins.i2cWriteBuffer(PCA, i2cData, false);
 
+        for (let servo=0; servo<16; servo++)
+        {
+            i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
+            i2cData[1] = 0x00;			// low byte start - always 0
+            pins.i2cWriteBuffer(PCA, i2cData, false);
+
+            i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
+            i2cData[1] = 0x00;			// high byte start - always 0
+            pins.i2cWriteBuffer(PCA, i2cData, false);
+        }
+
 	pins.digitalWritePin(DigitalPin.P16, 0);	// enable servos at start
 
 	for (let i=0; i<16; i++)
@@ -252,21 +263,14 @@ namespace Animoid
         {
             initPCA();
         }
-        let i2cData = pins.createBuffer(2);
         // two bytes need setting for start and stop positions of the servo
         // servos start at SERVOS (0x06) and are then consecutive blocks of 4 bytes
+        // the start position (always 0x00) is set during init for all servos
+        // the zero offset for each servo is read during init into the servoOffset array
+
+        let i2cData = pins.createBuffer(2);
         let start = 0;
-        //let stop = 369 + (angle + servoOffset[servo]) * 223 / 90;
-        basic.showNumber(servoOffset[servo]);
-        let stop = 350 + (angle + servoOffset[servo]) * 223 / 90;
-
-        i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
-        i2cData[1] = 0x00;			// low byte start - always 0
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
-        i2cData[1] = 0x00;			// high byte start - always 0
-        pins.i2cWriteBuffer(PCA, i2cData, false);
+        let stop = 369 + (angle + servoOffset[servo]) * 223 / 90;
 
         i2cData[0] = SERVOS + servo*4 + 2;	// Servo register
         i2cData[1] = (stop & 0xff);		// low byte stop
