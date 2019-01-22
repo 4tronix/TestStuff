@@ -62,7 +62,8 @@ namespace Animoid
     let lUpper = 46;	// distance between servo shafts
     let lLower2 = lLower * lLower;	// no point in doing this every time
     let lUpper2 = lUpper * lUpper;
-    let gait: number[][][] = [];
+    let gait: number[][][] = [];	// array of foot positions for each foot and each of 16 Beats
+    let upDown: number[] = [];		// array of Up and down beat numbers for each foot
     let gInit = false;
     let radTOdeg = 180 / Math.PI;
     let servoOffset: number[] = [];
@@ -81,7 +82,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 47 servos"
+    //% blockId="enableServos" block="%state all 48 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -89,7 +90,7 @@ namespace Animoid
     }
 
     /**
-      * Initialise the gait array
+      * Create and Initialise the gait array
       * 4 limbs, 2 dimensions (x, height), 16 steps
       */
     function initGait(): void
@@ -97,13 +98,33 @@ namespace Animoid
         if (! gInit)
         {
             gInit = true;
+            // create all array elements
             for (let i=0; i<4; i++)
             {
                 gait[i] = [];
                 for (let j=0; j<2; j++)
                     gait[i][j] = [];
             }
+            // initialise with standard walking gait
+            upDown[0] = 0;
+            upDown[1] = 12;
+            upDown[2] = 4;
+            upDown[3] = 0;
+            upDown[4] = 8;
+            upDown[5] = 4;
+            upDown[6] = 12;
+            upDown[7] = 8;
+            configureGait();
         }
+    }
+
+    /**
+      * Create detailed foot patterns from current settings and gait
+      */
+    function configureGait(): void
+    {
+        for (let i=0; i<4; i++)
+            setGait(i, upDown[i*2], upDown[i*2+1]);
     }
 
     /**
@@ -116,6 +137,7 @@ namespace Animoid
     {
         _height = height;
         _raised = raised;
+        configureGait();
     }
 
     /**
@@ -132,6 +154,7 @@ namespace Animoid
         _stride = stride;
         _offset = offset;
         _delay = delay;
+        configureGait();
     }
 
 
@@ -154,7 +177,7 @@ namespace Animoid
         let rStep = _stride/nBeats;			// distance moved backwards per mini-step to move forward
         let fStep = (_stride/nBeats)*(tDown/tUp);	// distance moved forward per mini-step for raised leg
         
-        initGait();
+        createGaitArray();
         for (let i=0; i < tUp; i++)			// set mini-steps for raised forward movement of leg
         {
             let j = (i + gUp) % nBeats;			// wrap round at end of array
