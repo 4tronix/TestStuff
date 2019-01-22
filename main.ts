@@ -82,7 +82,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 49 servos"
+    //% blockId="enableServos" block="%state all 50 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -106,13 +106,13 @@ namespace Animoid
                     gait[i][j] = [];
             }
             // initialise with standard walking gait
-            upDown[0] = 0;
-            upDown[1] = 12;
-            upDown[2] = 4;
-            upDown[3] = 0;
-            upDown[4] = 8;
+            upDown[0] = 4;	// left front
+            upDown[1] = 0;
+            upDown[2] = 0;	// left rear
+            upDown[3] = 12;
+            upDown[4] = 8;	// right rear
             upDown[5] = 4;
-            upDown[6] = 12;
+            upDown[6] = 12;	// right front
             upDown[7] = 8;
             configureGait();
         }
@@ -378,6 +378,7 @@ namespace Animoid
         i2cRead[0] = address >> 8;	// address MSB
         i2cRead[1] = address & 0xff;	// address LSB
         pins.i2cWriteBuffer(EEROM, i2cRead, false);
+        basic.pause(1);
         return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);
     }
 
