@@ -82,7 +82,7 @@ namespace Animoid
       *
       * @param state Select Enabled or Disabled
       */
-    //% blockId="enableServos" block="%state all 50 servos"
+    //% blockId="enableServos" block="%state all 51 servos"
     //% weight=90
     export function enableServos(state: States): void
     {
@@ -203,6 +203,7 @@ namespace Animoid
     //% steps.min=1
     export function walk(steps: number): void
     {
+        initGait();	// ensure we have at least the default gait setup
         for (let count=0; count<steps; count++)
         {
             for (let i=0; i<nBeats; i++)
