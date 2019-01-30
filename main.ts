@@ -1,386 +1,349 @@
-﻿/**
-  * Enumeration of servos
+﻿
+/**
+  * Enumeration of buttons
   */
-enum Servos
-{
-    FL_Hip,
-    FL_Knee,
-    RL_Hip,
-    RL_Knee,
-    RR_Hip,
-    RR_Knee,
-    FR_Hip,
-    FR_Knee,
-    Head,
-    Tail
+enum BCButtons {
+    //% block="red"
+    Red,
+    //% block="yellow"
+    Yellow,
+    //% block="green"
+    Green,
+    //% block="blue"
+    Blue,
+    //% block="joystick"
+    Joystick
 }
 
 /**
-  * Enumeration of limbs
+  * Enumeration of joystick axes
   */
-enum Limbs
-{
-    FrontLeft,
-    RearLeft,
-    RearRight,
-    FrontRight
+enum BCJoystick {
+    //% block="x"
+    X,
+    //% block="y"
+    Y
 }
 
 /**
-  * Enumeration of servo enable states
+  * Update mode for LEDs
+  * setting to Manual requires show LED changes blocks
+  * setting to Auto will update the LEDs everytime they change
   */
-enum States
+enum BCMode
 {
-    Enable,
-    Disable
+    Manual,
+    Auto
 }
 
 /**
-  * Enumeration of directions.
+  * Pre-Defined LED colours
   */
-enum RBRobotDirection
+enum BCColors
 {
-    //% block="left"
-    Left,
-    //% block="right"
-    Right
+    //% block=red
+    Red = 0xff0000,
+    //% block=orange
+    Orange = 0xffa500,
+    //% block=yellow
+    Yellow = 0xffff00,
+    //% block=green
+    Green = 0x00ff00,
+    //% block=blue
+    Blue = 0x0000ff,
+    //% block=indigo
+    Indigo = 0x4b0082,
+    //% block=violet
+    Violet = 0x8a2be2,
+    //% block=purple
+    Purple = 0xff00ff,
+    //% block=white
+    White = 0xffffff,
+    //% block=black
+    Black = 0x000000
 }
 
+/**
+ * Pins used to generate events
+ */
+enum BCPins {
+    //% block="red"
+    P12 = <number>DAL.MICROBIT_ID_IO_P12,
+    //% block="yellow"
+    P16 = DAL.MICROBIT_ID_IO_P16,
+    //% block="green"
+    P14 = DAL.MICROBIT_ID_IO_P14,
+    //% block="blue"
+    P15 = DAL.MICROBIT_ID_IO_P15,
+    //% block="joystick"
+    Joystick = DAL.MICROBIT_ID_IO_P8
+}
+
+
+/**
+ * Button events
+ */
+enum BCEvents {
+    //% block="down"
+    Down = DAL.MICROBIT_PIN_EVT_RISE,
+    //% block="up"
+    Up = DAL.MICROBIT_PIN_EVT_FALL
+}
 
 /**
  * Custom blocks
  */
-
-//% weight=10 color=#e7660b icon="\uf188"
-namespace Animoid
+//% weight=10 color=#e7660b icon="\uf11b"
+namespace bitcommander
 {
-    let PCA = 0x40;	// i2c address of 4tronix Animoid servo controller
-    let EEROM = 0x50;	// i2c address of EEROM
-    let initI2C = false;
-    let SERVOS = 0x06; // first servo address for start byte low
-    let lLower = 57;	// distance from servo shaft to tip of leg/foot
-    let lUpper = 46;	// distance between servo shafts
-    let lLower2 = lLower * lLower;	// no point in doing this every time
-    let lUpper2 = lUpper * lUpper;
-    let gait: number[][][] = [];	// array of foot positions for each foot and each of 16 Beats
-    let upDown: number[] = [];		// array of Up and down beat numbers for each foot
-    let gInit = false;
-    let radTOdeg = 180 / Math.PI;
-    let servoOffset: number[] = [];
+    let neoStrip: neopixel.Strip;
+    let _updateMode = BCMode.Auto;
+    let _initEvents = true;
 
-    let nBeats = 16;	// number of beats in a cycle
-    let _height = 60;	// default standing height of lowered legs
-    let _raised = 50;	// default height of raised legs
-    let _stride = 80;	// total distance moved in one cycle
-    let _offset = 20;	// forward-most point of leg
-    let _delay = 20;	// ms to pause at end of each beat
+// Inputs. Buttons, Dial and Joystick
 
-    // Helper functions
+    function initEvents(): void
+    {
+        if (_initEvents)
+        {
+            pins.setEvents(DigitalPin.P12, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P16, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P14, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P15, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P8, PinEventType.Edge);
+            _initEvents = false;
+        }
+    }
 
     /**
-      * Enable/Disable Servos
-      *
-      * @param state Select Enabled or Disabled
+      * Registers event code
       */
-    //% blockId="enableServos" block="%state all 51 servos"
     //% weight=90
-    export function enableServos(state: States): void
+    //% blockId=bc_event block="on button %button|%event"
+    //% subcategory=Inputs
+    //% group=Inputs
+    export function onEvent(button: BCPins, event: BCEvents, handler: Action)
     {
-        pins.digitalWritePin(DigitalPin.P16, state);
+        initEvents();
+        control.onEvent(<number>button, <number>event, handler);
     }
 
     /**
-      * Create and Initialise the gait array
-      * 4 limbs, 2 dimensions (x, height), 16 steps
-      */
-    function initGait(): void
-    {
-        if (! gInit)
-        {
-            gInit = true;
-            // create all array elements
-            for (let i=0; i<4; i++)
-            {
-                gait[i] = [];
-                for (let j=0; j<2; j++)
-                    gait[i][j] = [];
-            }
-            // initialise with standard walking gait
-            upDown[0] = 4;	// left front
-            upDown[1] = 0;
-            upDown[2] = 0;	// left rear
-            upDown[3] = 12;
-            upDown[4] = 8;	// right rear
-            upDown[5] = 4;
-            upDown[6] = 12;	// right front
-            upDown[7] = 8;
-            configureGait();
-        }
-    }
-
-    /**
-      * Create detailed foot patterns from current settings and gait
-      */
-    function configureGait(): void
-    {
-        for (let i=0; i<4; i++)
-            setGait(i, upDown[i*2], upDown[i*2+1]);
-    }
-
-    /**
-      * Define gait default (leg down) and raised heights
-      * @param height height of body when legs down eg: 60
-      * @param raised height of raised leg. eg: 50
-      */
-    //% blockId="an_setHeights" block="set lowered %height|mm raised %raised|mm"
-    export function setHeights(height: number, raised: number): void
-    {
-        _height = height;
-        _raised = raised;
-        initGait();
-        configureGait();
-    }
-
-    /**
-      * Define Gait distances and speeds
-      * @param stride Sets length in mm of complete sequence. eg: 80
-      * @param offset Distance from centre of hip that foot is placed down. eg: 20
-      * @param delay Time delay ms between beats. eg: 20
-      */
-    //% blockId="an_configGait" block="set stride %stride|mm offset %offset|mm delay %delay|ms"
-    //% stride.min=0
-    //% delay.min=0
-    export function configGait(stride: number, offset: number, delay: number): void
-    {
-        _stride = stride;
-        _offset = offset;
-        _delay = delay;
-        initGait();
-        configureGait();
-    }
-
-
-    /**
-      * Define Gait up/down positions
-      * @param limb Determines which limb is being defined eg. FrontLeft
-      * @param gDown beat number (0 to 15) that the leg is first put down
-      * @param gUp beat number (0 to 15) that the leg is first lifted up
-      */
-    //% blockId="an_setGait" block="set %limb=an_limbs| down at %gDown| up at %gUp"
-    //% gDown.min=0 gDown.max=15
-    //% gUp.min=0 gUp.max=15
-    export function setGait(limb: number, gDown: number, gUp: number): void
-    {
-        let tUp = gDown - gUp;		// number of beats leg is raised
-        if (tUp<0)
-            tUp += nBeats;		// fix for gDown earlier than gUp
-        let tDown = nBeats - tUp;	// number of beats leg is down
-
-        let rStep = _stride/nBeats;			// distance moved backwards per mini-step to move forward
-        let fStep = (_stride/nBeats)*(tDown/tUp);	// distance moved forward per mini-step for raised leg
-        
-        initGait();
-        for (let i=0; i < tUp; i++)			// set mini-steps for raised forward movement of leg
-        {
-            let j = (i + gUp) % nBeats;			// wrap round at end of array
-            gait[limb][0][j] = _raised;			// set height of raised leg
-            gait[limb][1][j] = _offset - _stride*(tDown/nBeats) + (i * fStep);	// set x position of leg
-        }
-        for (let i=0; i < tDown; i++)			// set mini-steps for down rearward movement of leg
-        {
-            let j = (i + gDown) % nBeats;		// wrap round at end of array
-            gait[limb][0][j] = _height;			// set height of down leg
-            gait[limb][1][j] = _offset - (i * rStep);	// set x position of leg
-        }
-    }
-
-   /**
-      * Walk a fixed number of steps using selected Gait
-      * @param steps Number of steps to walk. eg: 1
-      */
-    //% blockId="an_walk"
-    //% block
-    //% steps.min=1
-    export function walk(steps: number): void
-    {
-        initGait();	// ensure we have at least the default gait setup
-        for (let count=0; count<steps; count++)
-        {
-            for (let i=0; i<nBeats; i++)
-            {
-                for (let j=0; j<4; j++)	// for each limb
-                {
-                    setLimb(j, gait[j][1][i], gait[j][0][i]);
-                }
-                basic.pause(_delay);
-            }
-        }
-    }
-
-    /**
-      * Return servo number from name
+      * check button states
       *
-      * @param value servo name
+      * @param buttonID Button to check
       */
-    //% blockId="getServo" block="%value"
-    //% weight=80
-    export function getServo(value: Servos): number
+    //% blockId="bitcommander_check_button" block="button %buttonID|pressed"
+    //% weight=85
+    //% subcategory=Inputs
+    //% group=Inputs
+    export function readButton(buttonID: BCButtons): boolean
     {
-        return value;
-    }
-
-    // initialise the servo driver and the offset array values
-    function initPCA(): void
-    {
-
-        let i2cData = pins.createBuffer(2);
-        initI2C = true;
-
-        i2cData[0] = 0;		// Mode 1 register
-        i2cData[1] = 0x10;	// put to sleep
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = 0xFE;	// Prescale register
-        i2cData[1] = 101;	// set to 60 Hz
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = 0;		// Mode 1 register
-        i2cData[1] = 0x81;	// Wake up
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        for (let servo=0; servo<16; servo++)
-        {
-            i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
-            i2cData[1] = 0x00;			// low byte start - always 0
-            pins.i2cWriteBuffer(PCA, i2cData, false);
-
-            i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
-            i2cData[1] = 0x00;			// high byte start - always 0
-            pins.i2cWriteBuffer(PCA, i2cData, false);
-        }
-
-	pins.digitalWritePin(DigitalPin.P16, 0);	// enable servos at start
-
-	for (let i=0; i<16; i++)
-            servoOffset[i] = readEEROM(i);
+	switch (buttonID)
+	{
+            case BCButtons.Red: return pins.digitalReadPin(DigitalPin.P12)==1; break;
+            case BCButtons.Yellow: return pins.digitalReadPin(DigitalPin.P16)==1; break;
+            case BCButtons.Green: return pins.digitalReadPin(DigitalPin.P14)==1; break;
+            case BCButtons.Blue: return pins.digitalReadPin(DigitalPin.P15)==1; break;
+            case BCButtons.Joystick: return pins.digitalReadPin(DigitalPin.P8)==1; break;
+	    default: return false;
+	}
     }
 
     /**
-      * Initialise all servos to Angle=0
+      * Read dial
+      *
       */
-    //% blockId="an_zeroServos"
-    //% block
-    export function zeroServos(): void
+    //% blockId="bitcommander_read_dial" block="dial"
+    //% weight=90
+    //% subcategory=Inputs
+    //% group=Inputs
+    export function readDial( ): number
     {
-        for (let i=0; i<16; i++)
-            setServo(i, 0);
+        return pins.analogReadPin(AnalogPin.P0);
     }
 
     /**
-      * Set Servo Position by Angle
-      * @param servo Servo number (0 to 15)
-      * @param angle degrees to turn servo (-90 to +90)
+      * Read joystick values
+      *
+      * @param axis Axis to read
       */
-    //% blockId="an_setServo" block="set servo %servo| to angle %angle"
-    //% weight = 70
-    export function setServo(servo: number, angle: number): void
+    //% blockId="bitcommander_read_joystick" block="joystick %axis"
+    //% weight=90
+    //% subcategory=Inputs
+    //% group=Inputs
+    export function readJoystick(axis: BCJoystick): number
     {
-        if (initI2C == false)
-        {
-            initPCA();
-        }
-        // two bytes need setting for start and stop positions of the servo
-        // servos start at SERVOS (0x06) and are then consecutive blocks of 4 bytes
-        // the start position (always 0x00) is set during init for all servos
-        // the zero offset for each servo is read during init into the servoOffset array
-
-        let i2cData = pins.createBuffer(2);
-        let start = 0;
-        let stop = 369 + (angle + servoOffset[servo]) * 223 / 90;
-
-        i2cData[0] = SERVOS + servo*4 + 2;	// Servo register
-        i2cData[1] = (stop & 0xff);		// low byte stop
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = SERVOS + servo*4 + 3;	// Servo register
-        i2cData[1] = (stop >> 8);		// high byte stop
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-    }
-
-    /**
-      * Get numeric value of Limb
-      * @param limb name of limb eg FrontLeft
-      */
-    //% blockId="an_limbs" block=%limb
-    export function limbNum(limb: Limbs): number
-    {
-        return limb;
-    }
-
-    /**
-      * Set Position of Foot in mm from hip servo shaft
-      * Inverse kinematics from learnaboutrobots.com/inverseKinematics.htm
-      * @param limb Determines which limb to move. eg. FrontLeft
-      * @param xpos Position on X-axis in mm
-      * @param height Height of hip servo shaft above foot. eg: 60
-      */
-    //% blockId="setLimb" block="set %limb=an_limbs| to position %xpos|(mm) height %height|(mm)"
-    //% weight = 60
-    export function setLimb(limb: number, xpos: number, height: number): void
-    {
-        let B2 = xpos*xpos + height*height;	// from: B2 = Xhand2 + Yhand2
-        let q1 = Math.atan2(height, xpos);	// from: q1 = ATan2(Yhand/Xhand)
-        let q2 = Math.acos((lUpper2 - lLower2 + B2) / (2 * lUpper * Math.sqrt(B2)));
-        let hip = Math.floor((q1 + q2)*radTOdeg);	// convert from radians to integer degrees
-        let k = Math.acos((lUpper2 + lLower2 - B2) / (2 * lUpper * lLower));
-        let knee = Math.floor(k*radTOdeg);
-	if (limb < 2)
-        {
-            hip = hip - 90;
-            knee = knee - 90;
-        }
+        if (axis == BCJoystick.X)
+            return pins.analogReadPin(AnalogPin.P1);
         else
+            return pins.analogReadPin(AnalogPin.P2);
+    }
+
+
+// LEDs. neopixel blocks
+
+    // create a neopixel strip if not got one already
+    function neo(): neopixel.Strip
+    {
+        if (!neoStrip)
         {
-            hip = 90 - hip;
-            knee = 90 - knee;
+            neoStrip = neopixel.create(DigitalPin.P13, 6, NeoPixelMode.RGB)
+            neoStrip.setBrightness(40)
         }
-        setServo(limb * 2, hip);
-        setServo(limb*2 + 1, knee);
+        return neoStrip;
+    }
+
+    // update LEDs if _updateMode set to Auto
+    function updateLEDs(): void
+    {
+        if (_updateMode == BCMode.Auto)
+            neo().show();
     }
 
     /**
-      * Write a byte of data to EEROM at selected address
-      * @param address Location in EEROM to write to
-      * @param data Byte of data to write
+      * Show LED changes
       */
-    //% blockId="writeEEROM" block="write %data| to address %address"
-    //% data.min = -128 data.max = 127
-    export function writeEEROM(data: number, address: number): void
+    //% blockId="bitcommander_neo_show" block="show LED changes"
+    //% weight=100
+    //% subcategory=Leds
+    export function neoShow(): void
     {
-        let i2cData = pins.createBuffer(3);
-
-        i2cData[0] = address >> 8;	// address MSB
-        i2cData[1] = address & 0xff;	// address LSB
-        i2cData[2] = data & 0xff;
-        pins.i2cWriteBuffer(EEROM, i2cData, false);
-        servoOffset[address] = data;	// update servo offset as well - lazy coding
-        basic.pause(1);			// needs a short pause. << 1ms ok?
+        neo().show();
     }
 
     /**
-      * Read a byte of data from EEROM at selected address
-      * @param address Location in EEROM to read from
+      * Sets all LEDs to a given color (range 0-255 for r, g, b).
+      *
+      * @param rgb RGB color of the LED
       */
-    //% blockId="readEEROM" block="read EEROM address %address"
-    export function readEEROM(address: number): number
+    //% blockId="bitcommander_neo_set_color" block="set all LEDs to %rgb=bc_colours"
+    //% weight=95
+    //% subcategory=Leds
+    export function neoSetColor(rgb: number)
     {
-        let i2cRead = pins.createBuffer(2);
+        neo().showColor(rgb);
+        updateLEDs();
+    }
 
-        i2cRead[0] = address >> 8;	// address MSB
-        i2cRead[1] = address & 0xff;	// address LSB
-        pins.i2cWriteBuffer(EEROM, i2cRead, false);
-        basic.pause(1);
-        return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);
+    /**
+      * Clear all LEDs.
+      */
+    //% blockId="bitcommander_neo_clear" block="clear all LEDs"
+    //% weight=90
+    //% subcategory=Leds
+    export function neoClear(): void
+    {
+        neo().clear();
+        updateLEDs();
+    }
+
+    /**
+      * Set LED to a given color (range 0-255 for r, g, b).
+      *
+      * @param ledId position of the LED (0 to 5)
+      * @param rgb RGB color of the LED
+      */
+    //% blockId="bitcommander_neo_set_pixel_color" block="set LED at %ledId|to %rgb=bc_colours"
+    //% weight=85
+    //% subcategory=Leds
+    export function neoSetPixelColor(ledId: number, rgb: number): void
+    {
+        neo().setPixelColor(ledId, rgb);
+        updateLEDs();
+    }
+
+    /**
+      * Shows a rainbow pattern on all LEDs.
+      */
+    //% blockId="bitcommander_neo_rainbow" block="set led rainbow"
+    //% weight=80
+    //% subcategory=Leds
+    export function neoRainbow(): void
+    {
+        neo().showRainbow(1, 360)
+        updateLEDs()
+    }
+
+    /**
+      * Rotate LEDs forward.
+      */
+    //% blockId="bitcommander_neo_rotate" block="rotate LEDs"
+    //% weight=75
+    //% subcategory=Leds
+    export function neoRotate(): void
+    {
+        neo().rotate(1);
+        updateLEDs();
+    }
+
+    /**
+      * Shift LEDs forward and clear with zeros.
+      */
+    //% blockId="bitcommander_neo_shift" block="shift LEDs"
+    //% weight=70
+    //% subcategory=Leds
+    export function neoShift(): void
+    {
+        neo().shift(1);
+        updateLEDs();
+    }
+
+    // advanced blocks
+
+    /**
+      * Set LED update mode (Manual or Automatic)
+      * @param updateMode setting automatic will show LED changes automatically
+      */
+    //% blockId="bitcommander_set_updateMode" block="set %updateMode|update mode"
+    //% brightness.min=0 brightness.max=255
+    //% weight=65
+    //% advanced=true
+    export function setUpdateMode(updateMode: BCMode): void
+    {
+        _updateMode = updateMode;
+    }
+
+    /**
+      * Set the brightness of the LEDs
+      * @param brightness a measure of LED brightness (0 to 255) eg: 40
+      */
+    //% blockId="bitcommander_neo_brightness" block="set led brightness %brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=60
+    //% advanced=true
+    export function neoBrightness(brightness: number): void
+    {
+        neo().setBrightness(brightness);
+        updateLEDs();
+    }
+
+    /**
+      * Get numeric value of colour
+      *
+      * @param color Standard RGB Led Colours
+      */
+    //% blockId="bc_colours" block=%color
+    //% weight=55
+    //% advanced=true
+    export function BCColours(color: BCColors): number
+    {
+        return color;
+    }
+
+    /**
+      * Convert from RGB values to colour number
+      *
+      * @param red Red value of the LED (0 to 255)
+      * @param green Green value of the LED (0 to 255)
+      * @param blue Blue value of the LED (0 to 255)
+      */
+    //% blockId="bitcommander_convertRGB" block="convert from red %red| green %green| blue %bblue"
+    //% weight=50
+    //% advanced=true
+    export function convertRGB(r: number, g: number, b: number): number
+    {
+        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
 
 }
