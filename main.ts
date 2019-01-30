@@ -1,4 +1,31 @@
-﻿
+﻿/**
+ * Pins used to generate events
+ */
+enum BCPins {
+    //% block="red"
+    Red = <number>DAL.MICROBIT_ID_IO_P12,
+    //% block="yellow"
+    Yellow = DAL.MICROBIT_ID_IO_P16,
+    //% block="green"
+    Green = DAL.MICROBIT_ID_IO_P14,
+    //% block="blue"
+    Blue = DAL.MICROBIT_ID_IO_P15,
+    //% block="joystick"
+    Joystick = DAL.MICROBIT_ID_IO_P8
+}
+
+/**
+ * Button events
+ */
+enum BCEvents {
+    //% block="down"
+    Down = DAL.MICROBIT_BUTTON_EVT_DOWN,
+    //% block="up"
+    Up = DAL.MICROBIT_BUTTON_EVT_UP,
+    //% block="click"
+    Click = DAL.MICROBIT_BUTTON_EVT_CLICK,
+}
+
 /**
   * Enumeration of buttons
   */
@@ -63,9 +90,9 @@ enum BCColors
     Black = 0x000000
 }
 
-/**
+/** Old BCPins and BCEvents
  * Pins used to generate events
- */
+ 
 enum BCPins {
     //% block="red"
     P12 = <number>DAL.MICROBIT_ID_IO_P12,
@@ -77,18 +104,18 @@ enum BCPins {
     P15 = DAL.MICROBIT_ID_IO_P15,
     //% block="joystick"
     Joystick = DAL.MICROBIT_ID_IO_P8
-}
+}*/
 
 
 /**
  * Button events
- */
+ 
 enum BCEvents {
     //% block="down"
     Down = DAL.MICROBIT_PIN_EVT_RISE,
     //% block="up"
     Up = DAL.MICROBIT_PIN_EVT_FALL
-}
+}*/
 
 /**
  * Custom blocks
@@ -102,7 +129,23 @@ namespace bitcommander
 
 // Inputs. Buttons, Dial and Joystick
 
-    function initEvents(): void
+    //% shim=bitcommander::init
+    function init(): void {
+        return;
+    }
+
+    /**
+      * Registers event code
+      */
+    //% weight=90
+    //% blockId=bc_onevent block="on %button|%event"
+    export function onEvent(button: BCPins, event: BCEvents, handler: Action)
+    {
+        init();
+        control.onEvent(<number>button, <number>event, handler); // register handler
+    }
+
+/*    function initEvents(): void
     {
         if (_initEvents)
         {
@@ -113,7 +156,7 @@ namespace bitcommander
             pins.setEvents(DigitalPin.P8, PinEventType.Edge);
             _initEvents = false;
         }
-    }
+    }*/
 
     /**
       * Registers event code
@@ -133,7 +176,7 @@ namespace bitcommander
       *
       * @param buttonID Button to check
       */
-    //% blockId="bitcommander_check_button" block="button %buttonID|pressed"
+    //% blockId="bitcommander_check_button" block="button BC01 %buttonID|pressed"
     //% weight=85
     //% subcategory=Inputs
     //% group=Inputs
