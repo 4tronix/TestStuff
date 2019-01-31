@@ -176,7 +176,7 @@ namespace bitcommander
       *
       * @param buttonID Button to check
       */
-    //% blockId="bitcommander_check_button" block="button BC01 %buttonID|pressed"
+    //% blockId="bitcommander_check_button" block="button BC02 %buttonID|pressed"
     //% weight=85
     //% subcategory=Inputs
     //% group=Inputs
