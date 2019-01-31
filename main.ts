@@ -139,6 +139,8 @@ namespace bitcommander
       */
     //% weight=90
     //% blockId=bc_onevent block="on %button|%event"
+    //% subcategory=Inputs
+    //% group=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
     {
         init();
@@ -176,7 +178,7 @@ namespace bitcommander
       *
       * @param buttonID Button to check
       */
-    //% blockId="bitcommander_check_button" block="button BC03 %buttonID|pressed"
+    //% blockId="bitcommander_check_button" block="button BC04 %buttonID|pressed"
     //% weight=85
     //% subcategory=Inputs
     //% group=Inputs
