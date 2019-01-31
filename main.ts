@@ -19,11 +19,9 @@ enum BCPins {
  */
 enum BCEvents {
     //% block="down"
-    Down = DAL.MICROBIT_BUTTON_EVT_DOWN,
+    Down = DAL.MICROBIT_BUTTON_EVT_UP,
     //% block="up"
-    Up = DAL.MICROBIT_BUTTON_EVT_UP,
-    //% block="click"
-    Click = DAL.MICROBIT_BUTTON_EVT_CLICK,
+    Up = DAL.MICROBIT_BUTTON_EVT_DOWN
 }
 
 /**
@@ -90,32 +88,6 @@ enum BCColors
     Black = 0x000000
 }
 
-/** Old BCPins and BCEvents
- * Pins used to generate events
- 
-enum BCPins {
-    //% block="red"
-    P12 = <number>DAL.MICROBIT_ID_IO_P12,
-    //% block="yellow"
-    P16 = DAL.MICROBIT_ID_IO_P16,
-    //% block="green"
-    P14 = DAL.MICROBIT_ID_IO_P14,
-    //% block="blue"
-    P15 = DAL.MICROBIT_ID_IO_P15,
-    //% block="joystick"
-    Joystick = DAL.MICROBIT_ID_IO_P8
-}*/
-
-
-/**
- * Button events
- 
-enum BCEvents {
-    //% block="down"
-    Down = DAL.MICROBIT_PIN_EVT_RISE,
-    //% block="up"
-    Up = DAL.MICROBIT_PIN_EVT_FALL
-}*/
 
 /**
  * Custom blocks
@@ -147,38 +119,12 @@ namespace bitcommander
         control.onEvent(<number>button, <number>event, handler); // register handler
     }
 
-/*    function initEvents(): void
-    {
-        if (_initEvents)
-        {
-            pins.setEvents(DigitalPin.P12, PinEventType.Edge);
-            pins.setEvents(DigitalPin.P16, PinEventType.Edge);
-            pins.setEvents(DigitalPin.P14, PinEventType.Edge);
-            pins.setEvents(DigitalPin.P15, PinEventType.Edge);
-            pins.setEvents(DigitalPin.P8, PinEventType.Edge);
-            _initEvents = false;
-        }
-    }*/
-
-    /**
-      * Old Registers event code
-      
-    //% weight=90
-    //% blockId=bc_event block="on button %button|%event"
-    //% subcategory=Inputs
-    //% group=Inputs
-    export function onEvent(button: BCPins, event: BCEvents, handler: Action)
-    {
-        initEvents();
-        control.onEvent(<number>button, <number>event, handler);
-    }*/
-
     /**
       * check button states
       *
       * @param buttonID Button to check
       */
-    //% blockId="bitcommander_check_button" block="button BC04 %buttonID|pressed"
+    //% blockId="bitcommander_check_button" block="button BC05 %buttonID|pressed"
     //% weight=85
     //% subcategory=Inputs
     //% group=Inputs
