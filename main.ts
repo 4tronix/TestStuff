@@ -159,8 +159,8 @@ namespace bitcommander
     }*/
 
     /**
-      * Registers event code
-      */
+      * Old Registers event code
+      
     //% weight=90
     //% blockId=bc_event block="on button %button|%event"
     //% subcategory=Inputs
@@ -169,14 +169,14 @@ namespace bitcommander
     {
         initEvents();
         control.onEvent(<number>button, <number>event, handler);
-    }
+    }*/
 
     /**
       * check button states
       *
       * @param buttonID Button to check
       */
-    //% blockId="bitcommander_check_button" block="button BC02 %buttonID|pressed"
+    //% blockId="bitcommander_check_button" block="button BC03 %buttonID|pressed"
     //% weight=85
     //% subcategory=Inputs
     //% group=Inputs
