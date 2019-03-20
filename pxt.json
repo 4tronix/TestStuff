@@ -1,7 +1,7 @@
 {
-    "name": "bitcommander",
-    "version": "1.0.0",
-    "description": "A BitCommander package for pxt-microbit",
+    "name": "RoboBit",
+    "version": "1.2.2",
+    "description": "Microsoft MakeCode package for 4tronix RoboBit Buggy",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -10,9 +10,7 @@
     "files": [
         "README.md",
         "main.ts",
-        "main.cpp",
-        "shims.d.ts",
-        "enums.d.ts"
+        "_locales/no/robobit-strings.json"
     ],
     "testFiles": [
         "tests.ts"
