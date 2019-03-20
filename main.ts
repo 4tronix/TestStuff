@@ -79,7 +79,7 @@ namespace Rover
       */
     //% blockId="getServo" block="%value"
     //% weight=80
-    export function getServo(value: Servos): number
+    export function getServo(value: eServos): number
     {
         return value;
     }
@@ -171,7 +171,7 @@ namespace Rover
       * Drive forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="drive" block="drive Cur03 at speed %speed"
+    //% blockId="drive" block="drive Cur04 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=110
     export function drive(speed: number): void
