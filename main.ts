@@ -52,7 +52,7 @@ enum eMotor
  * Custom blocks
  */
 
-//% weight=10 color=#e7660b icon="\uf188"
+//% weight=10 color=#e7660b icon="\uf135"
 namespace Rover
 {
     let PCA = 0x40;	// i2c address of 4tronix Animoid servo controller
@@ -77,7 +77,7 @@ namespace Rover
       *
       * @param value servo name
       */
-    //% blockId="getServo" block="%value"
+    //% blockId="cu_getServo" block="%value"
     //% weight=80
     export function getServo(value: eServos): number
     {
@@ -114,10 +114,18 @@ namespace Rover
             pins.i2cWriteBuffer(PCA, i2cData, false);
         }
 
-	pins.digitalWritePin(DigitalPin.P16, 0);	// enable servos at start
-
 	for (let i=0; i<16; i++)
             servoOffset[i] = readEEROM(i);
+    }
+
+    function setPWM(): void
+    {
+        if ((leftSpeed < 400) || (rightSpeed < 400))
+            pins.analogSetPeriod(AnalogPin.P0, 60000);
+        else if ((leftSpeed < 600) || (rightSpeed < 600))
+            pins.analogSetPeriod(AnalogPin.P0, 40000);
+        else
+            pins.analogSetPeriod(AnalogPin.P0, 30000);
     }
 
 
@@ -126,7 +134,7 @@ namespace Rover
     /**
       * Initialise all servos to Angle=0
       */
-    //% blockId="an_zeroServos"
+    //% blockId="cu_zeroServos"
     //% block
     export function zeroServos(): void
     {
@@ -139,7 +147,7 @@ namespace Rover
       * @param servo Servo number (0 to 15)
       * @param angle degrees to turn servo (-90 to +90)
       */
-    //% blockId="an_setServo" block="set servo %servo| to angle %angle"
+    //% blockId="cu_setServo" block="set servo %servo| to angle %angle"
     //% weight = 70
     export function setServo(servo: number, angle: number): void
     {
@@ -167,11 +175,12 @@ namespace Rover
 
 
 // MOTOR BLOCKS
+
     /**
       * Drive forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="drive" block="drive Cur04 at speed %speed"
+    //% blockId="cu_drive" block="drive Cur05 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=110
     export function drive(speed: number): void
@@ -185,7 +194,7 @@ namespace Rover
       * @param motor motor to drive.
       * @param speed speed of motor eg: 600
       */
-    //% blockId="robobit_motor" block="drive %motor| motor at speed %speed"
+    //% blockId="cu_motor" block="drive %motor| motor at speed %speed"
     //% weight=100
     export function motor(motor: eMotor, speed: number): void
     {
@@ -230,6 +239,44 @@ namespace Rover
     }
 
 
+// SENSOR BLOCKS
+    /**
+    * Read distance from sonar module
+    *
+    * @param unit desired conversion unit
+    */
+    //% subcategory=Sensors
+    //% group=Sensors
+    //% blockId="cu_sonar" block="read sonar as %unit"
+    //% weight=90
+    export function sonar(unit: ePingUnit): number
+    {
+        // send pulse
+        let trig = DigitalPin.P13;
+        let echo = DigitalPin.P13;
+        let maxCmDistance = 500;
+        let d=10;
+        pins.setPull(trig, PinPullMode.PullNone);
+        for (let x=0; x<10; x++)
+        {
+            pins.digitalWritePin(trig, 0);
+            control.waitMicros(2);
+            pins.digitalWritePin(trig, 1);
+            control.waitMicros(10);
+            pins.digitalWritePin(trig, 0);
+            // read pulse
+            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            if (d>0)
+                break;
+        }
+        switch (unit)
+        {
+            case ePingUnit.Centimeters: return d / 58;
+            case ePingUnit.Inches: return d / 148;
+            default: return d;
+        }
+    }
+
 
 // EEROM BLOCKS
 
@@ -238,7 +285,7 @@ namespace Rover
       * @param address Location in EEROM to write to
       * @param data Byte of data to write
       */
-    //% blockId="writeEEROM" block="write %data| to address %address"
+    //% blockId="cu_writeEEROM" block="write %data| to address %address"
     //% data.min = -128 data.max = 127
     export function writeEEROM(data: number, address: number): void
     {
@@ -256,7 +303,7 @@ namespace Rover
       * Read a byte of data from EEROM at selected address
       * @param address Location in EEROM to read from
       */
-    //% blockId="readEEROM" block="read EEROM address %address"
+    //% blockId="cu_readEEROM" block="read EEROM address %address"
     export function readEEROM(address: number): number
     {
         return 0;	// no EEROM to read
