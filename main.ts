@@ -113,7 +113,7 @@ namespace robobit
       *
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select Robobit model %model"
+    //% blockId="robobit_model" block="select Robobit RB02 model %model"
     //% weight=110
     export function select_model(model: RBModel): void
     {
@@ -330,12 +330,12 @@ namespace robobit
 
     function setPWM(): void
     {
-        if ((leftSpeed < 400) || (rightSpeed < 400))
+        /*if ((leftSpeed < 400) || (rightSpeed < 400))
             pins.analogSetPeriod(AnalogPin.P0, 60000);
         else if ((leftSpeed < 600) || (rightSpeed < 600))
             pins.analogSetPeriod(AnalogPin.P0, 40000);
         else
-            pins.analogSetPeriod(AnalogPin.P0, 30000);
+            pins.analogSetPeriod(AnalogPin.P0, 30000);*/
     }
 
     function neo(): neopixel.Strip
