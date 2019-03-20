@@ -59,14 +59,8 @@ namespace Rover
     let EEROM = 0x50;	// i2c address of EEROM
     let initI2C = false;
     let SERVOS = 0x06; // first servo address for start byte low
-    let lLower = 57;	// distance from servo shaft to tip of leg/foot
-    let lUpper = 46;	// distance between servo shafts
-    let lLower2 = lLower * lLower;	// no point in doing this every time
-    let lUpper2 = lUpper * lUpper;
-    let gait: number[][][] = [];	// array of foot positions for each foot and each of 16 Beats
-    let upDown: number[] = [];		// array of Up and down beat numbers for each foot
-    let gInit = false;
-    let radTOdeg = 180 / Math.PI;
+    let leftSpeed = 0;
+    let rightSpeed = 0;
     let servoOffset: number[] = [];
 
 
@@ -180,7 +174,7 @@ namespace Rover
       * Drive forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="cu_drive" block="drive Cur05 at speed %speed"
+    //% blockId="cu_drive" block="drive Cur06 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=110
     export function drive(speed: number): void
@@ -245,8 +239,6 @@ namespace Rover
     *
     * @param unit desired conversion unit
     */
-    //% subcategory=Sensors
-    //% group=Sensors
     //% blockId="cu_sonar" block="read sonar as %unit"
     //% weight=90
     export function sonar(unit: ePingUnit): number
