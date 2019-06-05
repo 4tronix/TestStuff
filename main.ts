@@ -76,27 +76,6 @@ enum BCColors
 //% weight=10 color=#e7660b icon="\uf1cd"
 namespace BitCopter
 {
-    let PCA = 0x40;	// i2c address of 4tronix Animoid servo controller
-    let EEROM = 0x50;	// i2c address of EEROM
-    let initI2C = false;
-    let SERVOS = 0x06; // first servo address for start byte low
-    let lLower = 57;	// distance from servo shaft to tip of leg/foot
-    let lUpper = 46;	// distance between servo shafts
-    let lLower2 = lLower * lLower;	// no point in doing this every time
-    let lUpper2 = lUpper * lUpper;
-    let gait: number[][][] = [];	// array of foot positions for each foot and each of 16 Beats
-    let upDown: number[] = [];		// array of Up and down beat numbers for each foot
-    let gInit = false;
-    let radTOdeg = 180 / Math.PI;
-    let servoOffset: number[] = [];
-
-    let nBeats = 16;	// number of beats in a cycle
-    let _height = 50;	// default standing height of lowered legs
-    let _raised = 40;	// default height of raised legs
-    let _stride = 80;	// total distance moved in one cycle
-    let _offset = 20;	// forward-most point of leg
-    let _delay = 20;	// ms to pause at end of each beat
-
     // Helper functions
 
     /**
@@ -104,7 +83,7 @@ namespace BitCopter
       * @param motor motor to drive
       * @param speed speed of motor between 0 and 1023. eg: 600
       */
-    //% blockId="rotate_motor" block="rotate 19 %motor| motor at speed %speed"
+    //% blockId="rotate_motor" block="rotate 20 %motor| motor at speed %speed"
     //% weight=110
     export function rotate(motor: BCMotor, speed: number): void
     {
@@ -123,6 +102,43 @@ namespace BitCopter
         //    default: motorPin = AnalogPin.P12;
         }
         pins.analogWritePin(motorPin, speed);
+    }
+
+    /**
+    * Read height from sonar module
+    *
+    * @param unit desired conversion unit
+    */
+    //% subcategory=Sensors
+    //% group=Sensors
+    //% blockId="height_sonar" block="read sonar as %unit"
+    //% weight=90
+    export function sonar(unit: BCPingUnit): number
+    {
+        // send pulse
+        let trig = DigitalPin.P15;
+        let echo = trig;
+        let maxCmDistance = 500;
+        let d=10;
+        pins.setPull(trig, PinPullMode.PullNone);
+        for (let x=0; x<10; x++)
+        {
+            pins.digitalWritePin(trig, 0);
+            control.waitMicros(2);
+            pins.digitalWritePin(trig, 1);
+            control.waitMicros(10);
+            pins.digitalWritePin(trig, 0);
+            // read pulse
+            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            if (d>0)
+                break;
+        }
+        switch (unit)
+        {
+            case BCPingUnit.Centimeters: return d / 58;
+            case BCPingUnit.Inches: return d / 148;
+            default: return d;
+        }
     }
 
 
