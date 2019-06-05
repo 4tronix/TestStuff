@@ -1,7 +1,7 @@
 {
-    "name": "PCB-Rover",
+    "name": "BitCopter",
     "version": "0.0.1",
-    "description": "Microsoft MakeCode package for 4tronix Rover",
+    "description": "Microsoft MakeCode package for 4tronix BitCopter",
     "license": "MIT",
     "dependencies": {
         "core": "*",
