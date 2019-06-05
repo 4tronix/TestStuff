@@ -29,40 +29,43 @@ enum BCDirection
 }
 
 /**
-  * Enumeration of servos
-  */
-enum Servos
+ * Ping unit for sensor
+ */
+enum BCPingUnit
 {
-    FL_Hip,
-    FL_Knee,
-    RL_Hip,
-    RL_Knee,
-    RR_Hip,
-    RR_Knee,
-    FR_Hip,
-    FR_Knee,
-    Head,
-    Tail
+    //% block="cm"
+    Centimeters,
+    //% block="inches"
+    Inches,
+    //% block="μs"
+    MicroSeconds
 }
 
 /**
-  * Enumeration of limbs
-  */
-enum Limbs
+ * Pre-Defined pixel colours
+ */
+enum BCColors
 {
-    FrontLeft,
-    RearLeft,
-    RearRight,
-    FrontRight
-}
-
-/**
-  * Enumeration of servo enable states
-  */
-enum States
-{
-    Enable,
-    Disable
+    //% block=red
+    Red = 0xff0000,
+    //% block=orange
+    Orange = 0xffa500,
+    //% block=yellow
+    Yellow = 0xffff00,
+    //% block=green
+    Green = 0x00ff00,
+    //% block=blue
+    Blue = 0x0000ff,
+    //% block=indigo
+    Indigo = 0x4b0082,
+    //% block=violet
+    Violet = 0x8a2be2,
+    //% block=purple
+    Purple = 0xff00ff,
+    //% block=white
+    White = 0xffffff,
+    //% block=black
+    Black = 0x000000
 }
 
 
@@ -97,23 +100,11 @@ namespace BitCopter
     // Helper functions
 
     /**
-      * Enable/Disable Servos
-      *
-      * @param state Select Enabled or Disabled
-      */
-    //% blockId="enableServos" block="%state all 18 servos"
-    //% weight=90
-    export function enableServos(state: States): void
-    {
-        pins.digitalWritePin(DigitalPin.P16, state);
-    }
-
-    /**
       * Turn selected motor at speed.
       * @param motor motor to drive
       * @param speed speed of motor between 0 and 1023. eg: 600
       */
-    //% blockId="rotate_motor" block="rotate %motor| motor at speed %speed"
+    //% blockId="rotate_motor" block="rotate 19 %motor| motor at speed %speed"
     //% weight=110
     export function rotate(motor: BCMotor, speed: number): void
     {
