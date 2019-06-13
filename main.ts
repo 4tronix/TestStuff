@@ -135,7 +135,7 @@ namespace bitbot
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="bitbot_motor_forward" block="drive 02 at speed %speed"
+    //% blockId="bitbot_motor_forward" block="drive 03 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
@@ -212,8 +212,33 @@ namespace bitbot
     //% subcategory=Motors
     export function motor(motor: BBMotor, speed: number): void
     {
-        let forward = (speed >= 0);
+        if (speed == 0)
+            bitbot_stop();
+        else if (speed > 0)
+        {
+            let speed0 = speed;
+            let speed1 = 0;
+        }
+        else
+        {
+            let speed0 = 0;
+            let speed1 = 0 - speed;
+        }
+        if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
+        {
+            pins.analogWritePin(AnalogPin.P0, speed0);
+            pins.analogWritePin(AnalogPin.P8, speed1);
+        }
+
+        if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
+        {
+            pins.analogWritePin(AnalogPin.P1, speed0);
+            pins.analogWritePin(AnalogPin.P12, speed1);
+        }
+
+/*        let forward = (speed >= 0);
         let absSpeed = Math.abs(speed);
+        
         if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
             leftSpeed = absSpeed;
         if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
@@ -249,7 +274,7 @@ namespace bitbot
         {
             pins.analogWritePin(AnalogPin.P1, realSpeed);
             pins.digitalWritePin(DigitalPin.P12, forward ? 0 : 1);
-        }
+        }*/
     }
 
 // Sensors and Addons
