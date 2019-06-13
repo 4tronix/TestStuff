@@ -132,6 +132,43 @@ namespace bitbot
     }
 
     /**
+      * Drive motor(s) forward or reverse.
+      * @param motor motor to drive.
+      * @param speed speed of motor (-1023 to 1023). eg: 600
+      */
+    //% blockId="bitbot_motor" block="drive %motor|motor(s) at speed %speed"
+    //% weight=80
+    //% subcategory=Motors
+    export function motor(motor: BBMotor, speed: number): void
+    {
+        let speed0 = 0;
+        let speed1 = 0;
+        if (speed == 0)
+            robot_stop();
+        else if (speed > 0)
+        {
+            speed0 = speed;
+            speed1 = 0;
+        }
+        else
+        {
+            speed0 = 0;
+            speed1 = 0 - speed;
+        }
+        if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
+        {
+            pins.analogWritePin(AnalogPin.P0, speed0);
+            pins.analogWritePin(AnalogPin.P8, speed1);
+        }
+
+        if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
+        {
+            pins.analogWritePin(AnalogPin.P1, speed0);
+            pins.analogWritePin(AnalogPin.P12, speed1);
+        }
+    }
+
+    /**
       * Stop robot by coasting slowly to a halt
       */
     //% blockId="robot_stop" block="stop (coast)"
@@ -164,7 +201,7 @@ namespace bitbot
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="bitbot_motor_forward" block="drive 05 at speed %speed"
+    //% blockId="bitbot_motor_forward" block="drive 06 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
@@ -229,42 +266,6 @@ namespace bitbot
         driveTurn(direction, speed)
         basic.pause(milliseconds)
         motor(BBMotor.Both, 0)
-    }
-
-    /**
-      * Drive motor(s) forward or reverse.
-      * @param motor motor to drive.
-      * @param speed speed of motor (-1023 to 1023). eg: 600
-      */
-    //% blockId="bitbot_motor" block="drive %motor|motor(s) at speed %speed"
-    //% weight=80
-    //% subcategory=Motors
-    export function motor(motor: BBMotor, speed: number): void
-    {
-        if (speed == 0)
-            robot_stop();
-        else if (speed > 0)
-        {
-            let speed0 = speed;
-            let speed1 = 0;
-        }
-        else
-        {
-            let speed0 = 0;
-            let speed1 = 0 - speed;
-        }
-        if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
-        {
-            pins.analogWritePin(AnalogPin.P0, speed0);
-            pins.analogWritePin(AnalogPin.P8, speed1);
-        }
-
-        if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
-        {
-            pins.analogWritePin(AnalogPin.P1, speed0);
-            pins.analogWritePin(AnalogPin.P12, speed1);
-        }
-
     }
 
 // Sensors and Addons
