@@ -134,7 +134,7 @@ namespace bitbot
     // slow PWM frequency for slower speeds to improve torque
     function setPWM(speed: number): void
     {
-        if ((speed < 200)
+        if (speed < 200)
             pins.analogSetPeriod(AnalogPin.P0, 60000);
         else if (speed < 300)
             pins.analogSetPeriod(AnalogPin.P0, 40000);
@@ -202,7 +202,7 @@ namespace bitbot
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="bitbot_motor_forward" block="drive 09 at speed %speed"
+    //% blockId="bitbot_motor_forward" block="drive 10 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
