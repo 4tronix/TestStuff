@@ -24,6 +24,17 @@ enum BBRobotDirection
 }
 
 /**
+  * Stop modes. Coast or Brake
+  */
+enum BBStopMode
+{
+    //% block="coast"
+    Coast,
+    //% block="brake"
+    Brake
+}
+
+/**
   * Values for buzzer. On or Off
   */
 enum BBBuzz
@@ -169,39 +180,28 @@ namespace bitbot
     }
 
     /**
-      * Stop robot by coasting slowly to a halt
+      * Stop robot by coasting slowly to a halt or braking
+      * @param mode Brakes on or off
       */
-    //% blockId="robot_stop" block="stop (coast)"
+    //% blockId="robot_stop" block="stop with %mode"
     //% weight=100
     //% subcategory=Motors
-    export function robot_stop(): void
+    export function robot_stop(mode: BBStopMode): void
     {
-        pins.digitalWritePin(DigitalPin.P0, 0);
-        pins.digitalWritePin(DigitalPin.P1, 0);
-        pins.digitalWritePin(DigitalPin.P8, 0);
-        pins.digitalWritePin(DigitalPin.P12, 0);
-    }
-
-    /**
-      * Stop robot by braking quickly
-      * @param speed speed of motor between -1023 and 1023. eg: 600
-      */
-    //% blockId="robot_brake" block="brake (stop)"
-    //% weight=100
-    //% subcategory=Motors
-    export function robot_brake(): void
-    {
-        pins.digitalWritePin(DigitalPin.P0, 1);
-        pins.digitalWritePin(DigitalPin.P1, 1);
-        pins.digitalWritePin(DigitalPin.P8, 1);
-        pins.digitalWritePin(DigitalPin.P12, 1);
+        let stopMode = 0;
+        if (mode == BBStopMode.Brake)
+            stopMode = 1;
+        pins.digitalWritePin(DigitalPin.P0, stopMode);
+        pins.digitalWritePin(DigitalPin.P1, stopMode);
+        pins.digitalWritePin(DigitalPin.P8, stopMode);
+        pins.digitalWritePin(DigitalPin.P12, stopMode);
     }
 
     /**
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="bitbot_motor_forward" block="drive 06 at speed %speed"
+    //% blockId="bitbot_motor_forward" block="drive 07 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
