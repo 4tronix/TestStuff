@@ -28,7 +28,7 @@ enum BBRobotDirection
   */
 enum BBStopMode
 {
-    //% block="coast"
+    //% block="no brake"
     Coast,
     //% block="brake"
     Brake
@@ -155,7 +155,7 @@ namespace bitbot
         let speed0 = 0;
         let speed1 = 0;
         if (speed == 0)
-            robot_stop();
+            robot_stop(BBStopMode.Coast);
         else if (speed > 0)
         {
             speed0 = speed;
@@ -201,7 +201,7 @@ namespace bitbot
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="bitbot_motor_forward" block="drive 07 at speed %speed"
+    //% blockId="bitbot_motor_forward" block="drive 08 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
