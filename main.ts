@@ -132,11 +132,11 @@ namespace bitbot
 // Motor Blocks
 
     // slow PWM frequency for slower speeds to improve torque
-    function setPWM(): void
+    function setPWM(speed: number): void
     {
-        if ((leftSpeed < 200) || (rightSpeed < 200))
+        if ((speed < 200)
             pins.analogSetPeriod(AnalogPin.P0, 60000);
-        else if ((leftSpeed < 300) || (rightSpeed < 300))
+        else if (speed < 300)
             pins.analogSetPeriod(AnalogPin.P0, 40000);
         else
             pins.analogSetPeriod(AnalogPin.P0, 30000);
@@ -154,6 +154,7 @@ namespace bitbot
     {
         let speed0 = 0;
         let speed1 = 0;
+        setPWM(Math.abs(speed));
         if (speed == 0)
             robot_stop(BBStopMode.Coast);
         else if (speed > 0)
@@ -201,7 +202,7 @@ namespace bitbot
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="bitbot_motor_forward" block="drive 08 at speed %speed"
+    //% blockId="bitbot_motor_forward" block="drive 09 at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
