@@ -185,7 +185,7 @@ namespace bitbot
       * @param mode Brakes on or off
       */
     //% blockId="robot_stop" block="stop with %mode"
-    //% weight=100
+    //% weight=92
     //% subcategory=Motors
     export function robot_stop(mode: BBStopMode): void
     {
@@ -202,7 +202,7 @@ namespace bitbot
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
-    //% blockId="bitbot_motor_forward" block="drive 10 at speed %speed"
+    //% blockId="bitbot_motor_forward" block="drive at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
