@@ -104,11 +104,19 @@ namespace BitCopter
         for (let pwm=0; pwm<4; pwm++)
         {
             i2cData[0] = PWM0 + pwm*4 + 0;	// PWM register
-            i2cData[1] = 0x00;			// low byte start - always 0
+            i2cData[1] = 0x00;			// low byte start
             pins.i2cWriteBuffer(PCA, i2cData, false);
 
             i2cData[0] = PWM0 + pwm*4 + 1;	// PWM register
-            i2cData[1] = 0x00;			// high byte start - always 0
+            i2cData[1] = 0x00;			// high byte start
+            pins.i2cWriteBuffer(PCA, i2cData, false);
+
+            i2cData[0] = PWM0 + pwm*4 + 2;	// PWM register
+            i2cData[1] = 0x00;			// low byte stop
+            pins.i2cWriteBuffer(PCA, i2cData, false);
+
+            i2cData[0] = PWM0 + pwm*4 + 3;	// PWM register
+            i2cData[1] = 0x00;			// high byte stop
             pins.i2cWriteBuffer(PCA, i2cData, false);
         }
     }
@@ -118,7 +126,7 @@ namespace BitCopter
       * @param motor motor to drive
       * @param speed speed of motor between 0 and 1023. eg: 600
       */
-    //% blockId="rotate_motor" block="rotate 24 %motor| motor at speed %speed"
+    //% blockId="rotate_motor" block="rotate 25 %motor| motor at speed %speed"
     //% weight=110
     export function rotate(motor: BCMotor, speed: number): void
     {
