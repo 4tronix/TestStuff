@@ -76,32 +76,84 @@ enum BCColors
 //% weight=10 color=#e7660b icon="\uf1cd"
 namespace BitCopter
 {
+    let PCA = 0x40;	// i2c address of 4tronix BitCopter PWM controller
+    let initI2C = false;
+    let PWM0 = 0x06; // first address for start byte low on PWM channel 0
+
     // Helper functions
+
+    // initialise the PWM driver
+    function initPCA(): void
+    {
+
+        let i2cData = pins.createBuffer(2);
+        initI2C = true;
+
+        i2cData[0] = 0;		// Mode 1 register
+        i2cData[1] = 0x10;	// put to sleep
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = 0xFE;	// Prescale register
+        i2cData[1] = 101;	// set to 60 Hz
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = 0;		// Mode 1 register
+        i2cData[1] = 0x81;	// Wake up
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        for (let pwm=0; pwm<4; pwm++)
+        {
+            i2cData[0] = PWM0 + pwm*4 + 0;	// PWM register
+            i2cData[1] = 0x00;			// low byte start - always 0
+            pins.i2cWriteBuffer(PCA, i2cData, false);
+
+            i2cData[0] = PWM0 + pwm*4 + 1;	// PWM register
+            i2cData[1] = 0x00;			// high byte start - always 0
+            pins.i2cWriteBuffer(PCA, i2cData, false);
+        }
+    }
 
     /**
       * Turn selected motor at speed.
       * @param motor motor to drive
       * @param speed speed of motor between 0 and 1023. eg: 600
       */
-    //% blockId="rotate_motor" block="rotate 22 %motor| motor at speed %speed"
+    //% blockId="rotate_motor" block="rotate 23 %motor| motor at speed %speed"
     //% weight=110
     export function rotate(motor: BCMotor, speed: number): void
     {
-        turnMotor(motor, speed);
+        turnMotor(motorNum(motor), speed);
     }
 
-
-    function turnMotor(motor: BCMotor, speed: number): void
+    /**
+      * Get numeric value of motor
+      */
+    function motorNum(motor: BCMotor): number
     {
-        let motorPin = AnalogPin.P12;
-        switch (motor)
+        return motor;
+    }
+
+    function turnMotor(motor: number, speed: number): void
+    {
+        if (initI2C == false)
         {
-            case BCMotor.FR: motorPin = AnalogPin.P13; break;
-            case BCMotor.RR: motorPin = AnalogPin.P14; break;
-            case BCMotor.RL: motorPin = AnalogPin.P8; break;
-        //    default: motorPin = AnalogPin.P12;
+            initPCA();
         }
-        pins.analogWritePin(motorPin, speed);
+        // two bytes need setting for start and stop positions of the PWM period
+        // PWM drivers start at PWM0 (0x06) and are then consecutive blocks of 4 bytes
+        // the start position (always 0x00) is set during init for all
+
+        let i2cData = pins.createBuffer(2);
+        let start = 0;
+        let stop = speed * 4;
+
+        i2cData[0] = PWM0 + motor*4 + 2;	// Servo register
+        i2cData[1] = (stop & 0xff);		// low byte stop
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = PWM0 + motor*4 + 3;	// Servo register
+        i2cData[1] = (stop >> 8);		// high byte stop
+        pins.i2cWriteBuffer(PCA, i2cData, false);
     }
 
     /**
