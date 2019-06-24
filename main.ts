@@ -7,10 +7,10 @@ enum BCMotor
     FL,
     //% block="FrontRight"
     FR,
-    //% block="RearLeft"
-    RL,
     //% block="RearRight"
-    RR
+    RR,
+    //% block="RearLeft"
+    RL
 }
 
 /**
@@ -118,7 +118,7 @@ namespace BitCopter
       * @param motor motor to drive
       * @param speed speed of motor between 0 and 1023. eg: 600
       */
-    //% blockId="rotate_motor" block="rotate 23 %motor| motor at speed %speed"
+    //% blockId="rotate_motor" block="rotate 24 %motor| motor at speed %speed"
     //% weight=110
     export function rotate(motor: BCMotor, speed: number): void
     {
