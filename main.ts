@@ -68,6 +68,16 @@ enum BCColors
     Black = 0x000000
 }
 
+/**
+  * Update mode for LEDs
+  * setting to Manual requires show LED changes blocks
+  * setting to Auto will update the LEDs everytime they change
+  */
+enum BCMode
+{
+    Manual,
+    Auto
+}
 
 /**
  * Custom blocks
@@ -80,6 +90,7 @@ namespace BitCopter
     let initI2C = false;
     let PWM0 = 0x06; // first address for start byte low on PWM channel 0
     let leds: neopixel.Strip;
+    let _updateMode = BCMode.Auto;
 
     // Helper functions
 
@@ -127,7 +138,7 @@ namespace BitCopter
       * @param motor motor to drive
       * @param speed speed of motor between 0 and 1023. eg: 600
       */
-    //% blockId="rotate_motor" block="rotate 26 %motor| motor at speed %speed"
+    //% blockId="rotate_motor" block="rotate 27 %motor| motor at speed %speed"
     //% weight=110
     export function rotate(motor: BCMotor, speed: number): void
     {
@@ -212,6 +223,25 @@ namespace BitCopter
         return leds;
     }
 
+    // update LEDs if _updateMode set to Auto
+    function updateLEDs(): void
+    {
+        if (_updateMode == BCMode.Auto)
+            neo().show();
+    }
+
+    /**
+      * Set LED update mode (Manual or Automatic)
+      * @param updateMode setting automatic will show LED changes automatically
+      */
+    //% blockId="set_updateMode" block="set %updateMode|update mode"
+    //% weight=65
+    //% advanced=true
+    export function setUpdateMode(updateMode: BCMode): void
+    {
+        _updateMode = updateMode;
+    }
+
     /**
       * Sets all pixels to a given colour
       *
@@ -224,6 +254,7 @@ namespace BitCopter
     export function setColor(rgb: number): void
     {
         neo().showColor(rgb);
+        updateLEDs();
     }
 
     /**
@@ -239,6 +270,7 @@ namespace BitCopter
     export function setPixel(ID: number, rgb: number): void
     {
         neo().setPixelColor(ID, rgb);
+        updateLEDs();
     }
 
     /**
@@ -279,6 +311,7 @@ namespace BitCopter
     export function ledsClear(): void
     {
         neo().clear();
+        updateLEDs();
     }
 
     /**
@@ -291,6 +324,7 @@ namespace BitCopter
     export function ledsShift(): void
     {
         neo().shift(1);
+        updateLEDs();
     }
 
     /**
@@ -303,7 +337,8 @@ namespace BitCopter
     export function ledsRotate(): void
     {
         neo().rotate(1);
-    }
+        updateLEDs();
+   }
 
     /**
      * Set the brightness of the Leds. Note this only applies to future writes to the strip.
@@ -317,6 +352,7 @@ namespace BitCopter
     export function ledsBrightness(brightness: number): void
     {
         neo().setBrightness(brightness);
+        updateLEDs();
     }
 
     /**
