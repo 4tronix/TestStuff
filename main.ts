@@ -79,6 +79,7 @@ namespace BitCopter
     let PCA = 0x40;	// i2c address of 4tronix BitCopter PWM controller
     let initI2C = false;
     let PWM0 = 0x06; // first address for start byte low on PWM channel 0
+    let leds: neopixel.Strip;
 
     // Helper functions
 
@@ -126,7 +127,7 @@ namespace BitCopter
       * @param motor motor to drive
       * @param speed speed of motor between 0 and 1023. eg: 600
       */
-    //% blockId="rotate_motor" block="rotate 25 %motor| motor at speed %speed"
+    //% blockId="rotate_motor" block="rotate 26 %motor| motor at speed %speed"
     //% weight=110
     export function rotate(motor: BCMotor, speed: number): void
     {
@@ -201,6 +202,136 @@ namespace BitCopter
         }
     }
 
+    function neo(): neopixel.Strip
+    {
+        if (!leds)
+        {
+            leds = neopixel.create(DigitalPin.P16, 4, NeoPixelMode.RGB);
+            leds.setBrightness(40);
+        }
+        return leds;
+    }
+
+    /**
+      * Sets all pixels to a given colour
+      *
+      * @param rgb RGB colour of the pixel
+      */
+    //% subcategory=leds
+    //% group=leds
+    //% blockId="set_color" block="set all pixels to %rgb=bc_colours"
+    //% weight=90
+    export function setColor(rgb: number): void
+    {
+        neo().showColor(rgb);
+    }
+
+    /**
+     * Set a pixel to a given colour (using colour names).
+     *
+     * @param ID location of the pixel in the cube from 0
+     * @param rgb RGB color of the LED
+     */
+    //% subcategory=leds
+    //% group=leds
+    //% blockId="set_pixel_color" block="set pixel color at %ID|to %rgb=bc_colours"
+    //% weight=85
+    export function setPixel(ID: number, rgb: number): void
+    {
+        neo().setPixelColor(ID, rgb);
+    }
+
+    /**
+     * Convert from RGB values to colour number
+     *
+     * @param red Red value of the LED 0:255
+     * @param green Green value of the LED 0:255
+     * @param blue Blue value of the LED 0:255
+     */
+    //% subcategory=leds
+    //% group=leds
+    //% blockId="convertRGB" block="convert from red %red| green %green| blue %bblue"
+    //% weight=55
+    export function convertRGB(r: number, g: number, b: number): number
+    {
+        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+    }
+
+    /**
+      * Show pixels
+      */
+    //% subcategory=leds
+    //% group=leds
+    //% blockId="leds_show" block="show Led changes"
+    //% weight=95
+    export function ledsShow(): void
+    {
+        neo().show();
+    }
+
+    /**
+      * Clear leds.
+      */
+    //% subcategory=leds
+    //% group=leds
+    //% blockId="leds_clear" block="clear all pixels"
+    //% weight=80
+    export function ledsClear(): void
+    {
+        neo().clear();
+    }
+
+    /**
+     * Shift LEDs forward and clear with zeros.
+     */
+    //% subcategory=leds
+    //% group=leds
+    //% blockId="leds_shift" block="shift pixels"
+    //% weight=65
+    export function ledsShift(): void
+    {
+        neo().shift(1);
+    }
+
+    /**
+     * Rotate LEDs forward.
+     */
+    //% subcategory=leds
+    //% group=leds
+    //% blockId="leds_rotate" block="rotate pixels"
+    //% weight=70
+    export function ledsRotate(): void
+    {
+        neo().rotate(1);
+    }
+
+    /**
+     * Set the brightness of the Leds. Note this only applies to future writes to the strip.
+     * @param brightness a measure of LED brightness in 0-255. eg: 40
+     */
+    //% subcategory=leds
+    //% group=leds
+    //% blockId="leds_brightness" block="set Led brightness %brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=92
+    export function ledsBrightness(brightness: number): void
+    {
+        neo().setBrightness(brightness);
+    }
+
+    /**
+      * Gets numeric value of colour
+      *
+      * @param color Standard RGB Led Colours
+      */
+    //% subcategory=leds
+    //% group=leds
+    //% blockId="bc_colours" block=%color
+    //% weight=60
+    export function BCColours(color: BCColors): number
+    {
+        return color;
+    }
 
 
 }
