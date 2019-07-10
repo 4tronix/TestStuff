@@ -146,7 +146,7 @@ namespace bitbot
       *
       * @param model Model of BitBot; Classic or XL
       */
-    //% blockId="bitbot_model" block="select 03 BitBot model %model"
+    //% blockId="bitbot_model" block="select 04 BitBot model %model"
     //% weight=100
     export function select_model(model: BBModel): void
     {
@@ -392,11 +392,11 @@ namespace bitbot
         }
         else
         {
-            let sensor = pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false);
+            let value = pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false);
             if (sensor == BBLineSensor.Left)
-                return sensor & 0x01;
+                return value & 0x01;
             else
-                return (sensor & 0x02) >> 1;
+                return (value & 0x02) >> 1;
         }
     }
 
