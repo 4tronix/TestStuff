@@ -138,15 +138,16 @@ namespace bitbot
     let _updateMode = BBMode.Auto;
     let leftSpeed = 0;
     let rightSpeed = 0;
-    let _model: BBModel;
+    let _model = BBModel.Classic;
+    let i2caddr = 28;
 
     /**
       * Select Model of BitBot (Determines Pins used)
       *
       * @param model Model of BitBot; Classic or XL
       */
-    //% blockId="bitbot_model" block="select Robobit model %model"
-    //% weight=110
+    //% blockId="bitbot_model" block="select 03 BitBot model %model"
+    //% weight=100
     export function select_model(model: BBModel): void
     {
         _model = model;
@@ -329,9 +330,8 @@ namespace bitbot
     //% subcategory=Sensors
     export function buzz(flag: BBBuzz): void
     {
-        if (flag==BBBuzz.Off) buzz=0
-            buzz = 0;
-        else
+        let buzz = 0;
+        if (flag==BBBuzz.On)
             buzz = 1;
         if (_model == BBModel.Classic)
             pins.digitalWritePin(DigitalPin.P14, buzz);
@@ -383,10 +383,21 @@ namespace bitbot
     //% subcategory=Sensors
     export function readLine(sensor: BBLineSensor): number
     {
-        if (sensor == BBLineSensor.Left)
-            return pins.digitalReadPin(DigitalPin.P11);
+        if (_model == BBModel.Classic)
+        {
+            if (sensor == BBLineSensor.Left)
+                return pins.digitalReadPin(DigitalPin.P11);
+            else
+                return pins.digitalReadPin(DigitalPin.P5);
+        }
         else
-            return pins.digitalReadPin(DigitalPin.P5);
+        {
+            let sensor = pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false);
+            if (sensor == BBLineSensor.Left)
+                return sensor & 0x01;
+            else
+                return (sensor & 0x02) >> 1;
+        }
     }
 
     /**
