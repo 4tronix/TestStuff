@@ -100,7 +100,7 @@ namespace THBoards
       *
       * @param model Model of TH Board; Zero or Plus
       */
-    //% blockId="th_model" block="select 05 TH Board model %model"
+    //% blockId="th_model" block="select 06 TH Board model %model"
     //% weight=100
     export function th_model(model: THModel): void
     {
@@ -211,9 +211,9 @@ namespace THBoards
         else
         {
             pins.digitalWritePin(DigitalPin.P12, 0);
-            pins.digitalWritePin(DigitalPin.P13, lDir ^ 1);
+            pins.digitalWritePin(DigitalPin.P13, lDir ^ stopMode);
             pins.digitalWritePin(DigitalPin.P14, 0);
-            pins.digitalWritePin(DigitalPin.P15, rDir ^ 1);
+            pins.digitalWritePin(DigitalPin.P15, rDir ^ stopMode);
         }
     }
 
