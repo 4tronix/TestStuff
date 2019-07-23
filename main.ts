@@ -92,13 +92,15 @@ namespace THBoards
     let neoStrip: neopixel.Strip;
     let _updateMode = THMode.Auto;
     let _model = THModel.Zero;
+    let lDir = 0;
+    let rDir = 0;
 
     /**
       * Select Model of TH Board (Determines Pins used)
       *
       * @param model Model of TH Board; Zero or Plus
       */
-    //% blockId="th_model" block="select 03 TH Board model %model"
+    //% blockId="th_model" block="select 04 TH Board model %model"
     //% weight=100
     export function th_model(model: THModel): void
     {
@@ -147,11 +149,13 @@ namespace THBoards
             {
                 pins.analogWritePin(AnalogPin.P12, speed);
                 pins.digitalWritePin(DigitalPin.P13, reverse);
+                lDir = reverse;
             }
             if ((motor == THMotor.M2) || (motor == THMotor.Both))
             {
                 pins.analogWritePin(AnalogPin.P14, speed);
                 pins.digitalWritePin(DigitalPin.P15, reverse);
+                rDir = reverse;
             }
         }
         else // model == Zero
@@ -197,10 +201,20 @@ namespace THBoards
         let stopMode = 0;
         if (mode == THStopMode.Brake)
             stopMode = 1;
-        pins.digitalWritePin(DigitalPin.P12, stopMode);
-        pins.digitalWritePin(DigitalPin.P13, stopMode);
-        pins.digitalWritePin(DigitalPin.P14, stopMode);
-        pins.digitalWritePin(DigitalPin.P15, stopMode);
+        if (_model == THModel.Zero)
+        {
+            pins.digitalWritePin(DigitalPin.P12, stopMode);
+            pins.digitalWritePin(DigitalPin.P13, stopMode);
+            pins.digitalWritePin(DigitalPin.P14, stopMode);
+            pins.digitalWritePin(DigitalPin.P15, stopMode);
+        }
+        else
+        {
+            pins.digitalWritePin(DigitalPin.P12, 0);
+            pins.digitalWritePin(DigitalPin.P13, lDir);
+            pins.digitalWritePin(DigitalPin.P14, 0);
+            pins.digitalWritePin(DigitalPin.P15, rDir);
+        }
     }
 
     /**
