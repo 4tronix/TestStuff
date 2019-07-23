@@ -1,7 +1,7 @@
 {
-    "name": "BitBot",
-    "version": "1.2.0",
-    "description": "A BitBot package for pxt-microbit",
+    "name": "THBoards",
+    "version": "1.0.2",
+    "description": "Microsoft MakeCode package for THZero & THPlus",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -9,10 +9,8 @@
     },
     "files": [
         "README.md",
-        "main.ts",
-        "_locales/no/bitbot-strings.json",
-        "_locales/no/bitbot-jsdoc-strings.json"
-    ],
+        "main.ts"
+     ],
     "testFiles": [
         "tests.ts"
     ],
