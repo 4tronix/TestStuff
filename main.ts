@@ -98,7 +98,7 @@ namespace THBoards
       *
       * @param model Model of TH Board; Zero or Plus
       */
-    //% blockId="th_model" block="select 02 TH Board model %model"
+    //% blockId="th_model" block="select 03 TH Board model %model"
     //% weight=100
     export function th_model(model: THModel): void
     {
@@ -146,12 +146,12 @@ namespace THBoards
             if ((motor == THMotor.M1) || (motor == THMotor.Both))
             {
                 pins.analogWritePin(AnalogPin.P12, speed);
-                pins.digitalWritePin(AnalogPin.P13, reverse);
+                pins.digitalWritePin(DigitalPin.P13, reverse);
             }
             if ((motor == THMotor.M2) || (motor == THMotor.Both))
             {
                 pins.analogWritePin(AnalogPin.P14, speed);
-                pins.digitalWritePin(AnalogPin.P15, reverse);
+                pins.digitalWritePin(DigitalPin.P15, reverse);
             }
         }
         else // model == Zero
