@@ -86,7 +86,7 @@ enum THColors
 /**
  * Custom blocks
  */
-//% weight=50 color=#e7660b icon="\uf1b9"
+//% weight=50 color=#a93135 icon="\uf0e4"
 namespace THBoards
 {
     let neoStrip: neopixel.Strip;
@@ -100,7 +100,7 @@ namespace THBoards
       *
       * @param model Model of TH Board; Zero or Plus
       */
-    //% blockId="th_model" block="select 06 TH Board model %model"
+    //% blockId="th_model" block="select TH Board model %model"
     //% weight=100
     export function th_model(model: THModel): void
     {
@@ -296,7 +296,7 @@ namespace THBoards
     {
         if (!neoStrip)
         {
-            neoStrip = neopixel.create(DigitalPin.P13, 4, NeoPixelMode.RGB);
+            neoStrip = neopixel.create(DigitalPin.P16, 4, NeoPixelMode.RGB);
             neoStrip.setBrightness(40);
         }
         return neoStrip;
