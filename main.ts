@@ -91,6 +91,8 @@ namespace THBoards
 {
     let neoStrip: neopixel.Strip;
     let _updateMode = THMode.Auto;
+    let _flashing = false;
+
     let _model = THModel.Zero;
     let lDir = 0;
     let rDir = 0;
@@ -181,7 +183,7 @@ namespace THBoards
       *
       * @param model Model of TH Board; Zero or Plus
       */
-    //% blockId="th_model" block="select 02 TH Board model %model"
+    //% blockId="th_model" block="select 03 TH Board model %model"
     //% weight=100
     export function th_model(model: THModel): void
     {
@@ -463,7 +465,7 @@ namespace THBoards
       *
       * @param color Standard RGB Led Colours
       */
-    //% blockId="mb_colours" block=%color
+    //% blockId="th_colours" block=%color
     //% weight=50
     //% subcategory=LEDs
     export function THColours(color: THColors): number
@@ -538,5 +540,44 @@ namespace THBoards
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
+
+    /**
+      * Start Flashing
+      * @param color the colour to flash
+      * @param delay time in ms for each flash, eg: 100,50,200,500
+      */
+    //% blockId="startFlash" block="start flash %color=th_colours| with %delay|(ms)"
+    //% subcategory=Leds
+    //% delay.min=1 delay.max=10000
+    //% weight=15
+    export function startFlash(color: number, delay: number): void
+    {
+        if(_flashing == false)
+        {
+            _flashing = true;
+            control.inBackground(() =>
+            {
+                while (_flashing)
+                {                                
+                    setLedColor(color);
+                    basic.pause(delay);
+                    setLedColor(0);
+                    basic.pause(delay);
+                }
+            })
+        }
+    }
+
+    /**
+      * Stop Flashing
+      */
+    //% block
+    //% subcategory=Leds
+    //% weight=10
+    export function stopFlash(): void
+    {
+        _flashing = false;
+    }
+
 
 }
