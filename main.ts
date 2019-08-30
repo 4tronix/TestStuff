@@ -183,7 +183,7 @@ namespace THBoards
       *
       * @param model Model of TH Board; Zero or Plus
       */
-    //% blockId="th_model" block="select 04 TH Board model %model"
+    //% blockId="th_model" block="select 05 TH Board model %model"
     //% weight=100
     export function th_model(model: THModel): void
     {
@@ -546,7 +546,7 @@ namespace THBoards
       * @param color the colour to flash
       * @param delay time in ms for each flash, eg: 100,50,200,500
       */
-    //% blockId="startFlash" block="start flash %color=th_colours| with %delay|(ms)"
+    //% blockId="startFlash" block="start flash %color=th_colours| at %delay|(ms)"
     //% subcategory=LEDs
     //% delay.min=1 delay.max=10000
     //% weight=15
