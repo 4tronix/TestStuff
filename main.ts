@@ -183,7 +183,7 @@ namespace THBoards
       *
       * @param model Model of TH Board; Zero or Plus
       */
-    //% blockId="th_model" block="select 03 TH Board model %model"
+    //% blockId="th_model" block="select 04 TH Board model %model"
     //% weight=100
     export function th_model(model: THModel): void
     {
@@ -396,7 +396,7 @@ namespace THBoards
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="th_set_led_color" block="set LED to %rgb=mb_colours"
+    //% blockId="th_set_led_color" block="set LED to %rgb=th_colours"
     //% weight=100
     //% subcategory=LEDs
     export function setLedColor(rgb: number)
@@ -547,7 +547,7 @@ namespace THBoards
       * @param delay time in ms for each flash, eg: 100,50,200,500
       */
     //% blockId="startFlash" block="start flash %color=th_colours| with %delay|(ms)"
-    //% subcategory=Leds
+    //% subcategory=LEDs
     //% delay.min=1 delay.max=10000
     //% weight=15
     export function startFlash(color: number, delay: number): void
@@ -572,7 +572,7 @@ namespace THBoards
       * Stop Flashing
       */
     //% block
-    //% subcategory=Leds
+    //% subcategory=LEDs
     //% weight=10
     export function stopFlash(): void
     {
