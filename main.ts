@@ -165,7 +165,7 @@ namespace THBoards
 
         let i2cData = pins.createBuffer(2);
         let start = 0;
-        let stop = 369 + (angle + servoOffset[servo]) * 223 / 90;
+        let stop = 369 + angle * 223 / 90;
 
         i2cData[0] = SERVOS + servo*4 + 2;	// Servo register
         i2cData[1] = (stop & 0xff);		// low byte stop
@@ -181,7 +181,7 @@ namespace THBoards
       *
       * @param model Model of TH Board; Zero or Plus
       */
-    //% blockId="th_model" block="select TH Board model %model"
+    //% blockId="th_model" block="select 02 TH Board model %model"
     //% weight=100
     export function th_model(model: THModel): void
     {
