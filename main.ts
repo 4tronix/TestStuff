@@ -99,6 +99,7 @@ namespace THBoards
 // Servo PCA9685
     let PCA = 0x40;	// i2c address of PCA9685 servo controller
     let initI2C = false;
+    let _i2cError = 0;
     let SERVOS = 0x06; // first servo address for start byte low
 
 // Helper functions
@@ -126,7 +127,7 @@ namespace THBoards
         {
             i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
             i2cData[1] = 0x00;			// low byte start - always 0
-            pins.i2cWriteBuffer(PCA, i2cData, false);
+            i2cError = pins.i2cWriteBuffer(PCA, i2cData, false);
 
             i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
             i2cData[1] = 0x00;			// high byte start - always 0
@@ -183,7 +184,7 @@ namespace THBoards
       *
       * @param model Model of TH Board; Zero or Plus
       */
-    //% blockId="th_selectModel" block="select 06 TH Board model %model"
+    //% blockId="th_selectModel" block="select 07 TH Board model %model"
     //% weight=100
     export function th_selectModel(model: THModel): void
     {
@@ -195,9 +196,9 @@ namespace THBoards
       */
     //% blockId="th_model" block="board model"
     //% weight=90
-    export function th_model(): THModel
+    export function th_model(): number
     {
-        return _model;
+        return _i2cError;
     }
 
 // Motor Blocks
