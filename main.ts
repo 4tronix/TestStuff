@@ -183,11 +183,21 @@ namespace THBoards
       *
       * @param model Model of TH Board; Zero or Plus
       */
-    //% blockId="th_model" block="select 05 TH Board model %model"
+    //% blockId="th_selectModel" block="select 06 TH Board model %model"
     //% weight=100
-    export function th_model(model: THModel): void
+    export function th_selectModel(model: THModel): void
     {
         _model = model;
+    }
+
+    /**
+      * get Model of Board (Zero or Plus)
+      */
+    //% blockId="th_model" block="board model"
+    //% weight=90
+    export function th_model(): THModel
+    {
+        return _model;
     }
 
 // Motor Blocks
