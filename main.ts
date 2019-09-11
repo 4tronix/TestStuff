@@ -127,7 +127,7 @@ namespace THBoards
         {
             i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
             i2cData[1] = 0x00;			// low byte start - always 0
-            i2cError = pins.i2cWriteBuffer(PCA, i2cData, false);
+            _i2cError = pins.i2cWriteBuffer(PCA, i2cData, false);
 
             i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
             i2cData[1] = 0x00;			// high byte start - always 0
@@ -184,7 +184,7 @@ namespace THBoards
       *
       * @param model Model of TH Board; Zero or Plus
       */
-    //% blockId="th_selectModel" block="select 07 TH Board model %model"
+    //% blockId="th_selectModel" block="select 08 TH Board model %model"
     //% weight=100
     export function th_selectModel(model: THModel): void
     {
