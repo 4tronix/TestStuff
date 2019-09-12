@@ -129,7 +129,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="cu_zeroServos"
-    //% block="Centre all 02 servos"
+    //% block="Centre all 03 servos"
     export function zeroServos(): void
     {
         for (let i=0; i<16; i++)
@@ -222,13 +222,13 @@ namespace Rover
         }
         if ((motor == eMotor.Left) || (motor == eMotor.Both))
         {
-            pins.analogWritePin(AnalogPin.P0, realSpeed);
-            pins.digitalWritePin(DigitalPin.P8, forward ? 0 : 1);
+            pins.analogWritePin(AnalogPin.P8, realSpeed);
+            pins.digitalWritePin(DigitalPin.P0, forward ? 0 : 1);
         }
         if ((motor == eMotor.Right) || (motor == eMotor.Both))
         {
-            pins.analogWritePin(AnalogPin.P12, realSpeed);
-            pins.digitalWritePin(DigitalPin.P1, forward ? 0 : 1);
+            pins.analogWritePin(AnalogPin.P1, realSpeed);
+            pins.digitalWritePin(DigitalPin.P12, forward ? 0 : 1);
         }
     }
 
