@@ -51,6 +51,7 @@ enum THMode
   */
 enum THModel
 {
+    Unknown,
     Zero,
     Plus
 }
@@ -93,7 +94,7 @@ namespace THBoards
     let _updateMode = THMode.Auto;
     let _flashing = false;
 
-    let _model = THModel.Zero;
+    let _model = THModel.Unknown;
     let lDir = 0;
     let rDir = 0;
 // Servo PCA9685
@@ -184,7 +185,7 @@ namespace THBoards
       *
       * @param model Model of TH Board; Zero or Plus
       */
-    //% blockId="th_selectModel" block="select 08 TH Board model %model"
+    //% blockId="th_selectModel" block="select 09 TH Board model %model"
     //% weight=100
     export function th_selectModel(model: THModel): void
     {
@@ -196,9 +197,16 @@ namespace THBoards
       */
     //% blockId="th_model" block="board model"
     //% weight=90
-    export function th_model(): number
+    export function getModel(): THModel
     {
-        return _i2cError;
+        if (_model == THModel.Unknown)
+        {
+            if (pins.i2cReadNumber(64, NumberFormat.Int8LE, false) == 0)
+                _model = THModel.Zero;
+            else
+                _model = THModel.Plus;
+        }
+        return _model;
     }
 
 // Motor Blocks
@@ -237,7 +245,7 @@ namespace THBoards
             speed = -speed;
         }
         setPWM(speed);
-        if (_model == THModel.Plus)
+        if (getModel() == THModel.Plus)
         {
             if ((motor == THMotor.M1) || (motor == THMotor.Both))
             {
@@ -295,7 +303,7 @@ namespace THBoards
         let stopMode = 0;
         if (mode == THStopMode.Brake)
             stopMode = 1;
-        if (_model == THModel.Zero)
+        if (getModel() == THModel.Zero)
         {
             pins.digitalWritePin(DigitalPin.P12, stopMode);
             pins.digitalWritePin(DigitalPin.P13, stopMode);
