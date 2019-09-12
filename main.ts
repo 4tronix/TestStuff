@@ -180,17 +180,6 @@ namespace THBoards
         pins.i2cWriteBuffer(PCA, i2cData, false);
     }
 
-    /**
-      * Select Model of TH Board (Determines Pins used)
-      *
-      * @param model Model of TH Board; Zero or Plus
-      */
-    //% blockId="th_selectModel" block="select 09 TH Board model %model"
-    //% weight=100
-    export function th_selectModel(model: THModel): void
-    {
-        _model = model;
-    }
 
     /**
       * get Model of Board (Zero or Plus)
