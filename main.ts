@@ -168,7 +168,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 06 servos"
+    //% block="Centre all 07 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -261,7 +261,7 @@ namespace Rover
       * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
       */
     //% blockId="drive_milliseconds"
-    //& block="drive at speed %speed| for %milliseconds|(ms)"
+    //% block="drive at speed %speed| for %milliseconds|(ms)"
     //% speed.min=-1023 speed.max=1023
     //% weight=90
     //% subcategory=Motors
