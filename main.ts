@@ -168,7 +168,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 07 servos"
+    //% block="Centre all 08 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
