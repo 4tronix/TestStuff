@@ -168,7 +168,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 05 servos"
+    //% block="Centre all 06 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -211,32 +211,32 @@ namespace Rover
     }
 
     /**
-      * Return servo number from name
-      *
-      * @param value servo name
-      */
-    //% blockId="getServoNumber"
-    //% block="%value"
-    //% weight=80
-    //% subcategory=Servos
-    export function getServoNumber(value: eServos): number
-    {
-        return value;
-    }
-
-    /**
       * Set Servo Offset then zero the servo
       * @param servo Servo number (0 to 15)
       * @param angle degrees to turn servo (-90 to +90)
       */
     //% blockId="setOffset"
-    //% block="set offset of servo %servo| to %offset"
-    //% weight=70
+    //% block="set offset of servo %servo=e_servos| to %offset"
+    //% weight=80
     //% subcategory=Servos
     export function setOffset(servo: number, offset: number): void
     {
         servoOffset[servo] = offset;
         setServo(servo, 0);
+    }
+
+    /**
+      * Return servo number from name
+      *
+      * @param value servo name
+      */
+    //% blockId="e_servos"
+    //% block="%value"
+    //% weight=70
+    //% subcategory=Servos
+    export function getServoNumber(value: eServos): number
+    {
+        return value;
     }
 
 // MOTOR BLOCKS
@@ -389,7 +389,7 @@ namespace Rover
         i2cData[1] = address & 0xff;	// address LSB
         i2cData[2] = data & 0xff;
         pins.i2cWriteBuffer(EEROM, i2cData, false);
-        servoOffset[address] = data;	// update servo offset as well - lazy coding
+        //servoOffset[address] = data;	// update servo offset as well - lazy coding
         basic.pause(1);			// needs a short pause. << 1ms ok?
     }
 
@@ -436,7 +436,8 @@ namespace Rover
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="set_led_color" block="set all LEDs to %rgb=e_colours"
+    //% blockId="set_led_color"
+    //% block="set all LEDs to %rgb=e_colours"
     //% weight=100
     //% subcategory=LEDs
     export function setLedColor(rgb: number)
@@ -448,7 +449,8 @@ namespace Rover
     /**
       * Clear all leds.
       */
-    //% blockId="led_clear" block="clear all LEDs"
+    //% blockId="led_clear"
+    //% block="clear all LEDs"
     //% weight=90
     //% subcategory=LEDs
     export function ledClear(): void
@@ -463,7 +465,8 @@ namespace Rover
      * @param ledId position of the LED (0 to 11)
      * @param rgb RGB color of the LED
      */
-    //% blockId="set_pixel_color" block="set LED at %ledId|to %rgb=e_colours"
+    //% blockId="set_pixel_color"
+    //% block="set LED at %ledId|to %rgb=e_colours"
     //% weight=80
     //% subcategory=LEDs
     export function setPixelColor(ledId: number, rgb: number): void
@@ -476,7 +479,8 @@ namespace Rover
      * Set the brightness of the LEDs
      * @param brightness a measure of LED brightness in 0-255. eg: 40
      */
-    //% blockId="minibit_led_brightness" block="set LED brightness %brightness"
+    //% blockId="led_brightness"
+    //% block="set LED brightness %brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=70
     //% subcategory=LEDs
@@ -489,7 +493,8 @@ namespace Rover
     /**
       * Shows a rainbow pattern on all LEDs.
       */
-    //% blockId="led_rainbow" block="set led rainbow"
+    //% blockId="led_rainbow"
+    //% block="set led rainbow"
     //% weight=60
     //% subcategory=LEDs
     export function ledRainbow(): void
@@ -503,7 +508,8 @@ namespace Rover
       *
       * @param color Standard RGB Led Colours
       */
-    //% blockId="e_colours" block=%color
+    //% blockId="e_colours"
+    //% block=%color
     //% weight=50
     //% subcategory=LEDs
     export function eColours(color: eColors): number
@@ -511,13 +517,14 @@ namespace Rover
         return color;
     }
 
-    // Advanced blocks
+// Advanced blocks
 
     /**
       * Set LED update mode (Manual or Automatic)
       * @param updateMode setting automatic will show LED changes automatically
       */
-    //% blockId="set_updateMode" block="set %updateMode|update mode"
+    //% blockId="set_updateMode"
+    //% block="set %updateMode|update mode"
     //% weight=100
     //% advanced=true
     export function setUpdateMode(updateMode: eUpdateMode): void
@@ -528,7 +535,8 @@ namespace Rover
     /**
       * Show LED changes
       */
-    //% blockId="led_show" block="show LED changes"
+    //% blockId="led_show"
+    //% block="show LED changes"
     //% weight=90
     //% advanced=true
     export function ledShow(): void
@@ -539,7 +547,8 @@ namespace Rover
     /**
      * Rotate LEDs forward.
      */
-    //% blockId="led_rotate" block="rotate LEDs"
+    //% blockId="led_rotate"
+    //% block="rotate LEDs"
     //% weight=80
     //% advanced=true
     export function ledRotate(): void
@@ -551,7 +560,8 @@ namespace Rover
     /**
      * Shift LEDs forward and clear with zeros.
      */
-    //% blockId="led_shift" block="shift LEDs"
+    //% blockId="led_shift"
+    //% block="shift LEDs"
     //% weight=70
     //% advanced=true
     export function ledShift(): void
@@ -567,7 +577,8 @@ namespace Rover
       * @param green Green value of the LED (0 to 255)
       * @param blue Blue value of the LED (0 to 255)
       */
-    //% blockId="convertRGB" block="convert from red %red| green %green| blue %blue"
+    //% blockId="convertRGB"
+    //% block="convert from red %red| green %green| blue %blue"
     //% weight=60
     //% advanced=true
     export function convertRGB(r: number, g: number, b: number): number
