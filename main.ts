@@ -61,9 +61,9 @@ enum eStopMode
 /**
   * Update mode for LEDs
   * setting to Manual requires show LED changes blocks
-  * setting to Auto will update the LEDs everytime they change
+  * setting to Auto will update the LEDs every time they change
   */
-enum eMode
+enum eUpdateMode
 {
     Manual,
     Auto
@@ -112,7 +112,7 @@ namespace Rover
     let rightSpeed = 0;
     let servoOffset: number[] = [];
     let neoStrip: neopixel.Strip;
-    let _updateMode = eMode.Auto;
+    let _updateMode = eUpdateMode.Auto;
 
 
 // HELPER FUNCTIONS
@@ -168,9 +168,9 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 04 servos"
-    //% weight = 100
-    //% subcategory = Servos
+    //% block="Centre all 05 servos"
+    //% weight=100
+    //% subcategory=Servos
     export function zeroServos(): void
     {
         for (let i=0; i<16; i++)
@@ -184,8 +184,8 @@ namespace Rover
       */
     //% blockId="setServo"
     //% block="set servo %servo| to angle %angle"
-    //% weight = 90
-    //% subcategory = Servos
+    //% weight=90
+    //% subcategory=Servos
     export function setServo(servo: number, angle: number): void
     {
         if (initI2C == false)
@@ -218,7 +218,7 @@ namespace Rover
     //% blockId="getServoNumber"
     //% block="%value"
     //% weight=80
-    //% subcategory = Servos
+    //% subcategory=Servos
     export function getServoNumber(value: eServos): number
     {
         return value;
@@ -231,8 +231,8 @@ namespace Rover
       */
     //% blockId="setOffset"
     //% block="set offset of servo %servo| to %offset"
-    //% weight = 70
-    //% subcategory = Servos
+    //% weight=70
+    //% subcategory=Servos
     export function setOffset(servo: number, offset: number): void
     {
         servoOffset[servo] = offset;
@@ -249,7 +249,7 @@ namespace Rover
     //% block="drive at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=100
-    //% subcategory = Motors
+    //% subcategory=Motors
     export function drive(speed: number): void
     {
         motor(eMotor.Both, speed);
@@ -264,7 +264,7 @@ namespace Rover
     //& block="drive at speed %speed| for %milliseconds|(ms)"
     //% speed.min=-1023 speed.max=1023
     //% weight=90
-    //% subcategory = Motors
+    //% subcategory=Motors
     export function driveMilliseconds(speed: number, milliseconds: number): void
     {
         drive(speed);
@@ -278,7 +278,7 @@ namespace Rover
       */
     //% blockId="rover_stop" block="stop with %mode"
     //% weight=80
-    //% subcategory = Motors
+    //% subcategory=Motors
     export function stop(mode: eStopMode): void
     {
         let stopMode = 0;
@@ -298,7 +298,7 @@ namespace Rover
     //% blockId="motor"
     //% block="drive %motor| motor at speed %speed"
     //% weight=70
-    //% subcategory = Motors
+    //% subcategory=Motors
     export function motor(motor: eMotor, speed: number): void
     {
         let speed0 = 0;
@@ -336,11 +336,11 @@ namespace Rover
     *
     * @param unit desired conversion unit
     */
-    //% blockId="cu_sonar"
+    //% blockId="readSonar"
     //% block="read sonar as %unit"
     //% weight=100
-    //% subcategory = Sensors
-    export function sonar(unit: ePingUnit): number
+    //% subcategory=Sensors
+    export function readSonar(unit: ePingUnit): number
     {
         // send pulse
         let trig = DigitalPin.P13;
@@ -376,11 +376,11 @@ namespace Rover
       * @param address Location in EEROM to write to
       * @param data Byte of data to write
       */
-    //% blockId="cu_writeEEROM"
+    //% blockId="writeEEROM"
     //% block="write %data| to address %address"
     //% data.min = -128 data.max = 127
-    //% weight = 100
-    //% subcategory = EEROM
+    //% weight=100
+    //% subcategory=EEROM
     export function writeEEROM(data: number, address: number): void
     {
         let i2cData = pins.createBuffer(3);
@@ -397,10 +397,10 @@ namespace Rover
       * Read a byte of data from EEROM at selected address
       * @param address Location in EEROM to read from
       */
-    //% blockId="cu_readEEROM"
+    //% blockId="readEEROM"
     //% block="read EEROM address %address"
-    //% weight = 90
-    //% subcategory = EEROM
+    //% weight=90
+    //% subcategory=EEROM
     export function readEEROM(address: number): number
     {
         let i2cRead = pins.createBuffer(2);
@@ -428,7 +428,7 @@ namespace Rover
     // update LEDs if _updateMode set to Auto
     function updateLEDs(): void
     {
-        if (_updateMode == eMode.Auto)
+        if (_updateMode == eUpdateMode.Auto)
             neo().show();
     }
 
@@ -489,7 +489,7 @@ namespace Rover
     /**
       * Shows a rainbow pattern on all LEDs.
       */
-    //% blockId="minibit_rainbow" block="set led rainbow"
+    //% blockId="led_rainbow" block="set led rainbow"
     //% weight=60
     //% subcategory=LEDs
     export function ledRainbow(): void
@@ -520,7 +520,7 @@ namespace Rover
     //% blockId="set_updateMode" block="set %updateMode|update mode"
     //% weight=100
     //% advanced=true
-    export function setUpdateMode(updateMode: eMode): void
+    export function setUpdateMode(updateMode: eUpdateMode): void
     {
         _updateMode = updateMode;
     }
@@ -553,7 +553,6 @@ namespace Rover
      */
     //% blockId="led_shift" block="shift LEDs"
     //% weight=70
-    //% subcategory=Leds
     //% advanced=true
     export function ledShift(): void
     {
