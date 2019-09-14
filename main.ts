@@ -168,7 +168,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 13 servos"
+    //% block="Centre all 14 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -300,7 +300,7 @@ namespace Rover
     //% weight=70
     //% subcategory=Motors
     export function motor(motor: eMotor, speed: number): void
-    {/*
+    {
         let speed0 = 0;
         let speed1 = 0;
         setPWM(Math.abs(speed));
@@ -325,7 +325,7 @@ namespace Rover
             pins.analogWritePin(AnalogPin.P8, speed0);
             pins.analogWritePin(AnalogPin.P0, speed1);
         }
-    */}
+    }
 
 
 // SENSOR BLOCKS
