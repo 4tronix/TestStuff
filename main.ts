@@ -168,7 +168,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 08 servos"
+    //% block="Centre all 09 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -383,14 +383,14 @@ namespace Rover
     //% subcategory=EEROM
     export function writeEEROM(data: number, address: number): void
     {
-        let i2cData = pins.createBuffer(3);
+        /*let i2cData = pins.createBuffer(3);
 
         i2cData[0] = address >> 8;	// address MSB
         i2cData[1] = address & 0xff;	// address LSB
         i2cData[2] = data & 0xff;
         pins.i2cWriteBuffer(EEROM, i2cData, false);
         //servoOffset[address] = data;	// update servo offset as well - lazy coding
-        basic.pause(1);			// needs a short pause. << 1ms ok?
+        basic.pause(1);			// needs a short pause. << 1ms ok? */
     }
 
     /**
@@ -403,187 +403,16 @@ namespace Rover
     //% subcategory=EEROM
     export function readEEROM(address: number): number
     {
-        let i2cRead = pins.createBuffer(2);
+        return 0;
+        /*let i2cRead = pins.createBuffer(2);
 
         i2cRead[0] = address >> 8;	// address MSB
         i2cRead[1] = address & 0xff;	// address LSB
         pins.i2cWriteBuffer(EEROM, i2cRead, false);
         basic.pause(1);
-        return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);
+        return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);*/
     }
 
 // LED Blocks
-
-    // create a neopixel strip if not got one already. Default to brightness 40
-    function neo(): neopixel.Strip
-    {
-        if (!neoStrip)
-        {
-            neoStrip = neopixel.create(DigitalPin.P2, 4, NeoPixelMode.RGB);
-            neoStrip.setBrightness(40);
-        }
-        return neoStrip;
-    }
-
-    // update LEDs if _updateMode set to Auto
-    function updateLEDs(): void
-    {
-        if (_updateMode == eUpdateMode.Auto)
-            neo().show();
-    }
-
-    /**
-      * Sets all LEDs to a given color (range 0-255 for r, g, b).
-      * @param rgb RGB color of the LED
-      */
-    //% blockId="set_led_color"
-    //% block="set all LEDs to %rgb=e_colours"
-    //% weight=100
-    //% subcategory=LEDs
-    export function setLedColor(rgb: number)
-    {
-        neo().showColor(rgb);
-        updateLEDs();
-    }
-
-    /**
-      * Clear all leds.
-      */
-    //% blockId="led_clear"
-    //% block="clear all LEDs"
-    //% weight=90
-    //% subcategory=LEDs
-    export function ledClear(): void
-    {
-        neo().clear();
-        updateLEDs();
-    }
-
-    /**
-     * Set single LED to a given color (range 0-255 for r, g, b).
-     *
-     * @param ledId position of the LED (0 to 11)
-     * @param rgb RGB color of the LED
-     */
-    //% blockId="set_pixel_color"
-    //% block="set LED at %ledId|to %rgb=e_colours"
-    //% weight=80
-    //% subcategory=LEDs
-    export function setPixelColor(ledId: number, rgb: number): void
-    {
-        neo().setPixelColor(ledId, rgb);
-        updateLEDs();
-    }
-
-    /**
-     * Set the brightness of the LEDs
-     * @param brightness a measure of LED brightness in 0-255. eg: 40
-     */
-    //% blockId="led_brightness"
-    //% block="set LED brightness %brightness"
-    //% brightness.min=0 brightness.max=255
-    //% weight=70
-    //% subcategory=LEDs
-    export function ledBrightness(brightness: number): void
-    {
-        neo().setBrightness(brightness);
-        updateLEDs();
-    }
-
-    /**
-      * Shows a rainbow pattern on all LEDs.
-      */
-    //% blockId="led_rainbow"
-    //% block="set led rainbow"
-    //% weight=60
-    //% subcategory=LEDs
-    export function ledRainbow(): void
-    {
-        neo().showRainbow(1, 360);
-        updateLEDs()
-    }
-
-    /**
-      * Get numeric value of colour
-      *
-      * @param color Standard RGB Led Colours
-      */
-    //% blockId="e_colours"
-    //% block=%color
-    //% weight=50
-    //% subcategory=LEDs
-    export function eColours(color: eColors): number
-    {
-        return color;
-    }
-
-// Advanced blocks
-
-    /**
-      * Set LED update mode (Manual or Automatic)
-      * @param updateMode setting automatic will show LED changes automatically
-      */
-    //% blockId="set_updateMode"
-    //% block="set %updateMode|update mode"
-    //% weight=100
-    //% advanced=true
-    export function setUpdateMode(updateMode: eUpdateMode): void
-    {
-        _updateMode = updateMode;
-    }
-
-    /**
-      * Show LED changes
-      */
-    //% blockId="led_show"
-    //% block="show LED changes"
-    //% weight=90
-    //% advanced=true
-    export function ledShow(): void
-    {
-        neo().show();
-    }
-
-    /**
-     * Rotate LEDs forward.
-     */
-    //% blockId="led_rotate"
-    //% block="rotate LEDs"
-    //% weight=80
-    //% advanced=true
-    export function ledRotate(): void
-    {
-        neo().rotate(1);
-        updateLEDs()
-    }
-
-    /**
-     * Shift LEDs forward and clear with zeros.
-     */
-    //% blockId="led_shift"
-    //% block="shift LEDs"
-    //% weight=70
-    //% advanced=true
-    export function ledShift(): void
-    {
-        neo().shift(1);
-        updateLEDs()
-    }
-
-    /**
-      * Convert from RGB values to colour number
-      *
-      * @param red Red value of the LED (0 to 255)
-      * @param green Green value of the LED (0 to 255)
-      * @param blue Blue value of the LED (0 to 255)
-      */
-    //% blockId="convertRGB"
-    //% block="convert from red %red| green %green| blue %blue"
-    //% weight=60
-    //% advanced=true
-    export function convertRGB(r: number, g: number, b: number): number
-    {
-        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
-    }
 
 }
