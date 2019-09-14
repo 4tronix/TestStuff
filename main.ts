@@ -151,11 +151,13 @@ namespace Rover
             servoOffset[i] = readEEROM(i);
     }
 
-    function setPWM(): void
+    // slow PWM frequency for slower speeds to improve torque
+    // only one PWM frequency available for all pins
+    function setPWM(speed: number): void
     {
-        if ((leftSpeed < 400) || (rightSpeed < 400))
+        if (speed < 200)
             pins.analogSetPeriod(AnalogPin.P0, 60000);
-        else if ((leftSpeed < 600) || (rightSpeed < 600))
+        else if (speed < 300)
             pins.analogSetPeriod(AnalogPin.P0, 40000);
         else
             pins.analogSetPeriod(AnalogPin.P0, 30000);
@@ -168,7 +170,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 14 servos"
+    //% block="Centre all 15 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
