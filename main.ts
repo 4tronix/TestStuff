@@ -168,7 +168,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 10 servos"
+    //% block="Centre all 11 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -304,9 +304,7 @@ namespace Rover
         let speed0 = 0;
         let speed1 = 0;
         setPWM(Math.abs(speed));
-        /*if (speed == 0)
-            stop(eStopMode.Coast);
-        else*/ if (speed > 0)
+        if (speed > 0)
         {
             speed0 = speed;
             speed1 = 0;
