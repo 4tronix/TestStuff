@@ -168,7 +168,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 11 servos"
+    //% block="Centre all 12 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -251,9 +251,9 @@ namespace Rover
     //% weight=100
     //% subcategory=Motors
     export function drive(speed: number): void
-    {/*
+    {
         motor(eMotor.Both, speed);
-    */}
+    }
 
     /**
       * Drive robot forward (or backward) at speed for milliseconds.
@@ -266,11 +266,11 @@ namespace Rover
     //% weight=90
     //% subcategory=Motors
     export function driveMilliseconds(speed: number, milliseconds: number): void
-    {/*
+    {
         drive(speed);
         basic.pause(milliseconds);
         stop(eStopMode.Coast);
-    */}
+    }
 
     /**
       * Stop rover by coasting slowly to a halt or braking
