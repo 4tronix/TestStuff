@@ -168,7 +168,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 09 servos"
+    //% block="Centre all 10 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -251,9 +251,9 @@ namespace Rover
     //% weight=100
     //% subcategory=Motors
     export function drive(speed: number): void
-    {
+    {/*
         motor(eMotor.Both, speed);
-    }
+    */}
 
     /**
       * Drive robot forward (or backward) at speed for milliseconds.
@@ -266,11 +266,11 @@ namespace Rover
     //% weight=90
     //% subcategory=Motors
     export function driveMilliseconds(speed: number, milliseconds: number): void
-    {
+    {/*
         drive(speed);
         basic.pause(milliseconds);
         stop(eStopMode.Coast);
-    }
+    */}
 
     /**
       * Stop rover by coasting slowly to a halt or braking
@@ -280,7 +280,7 @@ namespace Rover
     //% weight=80
     //% subcategory=Motors
     export function stop(mode: eStopMode): void
-    {
+    {/*
         let stopMode = 0;
         if (mode == eStopMode.Brake)
             stopMode = 1;
@@ -288,7 +288,7 @@ namespace Rover
         pins.digitalWritePin(DigitalPin.P12, stopMode);
         pins.digitalWritePin(DigitalPin.P8, stopMode);
         pins.digitalWritePin(DigitalPin.P0, stopMode);
-    }
+    */}
 
     /**
       * Drive motor(s) forward or reverse.
@@ -300,7 +300,7 @@ namespace Rover
     //% weight=70
     //% subcategory=Motors
     export function motor(motor: eMotor, speed: number): void
-    {
+    {/*
         let speed0 = 0;
         let speed1 = 0;
         setPWM(Math.abs(speed));
@@ -327,7 +327,7 @@ namespace Rover
             pins.analogWritePin(AnalogPin.P8, speed0);
             pins.analogWritePin(AnalogPin.P0, speed1);
         }
-    }
+    */}
 
 
 // SENSOR BLOCKS
