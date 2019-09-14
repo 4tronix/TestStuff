@@ -168,7 +168,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 12 servos"
+    //% block="Centre all 13 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -280,7 +280,7 @@ namespace Rover
     //% weight=80
     //% subcategory=Motors
     export function stop(mode: eStopMode): void
-    {/*
+    {
         let stopMode = 0;
         if (mode == eStopMode.Brake)
             stopMode = 1;
@@ -288,7 +288,7 @@ namespace Rover
         pins.digitalWritePin(DigitalPin.P12, stopMode);
         pins.digitalWritePin(DigitalPin.P8, stopMode);
         pins.digitalWritePin(DigitalPin.P0, stopMode);
-    */}
+    }
 
     /**
       * Drive motor(s) forward or reverse.
