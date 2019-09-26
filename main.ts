@@ -96,6 +96,35 @@ enum eColors
     Black = 0x000000
 }
 
+/**
+  * Keypad keys
+  */
+enum eKeys
+{
+    //% block="stop"
+    kStop=0b0000000010000000,
+    //% block="forward"
+    kForward=0b0000010000000000,
+    //% block="reverse"
+    kReverse=0b0000000000010000,
+    //% block="forward left"
+    kForwardLeft=0b0000001000000000,
+    //% block="forward right"
+    kForwardRight=0b0000100000000000,
+    //% block="reverse left"
+    kReverseLeft=0b0000000000001000,
+    //% block="reverse right"
+    kReverseRight=0b0000000000100000,
+    //% block="spin left"
+    kSpinLeft=0b0000000001000000,
+    //% block="spin right"
+    kSpinRight=0b0000000100000000,
+    //% block="mast left"
+    kMastLeft=0b1000000000000000,
+
+    //% block="mast right"
+    kMastRight=0b0100000000000000
+}
 
 /**
  * Custom blocks
@@ -170,7 +199,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 16 servos"
+    //% block="Centre all 17 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -585,6 +614,51 @@ namespace Rover
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+    }
+
+// Keypad Blocks
+
+    /**
+      * Get numeric value of key
+      *
+      * @param key name of key
+      */
+    //% blockId="e_keyValue"
+    //% block=%keyName
+    //% weight=50
+    //% subcategory=Keypad
+    export function eKeyValue(keyName: eKeys): number
+    {
+        return keyName;
+    }
+
+    /**
+      * Wait for keypress
+      *
+      */
+    //% blockId="e_waitForKey"
+    //% block="wait for keypress"
+    //% weight=100
+    //% subcategory=Keypad
+    export function eWaitKey(): number
+    {
+        let keypad = 0;
+        pins.digitalWritePin(DigitalPin.P16, 1);
+        while (pins.digitalReadPin(DigitalPin.P15) == 0)
+    	    ;
+        while (pins.digitalReadPin(DigitalPin.P15) == 1)
+            ;
+        for (let index = 0; index <= 15; index++)
+        {
+            pins.digitalWritePin(DigitalPin.P16, 0)
+            control.waitMicros(2)
+            keypad = (keypad << 1) + pins.digitalReadPin(DigitalPin.P15)
+            pins.digitalWritePin(DigitalPin.P16, 1)
+            control.waitMicros(2)
+        }
+        keypad = 65535 - keypad
+        pins.digitalWritePin(DigitalPin.P16, 0)
+        return keypad;
     }
 
 }
