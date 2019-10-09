@@ -147,7 +147,7 @@ namespace bitbot
       *
       * @param model Model of BitBot; Classic or XL
       */
-    //% blockId="bitbot_model" block="select 01 BitBot model %model"
+    //% blockId="bitbot_model" block="select 02 BitBot model %model"
     //% weight=100
     export function select_model(model: BBModel): void
     {
