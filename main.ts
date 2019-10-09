@@ -147,11 +147,23 @@ namespace bitbot
       *
       * @param model Model of BitBot; Classic or XL
       */
-    //% blockId="bitbot_model" block="select 04 BitBot model %model"
+    //% blockId="bitbot_model" block="select 05 BitBot model %model"
     //% weight=100
     export function select_model(model: BBModel): void
     {
         _model = model;
+    }
+
+    /**
+      * Get numeric value of BitBot Model
+      *
+      * @param model BitBot Model eg: BBModel.Classic
+      */
+    //% blockId="bb_models" block=%model
+    //% weight=55
+    export function BBModels(model: BBModel): number
+    {
+        return model;
     }
 
     /**
