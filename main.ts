@@ -147,7 +147,7 @@ namespace bitbot
       *
       * @param model Model of BitBot; Classic or XL
       */
-    //% blockId="bitbot_model" block="select 03 BitBot model %model"
+    //% blockId="bitbot_model" block="select 04 BitBot model %model"
     //% weight=100
     export function select_model(model: BBModel): void
     {
@@ -157,13 +157,13 @@ namespace bitbot
     /**
       * get Model of BitBot (Classic or XL)
       */
-    //% blockId="bb_model" block="board model"
+    //% blockId="bb_model" block="BitBot model"
     //% weight=90
     export function getModel(): BBModel
     {
         if (_model == BBModel.Auto)
         {
-            if (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false)&0xf0 == 0)
+            if ((pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) & 0xf0) == 0)
                 _model = BBModel.Classic;
             else
                 _model = BBModel.XL;
