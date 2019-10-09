@@ -97,9 +97,9 @@ enum BBMode
   */
 enum BBModel
 {
-    Auto,
     Classic,
-    XL
+    XL,
+    Auto
 }
 
 /**
@@ -147,7 +147,7 @@ namespace bitbot
       *
       * @param model Model of BitBot; Classic or XL
       */
-    //% blockId="bitbot_model" block="select 05 BitBot model %model"
+    //% blockId="bitbot_model" block="select 06 BitBot model %model=bb_models"
     //% weight=100
     export function select_model(model: BBModel): void
     {
