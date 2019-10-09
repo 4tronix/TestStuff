@@ -1,43 +1,8 @@
-﻿/**
-  * Enumeration of servos
-  */
-enum eServos
-{
-    FL=9,
-    RL=11,
-    RR=13,
-    FR=15,
-    Mast=0
-}
-
-/**
-  * Enumeration of directions.
-  */
-enum eDirection
-{
-    //% block="left"
-    Left,
-    //% block="right"
-    Right
-}
-
-/**
- * Ping unit for sensor
- */
-enum ePingUnit
-{
-    //% block="cm"
-    Centimeters,
-    //% block="inches"
-    Inches,
-    //% block="μs"
-    MicroSeconds
-}
-
+﻿
 /**
   * Enumeration of motors.
   */
-enum eMotor
+enum BBMotor
 {
     //% block="left"
     Left,
@@ -48,9 +13,20 @@ enum eMotor
 }
 
 /**
+  * Enumeration of directions.
+  */
+enum BBRobotDirection
+{
+    //% block="left"
+    Left,
+    //% block="right"
+    Right
+}
+
+/**
   * Stop modes. Coast or Brake
   */
-enum eStopMode
+enum BBStopMode
 {
     //% block="no brake"
     Coast,
@@ -59,20 +35,77 @@ enum eStopMode
 }
 
 /**
+  * Values for buzzer. On or Off
+  */
+enum BBBuzz
+{
+    //% block="on"
+    On,
+    //% block="off"
+    Off
+}
+
+/**
+  * Enumeration of line sensors.
+  */
+enum BBLineSensor
+{
+    //% block="left"
+    Left,
+    //% block="right"
+    Right
+}
+
+/**
+  * Enumeration of light sensors.
+  */
+enum BBLightSensor
+{
+    //% block="left"
+    Left,
+    //% block="right"
+    Right
+}
+
+/**
+ * Ping unit for sensor.
+ */
+enum BBPingUnit
+{
+    //% block="cm"
+    Centimeters,
+    //% block="inches"
+    Inches,
+    //% block="μs"
+    MicroSeconds
+}
+
+/**
   * Update mode for LEDs
   * setting to Manual requires show LED changes blocks
-  * setting to Auto will update the LEDs every time they change
+  * setting to Auto will update the LEDs everytime they change
   */
-enum eUpdateMode
+enum BBMode
 {
     Manual,
     Auto
 }
 
 /**
+  * Model Types of BitBot
+  * Classic or XL
+  */
+enum BBModel
+{
+    Auto,
+    Classic,
+    XL
+}
+
+/**
   * Pre-Defined LED colours
   */
-enum eColors
+enum BBColors
 {
     //% block=red
     Red = 0xff0000,
@@ -97,91 +130,50 @@ enum eColors
 }
 
 /**
-  * Keypad keys
-  */
-enum eKeys
-{
-    //% block="stop"
-    kStop=0b0000000010000000,
-    //% block="forward"
-    kForward=0b0000010000000000,
-    //% block="reverse"
-    kReverse=0b0000000000010000,
-    //% block="forward left"
-    kForwardLeft=0b0000001000000000,
-    //% block="forward right"
-    kForwardRight=0b0000100000000000,
-    //% block="reverse left"
-    kReverseLeft=0b0000000000001000,
-    //% block="reverse right"
-    kReverseRight=0b0000000000100000,
-    //% block="spin left"
-    kSpinLeft=0b0000000001000000,
-    //% block="spin right"
-    kSpinRight=0b0000000100000000,
-    //% block="mast left"
-    kMastLeft=0b1000000000000000,
-
-    //% block="mast right"
-    kMastRight=0b0100000000000000
-}
-
-/**
  * Custom blocks
  */
-
-//% weight=10 color=#e7660b icon="\uf135"
-namespace Rover
+//% weight=50 color=#e7660b icon="\uf1b9"
+namespace bitbot
 {
-    let PCA = 0x40;	// i2c address of 4tronix Animoid servo controller
-    let EEROM = 0x50;	// i2c address of EEROM
-    let initI2C = false;
-    let SERVOS = 0x06; // first servo address for start byte low
+    let neoStrip: neopixel.Strip;
+    let _updateMode = BBMode.Auto;
     let leftSpeed = 0;
     let rightSpeed = 0;
-    let servoOffset: number[] = [];
-    let neoStrip: neopixel.Strip;
-    let _updateMode = eUpdateMode.Auto;
+    let _model = BBModel.Auto;
+    let i2caddr = 28;
 
-
-// HELPER FUNCTIONS
-
-    // initialise the servo driver and the offset array values
-    function initPCA(): void
+    /**
+      * Force Model of BitBot (Determines Pins used)
+      *
+      * @param model Model of BitBot; Classic or XL
+      */
+    //% blockId="bitbot_model" block="select 01 BitBot model %model"
+    //% weight=100
+    export function select_model(model: BBModel): void
     {
-
-        let i2cData = pins.createBuffer(2);
-        initI2C = true;
-
-        i2cData[0] = 0;		// Mode 1 register
-        i2cData[1] = 0x10;	// put to sleep
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = 0xFE;	// Prescale register
-        i2cData[1] = 101;	// set to 60 Hz
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = 0;		// Mode 1 register
-        i2cData[1] = 0x81;	// Wake up
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        for (let servo=0; servo<16; servo++)
-        {
-            i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
-            i2cData[1] = 0x00;			// low byte start - always 0
-            pins.i2cWriteBuffer(PCA, i2cData, false);
-
-            i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
-            i2cData[1] = 0x00;			// high byte start - always 0
-            pins.i2cWriteBuffer(PCA, i2cData, false);
-        }
-
-	for (let i=0; i<16; i++)
-            servoOffset[i] = readEEROM(i);
+        _model = model;
     }
 
+    /**
+      * get Model of BitBot (Classic or XL)
+      */
+    //% blockId="bb_model" block="board model"
+    //% weight=90
+    export function getModel(): BBModel
+    {
+        if (_model == BBModel.Auto)
+        {
+            if (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false)&0xf0 == 0)
+                _model = BBModel.Classic;
+            else
+                _model = BBModel.XL;
+        }
+        return _model;
+    }
+
+// Motor Blocks
+
     // slow PWM frequency for slower speeds to improve torque
-    // only one PWM frequency available for all pins
     function setPWM(speed: number): void
     {
         if (speed < 200)
@@ -192,150 +184,22 @@ namespace Rover
             pins.analogSetPeriod(AnalogPin.P0, 30000);
     }
 
-
-//  SERVO BLOCKS
-
-    /**
-      * Initialise all servos to Angle=0
-      */
-    //% blockId="zeroServos"
-    //% block="Centre all 17 servos"
-    //% weight=100
-    //% subcategory=Servos
-    export function zeroServos(): void
-    {
-        for (let i=0; i<16; i++)
-            setServo(i, 0);
-    }
-
-    /**
-      * Set Servo Position by Angle
-      * @param servo Servo number (0 to 15)
-      * @param angle degrees to turn servo (-90 to +90)
-      */
-    //% blockId="setServo"
-    //% block="set servo %servo| to angle %angle"
-    //% weight=90
-    //% subcategory=Servos
-    export function setServo(servo: number, angle: number): void
-    {
-        if (initI2C == false)
-        {
-            initPCA();
-        }
-        // two bytes need setting for start and stop positions of the servo
-        // servos start at SERVOS (0x06) and are then consecutive blocks of 4 bytes
-        // the start position (always 0x00) is set during init for all servos
-        // the zero offset for each servo is read during init into the servoOffset array
-
-        let i2cData = pins.createBuffer(2);
-        let start = 0;
-        let stop = 369 + (angle + servoOffset[servo]) * 223 / 90;
-
-        i2cData[0] = SERVOS + servo*4 + 2;	// Servo register
-        i2cData[1] = (stop & 0xff);		// low byte stop
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = SERVOS + servo*4 + 3;	// Servo register
-        i2cData[1] = (stop >> 8);		// high byte stop
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-    }
-
-    /**
-      * Set Servo Offset then zero the servo
-      * @param servo Servo number (0 to 15)
-      * @param angle degrees to turn servo (-90 to +90)
-      */
-    //% blockId="setOffset"
-    //% block="set offset of servo %servo=e_servos| to %offset"
-    //% weight=80
-    //% subcategory=Servos
-    export function setOffset(servo: number, offset: number): void
-    {
-        servoOffset[servo] = offset;
-        setServo(servo, 0);
-    }
-
-    /**
-      * Return servo number from name
-      *
-      * @param value servo name
-      */
-    //% blockId="e_servos"
-    //% block="%value"
-    //% weight=70
-    //% subcategory=Servos
-    export function getServoNumber(value: eServos): number
-    {
-        return value;
-    }
-
-// MOTOR BLOCKS
-
-    /**
-      * Drive forward (or backward) at speed.
-      * @param speed speed of motor between -1023 and 1023. eg: 600
-      */
-    //% blockId="drive"
-    //% block="drive at speed %speed"
-    //% speed.min=-1023 speed.max=1023
-    //% weight=100
-    //% subcategory=Motors
-    export function drive(speed: number): void
-    {
-        motor(eMotor.Both, speed);
-    }
-
-    /**
-      * Drive robot forward (or backward) at speed for milliseconds.
-      * @param speed speed of motor between -1023 and 1023. eg: 600
-      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
-      */
-    //% blockId="drive_milliseconds"
-    //% block="drive at speed %speed| for %milliseconds|(ms)"
-    //% speed.min=-1023 speed.max=1023
-    //% weight=90
-    //% subcategory=Motors
-    export function driveMilliseconds(speed: number, milliseconds: number): void
-    {
-        drive(speed);
-        basic.pause(milliseconds);
-        stop(eStopMode.Coast);
-    }
-
-    /**
-      * Stop rover by coasting slowly to a halt or braking
-      * @param mode Brakes on or off
-      */
-    //% blockId="rover_stop" block="stop with %mode"
-    //% weight=80
-    //% subcategory=Motors
-    export function stop(mode: eStopMode): void
-    {
-        let stopMode = 0;
-        if (mode == eStopMode.Brake)
-            stopMode = 1;
-        pins.digitalWritePin(DigitalPin.P1, stopMode);
-        pins.digitalWritePin(DigitalPin.P12, stopMode);
-        pins.digitalWritePin(DigitalPin.P8, stopMode);
-        pins.digitalWritePin(DigitalPin.P0, stopMode);
-    }
-
     /**
       * Drive motor(s) forward or reverse.
       * @param motor motor to drive.
-      * @param speed speed of motor eg: 600
+      * @param speed speed of motor (-1023 to 1023). eg: 600
       */
-    //% blockId="motor"
-    //% block="drive %motor| motor at speed %speed"
-    //% weight=70
+    //% blockId="bitbot_motor" block="drive %motor|motor(s) at speed %speed"
+    //% weight=80
     //% subcategory=Motors
-    export function motor(motor: eMotor, speed: number): void
+    export function motor(motor: BBMotor, speed: number): void
     {
         let speed0 = 0;
         let speed1 = 0;
         setPWM(Math.abs(speed));
-        if (speed > 0)
+        /*if (speed == 0)
+            robot_stop(BBStopMode.Coast);
+        else*/ if (speed > 0)
         {
             speed0 = speed;
             speed1 = 0;
@@ -345,35 +209,166 @@ namespace Rover
             speed0 = 0;
             speed1 = 0 - speed;
         }
-        if ((motor == eMotor.Left) || (motor == eMotor.Both))
+        if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
         {
-            pins.analogWritePin(AnalogPin.P1, speed0);
-            pins.analogWritePin(AnalogPin.P12, speed1);
+            if (getModel() == BBModel.Classic)
+            {
+                pins.analogWritePin(AnalogPin.P0, speed0);
+                pins.analogWritePin(AnalogPin.P8, speed1);
+            }
+            else
+            {
+                pins.analogWritePin(AnalogPin.P16, speed0);
+                pins.analogWritePin(AnalogPin.P8, speed1);
+            }
         }
 
-        if ((motor == eMotor.Right) || (motor == eMotor.Both))
+        if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
         {
-            pins.analogWritePin(AnalogPin.P8, speed0);
-            pins.analogWritePin(AnalogPin.P0, speed1);
+            if (getModel() == BBModel.Classic)
+            {
+                pins.analogWritePin(AnalogPin.P1, speed0);
+                pins.analogWritePin(AnalogPin.P12, speed1);
+            }
+            else
+            {
+                pins.analogWritePin(AnalogPin.P14, speed0);
+                pins.analogWritePin(AnalogPin.P12, speed1);
+            }
         }
     }
 
-
-// SENSOR BLOCKS
     /**
-    * Read distance from sonar module
-    *
+      * Stop robot by coasting slowly to a halt or braking
+      * @param mode Brakes on or off
+      */
+    //% blockId="robot_stop" block="stop with %mode"
+    //% weight=92
+    //% subcategory=Motors
+    export function robot_stop(mode: BBStopMode): void
+    {
+        let stopMode = 0;
+        if (mode == BBStopMode.Brake)
+            stopMode = 1;
+        if (getModel() == BBModel.Classic)
+        {
+            pins.digitalWritePin(DigitalPin.P0, stopMode);
+            pins.digitalWritePin(DigitalPin.P1, stopMode);
+            pins.digitalWritePin(DigitalPin.P8, stopMode);
+            pins.digitalWritePin(DigitalPin.P12, stopMode);
+        }
+        else
+        {
+            pins.digitalWritePin(DigitalPin.P16, stopMode);
+            pins.digitalWritePin(DigitalPin.P1, stopMode);
+            pins.digitalWritePin(DigitalPin.P14, stopMode);
+            pins.digitalWritePin(DigitalPin.P12, stopMode);
+        }
+    }
+
+    /**
+      * Drive robot forward (or backward) at speed.
+      * @param speed speed of motor between -1023 and 1023. eg: 600
+      */
+    //% blockId="bitbot_motor_forward" block="drive at speed %speed"
+    //% speed.min=-1023 speed.max=1023
+    //% weight=100
+    //% subcategory=Motors
+    export function drive(speed: number): void
+    {
+        motor(BBMotor.Both, speed);
+    }
+
+    /**
+      * Drive robot forward (or backward) at speed for milliseconds.
+      * @param speed speed of motor between -1023 and 1023. eg: 600
+      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      */
+    //% blockId="bitbot_motor_forward_milliseconds" block="drive at speed %speed| for %milliseconds|(ms)"
+    //% speed.min=-1023 speed.max=1023
+    //% weight=95
+    //% subcategory=Motors
+    export function driveMilliseconds(speed: number, milliseconds: number): void
+    {
+        drive(speed);
+        basic.pause(milliseconds);
+        drive(0);
+    }
+
+    /**
+      * Turn robot in direction at speed.
+      * @param direction direction to turn.
+      * @param speed speed of motor between 0 and 1023. eg: 600
+      */
+    //% blockId="bitbot_turn" block="spin %direction|at speed %speed"
+    //% speed.min=0 speed.max=1023
+    //% weight=90
+    //% subcategory=Motors
+    export function driveTurn(direction: BBRobotDirection, speed: number): void
+    {
+        if (speed < 0)
+            speed = 0;
+        if (direction == BBRobotDirection.Left)
+        {
+            motor(BBMotor.Left, -speed);
+            motor(BBMotor.Right, speed);
+        }
+        else if (direction == BBRobotDirection.Right)
+        {
+            motor(BBMotor.Left, speed);
+            motor(BBMotor.Right, -speed);
+        }
+    }
+
+    /**
+      * Spin robot in direction at speed for milliseconds.
+      * @param direction direction to turn.
+      * @param speed speed of motor between 0 and 1023. eg: 600
+      * @param milliseconds duration in milliseconds to turn for, then stop. eg: 400
+      */
+    //% blockId="bitbot_turn_milliseconds" block="spin %direction|at speed %speed| for %milliseconds|(ms)"
+    //% speed.min=0 speed.max=1023
+    //% weight=85
+    //% subcategory=Motors
+    export function driveTurnMilliseconds(direction: BBRobotDirection, speed: number, milliseconds: number): void
+    {
+        driveTurn(direction, speed)
+        basic.pause(milliseconds)
+        motor(BBMotor.Both, 0)
+    }
+
+// Sensors and Addons
+
+    /**
+      * Sound a buzz.
+      * @param flag state of buzzer (On or Off)
+      */
+    //% blockId="bitbot_buzz" block="turn buzzer %flag"
+    //% weight=95
+    //% subcategory=Sensors
+    export function buzz(flag: BBBuzz): void
+    {
+        let buzz = 0;
+        if (flag==BBBuzz.On)
+            buzz = 1;
+        if (getModel() == BBModel.Classic)
+            pins.digitalWritePin(DigitalPin.P14, buzz);
+        else
+            pins.digitalWritePin(DigitalPin.P0, buzz);
+    }
+
+    /**
+    * Read distance from sonar module connected to accessory connector.
     * @param unit desired conversion unit
     */
-    //% blockId="readSonar"
-    //% block="read sonar as %unit"
-    //% weight=100
+    //% blockId="bitbot_sonar" block="read sonar as %unit"
+    //% weight=90
     //% subcategory=Sensors
-    export function readSonar(unit: ePingUnit): number
+    export function sonar(unit: BBPingUnit): number
     {
         // send pulse
-        let trig = DigitalPin.P13;
-        let echo = DigitalPin.P13;
+        let trig = DigitalPin.P15;
+        let echo = DigitalPin.P15;
         let maxCmDistance = 500;
         let d=10;
         pins.setPull(trig, PinPullMode.PullNone);
@@ -391,55 +386,83 @@ namespace Rover
         }
         switch (unit)
         {
-            case ePingUnit.Centimeters: return d / 58;
-            case ePingUnit.Inches: return d / 148;
+            case BBPingUnit.Centimeters: return d / 58;
+            case BBPingUnit.Inches: return d / 148;
             default: return d;
         }
     }
 
-
-// EEROM BLOCKS
-
     /**
-      * Write a byte of data to EEROM at selected address
-      * @param address Location in EEROM to write to
-      * @param data Byte of data to write
+      * Read line sensor.
+      * @param sensor Line sensor to read.
       */
-    //% blockId="writeEEROM"
-    //% block="write %data| to address %address"
-    //% data.min = -128 data.max = 127
-    //% weight=100
-    //% subcategory=EEROM
-    export function writeEEROM(data: number, address: number): void
+    //% blockId="bitbot_read_line" block="%sensor|line sensor"
+    //% weight=85
+    //% subcategory=Sensors
+    export function readLine(sensor: BBLineSensor): number
     {
-        /*let i2cData = pins.createBuffer(3);
-
-        i2cData[0] = address >> 8;	// address MSB
-        i2cData[1] = address & 0xff;	// address LSB
-        i2cData[2] = data & 0xff;
-        pins.i2cWriteBuffer(EEROM, i2cData, false);
-        //servoOffset[address] = data;	// update servo offset as well - lazy coding
-        basic.pause(1);			// needs a short pause. << 1ms ok? */
+        if (getModel() == BBModel.Classic)
+        {
+            if (sensor == BBLineSensor.Left)
+                return pins.digitalReadPin(DigitalPin.P11);
+            else
+                return pins.digitalReadPin(DigitalPin.P5);
+        }
+        else
+        {
+            let value = pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false);
+            if (sensor == BBLineSensor.Left)
+                return value & 0x01;
+            else
+                return (value & 0x02) >> 1;
+        }
     }
 
     /**
-      * Read a byte of data from EEROM at selected address
-      * @param address Location in EEROM to read from
+      * Read light sensor.
+      * @param sensor Light sensor to read.
       */
-    //% blockId="readEEROM"
-    //% block="read EEROM address %address"
-    //% weight=90
-    //% subcategory=EEROM
-    export function readEEROM(address: number): number
+    //% blockId="bitbot_read_light" block="%sensor|light sensor"
+    //% weight=80
+    //% subcategory=Sensors
+    export function readLight(sensor: BBLightSensor): number
     {
-        return 0;
-        /*let i2cRead = pins.createBuffer(2);
+        if (getModel() == BBModel.Classic)
+        {
+            if (sensor == BBLightSensor.Left)
+            {
+                pins.digitalWritePin(DigitalPin.P16, 0);
+                return pins.analogReadPin(AnalogPin.P2);
+            }
+            else
+            {
+                pins.digitalWritePin(DigitalPin.P16, 1);
+                return pins.analogReadPin(AnalogPin.P2);
+            }
+        }
+        else
+        {
+            if (sensor == BBLightSensor.Left)
+                return pins.analogReadPin(AnalogPin.P2);
+            else
+                return pins.analogReadPin(AnalogPin.P1);
+        }
+    }
 
-        i2cRead[0] = address >> 8;	// address MSB
-        i2cRead[1] = address & 0xff;	// address LSB
-        pins.i2cWriteBuffer(EEROM, i2cRead, false);
-        basic.pause(1);
-        return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);*/
+    /**
+      * Adjust opening of Talon attachment
+      * @param degrees Degrees to open Talon (0 to 80). eg: 30
+      */
+    //% blockId="bitbot_set_talon" block="open talon %degrees|degrees"
+    //% weight=75
+    //% degrees.min=0 degrees.max=80
+    //% subcategory=Sensors
+    export function setTalon(degrees: number): void
+    {
+        if (getModel() == BBModel.Classic)
+            pins.servoWritePin(AnalogPin.P1, degrees);
+        else
+            pins.servoWritePin(AnalogPin.P15, degrees);
     }
 
 // LED Blocks
@@ -449,7 +472,7 @@ namespace Rover
     {
         if (!neoStrip)
         {
-            neoStrip = neopixel.create(DigitalPin.P2, 4, NeoPixelMode.RGB);
+            neoStrip = neopixel.create(DigitalPin.P13, 12, NeoPixelMode.RGB);
             neoStrip.setBrightness(40);
         }
         return neoStrip;
@@ -458,19 +481,29 @@ namespace Rover
     // update LEDs if _updateMode set to Auto
     function updateLEDs(): void
     {
-        if (_updateMode == eUpdateMode.Auto)
+        if (_updateMode == BBMode.Auto)
             neo().show();
+    }
+
+    /**
+      * Show LED changes
+      */
+    //% blockId="bitbot_neo_show" block="show LED changes"
+    //% weight=100
+    //% subcategory=Leds
+    export function neoShow(): void
+    {
+        neo().show();
     }
 
     /**
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="set_led_color"
-    //% block="set all LEDs to %rgb=e_colours"
-    //% weight=100
-    //% subcategory=LEDs
-    export function setLedColor(rgb: number)
+    //% blockId="bitbot_neo_set_color" block="set all LEDs to %rgb=bb_colours"
+    //% weight=95
+    //% subcategory=Leds
+    export function neoSetColor(rgb: number)
     {
         neo().showColor(rgb);
         updateLEDs();
@@ -479,109 +512,49 @@ namespace Rover
     /**
       * Clear all leds.
       */
-    //% blockId="led_clear"
-    //% block="clear all LEDs"
+    //% blockId="bitbot_neo_clear" block="clear all LEDs"
     //% weight=90
-    //% subcategory=LEDs
-    export function ledClear(): void
+    //% subcategory=Leds
+    export function neoClear(): void
     {
         neo().clear();
         updateLEDs();
     }
 
     /**
-     * Set single LED to a given color (range 0-255 for r, g, b).
+     * Set LED to a given color (range 0-255 for r, g, b).
      *
      * @param ledId position of the LED (0 to 11)
      * @param rgb RGB color of the LED
      */
-    //% blockId="set_pixel_color"
-    //% block="set LED at %ledId|to %rgb=e_colours"
-    //% weight=80
-    //% subcategory=LEDs
-    export function setPixelColor(ledId: number, rgb: number): void
+    //% blockId="bitbot_neo_set_pixel_color" block="set LED at %ledId|to %rgb=bb_colours"
+    //% weight=85
+    //% subcategory=Leds
+    export function neoSetPixelColor(ledId: number, rgb: number): void
     {
         neo().setPixelColor(ledId, rgb);
         updateLEDs();
     }
 
     /**
-     * Set the brightness of the LEDs
-     * @param brightness a measure of LED brightness in 0-255. eg: 40
-     */
-    //% blockId="led_brightness"
-    //% block="set LED brightness %brightness"
-    //% brightness.min=0 brightness.max=255
-    //% weight=70
-    //% subcategory=LEDs
-    export function ledBrightness(brightness: number): void
-    {
-        neo().setBrightness(brightness);
-        updateLEDs();
-    }
-
-    /**
       * Shows a rainbow pattern on all LEDs.
       */
-    //% blockId="led_rainbow"
-    //% block="set led rainbow"
-    //% weight=60
-    //% subcategory=LEDs
-    export function ledRainbow(): void
+    //% blockId="bitbot_neo_rainbow" block="set led rainbow"
+    //% weight=80
+    //% subcategory=Leds
+    export function neoRainbow(): void
     {
         neo().showRainbow(1, 360);
         updateLEDs()
     }
 
     /**
-      * Get numeric value of colour
-      *
-      * @param color Standard RGB Led Colours
-      */
-    //% blockId="e_colours"
-    //% block=%color
-    //% weight=50
-    //% subcategory=LEDs
-    export function eColours(color: eColors): number
-    {
-        return color;
-    }
-
-// Advanced blocks
-
-    /**
-      * Set LED update mode (Manual or Automatic)
-      * @param updateMode setting automatic will show LED changes automatically
-      */
-    //% blockId="set_updateMode"
-    //% block="set %updateMode|update mode"
-    //% weight=100
-    //% advanced=true
-    export function setUpdateMode(updateMode: eUpdateMode): void
-    {
-        _updateMode = updateMode;
-    }
-
-    /**
-      * Show LED changes
-      */
-    //% blockId="led_show"
-    //% block="show LED changes"
-    //% weight=90
-    //% advanced=true
-    export function ledShow(): void
-    {
-        neo().show();
-    }
-
-    /**
      * Rotate LEDs forward.
      */
-    //% blockId="led_rotate"
-    //% block="rotate LEDs"
-    //% weight=80
-    //% advanced=true
-    export function ledRotate(): void
+    //% blockId="bitbot_neo_rotate" block="rotate LEDs"
+    //% weight=75
+    //% subcategory=Leds
+    export function neoRotate(): void
     {
         neo().rotate(1);
         updateLEDs()
@@ -590,14 +563,54 @@ namespace Rover
     /**
      * Shift LEDs forward and clear with zeros.
      */
-    //% blockId="led_shift"
-    //% block="shift LEDs"
+    //% blockId="bitbot_neo_shift" block="shift LEDs"
     //% weight=70
-    //% advanced=true
-    export function ledShift(): void
+    //% subcategory=Leds
+    export function neoShift(): void
     {
         neo().shift(1);
         updateLEDs()
+    }
+
+    // Advanced blocks
+
+    /**
+      * Set LED update mode (Manual or Automatic)
+      * @param updateMode setting automatic will show LED changes automatically
+      */
+    //% blockId="bitbot_set_updateMode" block="set %updateMode|update mode"
+    //% weight=65
+    //% advanced=true
+    export function setUpdateMode(updateMode: BBMode): void
+    {
+        _updateMode = updateMode;
+    }
+
+    /**
+     * Set the brightness of the LEDs
+     * @param brightness a measure of LED brightness in 0-255. eg: 40
+     */
+    //% blockId="bitbot_neo_brightness" block="set LED brightness %brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=60
+    //% advanced=true
+    export function neoBrightness(brightness: number): void
+    {
+        neo().setBrightness(brightness);
+        updateLEDs();
+    }
+
+    /**
+      * Get numeric value of colour
+      *
+      * @param color Standard RGB Led Colours
+      */
+    //% blockId="bb_colours" block=%color
+    //% weight=55
+    //% advanced=true
+    export function BBColours(color: BBColors): number
+    {
+        return color;
     }
 
     /**
@@ -607,58 +620,12 @@ namespace Rover
       * @param green Green value of the LED (0 to 255)
       * @param blue Blue value of the LED (0 to 255)
       */
-    //% blockId="convertRGB"
-    //% block="convert from red %red| green %green| blue %blue"
-    //% weight=60
+    //% blockId="bitbot_convertRGB" block="convert from red %red| green %green| blue %blue"
+    //% weight=50
     //% advanced=true
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
-    }
-
-// Keypad Blocks
-
-    /**
-      * Get numeric value of key
-      *
-      * @param key name of key
-      */
-    //% blockId="e_keyValue"
-    //% block=%keyName
-    //% weight=50
-    //% subcategory=Keypad
-    export function eKeyValue(keyName: eKeys): number
-    {
-        return keyName;
-    }
-
-    /**
-      * Wait for keypress
-      *
-      */
-    //% blockId="e_waitForKey"
-    //% block="wait for keypress"
-    //% weight=100
-    //% subcategory=Keypad
-    export function eWaitKey(): number
-    {
-        let keypad = 0;
-        pins.digitalWritePin(DigitalPin.P16, 1);
-        while (pins.digitalReadPin(DigitalPin.P15) == 0)
-    	    ;
-        while (pins.digitalReadPin(DigitalPin.P15) == 1)
-            ;
-        for (let index = 0; index <= 15; index++)
-        {
-            pins.digitalWritePin(DigitalPin.P16, 0)
-            control.waitMicros(2)
-            keypad = (keypad << 1) + pins.digitalReadPin(DigitalPin.P15)
-            pins.digitalWritePin(DigitalPin.P16, 1)
-            control.waitMicros(2)
-        }
-        keypad = 65535 - keypad
-        pins.digitalWritePin(DigitalPin.P16, 0)
-        return keypad;
     }
 
 }

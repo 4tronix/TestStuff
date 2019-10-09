@@ -1,128 +1,156 @@
-# PCB Rover
- Package for Microsoft Makecode
+# BitBot Package for Microsoft PXT
 
-This library provides a Microsoft Makecode package for the 4tronix PCB Rover
+Based off [initial work](https://github.com/srs/pxt-bitbot) by [Sten Roger Sandvik](https://github.com/srs), updated/expanded by [Gareth Davies](https://github.com/4tronix) and [Andrew Mulholland](https://github.com/gbaman). 
+
+This library provides a Microsoft PXT package for BitBot, see
+https://4tronix.co.uk/bitbot/.
 
 ## Driving the robot    
 The simplest way to drive robot is by using the `driveMilliseconds(...)` and `driveTurnMilliseconds(...)` blocks.   
 Note with `driveMilliseconds(...)`, you can specify a negative speed to reverse.   
 ```blocks
 // Drive forward for 2000 ms
-robobit.driveMilliseconds(1023, 2000)
+bitbot.driveMilliseconds(1023, 2000)
 
 // Drive backwards for 2000 ms
-robobit.driveMilliseconds(-1023, 2000)
+bitbot.driveMilliseconds(-1023, 2000)
 
 // Turn left for 200 ms
-robobit.driveTurnMilliseconds(BBRobotDirection.Left, 1023, 200)
+bitbot.driveTurnMilliseconds(BBRobotDirection.Left, 1023, 200)
 
 // Turn right for 200 ms
-robobit.driveTurnMilliseconds(BBRobotDirection.Right, 1023, 200)
+bitbot.driveTurnMilliseconds(BBRobotDirection.Right, 1023, 200)
 ```   
 
 These blocks are also available in non blocking version. The following example performs the same operation as above.   
 ```blocks
-robobit.drive(1023)
+bitbot.drive(1023)
 basic.pause(1000)
 
-robobit.drive(0)
+bitbot.drive(0)
 basic.pause(1000)
 
-robobit.driveTurn(BBRobotDirection.Left, 1023)
+bitbot.driveTurn(BBRobotDirection.Left, 1023)
 basic.pause(250)
 
-robobit.driveTurn(BBRobotDirection.Right, 1023)
+bitbot.driveTurn(BBRobotDirection.Right, 1023)
 basic.pause(250)
 
-robobit.drive(0)
+bitbot.drive(0)
+```
+
+## Stopping
+When the motor speed is set to zero then it stops. However, we can also use the motor itself to create a reverse generated current to brake much quicker.
+This helps when aiming for more accurate manoeuvres. Use the `bitbot.stop(...)` command to stop with braking, or coast to a halt
+```blocks
+bitbot.robot_stop(BBStopMode.Coast) # slowly coast to a stop
+bitbot.robot_stop(BBStopMode.Brake) # rapidly brake
 ```
 
 ## Driving the motor
 
-If you want more fine grain control of individal motors, use `robobit.motor(..)` to drive motor either forward or reverse. The value
+If you want more fine grain control of individal motors, use `bitbot.motor(..)` to drive motor either forward or reverse. The value
 indicates speed and is between `-1023` to `1023`. Minus indicates reverse.
 
 ```blocks
 // Drive 1000 ms forward
-robobit.motor(BBMotor.All, 1023);
+bitbot.motor(BBMotor.All, 1023);
 basic.pause(1000);
 
 // Drive 1000 ms reverse
-robobit.motor(BBMotor.All, -1023);
+bitbot.motor(BBMotor.All, -1023);
 basic.pause(1000);
 
 // Drive 1000 ms forward on left and reverse on right
-robobit.motor(BBMotor.Left, 1023);
-robobit.motor(BBMotor.Right, -1023);
+bitbot.motor(BBMotor.Left, 1023);
+bitbot.motor(BBMotor.Right, -1023);
 basic.pause(1000);
+```
+
+## Buzz sound
+
+To use the buzzer, just use `bitbot.buzz(..)` function with either `1`
+(sound) or `0` (no-sound).
+
+```blocks
+// Buzz for 100 ms
+bitbot.buzz(1);
+basic.pause(100);
+bitbot.buzz(0);
 ```
 
 ## Read line sensor
 
-The Robobit (optionally) has two line-sensors: left and right. To read the value of the
-sensors, use `robobit.readLine(..)` function.
+The BitBot has two line-sensors: left and right. To read the value of the
+sensors, use `bitbot.readLine(..)` function.
 
 ```blocks
 // Read left and right line sensor
-let left = robobit.readLine(BBLineSensor.Left);
-let right = robobit.readLine(BBLineSensor.Right);
+let left = bitbot.readLine(BBLineSensor.Left);
+let right = bitbot.readLine(BBLineSensor.Right);
+```
+
+## Read light sensor
+
+Light sensors can be read using `bitbot.readLight(..)` function.
+
+```blocks
+// Read left and right light sensor
+let left = bitbot.readLight(BBLightSensor.Left);
+let right = bitbot.readLight(BBLightSensor.Right);
 ```
 
 ## Read sonar value
 
-If you have mounted the optional sonar sensor for the Robobit you can
-also use the `robobit.sonar(..)` function to read the distance to obstacles.
+If you have mounted the optional sonar sensor for the BitBot you can
+also use the `bitbot.sonar(..)` function to read the distance to obstacles.
 
 ```blocks
 // Read sonar values
-let v1 = robobit.sonar(BBPingUnit.MicroSeconds);
-let v2 = robobit.sonar(BBPingUnit.Centimeters);
-let v3 = robobit.sonar(BBPingUnit.Inches);
+let v1 = bitbot.sonar(BBPingUnit.MicroSeconds);
+let v2 = bitbot.sonar(BBPingUnit.Centimeters);
+let v3 = bitbot.sonar(BBPingUnit.Inches);
 ```
 
 ## NeoPixel helpers
 
-The Robobit optionally has 8 NeoPixels mounted on a LEDBar. This library defines some helpers
+The BitBot has 12 NeoPixels mounted. This library defines some helpers
 for using the NeoPixels.
 
 ```blocks
 // Show all leds
-robobit.setColor(neopixel.colors(NeoPixelColors.Red));
-robobit.neoShow();
+bitbot.neoSetColor(neopixel.colors(NeoPixelColors.Red));
+bitbot.neoShow();
 
 // Clear all leds
-robobit.neoClear();
-robobit.neoShow();
+bitbot.neoClear();
+bitbot.neoShow();
 
-// Show led at position 1 (0 to 7)
-robobit.setPixel(1, neopixel.colors(NeoPixelColors.Red));
-robobit.neoShow();
+// Show led at position 1
+bitbot.neoSetPixelColor(0, neopixel.colors(NeoPixelColors.Red));
+bitbot.neoShow();
 
 // Show led rainbow
-robobit.neoRainbow();
-robobit.neoShow();
+bitbot.neoRainbow();
+bitbot.neoShow();
 
 // Show led rainbow and shift
-robobit.neoRainbow();
-robobit.neoShift();
-robobit.neoShow();
+bitbot.neoRainbow();
+bitbot.neoShift();
+bitbot.neoShow();
 
 // Show led rainbow and rotate
-robobit.neoRainbow();
-robobit.neoRotate();
-robobit.neoShow();
+bitbot.neoRainbow();
+bitbot.neoRotate();
+bitbot.neoShow();
 
-// Set brightness of leds (0 to 255)
-robobit.neoBrightness(100);
-robobit.neoShow();
+// Set brightness of leds
+bitbot.neoBrightness(100);
+bitbot.neoShow();
 
-// Use scanner update regularly in forever loop
-robobit.ledScan();
-robobit.neoShow();
-
-// Define your own colours using convertRGB(red, green, blue)
-robobit.setColor(robobit.convertRGB(40, 50, 200));
-robobit.neoShow();
+// Use neo() variable
+bitbot.neo().clear();
+bitbot.neo().show();
 ```
 
 ## Supported targets
