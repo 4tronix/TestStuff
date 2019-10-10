@@ -149,12 +149,12 @@ namespace bitbot
       *
       * @param model Model of BitBot; Classic or XL
       */
-    //% blockId="bitbot_model" block="select 08 BitBot model %model=bb_models"
+    //% blockId="bitbot_model" block="select 09 BitBot model %model=bb_models"
     //% weight=100
     //% subcategory=BitBot_Model
     export function select_model(model: number): void
     {
-        if(model >= bb_models(BBModel.Classic) && (model <= bb_models(BBModel.Auto))
+        if((model >= bb_models(BBModel.Classic)) && (model <= bb_models(BBModel.Auto)))
             _model = model;
     }
 
