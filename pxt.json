@@ -1,7 +1,7 @@
 {
-    "name": "BitBot",
-    "version": "1.2.3",
-    "description": "A BitBot package for pxt-microbit",
+    "name": "MiniBit",
+    "version": "1.0.5",
+    "description": "Microsoft MakeCode package for 4tronix MiniBit",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -9,10 +9,8 @@
     },
     "files": [
         "README.md",
-        "main.ts",
-        "_locales/no/BitBot-strings.json",
-        "_locales/no/BitBot-jsdoc-strings.json"
-    ],
+        "main.ts"
+     ],
     "testFiles": [
         "tests.ts"
     ],
