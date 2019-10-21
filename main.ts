@@ -404,7 +404,7 @@ namespace bitbot
         }
         switch (unit)
         {
-            case BBPingUnit.Centimeters: return d / 58;
+            case BBPingUnit.Centimeters: return Math.round(d / 58);
             case BBPingUnit.Inches: return d / 148;
             default: return d;
         }
@@ -478,9 +478,9 @@ namespace bitbot
     export function setTalon(degrees: number): void
     {
         if (getModel() == BBModel.Classic)
-            pins.servoWritePin(AnalogPin.P1, degrees);
-        else
             pins.servoWritePin(AnalogPin.P15, degrees);
+        else
+            pins.servoWritePin(AnalogPin.P2, degrees);
     }
 
 // LED Blocks
