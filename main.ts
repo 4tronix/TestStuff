@@ -71,6 +71,19 @@ enum MBEvents {
     loseLine = DAL.MICROBIT_PIN_EVT_FALL
 }
 
+/**
+ * Pins used to generate events
+ */
+enum MBPins {
+    //% block="left"
+    leftLine = <number>DAL.MICROBIT_ID_IO_P0,
+    //% block="centre"
+    centreLine = DAL.MICROBIT_ID_IO_P1,
+    //% block="right"
+    rightLine = DAL.MICROBIT_ID_IO_P2
+}
+
+
 
 /**
   * Update mode for LEDs
@@ -316,7 +329,7 @@ namespace minibit
     * Read Line sensor value and return as True/False. True == black line
     * @param sensor selected line sensor
     */
-    //% blockId="lineSensor" block="%sensor| line 05 sensor"
+    //% blockId="lineSensor" block="%sensor| line 06 sensor"
     //% weight=90
     //% subcategory=Sensors
     export function lineSensor(sensor: MBLineSensors): boolean
@@ -335,7 +348,7 @@ namespace minibit
     //% weight=80
     //% blockId=bc_event block="on %sensor line sensor|%event"
     //% subcategory=Sensors
-    export function onEvent(sensor: MBLineSensors, event: MBEvents, handler: Action)
+    export function onEvent(sensor: MBPins, event: MBEvents, handler: Action)
     {
         initEvents();
         control.onEvent(<number>sensor, <number>event, handler);
