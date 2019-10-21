@@ -61,6 +61,16 @@ enum MBLineSensors
     Right
 }
 
+/**
+ * Line Sensor events
+ */
+enum MBEvents {
+    //% block="find line"
+    findLine = DAL.MICROBIT_PIN_EVT_RISE,
+    //% block="lose line"
+    loseLine = DAL.MICROBIT_PIN_EVT_FALL
+}
+
 
 /**
   * Update mode for LEDs
@@ -108,6 +118,21 @@ namespace minibit
 {
     let neoStrip: neopixel.Strip;
     let _updateMode = MBMode.Auto;
+    let _initEvents = true;
+
+// Initialise events on first use
+
+    function initEvents(): void
+    {
+        if (_initEvents)
+        {
+            pins.setEvents(DigitalPin.P0, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P1, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P2, PinEventType.Edge);
+            _initEvents = false;
+        }
+    }
+
 
 // Motor Blocks
 
@@ -291,7 +316,7 @@ namespace minibit
     * Read Line sensor value and return as True/False. True == black line
     * @param sensor selected line sensor
     */
-    //% blockId="lineSensor" block="%sensor| line 04 sensor"
+    //% blockId="lineSensor" block="%sensor| line 05 sensor"
     //% weight=90
     //% subcategory=Sensors
     export function lineSensor(sensor: MBLineSensors): boolean
@@ -303,6 +328,19 @@ namespace minibit
         else
             return pins.digitalReadPin(DigitalPin.P2)===1;
     }
+
+    /**
+      * Registers event code for line sensors
+      */
+    //% weight=80
+    //% blockId=bc_event block="on %sensor line sensor|%event"
+    //% subcategory=Sensors
+    export function onEvent(sensor: MBLineSensors, event: MBEvents, handler: Action)
+    {
+        initEvents();
+        control.onEvent(<number>sensor, <number>event, handler);
+    }
+
 
 // LED Blocks
 
