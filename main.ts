@@ -291,17 +291,17 @@ namespace minibit
     * Read Line sensor value and return as True/False. True == black line
     * @param sensor selected line sensor
     */
-    //% blockId="lineSensor" block="%sensor| line 03 sensor"
+    //% blockId="lineSensor" block="%sensor| line 04 sensor"
     //% weight=90
     //% subcategory=Sensors
-    export function lineSensor(sensor: MBLineSensors): number
+    export function lineSensor(sensor: MBLineSensors): boolean
     {
         if (sensor == MBLineSensors.Left)
-            return pins.digitalReadPin(DigitalPin.P0);
+            return pins.digitalReadPin(DigitalPin.P0)===1;
         else if (sensor == MBLineSensors.Centre)
-            return pins.digitalReadPin(DigitalPin.P1);
+            return pins.digitalReadPin(DigitalPin.P1)===1;
         else
-            return pins.digitalReadPin(DigitalPin.P2);
+            return pins.digitalReadPin(DigitalPin.P2)===1;
     }
 
 // LED Blocks
