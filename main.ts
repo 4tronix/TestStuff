@@ -65,9 +65,9 @@ enum MBLineSensors
  * Line Sensor events
  */
 enum MBEvents {
-    //% block="find line"
+    //% block="found"
     findLine = DAL.MICROBIT_PIN_EVT_RISE,
-    //% block="lose line"
+    //% block="lost"
     loseLine = DAL.MICROBIT_PIN_EVT_FALL
 }
 
@@ -329,7 +329,7 @@ namespace minibit
     * Read Line sensor value and return as True/False. True == black line
     * @param sensor selected line sensor
     */
-    //% blockId="lineSensor" block="%sensor| line 06 sensor"
+    //% blockId="lineSensor" block="%sensor| line 07 sensor"
     //% weight=90
     //% subcategory=Sensors
     export function lineSensor(sensor: MBLineSensors): boolean
@@ -343,10 +343,10 @@ namespace minibit
     }
 
     /**
-      * Registers event code for line sensors
+      * Runs when line sensor finds or loses the black line
       */
     //% weight=80
-    //% blockId=bc_event block="on %sensor line sensor|%event"
+    //% blockId=bc_event block="on %sensor| line %event"
     //% subcategory=Sensors
     export function onEvent(sensor: MBPins, event: MBEvents, handler: Action)
     {
