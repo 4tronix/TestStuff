@@ -208,7 +208,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 01 servos"
+    //% block="Centre all 02 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -218,13 +218,33 @@ namespace Rover
     }
 
     /**
-      * Set Servo Position by Angle
+      * Steer all wheels left or right by angle
+      * @param direction left or right
+      * @param angle angle to steer
+      */
+    //% blockId="steer"
+    //% block="steer %dir| by angle %angle"
+    //% weight=90
+    //% subcategory=Servos
+    export function steer(dir: eDirection, angle: number): void
+    { 
+        angle=Math.max(Math.min(90, angle),0));
+        if (dir==eDirection.Right)
+            angle = 0-angle;
+        setServo(eServos.FL, angle);
+        setServo(eServos.FR, angle);
+        setServo(eServos.RL, angle);
+        setServo(eServos.RR, angle);
+    }
+
+    /**
+      * Set individual Servo Position by Angle
       * @param servo Servo number (0 to 15)
       * @param angle degrees to turn servo (-90 to +90)
       */
     //% blockId="setServo"
     //% block="set servo %servo=e_servos| to angle %angle"
-    //% weight=90
+    //% weight=60
     //% subcategory=Servos
     export function setServo(servo: number, angle: number): void
     {
