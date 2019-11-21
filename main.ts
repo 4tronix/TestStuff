@@ -219,7 +219,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 12 servos"
+    //% block="Centre all 13 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -339,11 +339,11 @@ namespace Rover
       * @param millis duration in milliseconds to move, then stop. eg: 400
       */
     //% blockId="e_move_milli"
-    //% block="move %direction| at speed %speed| for *millis|(ms)"
+    //% block="move %direction| at speed %speed| for %millis|(ms)"
     //% speed.min=0 speed.max=100
     //% weight=90
     //% subcategory=Motors
-    export function move(direction: eVector, speed: number, millis: number): void
+    export function move_milli(direction: eVector, speed: number, millis: number): void
     {
         speed = Math.max(Math.min(100, speed),0);
         motor(eMotor.Both, direction, speed);
@@ -413,7 +413,7 @@ namespace Rover
     /**
       * Spin Left or Right at Speed
       * @param direction left or right
-      * @param speed from 0 to 1023. eg: 600
+      * @param speed from 0 to 100. eg: 60
       */
     //% blockId="e_spin"
     //% block="spin %direction| at speed %speed"
