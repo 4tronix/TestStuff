@@ -208,7 +208,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 09 servos"
+    //% block="Centre all 10 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -248,6 +248,15 @@ namespace Rover
     //% subcategory=Servos
     export function spin(direction: eDirection, speed: number): void
     { 
+        speed=Math.max(Math.min(1023, speed),0);
+        if (direction==eDirection.Right)
+            speed = 0-speed;
+        setServo(getServoNumber(eServos.FL), 45);
+        setServo(getServoNumber(eServos.FR), -45);
+        setServo(getServoNumber(eServos.RL), -45);
+        setServo(getServoNumber(eServos.RR), 45);
+        motor(eMotor.Left, 0-speed);
+        motor(eMotor.Right, speed);
     }
 
     /**
