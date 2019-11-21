@@ -11,7 +11,7 @@ enum eServos
 }
 
 /**
-  * Enumeration of directions.
+  * Enumeration of left/right directions
   */
 enum eDirection
 {
@@ -19,6 +19,17 @@ enum eDirection
     Left,
     //% block="right"
     Right
+}
+
+/**
+  * Enumeration of forward/reverse directions
+  */
+enum eVector
+{
+    //% block="forward"
+    Forward,
+    //% block="reverse"
+    Reverse
 }
 
 /**
@@ -208,7 +219,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 10 servos"
+    //% block="Centre all 12 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -238,35 +249,13 @@ namespace Rover
     }
 
     /**
-      * Spin Left or Right at Speed
-      * @param direction left or right
-      * @param speed from 0 to 1023. eg: 600
-      */
-    //% blockId="e_spin"
-    //% block="spin %direction| at speed %speed"
-    //% weight=85
-    //% subcategory=Servos
-    export function spin(direction: eDirection, speed: number): void
-    { 
-        speed=Math.max(Math.min(1023, speed),0);
-        if (direction==eDirection.Right)
-            speed = 0-speed;
-        setServo(getServoNumber(eServos.FL), 45);
-        setServo(getServoNumber(eServos.FR), -45);
-        setServo(getServoNumber(eServos.RL), -45);
-        setServo(getServoNumber(eServos.RR), 45);
-        motor(eMotor.Left, 0-speed);
-        motor(eMotor.Right, speed);
-    }
-
-    /**
       * Set individual Servo Position by Angle
       * @param servo Servo number (0 to 15)
       * @param angle degrees to turn servo (-90 to +90)
       */
     //% blockId="setServo"
     //% block="set servo %servo=e_servos| to angle %angle"
-    //% weight=60
+    //% weight=80
     //% subcategory=Servos
     export function setServo(servo: number, angle: number): void
     {
@@ -297,21 +286,6 @@ namespace Rover
     }
 
     /**
-      * Set Servo Offset then zero the servo
-      * @param servo Servo number (0 to 15)
-      * @param angle degrees to turn servo (-90 to +90)
-      */
-    //% blockId="setOffset"
-    //% block="set offset of servo %servo=e_servos| to %offset"
-    //% weight=80
-    //% subcategory=Servos
-    export function setOffset(servo: number, offset: number): void
-    {
-        servoOffset[servo] = offset;
-        setServo(servo, 0);
-    }
-
-    /**
       * Return servo number from name
       *
       * @param value servo name
@@ -325,36 +299,55 @@ namespace Rover
         return value;
     }
 
+    /**
+      * Set Servo Offset then zero the servo
+      * @param servo Servo number (0 to 15)
+      * @param angle degrees to turn servo (-90 to +90)
+      */
+    //% blockId="setOffset"
+    //% block="set offset of servo %servo=e_servos| to %offset"
+    //% weight=60
+    //% subcategory=Servos
+    export function setOffset(servo: number, offset: number): void
+    {
+        servoOffset[servo] = offset;
+        setServo(servo, 0);
+    }
+
 // MOTOR BLOCKS
 
     /**
-      * Drive forward (or backward) at speed.
-      * @param speed speed of motor between -1023 and 1023. eg: 600
+      * Drive forward (or backward) at selected speed
+      * @param direction select forwards or reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="drive"
-    //% block="drive at speed %speed"
-    //% speed.min=-1023 speed.max=1023
+    //% blockId="e_move"
+    //% block="move %direction| at speed %speed"
+    //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
-    export function drive(speed: number): void
+    export function move(direction: eVector, speed: number): void
     {
-        motor(eMotor.Both, speed);
+        speed = Math.max(Math.min(100, speed),0);
+        motor(eMotor.Both, direction, speed);
     }
 
     /**
-      * Drive robot forward (or backward) at speed for milliseconds.
-      * @param speed speed of motor between -1023 and 1023. eg: 600
-      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      * Drive forward (or backward) at selected speed for milliseconds
+      * @param direction select forwards or reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param millis duration in milliseconds to move, then stop. eg: 400
       */
-    //% blockId="drive_milliseconds"
-    //% block="drive at speed %speed| for %milliseconds|(ms)"
-    //% speed.min=-1023 speed.max=1023
+    //% blockId="e_move_milli"
+    //% block="move %direction| at speed %speed| for *millis|(ms)"
+    //% speed.min=0 speed.max=100
     //% weight=90
     //% subcategory=Motors
-    export function driveMilliseconds(speed: number, milliseconds: number): void
+    export function move(direction: eVector, speed: number, millis: number): void
     {
-        drive(speed);
-        basic.pause(milliseconds);
+        speed = Math.max(Math.min(100, speed),0);
+        motor(eMotor.Both, direction, speed);
+        basic.pause(millis);
         stop(eStopMode.Coast);
     }
 
@@ -377,20 +370,23 @@ namespace Rover
     }
 
     /**
-      * Drive motor(s) forward or reverse.
+      * Drive motors forward or reverse.
       * @param motor motor to drive.
-      * @param speed speed of motor eg: 600
+      * @param direction select forwards or reverse
+      * @param speed speed of motor eg: 60
       */
     //% blockId="motor"
-    //% block="drive %motor| motor at speed %speed"
+    //% block="drive %motor| motors %direction| at speed %speed"
     //% weight=70
+    //% speed.min=0 speed.max=100
     //% subcategory=Motors
-    export function motor(motor: eMotor, speed: number): void
+    export function motor(motor: eMotor, direction: eVector, speed: number): void
     {
+        speed = Math.max(Math.min(100, speed),0) * 10.23;
         let speed0 = 0;
         let speed1 = 0;
-        setPWM(Math.abs(speed));
-        if (speed > 0)
+        setPWM(speed);
+        if (direction == eVector.Forward)
         {
             speed0 = speed;
             speed1 = 0;
@@ -413,6 +409,34 @@ namespace Rover
         }
     }
 
+
+    /**
+      * Spin Left or Right at Speed
+      * @param direction left or right
+      * @param speed from 0 to 1023. eg: 600
+      */
+    //% blockId="e_spin"
+    //% block="spin %direction| at speed %speed"
+    //% weight=85
+    //% subcategory=Motors
+    export function spin(direction: eDirection, speed: number): void
+    { 
+        speed=Math.max(Math.min(100, speed),0);
+        setServo(getServoNumber(eServos.FL), 45);
+        setServo(getServoNumber(eServos.FR), -45);
+        setServo(getServoNumber(eServos.RL), -45);
+        setServo(getServoNumber(eServos.RR), 45);
+        if (direction==eDirection.Left)
+        {
+            motor(eMotor.Left, eVector.Reverse, speed);
+            motor(eMotor.Right, eVector.Forward, speed);
+        }
+        else
+        {
+            motor(eMotor.Left, eVector.Forward, speed);
+            motor(eMotor.Right, eVector.Reverse, speed);
+        }
+    }
 
 // SENSOR BLOCKS
     /**
