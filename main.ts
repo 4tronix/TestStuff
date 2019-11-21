@@ -208,7 +208,7 @@ namespace Rover
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="Centre all 06 servos"
+    //% block="Centre all 07 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(): void
@@ -228,6 +228,7 @@ namespace Rover
     //% subcategory=Servos
     export function steer(direction: eDirection, angle: number): void
     { 
+        setServo(getServoNumber(eServos.FL), angle);
     }
 
     /**
