@@ -11,6 +11,19 @@ enum eServos
 }
 
 /**
+  * Enumeration of servo groups
+  */
+enum eServoGroup
+{
+    //% block="wheel"
+    Wheel,
+    //% block="mast"
+    Mast,
+    //% block ="all"
+    All
+}
+
+/**
   * Enumeration of left/right directions
   */
 enum eDirection
@@ -216,16 +229,31 @@ namespace Rover
 //  SERVO BLOCKS
 
     /**
-      * Initialise all servos to Angle=0
+      * Initialise wheel/mast/all servos to Angle=0
+      * param group which group of servos to centre
       */
     //% blockId="zeroServos"
-    //% block="Centre all 13 servos"
+    //% block="Centre %group| 14 servos"
     //% weight=100
     //% subcategory=Servos
-    export function zeroServos(): void
+    export function zeroServos(group: eServoGroup): void
     {
-        for (let i=0; i<16; i++)
-            setServo(i, 0);
+        switch(group)
+        {
+        case eServoGroup.Wheel:
+            setServo(getServoNumber(eServos.FL), 0);
+            setServo(getServoNumber(eServos.FR), 0);
+            setServo(getServoNumber(eServos.RL), 0);
+            setServo(getServoNumber(eServos.RR), 0);
+            break;
+        case eServoGroup.Mast:
+            setServo(getServoNumber(eServos.Mast), 0);
+            break;
+        default:
+            for (let i=0; i<16; i++)
+                setServo(i, 0);
+            break;
+        }
     }
 
     /**
