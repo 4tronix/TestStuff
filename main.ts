@@ -19,7 +19,7 @@ enum eServoGroup
     Wheel,
     //% block="mast"
     Mast,
-    //% block ="all"
+    //% block="all"
     All
 }
 
@@ -209,8 +209,7 @@ namespace Rover
             pins.i2cWriteBuffer(PCA, i2cData, false);
         }
 
-	for (let i=0; i<16; i++)
-            servoOffset[i] = readEEROM(i);
+	loadOffsets();
     }
 
     // slow PWM frequency for slower speeds to improve torque
@@ -233,7 +232,7 @@ namespace Rover
       * param group which group of servos to centre
       */
     //% blockId="zeroServos"
-    //% block="Centre %group| 15 servos"
+    //% block="Centre %group| 16 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(group: eServoGroup): void
@@ -336,10 +335,25 @@ namespace Rover
     //% block="set offset of servo %servo=e_servos| to %offset"
     //% weight=60
     //% subcategory=Servos
+    //% advanced=true
     export function setOffset(servo: number, offset: number): void
     {
         servoOffset[servo] = offset;
         setServo(servo, 0);
+    }
+
+    /**
+      * Clear all Servo Offsets (does not save to EEROM)
+      */
+    //% blockId="clearOffsets"
+    //% block="clear all servo offsets"
+    //% weight=50
+    //% subcategory=Servos
+    //% advanced=true
+    export function clearOffsets(): void
+    {
+        for (let i=0; i<16; i++)
+            servoOffset[i] = 0;
     }
 
 // MOTOR BLOCKS
@@ -519,14 +533,19 @@ namespace Rover
     //% subcategory=EEROM
     export function writeEEROM(data: number, address: number): void
     {
-        /*let i2cData = pins.createBuffer(3);
+        wrEEROM(data, address + 16);
+    }
+
+    // Uses bottom 16 bytes of EEROM for servo offsets. No user access
+    function wrEEROM(data: number, address: number): void
+    {
+        let i2cData = pins.createBuffer(3);
 
         i2cData[0] = address >> 8;	// address MSB
         i2cData[1] = address & 0xff;	// address LSB
         i2cData[2] = data & 0xff;
         pins.i2cWriteBuffer(EEROM, i2cData, false);
-        //servoOffset[address] = data;	// update servo offset as well - lazy coding
-        basic.pause(1);			// needs a short pause. << 1ms ok? */
+        basic.pause(1);			// needs a short pause. << 1ms ok?
     }
 
     /**
@@ -539,15 +558,47 @@ namespace Rover
     //% subcategory=EEROM
     export function readEEROM(address: number): number
     {
-        return 0;
-        /*let i2cRead = pins.createBuffer(2);
+        return rdEEROM(address + 16);
+    }
+
+    // Uses bottom 16 bytes of EEROM for servo offsets. No user access
+    function rdEEROM(address: number): number
+    {
+        let i2cRead = pins.createBuffer(2);
 
         i2cRead[0] = address >> 8;	// address MSB
         i2cRead[1] = address & 0xff;	// address LSB
         pins.i2cWriteBuffer(EEROM, i2cRead, false);
         basic.pause(1);
-        return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);*/
+        return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);
     }
+
+    /**
+      * Load servo offsets from EEROM
+      */
+    //% blockId="loadOffsets"
+    //% block="Load servo offsets from EEROM"
+    //% weight=80
+    //% subcategory=EEROM
+    export function loadOffsets(): number
+    {
+	for (let i=0; i<16; i++)
+            servoOffset[i] = rdEEROM(i);
+    }
+
+    /**
+      * Save servo offsets to EEROM
+      */
+    //% blockId="saveOffsets"
+    //% block="Save servo offsets to EEROM"
+    //% weight=70
+    //% subcategory=EEROM
+    export function saveOffsets(): number
+    {
+	for (let i=0; i<16; i++)
+            wrEEROM(servoOffset[i],i);
+    }
+
 
 // LED Blocks
 
