@@ -232,7 +232,7 @@ namespace Rover
       * param group which group of servos to centre
       */
     //% blockId="zeroServos"
-    //% block="Centre %group| 16 servos"
+    //% block="Centre %group| 17 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(group: eServoGroup): void
@@ -580,7 +580,7 @@ namespace Rover
     //% block="Load servo offsets from EEROM"
     //% weight=80
     //% subcategory=EEROM
-    export function loadOffsets(): number
+    export function loadOffsets(): void
     {
 	for (let i=0; i<16; i++)
             servoOffset[i] = rdEEROM(i);
@@ -593,7 +593,7 @@ namespace Rover
     //% block="Save servo offsets to EEROM"
     //% weight=70
     //% subcategory=EEROM
-    export function saveOffsets(): number
+    export function saveOffsets(): void
     {
 	for (let i=0; i<16; i++)
             wrEEROM(servoOffset[i],i);
