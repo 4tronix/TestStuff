@@ -233,7 +233,7 @@ namespace Rover
       * param group which group of servos to centre
       */
     //% blockId="zeroServos"
-    //% block="Centre %group| 14 servos"
+    //% block="Centre %group| 15 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(group: eServoGroup): void
@@ -664,6 +664,7 @@ namespace Rover
     //% block="set %updateMode|update mode"
     //% weight=40
     //% subcategory=LEDs
+    //% deprecated=true
     export function setUpdateMode(updateMode: eUpdateMode): void
     {
         _updateMode = updateMode;
@@ -676,6 +677,7 @@ namespace Rover
     //% block="show LED changes"
     //% weight=30
     //% subcategory=LEDs
+    //% deprecated=true
     export function ledShow(): void
     {
         neo().show();
@@ -688,6 +690,7 @@ namespace Rover
     //% block="rotate LEDs"
     //% weight=20
     //% subcategory=LEDs
+    //% deprecated=true
     export function ledRotate(): void
     {
         neo().rotate(1);
@@ -701,6 +704,7 @@ namespace Rover
     //% block="shift LEDs"
     //% weight=10
     //% subcategory=LEDs
+    //% deprecated=true
     export function ledShift(): void
     {
         neo().shift(1);
