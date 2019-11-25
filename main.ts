@@ -232,7 +232,7 @@ namespace Rover
       * param group which group of servos to centre
       */
     //% blockId="zeroServos"
-    //% block="Centre %group| 17 servos"
+    //% block="Centre %group| 18 servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(group: eServoGroup): void
@@ -335,7 +335,6 @@ namespace Rover
     //% block="set offset of servo %servo=e_servos| to %offset"
     //% weight=60
     //% subcategory=Servos
-    //% advanced=true
     export function setOffset(servo: number, offset: number): void
     {
         servoOffset[servo] = offset;
@@ -349,7 +348,6 @@ namespace Rover
     //% block="clear all servo offsets"
     //% weight=50
     //% subcategory=Servos
-    //% advanced=true
     export function clearOffsets(): void
     {
         for (let i=0; i<16; i++)
