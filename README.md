@@ -1,156 +1,124 @@
-# BitBot Package for Microsoft PXT
+# MakeCode Package for 4tronix MiniBit Robot
 
-Based off [initial work](https://github.com/srs/pxt-bitbot) by [Sten Roger Sandvik](https://github.com/srs), updated/expanded by [Gareth Davies](https://github.com/4tronix) and [Andrew Mulholland](https://github.com/gbaman). 
-
-This library provides a Microsoft PXT package for BitBot, see
-https://4tronix.co.uk/bitbot/.
+This library provides a Microsoft Makecode package for 4tronix MiniBit, see
+https://4tronix.co.uk/minibit/
 
 ## Driving the robot    
 The simplest way to drive robot is by using the `driveMilliseconds(...)` and `driveTurnMilliseconds(...)` blocks.   
 Note with `driveMilliseconds(...)`, you can specify a negative speed to reverse.   
 ```blocks
 // Drive forward for 2000 ms
-bitbot.driveMilliseconds(1023, 2000)
+MiniBit.driveMilliseconds(1023, 2000)
 
 // Drive backwards for 2000 ms
-bitbot.driveMilliseconds(-1023, 2000)
+MiniBit.driveMilliseconds(-1023, 2000)
 
-// Turn left for 200 ms
-bitbot.driveTurnMilliseconds(BBRobotDirection.Left, 1023, 200)
+// Spin left for 200 ms
+MiniBit.spinMilliseconds(MBRobotDirection.Left, 1023, 200)
 
 // Turn right for 200 ms
-bitbot.driveTurnMilliseconds(BBRobotDirection.Right, 1023, 200)
+MiniBit.spinMilliseconds(MBRobotDirection.Right, 1023, 200)
 ```   
 
 These blocks are also available in non blocking version. The following example performs the same operation as above.   
 ```blocks
-bitbot.drive(1023)
+MiniBit.drive(1023)
 basic.pause(1000)
 
-bitbot.drive(0)
+MiniBit.drive(0)
 basic.pause(1000)
 
-bitbot.driveTurn(BBRobotDirection.Left, 1023)
+MiniBit.spin(MBRobotDirection.Left, 1023)
 basic.pause(250)
 
-bitbot.driveTurn(BBRobotDirection.Right, 1023)
+MiniBit.spin(MBRobotDirection.Right, 1023)
 basic.pause(250)
 
-bitbot.drive(0)
+MiniBit.drive(0)
 ```
 
 ## Stopping
 When the motor speed is set to zero then it stops. However, we can also use the motor itself to create a reverse generated current to brake much quicker.
-This helps when aiming for more accurate manoeuvres. Use the `bitbot.stop(...)` command to stop with braking, or coast to a halt
+This helps when aiming for more accurate manoeuvres. Use the `MiniBit.stop(...)` command to stop with braking, or coast to a halt
 ```blocks
-bitbot.robot_stop(BBStopMode.Coast) # slowly coast to a stop
-bitbot.robot_stop(BBStopMode.Brake) # rapidly brake
+MiniBit.robot_stop(MBStopMode.Coast) # slowly coast to a stop
+MiniBit.robot_stop(MBStopMode.Brake) # rapidly brake
 ```
 
 ## Driving the motor
 
-If you want more fine grain control of individal motors, use `bitbot.motor(..)` to drive motor either forward or reverse. The value
+If you want more fine grain control of individal motors, use `MiniBit.motor(..)` to drive motor either forward or reverse. The value
 indicates speed and is between `-1023` to `1023`. Minus indicates reverse.
 
 ```blocks
 // Drive 1000 ms forward
-bitbot.motor(BBMotor.All, 1023);
+MiniBit.motor(MBMotor.All, 1023);
 basic.pause(1000);
 
 // Drive 1000 ms reverse
-bitbot.motor(BBMotor.All, -1023);
+MiniBit.motor(MBMotor.All, -1023);
 basic.pause(1000);
 
 // Drive 1000 ms forward on left and reverse on right
-bitbot.motor(BBMotor.Left, 1023);
-bitbot.motor(BBMotor.Right, -1023);
+MiniBit.motor(MBMotor.Left, 1023);
+MiniBit.motor(MBMotor.Right, -1023);
 basic.pause(1000);
-```
-
-## Buzz sound
-
-To use the buzzer, just use `bitbot.buzz(..)` function with either `1`
-(sound) or `0` (no-sound).
-
-```blocks
-// Buzz for 100 ms
-bitbot.buzz(1);
-basic.pause(100);
-bitbot.buzz(0);
-```
-
-## Read line sensor
-
-The BitBot has two line-sensors: left and right. To read the value of the
-sensors, use `bitbot.readLine(..)` function.
-
-```blocks
-// Read left and right line sensor
-let left = bitbot.readLine(BBLineSensor.Left);
-let right = bitbot.readLine(BBLineSensor.Right);
-```
-
-## Read light sensor
-
-Light sensors can be read using `bitbot.readLight(..)` function.
-
-```blocks
-// Read left and right light sensor
-let left = bitbot.readLight(BBLightSensor.Left);
-let right = bitbot.readLight(BBLightSensor.Right);
 ```
 
 ## Read sonar value
 
-If you have mounted the optional sonar sensor for the BitBot you can
-also use the `bitbot.sonar(..)` function to read the distance to obstacles.
+If you have mounted the optional sonar sensor for the MiniBit you can
+also use the `MiniBit.sonar(..)` function to read the distance to obstacles.
 
 ```blocks
 // Read sonar values
-let v1 = bitbot.sonar(BBPingUnit.MicroSeconds);
-let v2 = bitbot.sonar(BBPingUnit.Centimeters);
-let v3 = bitbot.sonar(BBPingUnit.Inches);
+let v1 = MiniBit.sonar(MBPingUnit.MicroSeconds);
+let v2 = MiniBit.sonar(MBPingUnit.Centimeters);
+let v3 = MiniBit.sonar(MBPingUnit.Inches);
 ```
 
 ## NeoPixel helpers
 
-The BitBot has 12 NeoPixels mounted. This library defines some helpers
-for using the NeoPixels.
+The MiniBit has 4 smart RGB LEDs (aka neopixels) fitted. This library defines some helpers
+for using them.
+By default, the LEDs are Automatically updated after every setting. This makes it easy to understand.
+However, it can slow down some effects so there is a block provided to switch the update mode to
+Manual or Automatic:
 
 ```blocks
+// Switch LEDs Update Mode to Manual or Automatic
+MiniBit.setUpdateMode(MBMode.Manual);
+MiniBit.setUpdateMode(MBMode.Auto);
+
 // Show all leds
-bitbot.neoSetColor(neopixel.colors(NeoPixelColors.Red));
-bitbot.neoShow();
+MiniBit.setLedColor(MiniBit.MBColours(MBColors.Red));
+MiniBit.ledShow();
 
 // Clear all leds
-bitbot.neoClear();
-bitbot.neoShow();
+MiniBit.ledClear();
+MiniBit.ledShow();
 
-// Show led at position 1
-bitbot.neoSetPixelColor(0, neopixel.colors(NeoPixelColors.Red));
-bitbot.neoShow();
+// Show led at position 1 to Red
+MiniBit.setPixelColor(0, MiniBit.MBColours(MBColors.Red));
+MiniBit.ledShow();
 
 // Show led rainbow
-bitbot.neoRainbow();
-bitbot.neoShow();
+MiniBit.ledRainbow();
+MiniBit.ledShow();
 
 // Show led rainbow and shift
-bitbot.neoRainbow();
-bitbot.neoShift();
-bitbot.neoShow();
+MiniBit.ledRainbow();
+MiniBit.ledShift();
+MiniBit.ledShow();
 
 // Show led rainbow and rotate
-bitbot.neoRainbow();
-bitbot.neoRotate();
-bitbot.neoShow();
+MiniBit.ledRainbow();
+MiniBit.ledRotate();
+MiniBit.ledShow();
 
 // Set brightness of leds
-bitbot.neoBrightness(100);
-bitbot.neoShow();
-
-// Use neo() variable
-bitbot.neo().clear();
-bitbot.neo().show();
+MiniBit.ledBrightness(100);
+MiniBit.ledShow();
 ```
 
 ## Supported targets

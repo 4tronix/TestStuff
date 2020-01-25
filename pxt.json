@@ -1,16 +1,16 @@
 {
-    "name": "PCB-Rover",
-    "version": "0.0.1",
-    "description": "Microsoft MakeCode package for 4tronix Rover",
+    "name": "MiniBit",
+    "version": "1.0.6",
+    "description": "Microsoft MakeCode package for 4tronix MiniBit",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "neopixel": "github:microsoft/pxt-neopixel#v0.6.2"
+        "neopixel": "github:microsoft/pxt-neopixel#v0.6.10"
     },
     "files": [
         "README.md",
         "main.ts"
-    ],
+     ],
     "testFiles": [
         "tests.ts"
     ],
