@@ -129,7 +129,7 @@ enum MBColors
 //% weight=50 color=#e7660b icon="\uf1b9"
 namespace minibit
 {
-    let neoStrip: neopixel.Strip;
+    let fireBand: fireled.Band;
     let _updateMode = MBMode.Auto;
     let _initEvents = true;
 
@@ -166,7 +166,7 @@ namespace minibit
       * @param motor motor to drive.
       * @param speed speed of motor (-1023 to 1023). eg: 600
       */
-    //% blockId="minibit_motor" block="drive 01 %motor|motor(s) at speed %speed"
+    //% blockId="minibit_motor" block="drive 02 %motor|motor(s) at speed %speed"
     //% weight=50
     //% subcategory=Motors
     export function motor(motor: MBMotor, speed: number): void
@@ -357,22 +357,22 @@ namespace minibit
 
 // LED Blocks
 
-    // create a neopixel strip if not got one already. Default to brightness 40
-    function neo(): neopixel.Strip
+    // create a FireLed band if not got one already. Default to brightness 40
+    function fire(): fireled.Band
     {
-        if (!neoStrip)
+        if (!fireBand)
         {
-            neoStrip = neopixel.create(DigitalPin.P13, 4, NeoPixelMode.RGB);
-            neoStrip.setBrightness(40);
+            fireBand = fireled.newBand(DigitalPin.P13, 4);
+            fireBand.setBrightness(40);
         }
-        return neoStrip;
+        return fireBand;
     }
 
-    // update LEDs if _updateMode set to Auto
+    // update FireLedss if _updateMode set to Auto
     function updateLEDs(): void
     {
         if (_updateMode == MBMode.Auto)
-            neo().show();
+            fire().updateBand();
     }
 
     /**
@@ -384,7 +384,7 @@ namespace minibit
     //% subcategory=LEDs
     export function setLedColor(rgb: number)
     {
-        neo().showColor(rgb);
+        fire().setBand(rgb);
         updateLEDs();
     }
 
@@ -396,7 +396,7 @@ namespace minibit
     //% subcategory=LEDs
     export function ledClear(): void
     {
-        neo().clear();
+        fire().clearBand();
         updateLEDs();
     }
 
@@ -411,7 +411,7 @@ namespace minibit
     //% subcategory=LEDs
     export function setPixelColor(ledId: number, rgb: number): void
     {
-        neo().setPixelColor(ledId, rgb);
+        fire().setPixel(ledId, rgb);
         updateLEDs();
     }
 
@@ -425,7 +425,7 @@ namespace minibit
     //% subcategory=LEDs
     export function ledBrightness(brightness: number): void
     {
-        neo().setBrightness(brightness);
+        fire().setBrightness(brightness);
         updateLEDs();
     }
 
@@ -437,7 +437,7 @@ namespace minibit
     //% subcategory=LEDs
     export function ledRainbow(): void
     {
-        neo().showRainbow(1, 360);
+        fire().setRainbow();
         updateLEDs()
     }
 
@@ -476,7 +476,7 @@ namespace minibit
     //% advanced=true
     export function ledShow(): void
     {
-        neo().show();
+        fire().updateBand();
     }
 
     /**
@@ -487,7 +487,7 @@ namespace minibit
     //% advanced=true
     export function ledRotate(): void
     {
-        neo().rotate(1);
+        fire().rotateBand();
         updateLEDs()
     }
 
@@ -500,7 +500,7 @@ namespace minibit
     //% advanced=true
     export function ledShift(): void
     {
-        neo().shift(1);
+        fire().shiftBand();
         updateLEDs()
     }
 
