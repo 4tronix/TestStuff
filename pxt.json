@@ -6,7 +6,7 @@
     "dependencies": {
         "core": "*",
         "sk6812": "github:4tronix/SK6812",
-        "fireled": "github:4tronix/FireLeds#0.0.1"
+        "fireled": "github:4tronix/FireLeds"
     },
     "files": [
         "README.md",
