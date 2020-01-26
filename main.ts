@@ -166,7 +166,7 @@ namespace minibit
       * @param motor motor to drive.
       * @param speed speed of motor (-1023 to 1023). eg: 600
       */
-    //% blockId="minibit_motor" block="drive 08 %motor|motor(s) at speed %speed"
+    //% blockId="minibit_motor" block="drive 09 %motor|motor(s) at speed %speed"
     //% weight=50
     //% subcategory=Motors
     export function motor(motor: MBMotor, speed: number): void
