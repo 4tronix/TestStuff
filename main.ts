@@ -24,7 +24,7 @@ enum mbDirection
 }
 
 /**
-  * Enumeration of directions.
+  * Enumeration of left/right directions
   */
 enum mbRobotDirection
 {
@@ -45,6 +45,16 @@ enum mbStopMode
     Brake
 }
 
+/**
+  * Enable/Disable for Bluetooth and FireLeds
+  */
+enum mbBluetooth
+{
+    //% block="Enable Bluetooth, Disable FireLeds"
+    btEnable,
+    //% block="Disable Bluetooth, Enable FireLeds"
+    btDisable
+}
 
 /**
  * Ping unit for sensor. Optional Accessory
@@ -143,6 +153,7 @@ namespace minibit
     let fireBand: fireled.Band;
     let _updateMode = mbMode.Auto;
     let _initEvents = true;
+    let btEnabled = false;
 
 // Initialise events on first use
 
@@ -157,6 +168,20 @@ namespace minibit
         }
     }
 
+// Block to enable Bluetooth and disable FireLeds.
+    /**
+      * Enable/Disable 18 Bluetooth support by disabling/enabling FireLeds
+      * @param enable Enable or diable Blueetoth
+    */
+    //% blockId="mbEnableBluetooth"
+    //% block="%enable|Bluetooth"
+    export function mbEnableBluetooth(enable: mbBluetooth)
+    {
+        if (enable == mbEnableBluetooth.btEnable)
+            btEnabled = true;
+        else
+            btEnabled = false;
+    }
 
 // Motor Blocks
 
@@ -177,7 +202,7 @@ namespace minibit
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="mbGo" block="go 16 %direction|at speed %speed"
+    //% blockId="mbGo" block="go %direction|at speed %speed"
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
@@ -197,6 +222,7 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=90
     //% subcategory=Motors
+    //% group="Motors"
     export function goms(direction: mbDirection, speed: number, milliseconds: number): void
     {
         go(direction, speed);
@@ -214,6 +240,7 @@ namespace minibit
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
+    //% group="Motors"
     export function move(motor: mbMotor, direction: mbDirection, speed: number): void
     {
         let speed0 = 0;
@@ -419,7 +446,7 @@ namespace minibit
     //% blockId="lineSensor" block="%sensor| line sensor"
     //% weight=90
     //% subcategory=Sensors
-    //% group="Sensors"
+    //% group="Line Sensor"
     export function lineSensor(sensor: mbLineSensors): boolean
     {
         if (sensor == mbLineSensors.Left)
@@ -436,7 +463,7 @@ namespace minibit
     //% weight=80
     //% blockId=bc_event block="on %sensor| line %event"
     //% subcategory=Sensors
-    //% group="Sensors"
+    //% group="Line Sensor"
     export function onEvent(sensor: mbPins, event: mbEvents, handler: Action)
     {
         initEvents();
