@@ -245,12 +245,12 @@ namespace minibit
         if (direction == mbRobotDirection.Left)
         {
             move(mbMotor.Left, mbDirection.Reverse, speed);
-            motor(mbMotor.Right, mbDirection.Forward, speed);
+            move(mbMotor.Right, mbDirection.Forward, speed);
         }
         else if (direction == mbRobotDirection.Right)
         {
-            motor(mbMotor.Left, mbDirection.Forward, speed);
-            motor(mbMotor.Right, mbDirection.Reverse, speed);
+            move(mbMotor.Left, mbDirection.Forward, speed);
+            move(mbMotor.Right, mbDirection.Reverse, speed);
         }
     }
 
@@ -444,7 +444,7 @@ namespace minibit
         stop(mbStopMode.Coast);
     }
 
-// Sensors and Addons
+// Sensors
 
     /**
     * Read distance from sonar module connected to accessory connector.
@@ -452,8 +452,8 @@ namespace minibit
     */
     //% blockId="minibit_sonar" block="read sonar as %unit"
     //% weight=100
-    //% subcategory="Sensors and Addons"
-    //% group="Sensors"
+    //% subcategory="Sensors"
+    //% group="Ultrasonic"
     export function sonar(unit: mbPingUnit): number
     {
         // send pulse
@@ -489,7 +489,7 @@ namespace minibit
     //% blockId="lineSensor" block="%sensor| line sensor"
     //% weight=90
     //% subcategory=Sensors
-    //% group="Sensors"
+    //% group="Line Sensor"
     export function lineSensor(sensor: mbLineSensors): boolean
     {
         if (sensor == mbLineSensors.Left)
@@ -506,7 +506,7 @@ namespace minibit
     //% weight=80
     //% blockId=bc_event block="on %sensor| line %event"
     //% subcategory=Sensors
-    //% group="Sensors"
+    //% group="Line Sensor"
     export function onEvent(sensor: mbPins, event: mbEvents, handler: Action)
     {
         initEvents();
@@ -595,7 +595,7 @@ namespace minibit
     /**
       * Shows a rainbow pattern on all LEDs.
       */
-    //% blockId="minibit_rainbow" block="set led rainbow"
+    //% blockId="minibit_rainbow" block="set LED rainbow"
     //% weight=60
     //% subcategory=FireLeds
     //% group=Basic
@@ -628,7 +628,7 @@ namespace minibit
     //% blockId="minibit_set_updateMode" block="set %updateMode|update mode"
     //% weight=100
     //% subcategory=FireLeds
-    //% group=Advanced
+    //% group=Special
     export function setUpdateMode(updateMode: mbMode): void
     {
         _updateMode = updateMode;
@@ -640,7 +640,7 @@ namespace minibit
     //% blockId="led_show" block="show LED changes"
     //% weight=90
     //% subcategory=FireLeds
-    //% group=Advanced
+    //% group=Special
     export function ledShow(): void
     {
         if (btDisabled)
@@ -653,7 +653,7 @@ namespace minibit
     //% blockId="minibit_led_rotate" block="rotate LEDs"
     //% weight=80
     //% subcategory=FireLeds
-    //% group=Advanced
+    //% group=Special
     export function ledRotate(): void
     {
         fire().rotateBand();
@@ -666,7 +666,7 @@ namespace minibit
     //% blockId="minibit_led_shift" block="shift LEDs"
     //% weight=70
     //% subcategory=FireLeds
-    //% group=Advanced
+    //% group=Special
     export function ledShift(): void
     {
         fire().shiftBand();
@@ -683,7 +683,7 @@ namespace minibit
     //% blockId="bitbot_convertRGB" block="convert from red %red| green %green| blue %blue"
     //% weight=60
     //% subcategory=FireLeds
-    //% group=Advanced
+    //% group=Special
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
