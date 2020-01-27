@@ -177,7 +177,7 @@ namespace minibit
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="mbGo" block="go %direction|at speed %speed"
+    //% blockId="mbGo" block="go 15 %direction|at speed %speed"
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
@@ -192,15 +192,15 @@ namespace minibit
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
       */
-    //% blockId="mbGo" block="go %direction|at speed %speed|for %milliseconds|(ms)"
+    //% blockId="mbGoms" block="go %direction|at speed %speed|for %milliseconds|(ms)"
     //% speed.min=0 speed.max=100
-    //% weight=100
+    //% weight=90
     //% subcategory=Motors
-    export function go(direction: mbDirection, speed: number, milliseconds: number): void
+    export function goms(direction: mbDirection, speed: number, milliseconds: number): void
     {
-        motor(mbMotor.Both, direction, speed);
+        go(direction, speed);
         basic.pause(milliseconds);
-        stop(MBStopMode.Coast);
+        stop(mbStopMode.Coast);
     }
 
     /**
@@ -209,7 +209,7 @@ namespace minibit
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="mb_motor" block="move 14 %motor|motor(s) %direction|at speed %speed"
+    //% blockId="mbMove" block="move %motor|motor(s) %direction|at speed %speed"
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
@@ -246,13 +246,13 @@ namespace minibit
       * Stop robot by coasting slowly to a halt or braking
       * @param mode Brakes on or off
       */
-    //% blockId="minibit_stop" block="stop with %mode"
+    //% blockId="mbStop" block="stop with %mode"
     //% weight=80
     //% subcategory=Motors
-    export function stop(mode: MBStopMode): void
+    export function stop(mode: mbStopMode): void
     {
         let stopMode = 0;
-        if (mode == MBStopMode.Brake)
+        if (mode == mbStopMode.Brake)
             stopMode = 1;
         pins.digitalWritePin(DigitalPin.P16, stopMode);
         pins.digitalWritePin(DigitalPin.P14, stopMode);
@@ -270,14 +270,12 @@ namespace minibit
     //% weight=50
     //% subcategory=Motors
     //% group="Old Blocks"
-    export function motor(motor: MBMotor, speed: number): void
+    export function motor(motor: mbMotor, speed: number): void
     {
         let speed0 = 0;
         let speed1 = 0;
         setPWM(Math.abs(speed));
-        /*if (speed == 0)
-            stop(MBStopMode.Coast);
-        else*/ if (speed > 0)
+        if (speed > 0)
         {
             speed0 = speed;
             speed1 = 0;
@@ -287,13 +285,13 @@ namespace minibit
             speed0 = 0;
             speed1 = 0 - speed;
         }
-        if ((motor == MBMotor.Left) || (motor == MBMotor.Both))
+        if ((motor == mbMotor.Left) || (motor == mbMotor.Both))
         {
             pins.analogWritePin(AnalogPin.P12, speed0);
             pins.analogWritePin(AnalogPin.P8, speed1);
         }
 
-        if ((motor == MBMotor.Right) || (motor == MBMotor.Both))
+        if ((motor == mbMotor.Right) || (motor == mbMotor.Both))
         {
             pins.analogWritePin(AnalogPin.P16, speed0);
             pins.analogWritePin(AnalogPin.P14, speed1);
@@ -311,7 +309,7 @@ namespace minibit
     //% group="Old Blocks"
     export function drive(speed: number): void
     {
-        motor(MBMotor.Both, speed);
+        motor(mbMotor.Both, speed);
     }
 
     /**
@@ -328,7 +326,7 @@ namespace minibit
     {
         drive(speed);
         basic.pause(milliseconds);
-        stop(MBStopMode.Coast);
+        stop(mbStopMode.Coast);
     }
 
     /**
@@ -341,19 +339,19 @@ namespace minibit
     //% weight=90
     //% subcategory=Motors
     //% group="Old Blocks"
-    export function spin(direction: MBRobotDirection, speed: number): void
+    export function spin(direction: mbRobotDirection, speed: number): void
     {
         if (speed < 0)
             speed = 0;
-        if (direction == MBRobotDirection.Left)
+        if (direction == mbRobotDirection.Left)
         {
-            motor(MBMotor.Left, -speed);
-            motor(MBMotor.Right, speed);
+            motor(mbMotor.Left, -speed);
+            motor(mbMotor.Right, speed);
         }
-        else if (direction == MBRobotDirection.Right)
+        else if (direction == mbRobotDirection.Right)
         {
-            motor(MBMotor.Left, speed);
-            motor(MBMotor.Right, -speed);
+            motor(mbMotor.Left, speed);
+            motor(mbMotor.Right, -speed);
         }
     }
 
@@ -368,11 +366,11 @@ namespace minibit
     //% weight=60
     //% subcategory=Motors
     //% group="Old Blocks"
-    export function spinMilliseconds(direction: MBRobotDirection, speed: number, milliseconds: number): void
+    export function spinMilliseconds(direction: mbRobotDirection, speed: number, milliseconds: number): void
     {
         spin(direction, speed);
         basic.pause(milliseconds);
-        stop(MBStopMode.Coast);
+        stop(mbStopMode.Coast);
     }
 
 // Sensors and Addons
@@ -385,7 +383,7 @@ namespace minibit
     //% weight=100
     //% subcategory=Sensors
     //% group="Sensors"
-    export function sonar(unit: MBPingUnit): number
+    export function sonar(unit: mbPingUnit): number
     {
         // send pulse
         let trig = DigitalPin.P15;
@@ -407,8 +405,8 @@ namespace minibit
         }
         switch (unit)
         {
-            case MBPingUnit.Centimeters: return Math.round(d / 58);
-            case MBPingUnit.Inches: return Math.round(d / 148);
+            case mbPingUnit.Centimeters: return Math.round(d / 58);
+            case mbPingUnit.Inches: return Math.round(d / 148);
             default: return d;
         }
     }
@@ -421,11 +419,11 @@ namespace minibit
     //% weight=90
     //% subcategory=Sensors
     //% group="Sensors"
-    export function lineSensor(sensor: MBLineSensors): boolean
+    export function lineSensor(sensor: mbLineSensors): boolean
     {
-        if (sensor == MBLineSensors.Left)
+        if (sensor == mbLineSensors.Left)
             return pins.digitalReadPin(DigitalPin.P0)===1;
-        else if (sensor == MBLineSensors.Centre)
+        else if (sensor == mbLineSensors.Centre)
             return pins.digitalReadPin(DigitalPin.P1)===1;
         else
             return pins.digitalReadPin(DigitalPin.P2)===1;
@@ -438,7 +436,7 @@ namespace minibit
     //% blockId=bc_event block="on %sensor| line %event"
     //% subcategory=Sensors
     //% group="Sensors"
-    export function onEvent(sensor: MBPins, event: MBEvents, handler: Action)
+    export function onEvent(sensor: mbPins, event: mbEvents, handler: Action)
     {
         initEvents();
         control.onEvent(<number>sensor, <number>event, handler);
@@ -461,7 +459,7 @@ namespace minibit
     // update FireLedss if _updateMode set to Auto
     function updateLEDs(): void
     {
-        if (_updateMode == MBMode.Auto)
+        if (_updateMode == mbMode.Auto)
             fire().updateBand();
     }
 
@@ -539,7 +537,7 @@ namespace minibit
     //% blockId="mb_colours" block=%color
     //% weight=50
     //% subcategory=LEDs
-    export function MBColours(color: MBColors): number
+    export function mbColours(color: mbColors): number
     {
         return color;
     }
@@ -553,7 +551,7 @@ namespace minibit
     //% blockId="minibit_set_updateMode" block="set %updateMode|update mode"
     //% weight=100
     //% advanced=true
-    export function setUpdateMode(updateMode: MBMode): void
+    export function setUpdateMode(updateMode: mbMode): void
     {
         _updateMode = updateMode;
     }
