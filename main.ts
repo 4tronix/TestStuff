@@ -174,7 +174,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="19 %enable|Bluetooth"
+    //% block="20 %enable|Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -206,7 +206,7 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
-    //% group=""
+    //% group="Motors"
     export function go(direction: mbDirection, speed: number): void
     {
         move(mbMotor.Both, direction, speed);
@@ -231,7 +231,68 @@ namespace minibit
     }
 
     /**
-      * Move motors forward or reverse
+      * Rotate robot in direction at speed
+      * @param direction direction to turn
+      * @param speed speed of motors (0 to 100). eg: 60
+      */
+    //% blockId="mbRotate" block="spin %direction|at speed %speed"
+    //% speed.min=0 speed.max=100
+    //% weight=80
+    //% subcategory=Motors
+    //% group="Motors"
+    export function rotate(direction: mbRobotDirection, speed: number): void
+    {
+        if (direction == mbRobotDirection.Left)
+        {
+            move(mbMotor.Left, mbDirection.Reverse, speed);
+            motor(mbMotor.Right, mbDirection.Forward, speed);
+        }
+        else if (direction == mbRobotDirection.Right)
+        {
+            motor(mbMotor.Left, mbDirection.Forward, speed);
+            motor(mbMotor.Right, mbDirection.Reverse, speed);
+        }
+    }
+
+    /**
+      * Rotate robot in direction at speed for milliseconds.
+      * @param direction direction to spin
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
+      */
+    //% blockId="mbRotatems" block="spin %direction|at speed %speed|for %milliseconds|(ms)"
+    //% speed.min=0 speed.max=100
+    //% weight=70
+    //% subcategory=Motors
+    //% group="Motors"
+    export function rotatems(direction: mbRobotDirection, speed: number, milliseconds: number): void
+    {
+        rotate(direction, speed);
+        basic.pause(milliseconds);
+        stop(mbStopMode.Coast);
+    }
+
+    /**
+      * Stop robot by coasting slowly to a halt or braking
+      * @param mode Brakes on or off
+      */
+    //% blockId="mbStop" block="stop with %mode"
+    //% weight=60
+    //% subcategory=Motors
+    //% group="Motors"
+    export function stop(mode: mbStopMode): void
+    {
+        let stopMode = 0;
+        if (mode == mbStopMode.Brake)
+            stopMode = 1;
+        pins.digitalWritePin(DigitalPin.P16, stopMode);
+        pins.digitalWritePin(DigitalPin.P14, stopMode);
+        pins.digitalWritePin(DigitalPin.P8, stopMode);
+        pins.digitalWritePin(DigitalPin.P12, stopMode);
+    }
+
+    /**
+      * Move individual motors forward or reverse
       * @param motor motor to drive
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
@@ -268,25 +329,6 @@ namespace minibit
             pins.analogWritePin(AnalogPin.P16, speed0);
             pins.analogWritePin(AnalogPin.P14, speed1);
         }
-    }
-
-    /**
-      * Stop robot by coasting slowly to a halt or braking
-      * @param mode Brakes on or off
-      */
-    //% blockId="mbStop" block="stop with %mode"
-    //% weight=80
-    //% subcategory=Motors
-    //% group="Motors"
-    export function stop(mode: mbStopMode): void
-    {
-        let stopMode = 0;
-        if (mode == mbStopMode.Brake)
-            stopMode = 1;
-        pins.digitalWritePin(DigitalPin.P16, stopMode);
-        pins.digitalWritePin(DigitalPin.P14, stopMode);
-        pins.digitalWritePin(DigitalPin.P8, stopMode);
-        pins.digitalWritePin(DigitalPin.P12, stopMode);
     }
 
 // Old Motor Blocks - kept for compatibility
@@ -410,7 +452,7 @@ namespace minibit
     */
     //% blockId="minibit_sonar" block="read sonar as %unit"
     //% weight=100
-    //% subcategory=Sensors
+    //% subcategory="Sensors and Addons"
     //% group="Sensors"
     export function sonar(unit: mbPingUnit): number
     {
@@ -447,7 +489,7 @@ namespace minibit
     //% blockId="lineSensor" block="%sensor| line sensor"
     //% weight=90
     //% subcategory=Sensors
-    //% group="Line Sensor"
+    //% group="Sensors"
     export function lineSensor(sensor: mbLineSensors): boolean
     {
         if (sensor == mbLineSensors.Left)
@@ -464,7 +506,7 @@ namespace minibit
     //% weight=80
     //% blockId=bc_event block="on %sensor| line %event"
     //% subcategory=Sensors
-    //% group="Line Sensor"
+    //% group="Sensors"
     export function onEvent(sensor: mbPins, event: mbEvents, handler: Action)
     {
         initEvents();
@@ -472,7 +514,7 @@ namespace minibit
     }
 
 
-// LED Blocks
+// Inbuilt FireLed Blocks
 
     // create a FireLed band if not got one already. Default to brightness 40
     function fire(): fireled.Band
@@ -485,7 +527,7 @@ namespace minibit
         return fireBand;
     }
 
-    // update FireLedss if _updateMode set to Auto
+    // update FireLeds if _updateMode set to Auto
     function updateLEDs(): void
     {
         if (_updateMode == mbMode.Auto)
@@ -498,7 +540,8 @@ namespace minibit
       */
     //% blockId="minibit_set_led_color" block="set all LEDs to %rgb=mb_colours"
     //% weight=100
-    //% subcategory=LEDs
+    //% subcategory=FireLeds
+    //% group=Basic
     export function setLedColor(rgb: number)
     {
         fire().setBand(rgb);
@@ -510,7 +553,8 @@ namespace minibit
       */
     //% blockId="minibit_led_clear" block="clear all LEDs"
     //% weight=90
-    //% subcategory=LEDs
+    //% subcategory=FireLeds
+    //% group=Basic
     export function ledClear(): void
     {
         fire().clearBand();
@@ -525,7 +569,8 @@ namespace minibit
      */
     //% blockId="minibit_set_pixel_color" block="set LED at %ledId|to %rgb=mb_colours"
     //% weight=80
-    //% subcategory=LEDs
+    //% subcategory=FireLeds
+    //% group=Basic
     export function setPixelColor(ledId: number, rgb: number): void
     {
         fire().setPixel(ledId, rgb);
@@ -539,7 +584,8 @@ namespace minibit
     //% blockId="minibit_led_brightness" block="set LED brightness %brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=70
-    //% subcategory=LEDs
+    //% subcategory=FireLeds
+    //% group=Basic
     export function ledBrightness(brightness: number): void
     {
         fire().setBrightness(brightness);
@@ -551,7 +597,8 @@ namespace minibit
       */
     //% blockId="minibit_rainbow" block="set led rainbow"
     //% weight=60
-    //% subcategory=LEDs
+    //% subcategory=FireLeds
+    //% group=Basic
     export function ledRainbow(): void
     {
         fire().setRainbow();
@@ -565,7 +612,8 @@ namespace minibit
       */
     //% blockId="mb_colours" block=%color
     //% weight=50
-    //% subcategory=LEDs
+    //% subcategory=FireLeds
+    //% group=Basic
     export function mbColours(color: mbColors): number
     {
         return color;
@@ -579,7 +627,8 @@ namespace minibit
       */
     //% blockId="minibit_set_updateMode" block="set %updateMode|update mode"
     //% weight=100
-    //% advanced=true
+    //% subcategory=FireLeds
+    //% group=Advanced
     export function setUpdateMode(updateMode: mbMode): void
     {
         _updateMode = updateMode;
@@ -590,7 +639,8 @@ namespace minibit
       */
     //% blockId="led_show" block="show LED changes"
     //% weight=90
-    //% advanced=true
+    //% subcategory=FireLeds
+    //% group=Advanced
     export function ledShow(): void
     {
         if (btDisabled)
@@ -602,7 +652,8 @@ namespace minibit
      */
     //% blockId="minibit_led_rotate" block="rotate LEDs"
     //% weight=80
-    //% advanced=true
+    //% subcategory=FireLeds
+    //% group=Advanced
     export function ledRotate(): void
     {
         fire().rotateBand();
@@ -614,8 +665,8 @@ namespace minibit
      */
     //% blockId="minibit_led_shift" block="shift LEDs"
     //% weight=70
-    //% subcategory=Leds
-    //% advanced=true
+    //% subcategory=FireLeds
+    //% group=Advanced
     export function ledShift(): void
     {
         fire().shiftBand();
@@ -631,7 +682,8 @@ namespace minibit
       */
     //% blockId="bitbot_convertRGB" block="convert from red %red| green %green| blue %blue"
     //% weight=60
-    //% advanced=true
+    //% subcategory=FireLeds
+    //% group=Advanced
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
