@@ -2,7 +2,7 @@
 /**
   * Enumeration of motors.
   */
-enum MBMotor
+enum mbMotor
 {
     //% block="left"
     Left,
@@ -13,9 +13,20 @@ enum MBMotor
 }
 
 /**
+  * Enumeration of forward/reverse directions
+  */
+enum mbDirection
+{
+    //% block="forward"
+    Forward,
+    //% block="reverse"
+    Reverse
+}
+
+/**
   * Enumeration of directions.
   */
-enum MBRobotDirection
+enum mbRobotDirection
 {
     //% block="left"
     Left,
@@ -26,7 +37,7 @@ enum MBRobotDirection
 /**
   * Stop modes. Coast or Brake
   */
-enum MBStopMode
+enum mbStopMode
 {
     //% block="no brake"
     Coast,
@@ -38,7 +49,7 @@ enum MBStopMode
 /**
  * Ping unit for sensor. Optional Accessory
  */
-enum MBPingUnit
+enum mbPingUnit
 {
     //% block="cm"
     Centimeters,
@@ -51,7 +62,7 @@ enum MBPingUnit
 /**
   * Line sensors. Optional Accessory
   */
-enum MBLineSensors
+enum mbLineSensors
 {
     //% block="left"
     Left,
@@ -64,7 +75,7 @@ enum MBLineSensors
 /**
  * Line Sensor events
  */
-enum MBEvents {
+enum mbEvents {
     //% block="found"
     findLine = DAL.MICROBIT_PIN_EVT_RISE,
     //% block="lost"
@@ -74,7 +85,7 @@ enum MBEvents {
 /**
  * Pins used to generate events
  */
-enum MBPins {
+enum mbPins {
     //% block="left"
     leftLine = <number>DAL.MICROBIT_ID_IO_P0,
     //% block="centre"
@@ -90,7 +101,7 @@ enum MBPins {
   * setting to Manual requires show LED changes blocks
   * setting to Auto will update the LEDs everytime they change
   */
-enum MBMode
+enum mbMode
 {
     Manual,
     Auto
@@ -99,7 +110,7 @@ enum MBMode
 /**
   * Pre-Defined LED colours
   */
-enum MBColors
+enum mbColors
 {
     //% block=red
     Red = 0xff0000,
@@ -130,7 +141,7 @@ enum MBColors
 namespace minibit
 {
     let fireBand: fireled.Band;
-    let _updateMode = MBMode.Auto;
+    let _updateMode = mbMode.Auto;
     let _initEvents = true;
 
 // Initialise events on first use
@@ -162,13 +173,103 @@ namespace minibit
     }
 
     /**
+      * Move robot forward (or backward) at speed.
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      */
+    //% blockId="mbGo" block="go %direction|at speed %speed"
+    //% speed.min=0 speed.max=100
+    //% weight=100
+    //% subcategory=Motors
+    export function go(direction: mbDirection, speed: number): void
+    {
+        move(mbMotor.Both, direction, speed);
+    }
+
+    /**
+      * Move robot forward (or backward) at speed for milliseconds
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      */
+    //% blockId="mbGo" block="go %direction|at speed %speed|for %milliseconds|(ms)"
+    //% speed.min=0 speed.max=100
+    //% weight=100
+    //% subcategory=Motors
+    export function go(direction: mbDirection, speed: number, milliseconds: number): void
+    {
+        motor(mbMotor.Both, direction, speed);
+        basic.pause(milliseconds);
+        stop(MBStopMode.Coast);
+    }
+
+    /**
+      * Move motors forward or reverse
+      * @param motor motor to drive
+      * @param direction select forwards or reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      */
+    //% blockId="mb_motor" block="move 14 %motor|motor(s) %direction|at speed %speed"
+    //% weight=50
+    //% speed.min=0 speed.max=100
+    //% subcategory=Motors
+    export function move(motor: mbMotor, direction: mbDirection, speed: number): void
+    {
+        let speed0 = 0;
+        let speed1 = 0;
+        speed = Math.max(Math.min(100, speed),0) * 10.23;
+        setPWM(speed);
+        if (direction == mbDirection.Forward)
+        {
+            speed0 = speed;
+            speed1 = 0;
+        }
+        else // must be Reverse
+        {
+            speed0 = 0;
+            speed1 = 0 - speed;
+        }
+        if ((motor == mbMotor.Left) || (motor == mbMotor.Both))
+        {
+            pins.analogWritePin(AnalogPin.P12, speed0);
+            pins.analogWritePin(AnalogPin.P8, speed1);
+        }
+
+        if ((motor == mbMotor.Right) || (motor == mbMotor.Both))
+        {
+            pins.analogWritePin(AnalogPin.P16, speed0);
+            pins.analogWritePin(AnalogPin.P14, speed1);
+        }
+    }
+
+    /**
+      * Stop robot by coasting slowly to a halt or braking
+      * @param mode Brakes on or off
+      */
+    //% blockId="minibit_stop" block="stop with %mode"
+    //% weight=80
+    //% subcategory=Motors
+    export function stop(mode: MBStopMode): void
+    {
+        let stopMode = 0;
+        if (mode == MBStopMode.Brake)
+            stopMode = 1;
+        pins.digitalWritePin(DigitalPin.P16, stopMode);
+        pins.digitalWritePin(DigitalPin.P14, stopMode);
+        pins.digitalWritePin(DigitalPin.P8, stopMode);
+        pins.digitalWritePin(DigitalPin.P12, stopMode);
+    }
+
+// Old Motor Blocks - kept for compatibility
+    /**
       * Drive motor(s) forward or reverse.
       * @param motor motor to drive.
       * @param speed speed of motor (-1023 to 1023). eg: 600
       */
-    //% blockId="minibit_motor" block="drive 13 %motor|motor(s) at speed %speed"
+    //% blockId="minibit_motor" block="drive %motor|motor(s) at speed %speed"
     //% weight=50
     //% subcategory=Motors
+    //% group="Old Blocks"
     export function motor(motor: MBMotor, speed: number): void
     {
         let speed0 = 0;
@@ -200,24 +301,6 @@ namespace minibit
     }
 
     /**
-      * Stop robot by coasting slowly to a halt or braking
-      * @param mode Brakes on or off
-      */
-    //% blockId="minibit_stop" block="stop with %mode"
-    //% weight=80
-    //% subcategory=Motors
-    export function stop(mode: MBStopMode): void
-    {
-        let stopMode = 0;
-        if (mode == MBStopMode.Brake)
-            stopMode = 1;
-        pins.digitalWritePin(DigitalPin.P16, stopMode);
-        pins.digitalWritePin(DigitalPin.P14, stopMode);
-        pins.digitalWritePin(DigitalPin.P8, stopMode);
-        pins.digitalWritePin(DigitalPin.P12, stopMode);
-    }
-
-    /**
       * Drive robot forward (or backward) at speed.
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
@@ -225,6 +308,7 @@ namespace minibit
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
+    //% group="Old Blocks"
     export function drive(speed: number): void
     {
         motor(MBMotor.Both, speed);
@@ -239,6 +323,7 @@ namespace minibit
     //% speed.min=-1023 speed.max=1023
     //% weight=70
     //% subcategory=Motors
+    //% group="Old Blocks"
     export function driveMilliseconds(speed: number, milliseconds: number): void
     {
         drive(speed);
@@ -255,6 +340,7 @@ namespace minibit
     //% speed.min=0 speed.max=1023
     //% weight=90
     //% subcategory=Motors
+    //% group="Old Blocks"
     export function spin(direction: MBRobotDirection, speed: number): void
     {
         if (speed < 0)
@@ -281,6 +367,7 @@ namespace minibit
     //% speed.min=0 speed.max=1023
     //% weight=60
     //% subcategory=Motors
+    //% group="Old Blocks"
     export function spinMilliseconds(direction: MBRobotDirection, speed: number, milliseconds: number): void
     {
         spin(direction, speed);
@@ -297,6 +384,7 @@ namespace minibit
     //% blockId="minibit_sonar" block="read sonar as %unit"
     //% weight=100
     //% subcategory=Sensors
+    //% group="Sensors"
     export function sonar(unit: MBPingUnit): number
     {
         // send pulse
@@ -332,6 +420,7 @@ namespace minibit
     //% blockId="lineSensor" block="%sensor| line sensor"
     //% weight=90
     //% subcategory=Sensors
+    //% group="Sensors"
     export function lineSensor(sensor: MBLineSensors): boolean
     {
         if (sensor == MBLineSensors.Left)
@@ -348,6 +437,7 @@ namespace minibit
     //% weight=80
     //% blockId=bc_event block="on %sensor| line %event"
     //% subcategory=Sensors
+    //% group="Sensors"
     export function onEvent(sensor: MBPins, event: MBEvents, handler: Action)
     {
         initEvents();
