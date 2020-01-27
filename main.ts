@@ -177,10 +177,11 @@ namespace minibit
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="mbGo" block="go 15 %direction|at speed %speed"
+    //% blockId="mbGo" block="go 16 %direction|at speed %speed"
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
+    //% group="New Blocks"
     export function go(direction: mbDirection, speed: number): void
     {
         move(mbMotor.Both, direction, speed);
@@ -227,7 +228,7 @@ namespace minibit
         else // must be Reverse
         {
             speed0 = 0;
-            speed1 = 0 - speed;
+            speed1 = speed;
         }
         if ((motor == mbMotor.Left) || (motor == mbMotor.Both))
         {
