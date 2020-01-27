@@ -50,9 +50,9 @@ enum mbStopMode
   */
 enum mbBluetooth
 {
-    //% block="Enable Bluetooth, Disable FireLeds"
+    //% block="Enable"
     btEnable,
-    //% block="Disable Bluetooth, Enable FireLeds"
+    //% block="Disable"
     btDisable
 }
 
@@ -153,7 +153,7 @@ namespace minibit
     let fireBand: fireled.Band;
     let _updateMode = mbMode.Auto;
     let _initEvents = true;
-    let btEnabled = false;
+    let btDisabled = true;
 
 // Initialise events on first use
 
@@ -170,17 +170,17 @@ namespace minibit
 
 // Block to enable Bluetooth and disable FireLeds.
     /**
-      * Enable/Disable 18 Bluetooth support by disabling/enabling FireLeds
-      * @param enable Enable or diable Blueetoth
+      * Enable/Disable Bluetooth support by disabling/enabling FireLeds
+      * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable|Bluetooth"
+    //% block="19 %enable|Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
-        if (enable == mbEnableBluetooth.btEnable)
-            btEnabled = true;
+        if (enable == mbBluetooth.btEnable)
+            btDisabled = false;
         else
-            btEnabled = false;
+            btDisabled = true;
     }
 
 // Motor Blocks
@@ -206,7 +206,7 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
-    //% group="New Blocks"
+    //% group=""
     export function go(direction: mbDirection, speed: number): void
     {
         move(mbMotor.Both, direction, speed);
@@ -277,6 +277,7 @@ namespace minibit
     //% blockId="mbStop" block="stop with %mode"
     //% weight=80
     //% subcategory=Motors
+    //% group="Motors"
     export function stop(mode: mbStopMode): void
     {
         let stopMode = 0;
@@ -488,7 +489,7 @@ namespace minibit
     function updateLEDs(): void
     {
         if (_updateMode == mbMode.Auto)
-            fire().updateBand();
+            ledShow();
     }
 
     /**
@@ -592,7 +593,8 @@ namespace minibit
     //% advanced=true
     export function ledShow(): void
     {
-        fire().updateBand();
+        if (btDisabled)
+            fire().updateBand();
     }
 
     /**
