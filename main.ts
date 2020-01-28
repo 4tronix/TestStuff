@@ -148,7 +148,7 @@ enum mbColors
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
-//% groups='["Basic", "Advanced", "Special"]'
+//% groups='["Motors","Basic","Advanced","Special","Ultrasonic","Line Sensor","Deprecated"]'
 namespace minibit
 {
     let fireBand: fireled.Band;
@@ -175,7 +175,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="26 %enable|Bluetooth"
+    //% block="27 %enable|Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
