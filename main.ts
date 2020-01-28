@@ -175,7 +175,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="37 %enable|Bluetooth"
+    //% block="38 %enable|Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -692,7 +692,7 @@ namespace minibit
     //% block="New image $color"
     //% color.shadow="colorNumberPicker"
     //% imageLiteral=1
-    export function newImage(myImage: string, color: number): number
+    export function newImage(myImage: string, color: number): string
     {
         basic.showNumber(color);
         return myImage;
