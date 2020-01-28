@@ -148,7 +148,7 @@ enum mbColors
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
-//% groups='['Basic', 'Advanced', 'Special']'
+//% groups='["Basic", "Advanced", "Special"]'
 namespace minibit
 {
     let fireBand: fireled.Band;
@@ -175,7 +175,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="24 %enable|Bluetooth"
+    //% block="25 %enable|Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -528,7 +528,7 @@ namespace minibit
     //% blockId="minibit_set_led_color" block="set all LEDs to %rgb=mb_colours"
     //% weight=100
     //% subcategory=FireLeds
-    //% group="Basic"
+    //% group=Basic
     export function setLedColor(rgb: number)
     {
         fire().setBand(rgb);
@@ -541,7 +541,7 @@ namespace minibit
     //% blockId="minibit_led_clear" block="clear all LEDs"
     //% weight=90
     //% subcategory=FireLeds
-    //% group="Basic"
+    //% group=Basic
     export function ledClear(): void
     {
         fire().clearBand();
@@ -557,7 +557,7 @@ namespace minibit
     //% blockId="minibit_set_pixel_color" block="set LED at %ledId|to %rgb=mb_colours"
     //% weight=80
     //% subcategory=FireLeds
-    //% group="Basic"
+    //% group=Basic
     export function setPixelColor(ledId: number, rgb: number): void
     {
         fire().setPixel(ledId, rgb);
@@ -572,7 +572,7 @@ namespace minibit
     //% brightness.min=0 brightness.max=255
     //% weight=70
     //% subcategory=FireLeds
-    //% group="Basic"
+    //% group=Basic
     export function ledBrightness(brightness: number): void
     {
         fire().setBrightness(brightness);
@@ -585,7 +585,7 @@ namespace minibit
     //% blockId="minibit_rainbow" block="set LED rainbow"
     //% weight=60
     //% subcategory=FireLeds
-    //% group="Basic"
+    //% group=Basic
     export function ledRainbow(): void
     {
         fire().setRainbow();
@@ -600,7 +600,7 @@ namespace minibit
     //% blockId="mb_colours" block=%color
     //% weight=50
     //% subcategory=FireLeds
-    //% group="Basic"
+    //% group=Basic
     export function mbColours(color: mbColors): number
     {
         return color;
@@ -615,7 +615,7 @@ namespace minibit
     //% blockId="minibit_set_updateMode" block="set %updateMode|update mode"
     //% weight=100
     //% subcategory=FireLeds
-    //% group="Advanced"
+    //% group=Advanced
     export function setUpdateMode(updateMode: mbMode): void
     {
         _updateMode = updateMode;
@@ -627,7 +627,7 @@ namespace minibit
     //% blockId="led_show" block="show LED changes"
     //% weight=90
     //% subcategory=FireLeds
-    //% group="Special"
+    //% group=Special
     export function ledShow(): void
     {
         if (btDisabled)
@@ -640,7 +640,7 @@ namespace minibit
     //% blockId="minibit_led_rotate" block="rotate LEDs"
     //% weight=80
     //% subcategory=FireLeds
-    //% group="Special"
+    //% group=Special
     export function ledRotate(): void
     {
         fire().rotateBand();
@@ -653,7 +653,7 @@ namespace minibit
     //% blockId="minibit_led_shift" block="shift LEDs"
     //% weight=70
     //% subcategory=FireLeds
-    //% group="Advanced"
+    //% group=Advanced
     export function ledShift(): void
     {
         fire().shiftBand();
@@ -670,7 +670,7 @@ namespace minibit
     //% blockId="bitbot_convertRGB" block="convert from red %red| green %green| blue %blue"
     //% weight=60
     //% subcategory=FireLeds
-    //% group="Advanced"
+    //% group=Advanced
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
