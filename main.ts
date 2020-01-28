@@ -175,7 +175,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="27 %enable|Bluetooth"
+    //% block="28 %enable|Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -445,8 +445,182 @@ namespace minibit
         stop(mbStopMode.Coast);
     }
 
-// Sensors
+// Inbuilt FireLed Blocks
 
+    // create a FireLed band if not got one already. Default to brightness 40
+    function fire(): fireled.Band
+    {
+        if (!fireBand)
+        {
+            fireBand = fireled.newBand(DigitalPin.P13, 4);
+            fireBand.setBrightness(40);
+        }
+        return fireBand;
+    }
+
+    // update FireLeds if _updateMode set to Auto
+    function updateLEDs(): void
+    {
+        if (_updateMode == mbMode.Auto)
+            ledShow();
+    }
+
+    /**
+      * Sets all LEDs to a given color (range 0-255 for r, g, b).
+      * @param rgb RGB color of the LED
+      */
+    //% blockId="minibit_set_led_color" block="set all LEDs to %rgb=mb_colours"
+    //% weight=100
+    //% subcategory=FireLeds
+    //% group=Basic
+    export function setLedColor(rgb: number)
+    {
+        fire().setBand(rgb);
+        updateLEDs();
+    }
+
+    /**
+      * Clear all leds.
+      */
+    //% blockId="minibit_led_clear" block="clear all LEDs"
+    //% weight=90
+    //% subcategory=FireLeds
+    //% group=Basic
+    export function ledClear(): void
+    {
+        fire().clearBand();
+        updateLEDs();
+    }
+
+    /**
+     * Set single LED to a given color (range 0-255 for r, g, b).
+     *
+     * @param ledId position of the LED (0 to 11)
+     * @param rgb RGB color of the LED
+     */
+    //% blockId="minibit_set_pixel_color" block="set LED at %ledId|to %rgb=mb_colours"
+    //% weight=80
+    //% subcategory=FireLeds
+    //% group=Basic
+    export function setPixelColor(ledId: number, rgb: number): void
+    {
+        fire().setPixel(ledId, rgb);
+        updateLEDs();
+    }
+
+    /**
+      * Shows a rainbow pattern on all LEDs.
+      */
+    //% blockId="minibit_rainbow" block="set LED rainbow"
+    //% weight=70
+    //% subcategory=FireLeds
+    //% group=Basic
+    export function ledRainbow(): void
+    {
+        fire().setRainbow();
+        updateLEDs()
+    }
+
+    /**
+     * Shift LEDs forward and clear with zeros.
+     */
+    //% blockId="minibit_led_shift" block="shift LEDs"
+    //% weight=60
+    //% subcategory=FireLeds
+    //% group=Basic
+    export function ledShift(): void
+    {
+        fire().shiftBand();
+        updateLEDs()
+    }
+
+    /**
+     * Rotate LEDs forward.
+     */
+    //% blockId="minibit_led_rotate" block="rotate LEDs"
+    //% weight=50
+    //% subcategory=FireLeds
+    //% group=Basic
+    export function ledRotate(): void
+    {
+        fire().rotateBand();
+        updateLEDs()
+    }
+
+    // Advanced blocks
+
+    /**
+     * Set the brightness of the LEDs
+     * @param brightness a measure of LED brightness in 0-255. eg: 40
+     */
+    //% blockId="minibit_led_brightness" block="set LED brightness %brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=100
+    //% subcategory=FireLeds
+    //% group=Advanced
+    export function ledBrightness(brightness: number): void
+    {
+        fire().setBrightness(brightness);
+        updateLEDs();
+    }
+
+    /**
+      * Set LED update mode (Manual or Automatic)
+      * @param updateMode setting automatic will show LED changes automatically
+      */
+    //% blockId="minibit_set_updateMode" block="set %updateMode|update mode"
+    //% weight=90
+    //% subcategory=FireLeds
+    //% group=Advanced
+    export function setUpdateMode(updateMode: mbMode): void
+    {
+        _updateMode = updateMode;
+    }
+
+    /**
+      * Show LED changes
+      */
+    //% blockId="led_show" block="show LED changes"
+    //% weight=80
+    //% subcategory=FireLeds
+    //% group=Advanced
+    export function ledShow(): void
+    {
+        if (btDisabled)
+            fire().updateBand();
+    }
+
+    /**
+      * Get numeric value of colour
+      *
+      * @param color Standard RGB Led Colours
+      */
+    //% blockId="mb_colours" block=%color
+    //% weight=70
+    //% subcategory=FireLeds
+    //% group=Advanced
+    export function mbColours(color: mbColors): number
+    {
+        return color;
+    }
+
+    /**
+      * Convert from RGB values to colour number
+      *
+      * @param red Red value of the LED (0 to 255)
+      * @param green Green value of the LED (0 to 255)
+      * @param blue Blue value of the LED (0 to 255)
+      */
+    //% blockId="bitbot_convertRGB" block="convert from red %red| green %green| blue %blue"
+    //% weight=60
+    //% subcategory=FireLeds
+    //% group=Advanced
+    export function convertRGB(r: number, g: number, b: number): number
+    {
+        return fireled.fromRGB(r,g,b);
+    }
+
+// Sensors
     /**
     * Read distance from sonar module connected to accessory connector.
     * @param unit desired conversion unit
@@ -514,180 +688,16 @@ namespace minibit
         control.onEvent(<number>sensor, <number>event, handler);
     }
 
-
-// Inbuilt FireLed Blocks
-
-    // create a FireLed band if not got one already. Default to brightness 40
-    function fire(): fireled.Band
-    {
-        if (!fireBand)
-        {
-            fireBand = fireled.newBand(DigitalPin.P13, 4);
-            fireBand.setBrightness(40);
-        }
-        return fireBand;
-    }
-
-    // update FireLeds if _updateMode set to Auto
-    function updateLEDs(): void
-    {
-        if (_updateMode == mbMode.Auto)
-            ledShow();
-    }
-
+// Matrix 5x5
     /**
-      * Sets all LEDs to a given color (range 0-255 for r, g, b).
-      * @param rgb RGB color of the LED
-      */
-    //% blockId="minibit_set_led_color" block="set all LEDs to %rgb=mb_colours"
+    * Create image
+    * @param image select image string
+    */
+    //% blockId="m5Image" block="create %image"
     //% weight=100
-    //% subcategory=FireLeds
-    //% group=Basic
-    export function setLedColor(rgb: number)
+    //% subcategory="Matrix 5x5"
+    export function getImage(image: ImageLiteral_)
     {
-        fire().setBand(rgb);
-        updateLEDs();
-    }
-
-    /**
-      * Clear all leds.
-      */
-    //% blockId="minibit_led_clear" block="clear all LEDs"
-    //% weight=90
-    //% subcategory=FireLeds
-    //% group=Basic
-    export function ledClear(): void
-    {
-        fire().clearBand();
-        updateLEDs();
-    }
-
-    /**
-     * Set single LED to a given color (range 0-255 for r, g, b).
-     *
-     * @param ledId position of the LED (0 to 11)
-     * @param rgb RGB color of the LED
-     */
-    //% blockId="minibit_set_pixel_color" block="set LED at %ledId|to %rgb=mb_colours"
-    //% weight=80
-    //% subcategory=FireLeds
-    //% group=Basic
-    export function setPixelColor(ledId: number, rgb: number): void
-    {
-        fire().setPixel(ledId, rgb);
-        updateLEDs();
-    }
-
-    /**
-     * Set the brightness of the LEDs
-     * @param brightness a measure of LED brightness in 0-255. eg: 40
-     */
-    //% blockId="minibit_led_brightness" block="set LED brightness %brightness"
-    //% brightness.min=0 brightness.max=255
-    //% weight=70
-    //% subcategory=FireLeds
-    //% group=Basic
-    export function ledBrightness(brightness: number): void
-    {
-        fire().setBrightness(brightness);
-        updateLEDs();
-    }
-
-    /**
-      * Shows a rainbow pattern on all LEDs.
-      */
-    //% blockId="minibit_rainbow" block="set LED rainbow"
-    //% weight=60
-    //% subcategory=FireLeds
-    //% group=Basic
-    export function ledRainbow(): void
-    {
-        fire().setRainbow();
-        updateLEDs()
-    }
-
-    /**
-      * Get numeric value of colour
-      *
-      * @param color Standard RGB Led Colours
-      */
-    //% blockId="mb_colours" block=%color
-    //% weight=50
-    //% subcategory=FireLeds
-    //% group=Basic
-    export function mbColours(color: mbColors): number
-    {
-        return color;
-    }
-
-    // Advanced blocks
-
-    /**
-      * Set LED update mode (Manual or Automatic)
-      * @param updateMode setting automatic will show LED changes automatically
-      */
-    //% blockId="minibit_set_updateMode" block="set %updateMode|update mode"
-    //% weight=100
-    //% subcategory=FireLeds
-    //% group=Advanced
-    export function setUpdateMode(updateMode: mbMode): void
-    {
-        _updateMode = updateMode;
-    }
-
-    /**
-      * Show LED changes
-      */
-    //% blockId="led_show" block="show LED changes"
-    //% weight=90
-    //% subcategory=FireLeds
-    //% group=Special
-    export function ledShow(): void
-    {
-        if (btDisabled)
-            fire().updateBand();
-    }
-
-    /**
-     * Rotate LEDs forward.
-     */
-    //% blockId="minibit_led_rotate" block="rotate LEDs"
-    //% weight=80
-    //% subcategory=FireLeds
-    //% group=Special
-    export function ledRotate(): void
-    {
-        fire().rotateBand();
-        updateLEDs()
-    }
-
-    /**
-     * Shift LEDs forward and clear with zeros.
-     */
-    //% blockId="minibit_led_shift" block="shift LEDs"
-    //% weight=70
-    //% subcategory=FireLeds
-    //% group=Advanced
-    export function ledShift(): void
-    {
-        fire().shiftBand();
-        updateLEDs()
-    }
-
-    /**
-      * Convert from RGB values to colour number
-      *
-      * @param red Red value of the LED (0 to 255)
-      * @param green Green value of the LED (0 to 255)
-      * @param blue Blue value of the LED (0 to 255)
-      */
-    //% blockId="bitbot_convertRGB" block="convert from red %red| green %green| blue %blue"
-    //% weight=60
-    //% subcategory=FireLeds
-    //% group=Advanced
-    export function convertRGB(r: number, g: number, b: number): number
-    {
-        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
 
 }
