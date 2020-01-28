@@ -175,7 +175,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="31 %enable|Bluetooth"
+    //% block="32 %enable|Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -695,14 +695,14 @@ namespace minibit
     * Create image
     * @param image select image string
     */
-    //% blockId="m5Image" block="create %image"
+    //% blockId="m5Image" block="create image"
     //% weight=100
     //% subcategory="Addon Boards"
     //% group="5x5 Matrix"
     //% imageLiteral=1 async
-    export function getImage(image: ImageLiteral_, interval: number = 150): ImageLiteral_
+    export function getImage(image: ImageLiteral_, interval: number = 150)
     {
-        return image;
+        
     }
 
 }
