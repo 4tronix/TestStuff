@@ -148,7 +148,7 @@ enum mbColors
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
-//% groups='["Motors","Basic","Advanced","Special","Ultrasonic","Line Sensor","Deprecated"]'
+//% groups='["Motors","Basic","Advanced","Special","Ultrasonic","Line Sensor","5x5 Matrix","Deprecated"]'
 namespace minibit
 {
     let fireBand: fireled.Band;
@@ -175,7 +175,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="29 %enable|Bluetooth"
+    //% block="30 %enable|Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -688,6 +688,8 @@ namespace minibit
         control.onEvent(<number>sensor, <number>event, handler);
     }
 
+// Addon Boards
+
 // Matrix 5x5
     /**
     * Create image
@@ -695,10 +697,12 @@ namespace minibit
     */
     //% blockId="m5Image" block="create %image"
     //% weight=100
-    //% subcategory="Matrix 5x5"
+    //% subcategory="Addon Boards"
+    //% group="5x5 Matrix"
     //% imageLiteral=1 async
-    export function getImage(image: ImageLiteral_)
+    export function getImage(image: ImageLiteral_): ImageLiteral_
     {
+        return image;
     }
 
 }
