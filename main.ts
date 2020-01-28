@@ -175,7 +175,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="23 %enable|Bluetooth"
+    //% block="24 %enable|Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -207,7 +207,6 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
-    //% group="Motors"
     export function go(direction: mbDirection, speed: number): void
     {
         move(mbMotor.Both, direction, speed);
@@ -223,7 +222,6 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=90
     //% subcategory=Motors
-    //% group="Motors"
     export function goms(direction: mbDirection, speed: number, milliseconds: number): void
     {
         go(direction, speed);
@@ -240,7 +238,6 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=80
     //% subcategory=Motors
-    //% group="Motors"
     export function rotate(direction: mbRobotDirection, speed: number): void
     {
         if (direction == mbRobotDirection.Left)
@@ -265,7 +262,6 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=70
     //% subcategory=Motors
-    //% group="Motors"
     export function rotatems(direction: mbRobotDirection, speed: number, milliseconds: number): void
     {
         rotate(direction, speed);
@@ -280,7 +276,6 @@ namespace minibit
     //% blockId="mbStop" block="stop with %mode"
     //% weight=60
     //% subcategory=Motors
-    //% group="Motors"
     export function stop(mode: mbStopMode): void
     {
         let stopMode = 0;
@@ -302,7 +297,6 @@ namespace minibit
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
-    //% group="Motors"
     export function move(motor: mbMotor, direction: mbDirection, speed: number): void
     {
         let speed0 = 0;
@@ -341,7 +335,6 @@ namespace minibit
     //% blockId="minibit_motor" block="drive %motor|motor(s) at speed %speed"
     //% weight=50
     //% subcategory=Motors
-    //% group="Old Blocks"
     export function motor(motor: mbMotor, speed: number): void
     {
         let speed0 = 0;
@@ -378,7 +371,6 @@ namespace minibit
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
-    //% group="Old Blocks"
     export function drive(speed: number): void
     {
         motor(mbMotor.Both, speed);
@@ -393,7 +385,6 @@ namespace minibit
     //% speed.min=-1023 speed.max=1023
     //% weight=70
     //% subcategory=Motors
-    //% group="Old Blocks"
     export function driveMilliseconds(speed: number, milliseconds: number): void
     {
         drive(speed);
@@ -410,7 +401,6 @@ namespace minibit
     //% speed.min=0 speed.max=1023
     //% weight=90
     //% subcategory=Motors
-    //% group="Old Blocks"
     export function spin(direction: mbRobotDirection, speed: number): void
     {
         if (speed < 0)
@@ -437,7 +427,6 @@ namespace minibit
     //% speed.min=0 speed.max=1023
     //% weight=60
     //% subcategory=Motors
-    //% group="Old Blocks"
     export function spinMilliseconds(direction: mbRobotDirection, speed: number, milliseconds: number): void
     {
         spin(direction, speed);
@@ -454,7 +443,6 @@ namespace minibit
     //% blockId="minibit_sonar" block="read sonar as %unit"
     //% weight=100
     //% subcategory="Sensors"
-    //% group="Ultrasonic"
     export function sonar(unit: mbPingUnit): number
     {
         // send pulse
@@ -490,7 +478,6 @@ namespace minibit
     //% blockId="lineSensor" block="%sensor| line sensor"
     //% weight=90
     //% subcategory=Sensors
-    //% group="Line Sensor"
     export function lineSensor(sensor: mbLineSensors): boolean
     {
         if (sensor == mbLineSensors.Left)
@@ -507,7 +494,6 @@ namespace minibit
     //% weight=80
     //% blockId=bc_event block="on %sensor| line %event"
     //% subcategory=Sensors
-    //% group="Line Sensor"
     export function onEvent(sensor: mbPins, event: mbEvents, handler: Action)
     {
         initEvents();
