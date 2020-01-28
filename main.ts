@@ -175,7 +175,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="28 %enable|Bluetooth"
+    //% block="29 %enable|Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -617,7 +617,7 @@ namespace minibit
     //% group=Advanced
     export function convertRGB(r: number, g: number, b: number): number
     {
-        return fireled.fromRGB(r,g,b);
+        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
 
 // Sensors
