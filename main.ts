@@ -696,6 +696,7 @@ namespace minibit
     //% blockId="m5Image" block="create %image"
     //% weight=100
     //% subcategory="Matrix 5x5"
+    //% imageLiteral=1 async
     export function getImage(image: ImageLiteral_)
     {
     }
