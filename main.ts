@@ -176,7 +176,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 54 Bluetooth"
+    //% block="%enable| 55 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -759,7 +759,7 @@ namespace minibit
     export function setPixel(ledId: number, rgb: number): void
     {
         // need to map to match Microbit: top left is 0, bottom right is 24
-        let x = ledId % 5;
+        let x = 4 - ledId % 5;
         let y = 4 - Math.idiv(ledId, 5);
         mat5().setPixel(x + y*5, rgb);
         matUpdate();
@@ -777,7 +777,7 @@ namespace minibit
     //% group="5x5 Matrix"
     export function setArrayPixel(x: number, y: number, rgb: number): void
     {
-        mat5().setPixel(x + (4-y)*5, rgb);
+        mat5().setPixel((4-x) + (4-y)*5, rgb);
         matUpdate();
     }
 
