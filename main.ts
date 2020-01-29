@@ -175,7 +175,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="44 %enable|Bluetooth"
+    //% block="45 %enable|Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -703,11 +703,11 @@ namespace minibit
      */
     //% help=basic/show-leds
     //% weight=95 blockGap=8
-    //% imageLiteral=1 async
+    //% imageLiteral=1
     //% blockId=design_leds
     //% block="design leds" icon="\uf00a"
     //% parts="ledmatrix" interval.defl=400
-    export function designLeds(leds: string, interval?: number)
+    export function designLeds(leds: string): Image
     {
         basic.showNumber(leds.length);
     }
