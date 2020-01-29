@@ -172,11 +172,11 @@ namespace minibit
 
 // Block to enable Bluetooth and disable FireLeds.
     /**
-      * Enable/Disable 48 Bluetooth support by disabling/enabling FireLeds
+      * Enable/Disable Bluetooth support by disabling/enabling FireLeds
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable|Bluetooth"
+    //% block="%enable| 49 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -694,7 +694,7 @@ namespace minibit
 // 5x5 FireLed Matrix 
 
     /* create a FireLed band for the Matrix if not got one already. Default to brightness 40 */
-    function mat5(): fireband.Band
+    function mat5(): fireled.Band
     {
         if (!matrix5)
         {
@@ -726,7 +726,7 @@ namespace minibit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="setMatrix" block="whole Matrix to %rgb=mb_colours"
+    //% blockId="setMatrix" block="set whole Matrix to %rgb=mb_colours"
     //% weight=100
     //% subcategory=Addons
     //% group="5x5 Matrix"
