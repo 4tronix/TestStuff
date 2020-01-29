@@ -155,6 +155,7 @@ namespace minibit
     let _updateMode = mbMode.Auto;
     let _initEvents = true;
     let btDisabled = true;
+    let matrix5: fireled.Band;
 
 // Initialise events on first use
 
@@ -171,7 +172,7 @@ namespace minibit
 
 // Block to enable Bluetooth and disable FireLeds.
     /**
-      * Enable/Disable Bluetooth support by disabling/enabling FireLeds
+      * Enable/Disable 48 Bluetooth support by disabling/enabling FireLeds
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
@@ -689,21 +690,90 @@ namespace minibit
     }
 
 // Addon Boards
-    /* Draws an image on the LED screen.
-     * @param leds the pattern of LED to turn on/off
-     * @param interval time in milliseconds to pause after drawing
-     */
-    //% help=basic/show-leds
-    //% weight=50 blockGap=8
-    //% imageLiteral=1
-    //% blockId=design_leds
-    //% block="design 47 leds" icon="\uf00a"
-    //% parts="ledmatrix" interval.defl=400
-    export function designLeds(leds: string): Image
+
+// 5x5 FireLed Matrix 
+
+    /* create a FireLed band for the Matrix if not got one already. Default to brightness 40 */
+    function mat5(): fireband.Band
     {
-        let test = images.createImage(leds);
-	test.showImage(0);
-        return test;
+        if (!matrix5)
+        {
+            matrix5 = fireled.newBand(DigitalPin.P15, 25);
+            matrix5.setBrightness(40);
+        }
+        return matrix5;
+    }
+
+    /* Show changes on Matrix */
+    //% blockId="matShow" block="show Matrix changes"
+    //% weight=80
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    export function matShow(): void
+    {
+        if (btDisabled)
+            mat5().updateBand();
+    }
+
+    // update Matrix if _updateMode set to Auto
+    function matUpdate(): void
+    {
+        if (_updateMode == mbMode.Auto)
+            matShow();
+    }
+
+    /**
+      * Sets all LEDs to a given color (range 0-255 for r, g, b).
+      * @param rgb RGB color of the LED
+      */
+    //% blockId="setMatrix" block="whole Matrix to %rgb=mb_colours"
+    //% weight=100
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    export function setMatrix(rgb: number)
+    {
+        mat5().setBand(rgb);
+        matUpdate();
+    }
+
+    /* Clear all leds */
+    //% blockId="matClear" block="clear Matrix"
+    //% weight=90
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    export function matClear(): void
+    {
+        mat5().clearBand();
+        matUpdate();
+    }
+
+    /**
+     * Set single LED to a given color (range 0-255 for r, g, b).
+     *
+     * @param ledId position of the LED (0 to 11)
+     * @param rgb RGB color of the LED
+     */
+    //% blockId="setPixel" block="set LED at %ledId|to %rgb=mb_colours"
+    //% weight=80
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    export function setPixel(ledId: number, rgb: number): void
+    {
+        mat5().setPixel(ledId, rgb);
+        matUpdate();
+    }
+
+    /**
+      * Shows a rainbow pattern on all LEDs.
+      */
+    //% blockId="matRainbow" block="set LED rainbow"
+    //% weight=70
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    export function matRainbow(): void
+    {
+        mat5().setRainbow();
+        matUpdate()
     }
 
 
