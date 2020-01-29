@@ -176,7 +176,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 60 Bluetooth"
+    //% block="%enable| 61 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -805,10 +805,9 @@ namespace minibit
      * Shows an frame from the image at offset ``x offset``.
      * @param xOffset column index to start displaying the image
      */
-    //% help=images/show-image weight=80 blockNamespace=images
-    //% blockId=device_show_image_offset block="show image %sprite(myImage)|at offset %offset"
-    //% blockGap=8 parts="ledmatrix" async interval.defl=400 shim=ImageMethods::showImage
-    export function showImage(xOffset: int32, interval?: int32): void;
+    // elp=images/show-image weight=80 blockNamespace=images
+    // blockId=device_show_image_offset block="show image %sprite(myImage)|at offset %offset"
+    
 
     /**
       * Shows an Image on the Matrix
