@@ -176,7 +176,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 58 Bluetooth"
+    //% block="%enable| 59 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -796,10 +796,9 @@ namespace minibit
     /**
       * Shows an Image on the Matrix
       * @param myImage image to show
-      * @param colour colour of image
+      * @param rgb colour of image
       */
-    //% blockId="showImage" block="show %myImage|on Matrix in %rgb=mb_colours"
-    //% myImage.defl=null
+    //% blockId="showImage" block="show %myImage|on Matrix in %rgb=mb_colours
     //% weight=60
     //% subcategory=Addons
     //% group="5x5 Matrix"
