@@ -176,7 +176,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 53 Bluetooth"
+    //% block="%enable| 54 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -496,7 +496,7 @@ namespace minibit
     /**
      * Set single LED to a given color (range 0-255 for r, g, b).
      *
-     * @param ledId position of the LED (0 to 11)
+     * @param ledId position of the LED (0 to 3)
      * @param rgb RGB color of the LED
      */
     //% blockId="minibit_set_pixel_color" block="set LED at %ledId|to %rgb=mb_colours"
@@ -749,7 +749,7 @@ namespace minibit
 
     /**
      * Set single LED to a given color (range 0-255 for r, g, b)
-     * @param ledId position of the LED (0 to 11)
+     * @param ledId position of the LED (0 to 24)
      * @param rgb RGB color of the LED
      */
     //% blockId="setPixel" block="set Matrix LED at %ledId|to %rgb=mb_colours"
@@ -758,7 +758,26 @@ namespace minibit
     //% group="5x5 Matrix"
     export function setPixel(ledId: number, rgb: number): void
     {
-        mat5().setPixel(ledId, rgb);
+        // need to map to match Microbit: top left is 0, bottom right is 24
+        let x = ledId % 5;
+        let y = 4 - Math.idiv(ledId, 5);
+        mat5().setPixel(x + y*5, rgb);
+        matUpdate();
+    }
+
+    /**
+     * Set x, y position to a given color (range 0-255 for r, g, b)
+     * @param x left/right position of the LED (0 to 4). Left is 0
+     * @param y up/down position of the LED (0 to 4). Top is 0
+     * @param rgb RGB color of the LED
+     */
+    //% blockId="setArrayPixel" block="set Matrix LED at %x|,%y|to %rgb=mb_colours"
+    //% weight=75
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    export function setArrayPixel(x: number, y: number, rgb: number): void
+    {
+        mat5().setPixel(x + (4-y)*5, rgb);
         matUpdate();
     }
 
@@ -769,6 +788,7 @@ namespace minibit
     //% group="5x5 Matrix"
     export function matRainbow(): void
     {
+        // TODO Fix so it uses top left to bottom right
         mat5().setRainbow();
         matUpdate()
     }
@@ -804,7 +824,7 @@ namespace minibit
             for (let j=0; j<5; j++)
             {
                 if (myImage.pixel(i, j))
-                    setPixel(i, rgb);
+                    setArrayPixel(i, j, rgb);
             }
         }
         matUpdate();
