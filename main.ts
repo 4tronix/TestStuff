@@ -694,20 +694,14 @@ namespace minibit
      * @param interval time in milliseconds to pause after drawing
      */
     //% help=basic/show-leds
-    //% weight=95 blockGap=8
+    //% weight=50 blockGap=8
     //% imageLiteral=1
     //% blockId=design_leds
-    //% block="design 46 leds" icon="\uf00a"
+    //% block="design 47 leds" icon="\uf00a"
     //% parts="ledmatrix" interval.defl=400
     export function designLeds(leds: string): Image
     {
-        let test = images.createImage(`
-    . . . . .
-    . # # # .
-    . . # . .
-    . . . . .
-    . . . . .
-    `);
+        let test = images.createImage(leds);
 	test.showImage(0);
         return test;
     }
