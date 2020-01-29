@@ -176,7 +176,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 49 Bluetooth"
+    //% block="%enable| 50 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -748,12 +748,11 @@ namespace minibit
     }
 
     /**
-     * Set single LED to a given color (range 0-255 for r, g, b).
-     *
+     * Set single LED to a given color (range 0-255 for r, g, b)
      * @param ledId position of the LED (0 to 11)
      * @param rgb RGB color of the LED
      */
-    //% blockId="setPixel" block="set LED at %ledId|to %rgb=mb_colours"
+    //% blockId="setPixel" block="set Matrix LED at %ledId|to %rgb=mb_colours"
     //% weight=80
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -763,10 +762,8 @@ namespace minibit
         matUpdate();
     }
 
-    /**
-      * Shows a rainbow pattern on all LEDs.
-      */
-    //% blockId="matRainbow" block="set LED rainbow"
+    /* Shows a rainbow pattern on all LEDs */
+    //% blockId="matRainbow" block="set Matrix rainbow"
     //% weight=70
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -776,6 +773,18 @@ namespace minibit
         matUpdate()
     }
 
-
+    /**
+      * Shows an Image on the Matrix
+      * @param myImage image to show
+      * @param colour colour of image
+      */
+    //% blockId="showImage" block="show %myImage|on Matrix in %rgb=mb_colours"
+    //% weight=60
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    export function matShowImage(myImage: Image, rgb: number): void
+    {
+        myImage.showImage(0);
+    }
 
 }
