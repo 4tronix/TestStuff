@@ -175,7 +175,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="45 %enable|Bluetooth"
+    //% block="%enable|Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -689,14 +689,6 @@ namespace minibit
     }
 
 // Addon Boards
-    //% block="New image"
-    //% imageLiteral=1
-    export function newImage(myImage: string): string
-    {
-        basic.showNumber(myImage.length)
-        return myImage;
-    }
-
     /* Draws an image on the LED screen.
      * @param leds the pattern of LED to turn on/off
      * @param interval time in milliseconds to pause after drawing
@@ -705,11 +697,19 @@ namespace minibit
     //% weight=95 blockGap=8
     //% imageLiteral=1
     //% blockId=design_leds
-    //% block="design leds" icon="\uf00a"
+    //% block="design 46 leds" icon="\uf00a"
     //% parts="ledmatrix" interval.defl=400
     export function designLeds(leds: string): Image
     {
-        basic.showNumber(leds.length);
+        let test = images.createImage(`
+    . . . . .
+    . # # # .
+    . . # . .
+    . . . . .
+    . . . . .
+    `);
+	test.showImage(0);
+        return test;
     }
 
 
