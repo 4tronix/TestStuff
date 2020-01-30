@@ -157,8 +157,12 @@ namespace minibit
     let btDisabled = true;
     let matrix5: fireled.Band;
 
-// Initialise events on first use
+    function clamp(value: number, min: number, max: number): number
+    {
+        return Math.max(Math.min(max, value), min);
+    }
 
+// Initialise events on first use
     function initEvents(): void
     {
         if (_initEvents)
@@ -176,7 +180,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 73 Bluetooth"
+    //% block="%enable| 74 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -308,7 +312,7 @@ namespace minibit
     {
         let speed0 = 0;
         let speed1 = 0;
-        speed = Math.max(Math.min(100, speed),0) * 10.23;
+        speed = clamp(speed, 0, 100) * 10.23;
         setPWM(speed);
         if (direction == mbDirection.Forward)
         {
@@ -782,8 +786,13 @@ namespace minibit
     //% blockGap=8
     export function setArrayPixel(x: number, y: number, rgb: number): void
     {
-        mat5().setPixel((4-x) + (4-y)*5, rgb);
+        rawArrayPixel(x, y, rgb);
         matUpdate();
+    }
+
+    function rawArrayPixel(x: number, y: number, rgb: number): void
+    {
+        mat5().setPixel((4-x) + (4-y)*5, rgb);
     }
 
     /* Shows a rainbow pattern on all LEDs */
@@ -800,12 +809,48 @@ namespace minibit
     }
 
     /**
+      * Draw Rectangle on Matrix
+      * @param x1 x position to start
+      * @param y1 y position to start
+      * @param x2 x position to end
+      * @param y2 y position to end
+      * @param rgb colour to draw with
+      * @param fill selct to fill in area
+      */
+    //% blockId="matRectangle"
+    //% block="Draw rectangle from x%x1|y%y1|to x%x2|y%y2 in %rgb=mb_colours and fill%fill"
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% weight=60
+    //% inlineInputMode=inline
+    //% fill.shadow="toggleYesNo"
+    //% blockGap=8
+    export function matRectangle(x1: number, y1: number, x2: number, y2: number, rgb: number, fill: boolean)
+    {
+        for (let x=x1; x <= x2; x++)
+        {
+            for (let y=y1; y <= y2; y++)
+            {
+                if (valid(x, y) && (x==x1 || x==x2 || y==y1 || y==y2 || fill))
+                    rawArrayPixel(x, y, rgb);
+            }
+        }
+        matUpdate();
+    }
+
+    /* check x, y is within range */
+    function valid(x: number, y: number): boolean
+    {
+        return (x>=0 && x<5 && y>=0 && y<5);
+    }
+
+    /**
       * Shows an Image on the Matrix
       * @param myImage image to show
       * @param rgb colour of image
       */
     //% blockId="showImage" block="show %myImage|on Matrix in %rgb=mb_colours"
-    //% weight=60
+    //% weight=50
     //% subcategory=Addons
     //% group="5x5 Matrix"
     //% blockGap=8
@@ -856,10 +901,11 @@ namespace minibit
       * @param zoom zoomed or standard text eg: true
       */
     //% blockId="OledText"
-    //% block="Show %text|at x %x|y %y| inverse%inv| zoomed %zoom"
+    //% block="Text %text|at x %x|y %y| inverse%inv| zoomed %zoom"
     //% subcategory=Addons
     //% group="OLED 128x64"
     //% weight=90
+    //% inlineInputMode=inline
     //% inv.shadow="toggleYesNo"
     //% zoom.shadow="toggleYesNo"
     //% blockGap=8
@@ -877,10 +923,11 @@ namespace minibit
       * @param zoom zoomed or standard text eg: true
       */
     //% blockId="OledNumber"
-    //% block="Show %num|at x%x|y%y| inverse%inv| zoomed%zoom"
+    //% block="Number %num|at x%x|y%y| inverse%inv| zoomed%zoom"
     //% subcategory=Addons
     //% group="OLED 128x64"
     //% weight=80
+    //% inlineInputMode=inline
     //% inv.shadow="toggleYesNo"
     //% zoom.shadow="toggleYesNo"
     //% blockGap=8
