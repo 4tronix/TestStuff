@@ -205,7 +205,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 78 Bluetooth"
+    //% block="%enable| 79 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -922,14 +922,30 @@ namespace minibit
         rawArrayPixel(4, 0, 0);
         rawArrayPixel(4, 4, 0);
         // draw pupil
-        rawArrayPixel(2, 2, 0);
-        rawArrayPixel(2, 3, 0);
-        rawArrayPixel(3, 2, 0);
-        rawArrayPixel(3, 3, 0);
-
+        switch(pos)
+        {
+         case eyePos.Forward: pupil5(2,2); break;
+         case eyePos.DownRight: pupil4(2,2); break;
+        }
         matUpdate();
     }
+ 
+     function pupil5(x: number, y: number)
+     {
+        rawArrayPixel(x, y, 0);
+        rawArrayPixel(x+1, y, 0);
+        rawArrayPixel(x-1, y, 0);
+        rawArrayPixel(x, y+1, 0);
+        rawArrayPixel(x, y-1, 0);
+    }
 
+     function pupil4(x: number, y: number)
+     {
+         rawArrayPixel(x, y, 0);
+         rawArrayPixel(x+1, y, 0);
+         rawArrayPixel(x, y+1, 0);
+         rawArrayPixel(x+1, y+1, 0);
+     }
 
 
 // OLED 128x64 Addon
