@@ -176,7 +176,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 63 Bluetooth"
+    //% block="%enable| 64 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -793,15 +793,17 @@ namespace minibit
         matUpdate()
     }
 
-    /**
-     * Creates an image that fits on the LED screen.
-     */
-    //% weight=75 help=images/create-image
-    //% blockId=device_build_image block="create image"
-    //% imageLiteral=1 shim=images::createImage
-    //% subcategory=Addons color=#e7660b
-    export function createImage(leds: string): Image
+    /* Shadow Image Block */
+    //% blockId="mb_image" block="%value"
+    export function mbColours(): Image
     {
+        return images.createImage(`
+    . . . . .
+    . . . . .
+    . . . . .
+    . . . . .
+    . . . . .
+    `);
     }
 
     /**
@@ -809,7 +811,7 @@ namespace minibit
       * @param myImage image to show
       * @param rgb colour of image
       */
-    //% blockId="shOwImage" block="sHow %myImage|on Matrix in %rgb=mb_colours
+    //% blockId="shOwImage" block="sHow %myImage=mb_image|on Matrix in %rgb=mb_colours
     //% weight=60
     //% subcategory=Addons
     //% group="5x5 Matrix"
