@@ -176,7 +176,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 72 Bluetooth"
+    //% block="%enable| 73 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -863,7 +863,7 @@ namespace minibit
     //% inv.shadow="toggleYesNo"
     //% zoom.shadow="toggleYesNo"
     //% blockGap=8
-    export function oledText()
+    export function oledText(text: string, x: number, y: number, inv: boolean, zoom: boolean)
     {
 //        oled().showText(text, x, y, inv, zoom);
     }
@@ -884,7 +884,7 @@ namespace minibit
     //% inv.shadow="toggleYesNo"
     //% zoom.shadow="toggleYesNo"
     //% blockGap=8
-    export function oledNumber()
+    export function oledNumber(num: number, x: number, y: number, inv: boolean, zoom: boolean)
     {
 //        oled().showNumber(num, x, y, inv, zoom);
     }
