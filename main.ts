@@ -205,7 +205,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 76 Bluetooth"
+    //% block="%enable| 77 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -908,7 +908,7 @@ namespace minibit
       * @param pos position of pupil (up, down, left, etc)
       * @param rgb colour of image
       */
-    //% blockId="showImage" block="show Matrix eyeball on Matrix looking %pos|in %rgb=mb_colours"
+    //% blockId="matShowEyeball" block="show Matrix eyeball on Matrix looking %pos|in %rgb=mb_colours"
     //% weight=55
     //% subcategory=Addons
     //% group="5x5 Matrix"
