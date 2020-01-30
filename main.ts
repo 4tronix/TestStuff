@@ -1,5 +1,30 @@
 ﻿
 /**
+  * Eyeball directions
+  */
+enum eyePos
+{
+    //% block="forward"
+    Forward,
+    //% block="down"
+    Down,
+    //% block="up"
+    Up,
+    //% block="left"
+    Left,
+    //% block="right"
+    Right,
+    //% block="down-left"
+    DownLeft,
+    //% block="down-right"
+    DownRight,
+    //% block="up-left"
+    UpLeft,
+    //% block="up-right"
+    UpRight
+}
+
+/**
   * Enumeration of motors.
   */
 enum mbMotor
@@ -180,7 +205,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 75 Bluetooth"
+    //% block="%enable| 76 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -738,8 +763,13 @@ namespace minibit
     //% blockGap=8
     export function setMatrix(rgb: number)
     {
-        mat5().setBand(rgb);
+        rawSetMatrix(rgb);
         matUpdate();
+    }
+
+    function rawSetMatrix(rgb: number)
+    {
+        mat5().setBand(rgb);
     }
 
     /**
@@ -866,11 +896,41 @@ namespace minibit
             for (let j=0; j<5; j++)
             {
                 if (myImage.pixel(i, j))
-                    setArrayPixel(i, j, rgb);
+                    rawArrayPixel(i, j, rgb);
             }
         }
         matUpdate();
     }
+
+
+    /**
+      * Shows an Eyeball on the Matrix
+      * @param pos position of pupil (up, down, left, etc)
+      * @param rgb colour of image
+      */
+    //% blockId="showImage" block="show Matrix eyeball on Matrix looking %pos|in %rgb=mb_colours"
+    //% weight=55
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function matShowEyeball(pos: eyePos, rgb: number): void
+    {
+        rawSetMatrix(rgb);
+        // Clear corners to make a circle-ish
+        rawArrayPixel(0, 0, 0);
+        rawArrayPixel(0, 4, 0);
+        rawArrayPixel(4, 0, 0);
+        rawArrayPixel(4, 4, 0);
+        // draw pupil
+        rawArrayPixel(2, 2, 0);
+        rawArrayPixel(2, 3, 0);
+        rawArrayPixel(3, 2, 0);
+        rawArrayPixel(3, 3, 0);
+
+        matUpdate();
+    }
+
+
 
 // OLED 128x64 Addon
 
