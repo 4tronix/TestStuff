@@ -180,7 +180,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 74 Bluetooth"
+    //% block="%enable| 75 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -597,7 +597,6 @@ namespace minibit
 
     /**
       * Get numeric value of colour
-      *
       * @param color Standard RGB Led Colours
       */
     //% blockId="mb_colours" block=%color
@@ -611,7 +610,6 @@ namespace minibit
 
     /**
       * Convert from RGB values to colour number
-      *
       * @param red Red value of the LED (0 to 255)
       * @param green Green value of the LED (0 to 255)
       * @param blue Blue value of the LED (0 to 255)
@@ -708,7 +706,9 @@ namespace minibit
         return matrix5;
     }
 
-    /* Show changes on Matrix */
+    /**
+      * Show changes on Matrix
+      */
     //% blockId="matShow" block="show Matrix changes"
     //% weight=80
     //% subcategory=Addons
@@ -728,7 +728,7 @@ namespace minibit
     }
 
     /**
-      * Sets all LEDs to a given color (range 0-255 for r, g, b).
+      * Sets all Matrix LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
     //% blockId="setMatrix" block="set whole Matrix to %rgb=mb_colours"
@@ -742,7 +742,9 @@ namespace minibit
         matUpdate();
     }
 
-    /* Clear all leds */
+    /**
+      * Clear all Matrix leds
+      */
     //% blockId="matClear" block="clear Matrix"
     //% weight=90
     //% subcategory=Addons
@@ -755,8 +757,8 @@ namespace minibit
     }
 
     /**
-     * Set single LED to a given color (range 0-255 for r, g, b)
-     * @param ledId position of the LED (0 to 24)
+     * Set single Matrix LED to a given color (range 0-255 for r, g, b)
+     * @param ledId linear position of the LED (0 to 24)
      * @param rgb RGB color of the LED
      */
     //% blockId="setPixel" block="set Matrix LED at %ledId|to %rgb=mb_colours"
@@ -795,7 +797,9 @@ namespace minibit
         mat5().setPixel((4-x) + (4-y)*5, rgb);
     }
 
-    /* Shows a rainbow pattern on all LEDs */
+    /**
+      * Shows a rainbow pattern on all Matrix LEDs
+      */
     //% blockId="matRainbow" block="set Matrix rainbow"
     //% weight=70
     //% subcategory=Addons
@@ -831,7 +835,7 @@ namespace minibit
         {
             for (let y=y1; y <= y2; y++)
             {
-                if (valid(x, y) && (x==x1 || x==x2 || y==y1 || y==y2 || fill))
+                if (inRange(x, y) && (x==x1 || x==x2 || y==y1 || y==y2 || fill))
                     rawArrayPixel(x, y, rgb);
             }
         }
@@ -839,7 +843,7 @@ namespace minibit
     }
 
     /* check x, y is within range */
-    function valid(x: number, y: number): boolean
+    function inRange(x: number, y: number): boolean
     {
         return (x>=0 && x<5 && y>=0 && y<5);
     }
@@ -880,7 +884,9 @@ namespace minibit
 //        return oled;
 //    }
 
-    /* Clear Oled */
+    /**
+      * Clear Oled
+      */
     //% blockId="OledClear"
     //% block="Clear Oled"
     //% subcategory=Addons
@@ -923,7 +929,7 @@ namespace minibit
       * @param zoom zoomed or standard text eg: true
       */
     //% blockId="OledNumber"
-    //% block="Number %num|at x%x|y%y| inverse%inv| zoomed%zoom"
+    //% block="Number %num|at x%x|y%y|inverse%inv|zoomed%zoom"
     //% subcategory=Addons
     //% group="OLED 128x64"
     //% weight=80
@@ -934,6 +940,27 @@ namespace minibit
     export function oledNumber(num: number, x: number, y: number, inv: boolean, zoom: boolean)
     {
 //        oled().showNumber(num, x, y, inv, zoom);
+    }
+
+    /**
+      * Plot pixel on OLED
+      * @param x x position to plot
+      * @param y y position to plot
+      * @param inv inverse or normal text eg: false
+      * @param zoom zoomed or standard text eg: true
+      */
+    //% blockId="OledPlotPixel"
+    //% block="Plot pixel at x%x|y%y|inverse%inv|zoomed%zoom"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=70
+    //% inlineInputMode=inline
+    //% inv.shadow="toggleYesNo"
+    //% zoom.shadow="toggleYesNo"
+    //% blockGap=8
+    export function oledPlotPixel(x: number, y: number, inv: boolean, zoom: boolean)
+    {
+//        oled().plotPixel(x, y, inv, zoom);
     }
 
 }
