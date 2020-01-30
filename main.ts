@@ -176,7 +176,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 69 Bluetooth"
+    //% block="%enable| 70 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -793,37 +793,23 @@ namespace minibit
         matUpdate();
     }
 
-    /* Shadow Image Block */
-    //% blockId="mb_image" block="%value"
-    export function mbImage(value: Image): Image
-    {
-        return images.createImage(`
-    . . . . .
-    . . . . .
-    . . . . .
-    . . . . .
-    . . . . .
-    `);
-    }
-
     /**
       * Shows an Image on the Matrix
       * @param myImage image to show
       * @param rgb colour of image
       */
-    //% blockId="showImage" block="show $myImage|on Matrix in %rgb=mb_colours"
-    //% myImage.shadow="mb_image"
+    //% blockId="showImage" block="show %myImage|on Matrix in %rgb=mb_colours"
     //% weight=60
     //% subcategory=Addons
     //% group="5x5 Matrix"
     export function matShowImage(myImage: Image, rgb: number): void
     {
-        myImg.showImage(0);
+        myImage.showImage(0);
         for (let i=0; i<5; i++)
         {
             for (let j=0; j<5; j++)
             {
-                if (myImg.pixel(i, j))
+                if (myImage.pixel(i, j))
                     setArrayPixel(i, j, rgb);
             }
         }
