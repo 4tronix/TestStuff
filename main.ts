@@ -148,7 +148,7 @@ enum mbColors
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
-//% groups='["Motors","Basic","Advanced","Special","Ultrasonic","Line Sensor","5x5 Matrix","Deprecated"]'
+//% groups='["Motors","Basic","Advanced","Special","Ultrasonic","Line Sensor","5x5 Matrix","OLED 128x64","BitFace","Deprecated"]'
 namespace minibit
 {
     let fireBand: fireled.Band;
@@ -176,7 +176,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 70 Bluetooth"
+    //% block="%enable| 71 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -816,4 +816,26 @@ namespace minibit
         matUpdate();
     }
 
+// OLED 128x64 Addon
+
+    /* create a new OLED object if needed */
+//    function oled(): firescreen.Screen
+//    {
+//        if (!oled)
+//        {
+//            oled = firescreen.newScreen(0x3c);
+//        }
+//        return oled;
+//    }
+
+    /* Clear Oled Screen */
+    //% blockId="OledClear"
+    //% block="Clear Oled"
+    //% subcategory=Addons
+    //% group=""OLED 128x64"
+    //% weight=100
+    export function oledClear()
+    {
+//        oled().clearScreen();
+    }
 }
