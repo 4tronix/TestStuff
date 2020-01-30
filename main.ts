@@ -176,7 +176,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 67 Bluetooth"
+    //% block="%enable| 68 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -794,8 +794,8 @@ namespace minibit
     }
 
     /* Shadow Image Block */
-    //% blockId="mb_image" block=""
-    export function mbImage(): Image
+    //% blockId="mb_image" block="%value"
+    export function mbImage(value: Image): Image
     {
         return images.createImage(`
     . . . . .
