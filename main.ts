@@ -176,7 +176,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 71 Bluetooth"
+    //% block="%enable| 72 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -709,6 +709,7 @@ namespace minibit
     //% weight=80
     //% subcategory=Addons
     //% group="5x5 Matrix"
+    //% blockGap=8
     export function matShow(): void
     {
         if (btDisabled)
@@ -730,6 +731,7 @@ namespace minibit
     //% weight=100
     //% subcategory=Addons
     //% group="5x5 Matrix"
+    //% blockGap=8
     export function setMatrix(rgb: number)
     {
         mat5().setBand(rgb);
@@ -741,6 +743,7 @@ namespace minibit
     //% weight=90
     //% subcategory=Addons
     //% group="5x5 Matrix"
+    //% blockGap=8
     export function matClear(): void
     {
         mat5().clearBand();
@@ -756,6 +759,7 @@ namespace minibit
     //% weight=80
     //% subcategory=Addons
     //% group="5x5 Matrix"
+    //% blockGap=8
     export function setPixel(ledId: number, rgb: number): void
     {
         // need to map to match Microbit: top left is 0, bottom right is 24
@@ -775,6 +779,7 @@ namespace minibit
     //% weight=75
     //% subcategory=Addons
     //% group="5x5 Matrix"
+    //% blockGap=8
     export function setArrayPixel(x: number, y: number, rgb: number): void
     {
         mat5().setPixel((4-x) + (4-y)*5, rgb);
@@ -786,6 +791,7 @@ namespace minibit
     //% weight=70
     //% subcategory=Addons
     //% group="5x5 Matrix"
+    //% blockGap=8
     export function matRainbow(): void
     {
         // TODO Fix so it uses top left to bottom right
@@ -802,6 +808,7 @@ namespace minibit
     //% weight=60
     //% subcategory=Addons
     //% group="5x5 Matrix"
+    //% blockGap=8
     export function matShowImage(myImage: Image, rgb: number): void
     {
         myImage.showImage(0);
@@ -828,14 +835,58 @@ namespace minibit
 //        return oled;
 //    }
 
-    /* Clear Oled Screen */
+    /* Clear Oled */
     //% blockId="OledClear"
     //% block="Clear Oled"
     //% subcategory=Addons
-    //% group=""OLED 128x64"
+    //% group="OLED 128x64"
     //% weight=100
+    //% blockGap=8
     export function oledClear()
     {
 //        oled().clearScreen();
     }
+
+    /**
+      * Show Text on OLED
+      * @param text text string to display eg: '4tronix'
+      * @param x x position to start
+      * @param y y position to start
+      * @param inv inverse or normal text eg: false
+      * @param zoom zoomed or standard text eg: true
+      */
+    //% blockId="OledText"
+    //% block="Show %text|at x %x|y %y| inverse%inv| zoomed %zoom"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=90
+    //% inv.shadow="toggleYesNo"
+    //% zoom.shadow="toggleYesNo"
+    //% blockGap=8
+    export function oledText()
+    {
+//        oled().showText(text, x, y, inv, zoom);
+    }
+
+    /**
+      * Show Number on OLED
+      * @param num number to display eg: 100
+      * @param x x position to start
+      * @param y y position to start
+      * @param inv inverse or normal text eg: false
+      * @param zoom zoomed or standard text eg: true
+      */
+    //% blockId="OledNumber"
+    //% block="Show %num|at x%x|y%y| inverse%inv| zoomed%zoom"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=80
+    //% inv.shadow="toggleYesNo"
+    //% zoom.shadow="toggleYesNo"
+    //% blockGap=8
+    export function oledNumber()
+    {
+//        oled().showNumber(num, x, y, inv, zoom);
+    }
+
 }
