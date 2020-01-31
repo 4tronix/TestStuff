@@ -24,6 +24,14 @@ enum eyePos
     UpRight
 }
 
+enum eyeSize
+{
+    //% block="small"
+    Small,
+    //% block="large"
+    Large
+}
+
 /**
   * Enumeration of motors.
   */
@@ -205,7 +213,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 79 Bluetooth"
+    //% block="%enable| 80 Bluetooth"
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -907,13 +915,14 @@ namespace minibit
       * Shows an Eyeball on the Matrix
       * @param pos position of pupil (up, down, left, etc)
       * @param rgb colour of image
+      * @param size size of pupil. Small or Large
       */
-    //% blockId="matShowEyeball" block="Matrix eyeball looking%pos|in %rgb=mb_colours"
+    //% blockId="matShowEyeball" block="Matrix eyeball%pos|in %rgb=mb_colours %size"
     //% weight=55
     //% subcategory=Addons
     //% group="5x5 Matrix"
     //% blockGap=8
-    export function matShowEyeball(pos: eyePos, rgb: number): void
+    export function matShowEyeball(pos: eyePos, rgb: number, size: eyeSize): void
     {
         rawSetMatrix(rgb);
         // Clear corners to make a circle-ish
@@ -924,8 +933,24 @@ namespace minibit
         // draw pupil
         switch(pos)
         {
-         case eyePos.Forward: pupil5(2,2); break;
-         case eyePos.DownRight: pupil4(2,2); break;
+            case eyePos.Forward:
+                (size==eyeSize.Small) ? rawArrayPixel(2,2,0) : pupil5(2,2); break;
+            case eyePos.Down:
+                (size==eyeSize.Small) ? rawArrayPixel(2,3,0) : pupil5(2,3); break;
+            case eyePos.Up:
+                (size==eyeSize.Small) ? rawArrayPixel(2,1,0) : pupil5(2,1); break;
+            case eyePos.Left:
+                (size==eyeSize.Small) ? rawArrayPixel(3,2,0) : pupil5(3,2); break;
+            case eyePos.Right:
+                (size==eyeSize.Small) ? rawArrayPixel(1,2,0) : pupil5(1,2); break;
+            case eyePos.DownLeft:
+                (size==eyeSize.Small) ? rawArrayPixel(3,3,0) : pupil4(2,2); break;
+            case eyePos.DownRight:
+                (size==eyeSize.Small) ? rawArrayPixel(1,3,0) : pupil4(1,2); break;
+            case eyePos.UpLeft:
+                (size==eyeSize.Small) ? rawArrayPixel(3,1,0) : pupil4(2,1); break;
+            case eyePos.UpRight:
+                (size==eyeSize.Small) ? rawArrayPixel(1,1,0) : pupil4(1,1); break;
         }
         matUpdate();
     }
