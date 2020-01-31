@@ -215,7 +215,8 @@ namespace minibit
     let btDisabled = true;
     let matrix5: fireled.Band;
     let bitface: fireled.Band;
-//    let mouthSmile: number[] = [0,1,2,3,4,5];
+    let mouthSmile: number[] = [0,1,2,3,4,5];
+//  let list: number[] = [1, 2, 3];
 //    let oled: firescreen.Screen
 
     function clamp(value: number, min: number, max: number): number
@@ -241,7 +242,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 83 Bluetooth"
+    //% block="%enable| 84 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
