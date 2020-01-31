@@ -52,8 +52,12 @@ enum bfMouth
     Sad,
     //% block="grimace"
     Grimace,
+    //% block="straight"
+    Straight,
     //% block="oooh"
-    Oooh
+    Oooh,
+    //% block="eeeh"
+    Eeeh
 }
 
 
@@ -216,6 +220,12 @@ namespace minibit
     let matrix5: fireled.Band;
     let bitface: fireled.Band;
     let mouthSmile: number[] = [0,1,2,3,4,5];
+    let mouthGrin: number[] = [0,1,2,3,4,5,10,11,12,13];
+    let mouthSad: number[] = [0,5,6,7,8,9];
+    let mouthGrimace: number[] = [0,5,6,7,8,9,10,11,12,13];
+    let mouthStraight: number[] = [0,5,10,11,12,13];
+    let mouthOooh: number[] = [1,2,3,4,6,7,8,9,10,13];
+    let mouthEeeh: number[] = [0,1,2,3,4,5,6,7,8,9];
 //    let oled: firescreen.Screen
 
     function clamp(value: number, min: number, max: number): number
@@ -241,7 +251,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 87 Bluetooth"
+    //% block="%enable| 88 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1101,10 +1111,16 @@ namespace minibit
     //% blockGap=8
     export function setBitMouth(mouth: bfMouth, rgb: number)
     {
-//        switch (mouth)
-//        {
-//            case bfMouth.Smile: drawMouth(mouthSmile, rgb); break;
-//        }
+        switch (mouth)
+        {
+            case bfMouth.Smile: drawMouth(mouthSmile, rgb); break;
+            case bfMouth.Grin: drawMouth(mouthGrin, rgb); break;
+            case bfMouth.Sad: drawMouth(mouthSad, rgb); break;
+            case bfMouth.Grimace: drawMouth(mouthGrimace, rgb); break;
+            case bfMouth.Straight: drawMouth(mouthStraight, rgb); break;
+            case bfMouth.Oooh: drawMouth(mouthOooh, rgb); break;
+            case bfMouth.Eeeh: drawMouth(mouthEeeh, rgb); break;
+        }
         drawMouth(mouthSmile, rgb);
         bitfUpdate();
     }
