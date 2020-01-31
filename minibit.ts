@@ -32,6 +32,31 @@ enum eyeSize
     Large
 }
 
+enum bfEyes
+{
+    //% block="left"
+    Left,
+    //% block="right"
+    Right,
+    //% block="both"
+    Both
+}
+
+enum bfMouth
+{
+    //% block="smile"
+    Smile,
+    //% block="grin"
+    Grin,
+    //% block="sad"
+    Sad,
+    //% block="grimace"
+    Grimace,
+    //% block="oooh"
+    Oooh
+}
+
+
 /**
   * Enumeration of motors.
   */
@@ -181,7 +206,7 @@ enum mbColors
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
-//% groups='["New style blocks","Basic","Advanced","Special","Ultrasonic","Line Sensor","5x5 Matrix","OLED 128x64","BitFace","Old style blocks"]'
+//% groups='["New style blocks","Basic","Advanced","Special","Ultrasonic","Line Sensor","5x5 Matrix","BitFace","OLED 128x64","Old style blocks"]'
 namespace minibit
 {
     let fireBand: fireled.Band;
@@ -189,6 +214,9 @@ namespace minibit
     let _initEvents = true;
     let btDisabled = true;
     let matrix5: fireled.Band;
+    let bitface: fireled.Band;
+    let mouthSmile: number[] = [0,1,2,3,4,5];
+//    let oled: firescreen.Screen
 
     function clamp(value: number, min: number, max: number): number
     {
@@ -213,7 +241,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 81 Bluetooth"
+    //% block="%enable| 82 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -997,6 +1025,89 @@ namespace minibit
          rawArrayPixel(x, y+1, 0);
          rawArrayPixel(x+1, y+1, 0);
      }
+
+// BitFace Addon
+    /* create a FireLed band for the BitFace if not got one already. Default to brightness 40 */
+    function bitf(): fireled.Band
+    {
+        if (!bitface)
+        {
+            bitface = fireled.newBand(DigitalPin.P15, 17);
+            bitface.setBrightness(40);
+        }
+        return bitface;
+    }
+
+    function bitfUpdate(): void
+    {
+        if (btDisabled)
+            bitf().updateBand();
+    }
+
+    function drawMouth(myList: number[], rgb: number)
+    {
+        for (let i=0; i<14; i++)
+            bitf().setPixel(i, 0);
+        for (let i=0; i<myList.length, i++)
+            bitf().setPixel(myList[i], rgb);
+    }
+
+    /**
+      * Sets all Bitface LEDs to a given color (range 0-255 for r, g, b).
+      * @param rgb RGB color of the LED
+      */
+    //% blockId="setBitface"
+    //% block="set Bitface to%rgb=mb_colours"
+    //% weight=100
+    //% subcategory=Addons
+    //% group="Bitface"
+    //% blockGap=8
+    export function setBitface(rgb: number)
+    {
+        bitf().setBand(rgb);
+        bitfUpdate();
+    }
+
+    /**
+      * Set BitFace eye(s) to selected colour
+      * @param eye select the eye(s) to set
+      * @param rgb colour to set
+      */
+    //% blockId="setBitEye"
+    //% block="set Bitface%eye| eye(s) to%rgb=mb_colours"
+    //% weight=90
+    //% subcategory=Addons
+    //% group="Bitface"
+    //% blockGap=8
+    export function setBitEye(eye: bfEyes, rgb: number)
+    {
+        if (eye == bfEyes.Left || eye == bfEyes.Both)
+            bitf().setPixel(15, rgb);
+        if (eye == bfEyes.Right || eye == bfEyes.Both)
+            bitf().setPixel(16, rgb);
+        bitfUpdate();
+    }
+
+    /**
+      * Set BitFace mouth to selected style and colour
+      * @param mouth style of mouth. eg: smile
+      * @param rgb colour to set
+      */
+    //% blockId="setBitMouth"
+    //% block="set Bitface mouth to%mouth|with%rgb=mb_colours"
+    //% weight=80
+    //% subcategory=Addons
+    //% group="Bitface"
+    //% blockGap=8
+    export function setBitMouth(mouth: bfMouth, rgb: number)
+    {
+        switch (mouth)
+        {
+            case bfMouth.Smile: drawMouth(mouthSmile, rgb); break;
+        }
+        bitfUpdate();
+    }
+
 
 
 // OLED 128x64 Addon
