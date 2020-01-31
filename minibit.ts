@@ -215,7 +215,7 @@ namespace minibit
     let btDisabled = true;
     let matrix5: fireled.Band;
     let bitface: fireled.Band;
-    let mouthSmile: number[] = [0,1,2,3,4,5];
+//    let mouthSmile: number[] = [0,1,2,3,4,5];
 //    let oled: firescreen.Screen
 
     function clamp(value: number, min: number, max: number): number
@@ -241,7 +241,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 82 Bluetooth"
+    //% block="%enable| 83 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1046,10 +1046,10 @@ namespace minibit
 
     function drawMouth(myList: number[], rgb: number)
     {
-        for (let i=0; i<14; i++)
-            bitf().setPixel(i, 0);
-        for (let i=0; i<myList.length, i++)
-            bitf().setPixel(myList[i], rgb);
+//        for (let i=0; i<14; i++)
+//            bitf().setPixel(i, 0);
+//        for (let i=0; i<myList.length, i++)
+//            bitf().setPixel(myList[i], rgb);
     }
 
     /**
@@ -1101,10 +1101,10 @@ namespace minibit
     //% blockGap=8
     export function setBitMouth(mouth: bfMouth, rgb: number)
     {
-        switch (mouth)
-        {
-            case bfMouth.Smile: drawMouth(mouthSmile, rgb); break;
-        }
+//        switch (mouth)
+//        {
+//            case bfMouth.Smile: drawMouth(mouthSmile, rgb); break;
+//        }
         bitfUpdate();
     }
 
