@@ -251,7 +251,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 88 Bluetooth"
+    //% block="%enable| 89 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1121,7 +1121,6 @@ namespace minibit
             case bfMouth.Oooh: drawMouth(mouthOooh, rgb); break;
             case bfMouth.Eeeh: drawMouth(mouthEeeh, rgb); break;
         }
-        drawMouth(mouthSmile, rgb);
         bitfUpdate();
     }
 
