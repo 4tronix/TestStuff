@@ -181,7 +181,7 @@ enum mbColors
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
-//% groups='["Motors","Basic","Advanced","Special","Ultrasonic","Line Sensor","5x5 Matrix","OLED 128x64","BitFace","Deprecated"]'
+//% groups='["New style blocks","Basic","Advanced","Special","Ultrasonic","Line Sensor","5x5 Matrix","OLED 128x64","BitFace","Old style blocks"]'
 namespace minibit
 {
     let fireBand: fireled.Band;
@@ -213,7 +213,8 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 80 Bluetooth"
+    //% block="%enable| 81 Bluetooth"
+    //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
         if (enable == mbBluetooth.btEnable)
@@ -245,7 +246,8 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
-    //% group=Motors
+    //% group="New style blocks"
+    //% blockGap=8
     export function go(direction: mbDirection, speed: number): void
     {
         move(mbMotor.Both, direction, speed);
@@ -261,7 +263,8 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=90
     //% subcategory=Motors
-    //% group=Motors
+    //% group="New style blocks"
+    //% blockGap=8
     export function goms(direction: mbDirection, speed: number, milliseconds: number): void
     {
         go(direction, speed);
@@ -278,7 +281,8 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=80
     //% subcategory=Motors
-    //% group=Motors
+    //% group="New style blocks"
+    //% blockGap=8
     export function rotate(direction: mbRobotDirection, speed: number): void
     {
         if (direction == mbRobotDirection.Left)
@@ -303,7 +307,8 @@ namespace minibit
     //% speed.min=0 speed.max=100
     //% weight=70
     //% subcategory=Motors
-    //% group=Motors
+    //% group="New style blocks"
+    //% blockGap=8
     export function rotatems(direction: mbRobotDirection, speed: number, milliseconds: number): void
     {
         rotate(direction, speed);
@@ -318,7 +323,8 @@ namespace minibit
     //% blockId="mbStop" block="stop with %mode"
     //% weight=60
     //% subcategory=Motors
-    //% group=Motors
+    //% group="New style blocks"
+    //% blockGap=8
     export function stop(mode: mbStopMode): void
     {
         let stopMode = 0;
@@ -340,7 +346,8 @@ namespace minibit
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
-    //% group=Motors
+    //% group="New style blocks"
+    //% blockGap=8
     export function move(motor: mbMotor, direction: mbDirection, speed: number): void
     {
         let speed0 = 0;
@@ -379,7 +386,8 @@ namespace minibit
     //% blockId="minibit_motor" block="drive %motor|motor(s) at speed %speed"
     //% weight=50
     //% subcategory=Motors
-    //% group=Deprecated
+    //% group="Old style blocks"
+    //% blockGap=8
     export function motor(motor: mbMotor, speed: number): void
     {
         let speed0 = 0;
@@ -416,7 +424,8 @@ namespace minibit
     //% speed.min=-1023 speed.max=1023
     //% weight=100
     //% subcategory=Motors
-    //% group=Deprecated
+    //% group="Old style blocks"
+    //% blockGap=8
     export function drive(speed: number): void
     {
         motor(mbMotor.Both, speed);
@@ -431,7 +440,8 @@ namespace minibit
     //% speed.min=-1023 speed.max=1023
     //% weight=70
     //% subcategory=Motors
-    //% group=Deprecated
+    //% group="Old style blocks"
+    //% blockGap=8
     export function driveMilliseconds(speed: number, milliseconds: number): void
     {
         drive(speed);
@@ -448,7 +458,8 @@ namespace minibit
     //% speed.min=0 speed.max=1023
     //% weight=90
     //% subcategory=Motors
-    //% group=Deprecated
+    //% group="Old style blocks"
+    //% blockGap=8
     export function spin(direction: mbRobotDirection, speed: number): void
     {
         if (speed < 0)
@@ -475,7 +486,8 @@ namespace minibit
     //% speed.min=0 speed.max=1023
     //% weight=60
     //% subcategory=Motors
-    //% group=Deprecated
+    //% group="Old style blocks"
+    //% blockGap=8
     export function spinMilliseconds(direction: mbRobotDirection, speed: number, milliseconds: number): void
     {
         spin(direction, speed);
@@ -511,6 +523,7 @@ namespace minibit
     //% weight=100
     //% subcategory=FireLeds
     //% group=Basic
+    //% blockGap=8
     export function setLedColor(rgb: number)
     {
         fire().setBand(rgb);
@@ -524,6 +537,7 @@ namespace minibit
     //% weight=90
     //% subcategory=FireLeds
     //% group=Basic
+    //% blockGap=8
     export function ledClear(): void
     {
         fire().clearBand();
@@ -540,6 +554,7 @@ namespace minibit
     //% weight=80
     //% subcategory=FireLeds
     //% group=Basic
+    //% blockGap=8
     export function setPixelColor(ledId: number, rgb: number): void
     {
         fire().setPixel(ledId, rgb);
@@ -553,6 +568,7 @@ namespace minibit
     //% weight=70
     //% subcategory=FireLeds
     //% group=Basic
+    //% blockGap=8
     export function ledRainbow(): void
     {
         fire().setRainbow();
@@ -566,6 +582,7 @@ namespace minibit
     //% weight=60
     //% subcategory=FireLeds
     //% group=Basic
+    //% blockGap=8
     export function ledShift(): void
     {
         fire().shiftBand();
@@ -579,6 +596,7 @@ namespace minibit
     //% weight=50
     //% subcategory=FireLeds
     //% group=Basic
+    //% blockGap=8
     export function ledRotate(): void
     {
         fire().rotateBand();
@@ -596,6 +614,7 @@ namespace minibit
     //% weight=100
     //% subcategory=FireLeds
     //% group=Advanced
+    //% blockGap=8
     export function ledBrightness(brightness: number): void
     {
         fire().setBrightness(brightness);
@@ -610,6 +629,7 @@ namespace minibit
     //% weight=90
     //% subcategory=FireLeds
     //% group=Advanced
+    //% blockGap=8
     export function setUpdateMode(updateMode: mbMode): void
     {
         _updateMode = updateMode;
@@ -622,6 +642,7 @@ namespace minibit
     //% weight=80
     //% subcategory=FireLeds
     //% group=Advanced
+    //% blockGap=8
     export function ledShow(): void
     {
         if (btDisabled)
@@ -636,6 +657,7 @@ namespace minibit
     //% weight=70
     //% subcategory=FireLeds
     //% group=Advanced
+    //% blockGap=8
     export function mbColours(color: mbColors): number
     {
         return color;
@@ -651,6 +673,7 @@ namespace minibit
     //% weight=60
     //% subcategory=FireLeds
     //% group=Advanced
+    //% blockGap=8
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
@@ -665,6 +688,7 @@ namespace minibit
     //% weight=100
     //% subcategory="Sensors"
     //% group=Ultrasonic
+    //% blockGap=8
     export function sonar(unit: mbPingUnit): number
     {
         // send pulse
@@ -701,6 +725,7 @@ namespace minibit
     //% weight=90
     //% subcategory=Sensors
     //% group="Line Sensor"
+    //% blockGap=8
     export function lineSensor(sensor: mbLineSensors): boolean
     {
         if (sensor == mbLineSensors.Left)
@@ -718,6 +743,7 @@ namespace minibit
     //% blockId=bc_event block="on %sensor| line %event"
     //% subcategory=Sensors
     //% group="Line Sensor"
+    //% blockGap=8
     export function onEvent(sensor: mbPins, event: mbEvents, handler: Action)
     {
         initEvents();
@@ -891,7 +917,7 @@ namespace minibit
       * @param myImage image to show
       * @param rgb colour of image
       */
-    //% blockId="showImage" block="show %myImage|on Matrix in %rgb=mb_colours"
+    //% blockId="showImage" block="show image%myImage|on Matrix in%rgb=mb_colours"
     //% weight=50
     //% subcategory=Addons
     //% group="5x5 Matrix"
