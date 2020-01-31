@@ -241,7 +241,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 86 Bluetooth"
+    //% block="%enable| 87 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1048,7 +1048,7 @@ namespace minibit
     {
         for (let i=0; i<14; i++)
             bitf().setPixel(i, 0);
-        for (let i=0; i<myList.length, i++)
+        for (let i=0; i<myList.length; i++)
             bitf().setPixel(myList[i], rgb);
     }
 
