@@ -241,7 +241,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 85 Bluetooth"
+    //% block="%enable| 86 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1046,10 +1046,10 @@ namespace minibit
 
     function drawMouth(myList: number[], rgb: number)
     {
-//        for (let i=0; i<14; i++)
-//            bitf().setPixel(i, 0);
-//        for (let i=0; i<myList.length, i++)
-//            bitf().setPixel(myList[i], rgb);
+        for (let i=0; i<14; i++)
+            bitf().setPixel(i, 0);
+        for (let i=0; i<myList.length, i++)
+            bitf().setPixel(myList[i], rgb);
     }
 
     /**
