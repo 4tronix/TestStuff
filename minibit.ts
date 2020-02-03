@@ -251,7 +251,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 89 Bluetooth"
+    //% block="%enable| 90 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -557,7 +557,8 @@ namespace minibit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="minibit_set_led_color" block="set all LEDs to %rgb=mb_colours"
+    //% blockId="minibit_set_led_color" block="set all LEDs to %rgb"
+    //% rgb.shadow="colorNumberPicker"
     //% weight=100
     //% subcategory=FireLeds
     //% group=Basic
@@ -692,11 +693,12 @@ namespace minibit
       * @param color Standard RGB Led Colours
       */
     //% blockId="mb_colours" block=%color
+    //% color.shadow="colorNumberPicker"
     //% weight=70
     //% subcategory=FireLeds
     //% group=Advanced
     //% blockGap=8
-    export function mbColours(color: mbColors): number
+    export function mbColours(color: number): number
     {
         return color;
     }
