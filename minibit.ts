@@ -50,8 +50,8 @@ enum bfMouth
     Grin,
     //% block="sad"
     Sad,
-    //% block="grimace"
-    Grimace,
+    //% block="frown"
+    Frown,
     //% block="straight"
     Straight,
     //% block="oooh"
@@ -222,7 +222,7 @@ namespace minibit
     let mouthSmile: number[] = [0,1,2,3,4,5];
     let mouthGrin: number[] = [0,1,2,3,4,5,10,11,12,13];
     let mouthSad: number[] = [0,5,6,7,8,9];
-    let mouthGrimace: number[] = [0,5,6,7,8,9,10,11,12,13];
+    let mouthFrown: number[] = [0,5,6,7,8,9,10,11,12,13];
     let mouthStraight: number[] = [0,5,10,11,12,13];
     let mouthOooh: number[] = [1,2,3,4,6,7,8,9,10,13];
     let mouthEeeh: number[] = [0,1,2,3,4,5,6,7,8,9];
@@ -251,7 +251,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 91 Bluetooth"
+    //% block="%enable| 92 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1110,6 +1110,23 @@ namespace minibit
     }
 
     /**
+      * Set BitFace nose to selected colour
+      * @param rgb colour to set
+      */
+    //% blockId="setBitNose"
+    //% block="set Bitface nose to%rgb"
+    //% rgb.shadow="colorNumberPicker"
+    //% weight=80
+    //% subcategory=Addons
+    //% group="Bitface"
+    //% blockGap=8
+    export function setBitNose(rgb: number)
+    {
+        bitf().setPixel(14, rgb);
+        bitfUpdate();
+    }
+
+    /**
       * Set BitFace mouth to selected style and colour
       * @param mouth style of mouth. eg: smile
       * @param rgb colour to set
@@ -1117,7 +1134,7 @@ namespace minibit
     //% blockId="setBitMouth"
     //% block="set Bitface mouth to%mouth|with%rgb"
     //% rgb.shadow="colorNumberPicker"
-    //% weight=80
+    //% weight=70
     //% subcategory=Addons
     //% group="Bitface"
     //% blockGap=8
@@ -1128,7 +1145,7 @@ namespace minibit
             case bfMouth.Smile: drawMouth(mouthSmile, rgb); break;
             case bfMouth.Grin: drawMouth(mouthGrin, rgb); break;
             case bfMouth.Sad: drawMouth(mouthSad, rgb); break;
-            case bfMouth.Grimace: drawMouth(mouthGrimace, rgb); break;
+            case bfMouth.Frown: drawMouth(mouthFrown, rgb); break;
             case bfMouth.Straight: drawMouth(mouthStraight, rgb); break;
             case bfMouth.Oooh: drawMouth(mouthOooh, rgb); break;
             case bfMouth.Eeeh: drawMouth(mouthEeeh, rgb); break;
