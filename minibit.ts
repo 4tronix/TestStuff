@@ -251,7 +251,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 90 Bluetooth"
+    //% block="%enable| 91 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -589,7 +589,8 @@ namespace minibit
      * @param ledId position of the LED (0 to 3)
      * @param rgb RGB color of the LED
      */
-    //% blockId="minibit_set_pixel_color" block="set LED at %ledId|to %rgb=mb_colours"
+    //% blockId="minibit_set_pixel_color" block="set LED at %ledId|to %rgb"
+    //% rgb.shadow="colorNumberPicker"
     //% weight=80
     //% subcategory=FireLeds
     //% group=Basic
@@ -709,7 +710,7 @@ namespace minibit
       * @param green Green value of the LED (0 to 255)
       * @param blue Blue value of the LED (0 to 255)
       */
-    //% blockId="bitbot_convertRGB" block="convert from red %red| green %green| blue %blue"
+    //% blockId="bitbot_convertRGB" block="convert from red%red|green%green|blue%blue"
     //% weight=60
     //% subcategory=FireLeds
     //% group=Advanced
@@ -830,7 +831,8 @@ namespace minibit
       * Sets all Matrix LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="setMatrix" block="set whole Matrix to %rgb=mb_colours"
+    //% blockId="setMatrix" block="set whole Matrix to %rgb"
+    //% rgb.shadow="colorNumberPicker"
     //% weight=100
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -865,7 +867,8 @@ namespace minibit
      * @param ledId linear position of the LED (0 to 24)
      * @param rgb RGB color of the LED
      */
-    //% blockId="setPixel" block="set Matrix LED at %ledId|to %rgb=mb_colours"
+    //% blockId="setPixel" block="set Matrix LED at %ledId|to %rgb"
+    //% rgb.shadow="colorNumberPicker"
     //% weight=80
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -885,7 +888,8 @@ namespace minibit
      * @param y up/down position of the LED (0 to 4). Top is 0
      * @param rgb RGB color of the LED
      */
-    //% blockId="setArrayPixel" block="set Matrix LED at %x|,%y|to %rgb=mb_colours"
+    //% blockId="setArrayPixel" block="set Matrix LED at %x|,%y|to %rgb"
+    //% rgb.shadow="colorNumberPicker"
     //% weight=75
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -926,7 +930,8 @@ namespace minibit
       * @param fill selct to fill in area
       */
     //% blockId="matRectangle"
-    //% block="Draw rectangle from x%x1|y%y1|to x%x2|y%y2 in %rgb=mb_colours and fill%fill"
+    //% block="Draw rectangle from x%x1|y%y1|to x%x2|y%y2 in %rgb| and fill%fill"
+    //% rgb.shadow="colorNumberPicker"
     //% subcategory=Addons
     //% group="5x5 Matrix"
     //% weight=60
@@ -957,7 +962,8 @@ namespace minibit
       * @param myImage image to show
       * @param rgb colour of image
       */
-    //% blockId="showImage" block="show image%myImage|on Matrix in%rgb=mb_colours"
+    //% blockId="showImage" block="show image%myImage|on Matrix in%rgb"
+    //% rgb.shadow="colorNumberPicker"
     //% weight=50
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -983,7 +989,8 @@ namespace minibit
       * @param rgb colour of image
       * @param size size of pupil. Small or Large
       */
-    //% blockId="matShowEyeball" block="Matrix eyeball%pos|in %rgb=mb_colours %size"
+    //% blockId="matShowEyeball" block="Matrix eyeball%pos|in %rgb %size"
+    //% rgb.shadow="colorNumberPicker"
     //% weight=55
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -1069,7 +1076,8 @@ namespace minibit
       * @param rgb RGB color of the LED
       */
     //% blockId="setBitface"
-    //% block="set Bitface to%rgb=mb_colours"
+    //% block="set Bitface to%rgb"
+    //% rgb.shadow="colorNumberPicker"
     //% weight=100
     //% subcategory=Addons
     //% group="Bitface"
@@ -1086,7 +1094,8 @@ namespace minibit
       * @param rgb colour to set
       */
     //% blockId="setBitEye"
-    //% block="set Bitface%eye| eye(s) to%rgb=mb_colours"
+    //% block="set Bitface%eye| eye(s) to%rgb"
+    //% rgb.shadow="colorNumberPicker"
     //% weight=90
     //% subcategory=Addons
     //% group="Bitface"
@@ -1106,7 +1115,8 @@ namespace minibit
       * @param rgb colour to set
       */
     //% blockId="setBitMouth"
-    //% block="set Bitface mouth to%mouth|with%rgb=mb_colours"
+    //% block="set Bitface mouth to%mouth|with%rgb"
+    //% rgb.shadow="colorNumberPicker"
     //% weight=80
     //% subcategory=Addons
     //% group="Bitface"
