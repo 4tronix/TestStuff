@@ -226,7 +226,7 @@ namespace minibit
     let mouthStraight: number[] = [0,5,10,11,12,13];
     let mouthOooh: number[] = [1,2,3,4,6,7,8,9,10,13];
     let mouthEeeh: number[] = [0,1,2,3,4,5,6,7,8,9];
-//    let oled: firescreen.Screen
+    let oled: firescreen.Screen
 
     function clamp(value: number, min: number, max: number): number
     {
@@ -251,7 +251,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 94 Bluetooth"
+    //% block="%enable| 95 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
