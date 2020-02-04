@@ -258,7 +258,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 97 Bluetooth"
+    //% block="%enable| 98 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1299,12 +1299,12 @@ namespace minibit
     //% weight=40
     //% inlineInputMode=inline
     //% blockGap=8
-    oledLine(dir: lineDirection, x: number, y: number, length: number, doSet: boolean, update: boolean)
+    export function oledLine(dir: lineDirection, x: number, y: number, length: number, doSet: boolean, update: boolean)
     {
         if (dir == lineDirection.Vertical)
-            oScreen().oledHline(x, y, length, doSet, update);
+            oScreen().oledHLine(x, y, length, doSet, update);
         else
-            oScreen().oledVline(x, y, length, doSet, update);
+            oScreen().oledVLine(x, y, length, doSet, update);
     }
 
     /**
@@ -1325,7 +1325,7 @@ namespace minibit
     //% weight=30
     //% inlineInputMode=inline
     //% blockGap=8
-    oledRect(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
+    export function oledRect(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
     {
         oScreen().oledRect(x1, y1, x2, y2, doSet, update);
     }
