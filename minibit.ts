@@ -60,6 +60,13 @@ enum bfMouth
     Eeeh
 }
 
+enum lineDirection
+{
+    //% block="vertical"
+    Vertical,
+    //% block="horizontal"
+    Horizontal
+}
 
 /**
   * Enumeration of motors.
@@ -251,7 +258,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 96 Bluetooth"
+    //% block="%enable| 97 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1168,22 +1175,6 @@ namespace minibit
     }
 
     /**
-      * Set Oled all White or all Black
-      @ param set all OLED pixels on (true) or off (false)
-      */
-    //% blockId="OledSet"
-    //% block="All Oled pixels%set"
-    //% set.shadow="toggleOnOff"
-    //% subcategory=Addons
-    //% group="OLED 128x64"
-    //% weight=100
-    //% blockGap=8
-    export function oledSet(set: boolean)
-    {
-        oScreen().setScreen(set);
-    }
-
-    /**
       * Show Text on OLED
       * @param text text string to display eg: '4tronix'
       * @param x x position to start
@@ -1191,10 +1182,10 @@ namespace minibit
       * @param inv inverse or normal text eg: false
       */
     //% blockId="OledText"
-    //% block="Text %text|at x %x|y %y| inverse%inv"
+    //% block="OLED text%text|at x,y%x|,%y|inverse%inv"
     //% subcategory=Addons
     //% group="OLED 128x64"
-    //% weight=90
+    //% weight=100
     //% inlineInputMode=inline
     //% inv.shadow="toggleYesNo"
     //% blockGap=8
@@ -1211,10 +1202,10 @@ namespace minibit
       * @param inv inverse or normal text eg: false
       */
     //% blockId="OledNumber"
-    //% block="Number %num|at x%x|y%y|inverse%inv"
+    //% block="OLED number%num|at x,y%x|,%y|inverse%inv"
     //% subcategory=Addons
     //% group="OLED 128x64"
-    //% weight=80
+    //% weight=90
     //% inlineInputMode=inline
     //% inv.shadow="toggleYesNo"
     //% blockGap=8
@@ -1224,22 +1215,119 @@ namespace minibit
     }
 
     /**
+      * Set Oled all White or all Black
+      @ param set all OLED pixels on or off. eg: false
+      */
+    //% blockId="OledSet"
+    //% block="All OLED pixels%set"
+    //% set.shadow="toggleOnOff"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=80
+    //% blockGap=8
+    export function oledSet(set: boolean)
+    {
+        oScreen().setScreen(set);
+    }
+
+    /**
+      * Invert display
+      * @param inv inverse video: eg: true
+      */
+    //% blockId="invertOled" block="OLED inverse text%inv"
+    //% inv.shadow="toggleOnOff"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=70
+    //% blockGap=8
+    invertOled(inv: boolean)
+    {
+        oScreen().invertOled(inv);
+    }
+
+    /**
+      * Zoom display
+      * @param zoom zoomed text: eg: true
+      */
+    //% blockId="zoomOled" block="OLED zoom%zoom"
+    //% zoom.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=60
+    //% blockGap=8
+    zoomOled(zoom: boolean)
+    {
+        oScreen.zoomOled(zoom);
+    }
+
+    /**
       * Plot pixel on OLED
       * @param x x position to plot
       * @param y y position to plot
       * @param doSet on or off. eg: true
+      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
       */
     //% blockId="OledPlotPixel"
-    //% block="Plot pixel at x%x|y%y|set%doSet"
+    //% block="Set pixel at x,y%x|,%y|to%doSet|with update%update"
     //% doSet.shadow="toggleOnOff"
+    //% update.shadow="toggleYesNo"
     //% subcategory=Addons
     //% group="OLED 128x64"
-    //% weight=70
+    //% weight=50
     //% inlineInputMode=inline
     //% blockGap=8
-    export function oledPlotPixel(x: number, y: number, doSet: boolean)
+    export function oledPlotPixel(x: number, y: number, doSet: boolean, update: boolean)
     {
-        oScreen().plotPixel(x, y, doSet, true);
+        oScreen().plotPixel(x, y, doSet, update);
+    }
+
+    /**
+      * draw a line
+      * @param dir line direction. Horizontal or vertical. eg: Horizontal
+      * @param x x start
+      * @param y y start
+      * @param len length of line, eg: 10
+      * @param doSet set or clear. eg: true
+      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
+      */
+    //% blockId="oledLine" block="OLED%dir|line at x,y%x|,%y|length%length|set%doSet|update%update"
+    //% inlineInputMode=inline
+    //% doSet.shadow="toggleOnOff"
+    //% update.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=40
+    //% inlineInputMode=inline
+    //% blockGap=8
+    oledLine(dir: lineDirection, x: number, y: number, length: number, doSet: boolean, update: boolean)
+    {
+        if (dir == lineDirection.Vertical)
+            oScreen().oledHline(x, y, length, doSet, update);
+        else
+            oScreen().oledVline(x, y, length, doSet, update);
+    }
+
+    /**
+      * draw a rectangle
+      * @param x1 x start
+      * @param y1 y start
+      * @param x2 x finish
+      * @param y2 y finish
+      * @param doSet set or clear. eg: true
+      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
+      */
+    //% blockId="oledRect" block="OLED rectangle from x,y%x1|,%y1|to x,y%x2|,%y2|set%doSet|update%update"
+    //% inlineInputMode=inline
+    //% doSet.shadow="toggleOnOff"
+    //% update.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=30
+    //% inlineInputMode=inline
+    //% blockGap=8
+    oledRect(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
+    {
+        oScreen().oledRect(x1, y1, x2, y2, doSet, update);
     }
 
 }
