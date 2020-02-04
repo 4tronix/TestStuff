@@ -258,7 +258,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 99 Bluetooth"
+    //% block="%enable| 100 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1234,13 +1234,13 @@ namespace minibit
       * Invert display
       * @param inv inverse video: eg: true
       */
-    //% blockId="invertOled" block="OLED inverse text%inv"
+    //% blockId="OledInvert" block="OLED inverse text%inv"
     //% inv.shadow="toggleOnOff"
     //% subcategory=Addons
     //% group="OLED 128x64"
     //% weight=70
     //% blockGap=8
-    invertOled(inv: boolean)
+    export function oledInvert(inv: boolean)
     {
         oScreen().invertOled(inv);
     }
@@ -1249,13 +1249,13 @@ namespace minibit
       * Zoom display
       * @param zoom zoomed text: eg: true
       */
-    //% blockId="zoomOled" block="OLED zoom%zoom"
+    //% blockId="OledZoom" block="OLED zoom%zoom"
     //% zoom.shadow="toggleYesNo"
     //% subcategory=Addons
     //% group="OLED 128x64"
     //% weight=60
     //% blockGap=8
-    zoomOled(zoom: boolean)
+    export funtion oledZOOM(zoom: boolean)
     {
         oScreen.zoomOled(zoom);
     }
@@ -1290,7 +1290,7 @@ namespace minibit
       * @param doSet set or clear. eg: true
       * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
       */
-    //% blockId="oledLine" block="OLED%dir|line at x,y%x|,%y|length%length|set%doSet|update%update"
+    //% blockId="OledLine" block="OLED%dir|line at x,y%x|,%y|length%length|set%doSet|update%update"
     //% inlineInputMode=inline
     //% doSet.shadow="toggleOnOff"
     //% update.shadow="toggleYesNo"
@@ -1316,7 +1316,7 @@ namespace minibit
       * @param doSet set or clear. eg: true
       * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
       */
-    //% blockId="oledRectangle" block="OLED rectangle from x,y%x1|,%y1|to x,y%x2|,%y2|set%doSet|update%update"
+    //% blockId="OledRectangle" block="OLED rectangle from x,y%x1|,%y1|to x,y%x2|,%y2|set%doSet|update%update"
     //% inlineInputMode=inline
     //% doSet.shadow="toggleOnOff"
     //% update.shadow="toggleYesNo"
