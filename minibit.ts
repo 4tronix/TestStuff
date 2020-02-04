@@ -258,7 +258,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 98 Bluetooth"
+    //% block="%enable| 99 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1316,7 +1316,7 @@ namespace minibit
       * @param doSet set or clear. eg: true
       * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
       */
-    //% blockId="oledRect" block="OLED rectangle from x,y%x1|,%y1|to x,y%x2|,%y2|set%doSet|update%update"
+    //% blockId="oledRectangle" block="OLED rectangle from x,y%x1|,%y1|to x,y%x2|,%y2|set%doSet|update%update"
     //% inlineInputMode=inline
     //% doSet.shadow="toggleOnOff"
     //% update.shadow="toggleYesNo"
@@ -1325,7 +1325,7 @@ namespace minibit
     //% weight=30
     //% inlineInputMode=inline
     //% blockGap=8
-    export function oledRect(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
+    export function oledRectangle(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
     {
         oScreen().oledRect(x1, y1, x2, y2, doSet, update);
     }
