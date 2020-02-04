@@ -226,7 +226,7 @@ namespace minibit
     let mouthStraight: number[] = [0,5,10,11,12,13];
     let mouthOooh: number[] = [1,2,3,4,6,7,8,9,10,13];
     let mouthEeeh: number[] = [0,1,2,3,4,5,6,7,8,9];
-    let oled: firescreen.Screen
+    let oled: firescreen.Screen;
 
     function clamp(value: number, min: number, max: number): number
     {
@@ -251,7 +251,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 95 Bluetooth"
+    //% block="%enable| 96 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1158,7 +1158,7 @@ namespace minibit
 // OLED 128x64 Addon
 
     /* create a new OLED object if needed */
-    function oled(): firescreen.Screen
+    function oScreen(): firescreen.Screen
     {
         if (!oled)
         {
@@ -1180,7 +1180,7 @@ namespace minibit
     //% blockGap=8
     export function oledSet(set: boolean)
     {
-        oled().setScreen(set);
+        oScreen().setScreen(set);
     }
 
     /**
@@ -1200,7 +1200,7 @@ namespace minibit
     //% blockGap=8
     export function oledText(text: string, x: number, y: number, inv: boolean)
     {
-        oled().doText(text, x, y, inv);
+        oScreen().doText(text, x, y, inv);
     }
 
     /**
@@ -1220,7 +1220,7 @@ namespace minibit
     //% blockGap=8
     export function oledNumber(num: number, x: number, y: number, inv: boolean)
     {
-        oled().doNumber(num, x, y, inv);
+        oScreen().doNumber(num, x, y, inv);
     }
 
     /**
@@ -1239,7 +1239,7 @@ namespace minibit
     //% blockGap=8
     export function oledPlotPixel(x: number, y: number, doSet: boolean)
     {
-        oled().plotPixel(x, y, doSet, true);
+        oScreen().plotPixel(x, y, doSet, true);
     }
 
 }
