@@ -251,7 +251,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 92 Bluetooth"
+    //% block="%enable| 93 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1158,27 +1158,29 @@ namespace minibit
 // OLED 128x64 Addon
 
     /* create a new OLED object if needed */
-//    function oled(): firescreen.Screen
-//    {
-//        if (!oled)
-//        {
-//            oled = firescreen.newScreen(0x3c);
-//        }
-//        return oled;
-//    }
+    function oled(): firescreen.Screen
+    {
+        if (!oled)
+        {
+            oled = firescreen.newScreen(0x3c);
+        }
+        return oled;
+    }
 
     /**
-      * Clear Oled
+      * Set Oled all White or all Black
+      @ param set all OLED pixels on (true) or off (false)
       */
-    //% blockId="OledClear"
-    //% block="Clear Oled"
+    //% blockId="OledSet"
+    //% block="All Oled pixels%set"
+    //% set.shadow="toggleOnOff"
     //% subcategory=Addons
     //% group="OLED 128x64"
     //% weight=100
     //% blockGap=8
-    export function oledClear()
+    export function oledSet(set: boolean)
     {
-//        oled().clearScreen();
+        oled().setScreen(set);
     }
 
     /**
@@ -1187,20 +1189,18 @@ namespace minibit
       * @param x x position to start
       * @param y y position to start
       * @param inv inverse or normal text eg: false
-      * @param zoom zoomed or standard text eg: true
       */
     //% blockId="OledText"
-    //% block="Text %text|at x %x|y %y| inverse%inv| zoomed %zoom"
+    //% block="Text %text|at x %x|y %y| inverse%inv"
     //% subcategory=Addons
     //% group="OLED 128x64"
     //% weight=90
     //% inlineInputMode=inline
     //% inv.shadow="toggleYesNo"
-    //% zoom.shadow="toggleYesNo"
     //% blockGap=8
-    export function oledText(text: string, x: number, y: number, inv: boolean, zoom: boolean)
+    export function oledText(text: string, x: number, y: number, inv: boolean)
     {
-//        oled().showText(text, x, y, inv, zoom);
+        oled().doText(text, x, y, inv);
     }
 
     /**
@@ -1209,41 +1209,37 @@ namespace minibit
       * @param x x position to start
       * @param y y position to start
       * @param inv inverse or normal text eg: false
-      * @param zoom zoomed or standard text eg: true
       */
     //% blockId="OledNumber"
-    //% block="Number %num|at x%x|y%y|inverse%inv|zoomed%zoom"
+    //% block="Number %num|at x%x|y%y|inverse%inv"
     //% subcategory=Addons
     //% group="OLED 128x64"
     //% weight=80
     //% inlineInputMode=inline
     //% inv.shadow="toggleYesNo"
-    //% zoom.shadow="toggleYesNo"
     //% blockGap=8
-    export function oledNumber(num: number, x: number, y: number, inv: boolean, zoom: boolean)
+    export function oledNumber(num: number, x: number, y: number, inv: boolean)
     {
-//        oled().showNumber(num, x, y, inv, zoom);
+        oled().doNumber(num, x, y, inv);
     }
 
     /**
       * Plot pixel on OLED
       * @param x x position to plot
       * @param y y position to plot
-      * @param inv inverse or normal text eg: false
-      * @param zoom zoomed or standard text eg: true
+      * @param doSet on or off. eg: true
       */
     //% blockId="OledPlotPixel"
-    //% block="Plot pixel at x%x|y%y|inverse%inv|zoomed%zoom"
+    //% block="Plot pixel at x%x|y%y|set%doSet"
+    //% doSet.shadow="toggleOnOff"
     //% subcategory=Addons
     //% group="OLED 128x64"
     //% weight=70
     //% inlineInputMode=inline
-    //% inv.shadow="toggleYesNo"
-    //% zoom.shadow="toggleYesNo"
     //% blockGap=8
-    export function oledPlotPixel(x: number, y: number, inv: boolean, zoom: boolean)
+    export function oledPlotPixel(x: number, y: number, doSet: boolean)
     {
-//        oled().plotPixel(x, y, inv, zoom);
+        oled().plotPixel(x, y, doSet, true);
     }
 
 }
