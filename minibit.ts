@@ -234,6 +234,8 @@ namespace minibit
     let mouthOooh: number[] = [1,2,3,4,6,7,8,9,10,13];
     let mouthEeeh: number[] = [0,1,2,3,4,5,6,7,8,9];
     let oled: firescreen.Screen;
+    let leftBias = 0;
+    let rightBias = 0;
 
     function clamp(value: number, min: number, max: number): number
     {
@@ -258,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 107 Bluetooth"
+    //% block="%enable| 108 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -399,26 +401,60 @@ namespace minibit
         let speed1 = 0;
         speed = clamp(speed, 0, 100) * 10.23;
         setPWM(speed);
-        if (direction == mbDirection.Forward)
-        {
-            speed0 = speed;
-            speed1 = 0;
-        }
-        else // must be Reverse
-        {
-            speed0 = 0;
-            speed1 = speed;
-        }
+        lSpeed = Math.round(speed * (100 - leftBias) / 100);
+        rSpeed = Math.round(speed * (100 - rightBias) / 100);
         if ((motor == mbMotor.Left) || (motor == mbMotor.Both))
         {
-            pins.analogWritePin(AnalogPin.P12, speed0);
-            pins.analogWritePin(AnalogPin.P8, speed1);
+            if (direction == mbDirection.Forward)
+            {
+                pins.analogWritePin(AnalogPin.P12, lSpeed);
+                pins.analogWritePin(AnalogPin.P8, 0);
+            }
+            else
+            {
+                pins.analogWritePin(AnalogPin.P12, 0);
+                pins.analogWritePin(AnalogPin.P8, lSpeed);
+            }
         }
 
         if ((motor == mbMotor.Right) || (motor == mbMotor.Both))
         {
-            pins.analogWritePin(AnalogPin.P16, speed0);
-            pins.analogWritePin(AnalogPin.P14, speed1);
+            if (direction == mbDirection.Forward)
+            {
+                pins.analogWritePin(AnalogPin.P16, rSpeed);
+                pins.analogWritePin(AnalogPin.P14, 0);
+            }
+            else
+            {
+                pins.analogWritePin(AnalogPin.P16, 0);
+                pins.analogWritePin(AnalogPin.P4, rSpeed);
+            }
+        }
+    }
+
+    /**
+      * Set left/right bias to match motors
+      * @param direction direction to turn more (if robot goes right, set this to left)
+      * @param bias percentage of speed to bias with eg: 10
+      */
+    //% blockId="mbBias" block="bias%direction|by%bias|%"
+    //% bias.min=0 bias.max=50
+    //% weight=40
+    //% subcategory=Motors
+    //% group="New style blocks"
+    //% blockGap=8
+    export function mbBias(direction: mbRobotDirection, bias: number): void
+    {
+        bias = clamp(bias, 0, 50);
+        if (direction == mbRobotDirection.Left)
+        {
+            leftBias = bias;
+            rightBias = 0;
+        }
+        else if (direction == mbRobotDirection.Right)
+        {
+            leftBias = 0;
+            rightBias = bias;
         }
     }
 
@@ -1302,9 +1338,9 @@ namespace minibit
     export function oledLine(dir: lineDirection, x: number, y: number, length: number, doSet: boolean, update: boolean)
     {
         if (dir == lineDirection.Vertical)
-            oScreen().oledHLine(x, y, length, doSet, update);
-        else
             oScreen().oledVLine(x, y, length, doSet, update);
+        else
+            oScreen().oledHLine(x, y, length, doSet, update);
     }
 
     /**
