@@ -258,7 +258,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 105 Bluetooth"
+    //% block="%enable| 106 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1257,7 +1257,7 @@ namespace minibit
     //% blockGap=8
     export function oledZOOM(zoom: boolean)
     {
-        oScreen.zoomOled(zoom);
+        oScreen().zoomOled(zoom);
     }
 
 
