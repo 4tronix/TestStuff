@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 108 Bluetooth"
+    //% block="%enable| 109 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -397,12 +397,10 @@ namespace minibit
     //% blockGap=8
     export function move(motor: mbMotor, direction: mbDirection, speed: number): void
     {
-        let speed0 = 0;
-        let speed1 = 0;
         speed = clamp(speed, 0, 100) * 10.23;
         setPWM(speed);
-        lSpeed = Math.round(speed * (100 - leftBias) / 100);
-        rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        let lSpeed = Math.round(speed * (100 - leftBias) / 100);
+        let rSpeed = Math.round(speed * (100 - rightBias) / 100);
         if ((motor == mbMotor.Left) || (motor == mbMotor.Both))
         {
             if (direction == mbDirection.Forward)
@@ -416,7 +414,6 @@ namespace minibit
                 pins.analogWritePin(AnalogPin.P8, lSpeed);
             }
         }
-
         if ((motor == mbMotor.Right) || (motor == mbMotor.Both))
         {
             if (direction == mbDirection.Forward)
@@ -451,7 +448,7 @@ namespace minibit
             leftBias = bias;
             rightBias = 0;
         }
-        else if (direction == mbRobotDirection.Right)
+        else
         {
             leftBias = 0;
             rightBias = bias;
