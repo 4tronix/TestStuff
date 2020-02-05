@@ -34,7 +34,7 @@ minibit.stop(MBStopMode.Brake) # rapidly brake
 ## Driving the motors individually
 
 If you want more fine grain control of individal motors, use `minibit.move()` to drive motor either forward or reverse.
-You can specify the direction (Forward or Reverse) and speed between 0 and 100
+You can specify the direction (Forward or Reverse) and speed between 0 and 100.
 If the left motor truns slower than the right motor, the robot will turn to the left
 ```blocks
 // Drive both motors forward at speed 60. Equivalent to minibit.go(mbDirection.Forward, 60)
@@ -47,6 +47,26 @@ minibit.move(mbMotor.Left, mbDirection.Reverse, 30)
 minibit.move(mbMotor.Left, mbDirection.Forward, 40)
 minibit.move(mbMotor.Right, mbDirection.Forward, 70)
 ```
+
+## Making the Robot Drive Straight
+
+The small DC motors used in the Minibit and many other small robots are not guaranteed to go at the speed as each other.
+This can cause the robot to veer off the straight line, either to left or to right, even when both motors are programmed to go
+at the same speed.
+We can partially correct for this by adding a direction bias to the motor speed settings.
+If your robot is veering to the right, then set the bias to the left.
+Conversely, if your robot is turing to the left, then se the bias to the right.
+It varies with speed and battery condition etc, but an approximation is that a 10% bias will result in about 15cm (6 inches)
+change of course over about 2m (6 feet).
+
+```blocks
+// eg. robot leaves straight line to the right by about 10cm over 2m, so bias it to the left by 5%
+minibit.mbBias(mbRobotDirection.Left, 5)
+
+// eg. robot leaves straight line to left by 25cm, so bias it to the right by 15%
+minibit.mbBias(mbRobotDirection.Right, 15)
+```
+
 
 ## Read sonar value
 
@@ -67,10 +87,6 @@ However, it can slow down some effects so there is a block provided to switch th
 Manual or Automatic:
 
 ```blocks
-// Switch FireLedss Update Mode to Manual or Automatic
-miniBit.setUpdateMode(mbMode.Manual);
-miniBit.setUpdateMode(mbMode.Auto);
-
 // Set all FireLeds to Green (hard-coded RGB color)
 minibit.setLedColor(0x00FF00)
 // Set all FireLeds to Green (built-in colour selection)
@@ -98,6 +114,10 @@ and select the brightness of the FireLeds.
 The brightness is set to 40 by default, but can go as high as 255
 You should be careful not to look directly at them when they are bright as they can damage eyes
 ```blocks
+// Switch FireLedss Update Mode to Manual or Automatic
+miniBit.setUpdateMode(mbMode.Manual);
+miniBit.setUpdateMode(mbMode.Auto);
+
 // Select colour from separate Red, Green nd Blue values
 // Each of the Red, Green and Blue values can range from 0 to 255
 // This example produces a pale blue colour
