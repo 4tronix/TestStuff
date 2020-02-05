@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 109 Bluetooth"
+    //% block="%enable| 110 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -435,14 +435,14 @@ namespace minibit
       * @param bias percentage of speed to bias with eg: 10
       */
     //% blockId="mbBias" block="bias%direction|by%bias|%"
-    //% bias.min=0 bias.max=50
+    //% bias.min=0 bias.max=80
     //% weight=40
     //% subcategory=Motors
     //% group="New style blocks"
     //% blockGap=8
     export function mbBias(direction: mbRobotDirection, bias: number): void
     {
-        bias = clamp(bias, 0, 50);
+        bias = clamp(bias, 0, 80);
         if (direction == mbRobotDirection.Left)
         {
             leftBias = bias;
