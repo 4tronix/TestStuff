@@ -258,7 +258,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 106 Bluetooth"
+    //% block="%enable| 107 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1260,5 +1260,74 @@ namespace minibit
         oScreen().zoomOled(zoom);
     }
 
+    /**
+      * Plot pixel on OLED
+      * @param x x position to plot
+      * @param y y position to plot
+      * @param doSet on or off. eg: true
+      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
+      */
+    //% blockId="OledPlotPixel"
+    //% block="Set pixel at x,y%x|,%y|to%doSet|with update%update"
+    //% doSet.shadow="toggleOnOff"
+    //% update.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=50
+    //% inlineInputMode=inline
+    //% blockGap=8
+    export function oledPlotPixel(x: number, y: number, doSet: boolean, update: boolean)
+    {
+        oScreen().plotPixel(x, y, doSet, update);
+    }
+
+    /**
+      * draw a line
+      * @param dir line direction. Horizontal or vertical. eg: Horizontal
+      * @param x x start
+      * @param y y start
+      * @param len length of line, eg: 10
+      * @param doSet set or clear. eg: true
+      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
+      */
+    //% blockId="OledLine" block="OLED%dir|line at x,y%x|,%y|length%length|set%doSet|update%update"
+    //% inlineInputMode=inline
+    //% doSet.shadow="toggleOnOff"
+    //% update.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=40
+    //% inlineInputMode=inline
+    //% blockGap=8
+    export function oledLine(dir: lineDirection, x: number, y: number, length: number, doSet: boolean, update: boolean)
+    {
+        if (dir == lineDirection.Vertical)
+            oScreen().oledHLine(x, y, length, doSet, update);
+        else
+            oScreen().oledVLine(x, y, length, doSet, update);
+    }
+
+    /**
+      * draw a rectangle
+      * @param x1 x start
+      * @param y1 y start
+      * @param x2 x finish
+      * @param y2 y finish
+      * @param doSet set or clear. eg: true
+      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
+      */
+    //% blockId="OledRectangle" block="OLED rectangle from x,y%x1|,%y1|to x,y%x2|,%y2|set%doSet|update%update"
+    //% inlineInputMode=inline
+    //% doSet.shadow="toggleOnOff"
+    //% update.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=30
+    //% inlineInputMode=inline
+    //% blockGap=8
+    export function oledRectangle(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
+    {
+        oScreen().oledRect(x1, y1, x2, y2, doSet, update);
+    }
 
 }
