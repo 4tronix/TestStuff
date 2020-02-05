@@ -258,7 +258,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 103 Bluetooth"
+    //% block="%enable| 104 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1228,6 +1228,36 @@ namespace minibit
     export function oledSet(set: boolean)
     {
         oScreen().setScreen(set);
+    }
+
+    /**
+      * Invert display
+      * @param inv inverse video: eg: true
+      */
+    //% blockId="OledInvert" block="OLED inverse text%inv"
+    //% inv.shadow="toggleOnOff"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=70
+    //% blockGap=8
+    export function oledInvert(inv: boolean)
+    {
+        oScreen().invertOled(inv);
+    }
+
+    /**
+      * Zoom display
+      * @param zoom zoomed text: eg: true
+      */
+    //% blockId="OledZoom" block="OLED zoom%zoom"
+    //% zoom.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=60
+    //% blockGap=8
+    export funtion oledZOOM(zoom: boolean)
+    {
+        oScreen.zoomOled(zoom);
     }
 
 
