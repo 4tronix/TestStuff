@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 122 Bluetooth"
+    //% block="%enable| 123 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1337,6 +1337,54 @@ namespace minibit
     export function oledPlotPixel(x: number, y: number, doSet: boolean, update: boolean)
     {
         oScreen().plotPixel(x, y, doSet, update);
+    }
+
+    /**
+      * draw a general line in any direction
+      * @param x1 x start
+      * @param y1 y start
+      * @param x2 x end
+      * @param y2 y end
+      * @param doSet set or clear. eg: true
+      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
+      */
+    //% blockId="OledGLine" block="OLED%dir|line from x,y%x|,%y|to x,y%x|,%y|set%doSet|update%update"
+    //% inlineInputMode=inline
+    //% doSet.shadow="toggleOnOff"
+    //% update.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=45
+    //% inlineInputMode=inline
+    //% blockGap=8
+    export function oledGLine(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
+    {
+        let xSteps = Math.abs(x2-x1);
+        let ySteps = Math.abs(y2-y1);
+        let x = x1;
+        let y = y1;
+        if (xSteps > ySteps)    // x is greater, so step in x
+        {
+            let dx = (x2 > x1) ? 1 : -1;
+            let dy = (y2 - y1) / xSteps;
+            for (let i=0; i < xSteps; i++)
+            {
+                oScreen().plotPixel(x, y, doSet, update);
+                x += dx;
+                y += dy;
+            }
+        }
+        else
+        {
+            let dx = (x2 - x1) / ySteps;
+            let dy = (y2 > y1) ? 1 : -1;
+            for (let i=0; i < ySteps; i++)
+            {
+                oScreen().plotPixel(x, y, doSet, update);
+                x += dx;
+                y += dy;
+            }
+        }
     }
 
     /**
