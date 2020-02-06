@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 116 Bluetooth"
+    //% block="%enable| 117 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -585,7 +585,7 @@ namespace minibit
     //% group=Basic
     //% blockGap=8
     //% blockHidden=false
-    function wheel(pos: number): number
+    export function wheel(pos: number): number
     {
         /* Generate rainbow colors across 0-255 positions */
         if (pos < 85)
