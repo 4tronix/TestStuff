@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 114 Bluetooth"
+    //% block="%enable| 115 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -573,6 +573,36 @@ namespace minibit
         stop(mbStopMode.Coast);
     }
 
+
+// Test code
+    /**
+      * get rgb colour number for Rainbow
+      * @param pos Position in wheel 0 to 255
+      */
+    //% blockId="mbWheel" block="get colour at position%pos"
+    //% weight=110
+    //% subcategory=FireLeds
+    //% group=Basic
+    //% blockGap=8
+    //% blockHidden=false
+    function wheel(pos: number): number
+    {
+        /* Generate rainbow colors across 0-255 positions */
+        if (pos < 85)
+            return fromRGB(255 - pos * 3, pos * 3, 0); // Red -> Green
+        else if (pos < 170)
+        {
+            pos = pos - 85;
+            return fromRGB(0, 255 - pos * 3, pos * 3); // Green -> Blue
+        }
+        else
+        {
+            pos = pos - 170;
+            return fromRGB(pos * 3, 0, 255 - pos * 3); // Blue -> Red
+        }
+    }
+
+
 // Inbuilt FireLed Blocks
 
     // create a FireLed band if not got one already. Default to brightness 40
@@ -628,8 +658,7 @@ namespace minibit
      * @param ledId position of the LED (0 to 3)
      * @param rgb RGB color of the LED
      */
-    //% blockId="minibit_set_pixel_color" block="set LED at %ledId|to %rgb"
-    //% rgb.shadow="colorNumberPicker"
+    //% blockId="minibit_set_pixel_color" block="set LED at %ledId|to %rgb=mb_colours"
     //% weight=80
     //% subcategory=FireLeds
     //% group=Basic
@@ -874,11 +903,10 @@ namespace minibit
     }
 
     /**
-      * Sets all Matrix LEDs to a given color (range 0-255 for r, g, b).
+      * Sets all Matrix LEDs to a given color
       * @param rgb RGB color of the LED
       */
-    //% blockId="setMatrix" block="set whole Matrix to %rgb"
-    //% rgb.shadow="colorNumberPicker"
+    //% blockId="setMatrix" block="set whole Matrix to %rgb=mb_colours"
     //% weight=100
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -909,12 +937,11 @@ namespace minibit
     }
 
     /**
-     * Set single Matrix LED to a given color (range 0-255 for r, g, b)
+     * Set single Matrix LED to a given color
      * @param ledId linear position of the LED (0 to 24)
      * @param rgb RGB color of the LED
      */
-    //% blockId="setPixel" block="set Matrix LED at %ledId|to %rgb"
-    //% rgb.shadow="colorNumberPicker"
+    //% blockId="setPixel" block="set Matrix LED at %ledId|to %rgb=mb_colours"
     //% weight=80
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -929,13 +956,12 @@ namespace minibit
     }
 
     /**
-     * Set x, y position to a given color (range 0-255 for r, g, b)
+     * Set x, y position to a given color
      * @param x left/right position of the LED (0 to 4). Left is 0
      * @param y up/down position of the LED (0 to 4). Top is 0
      * @param rgb RGB color of the LED
      */
-    //% blockId="setArrayPixel" block="set Matrix LED at %x|,%y|to %rgb"
-    //% rgb.shadow="colorNumberPicker"
+    //% blockId="setArrayPixel" block="set Matrix LED at %x|,%y|to %rgb=mb_colours"
     //% weight=75
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -976,8 +1002,7 @@ namespace minibit
       * @param fill selct to fill in area
       */
     //% blockId="matRectangle"
-    //% block="Draw rectangle from x%x1|y%y1|to x%x2|y%y2 in %rgb| and fill%fill"
-    //% rgb.shadow="colorNumberPicker"
+    //% block="Draw rectangle from x%x1|y%y1|to x%x2|y%y2 in %rgb=mb_colours| and fill%fill"
     //% subcategory=Addons
     //% group="5x5 Matrix"
     //% weight=60
@@ -1008,8 +1033,7 @@ namespace minibit
       * @param myImage image to show
       * @param rgb colour of image
       */
-    //% blockId="showImage" block="show image%myImage|on Matrix in%rgb"
-    //% rgb.shadow="colorNumberPicker"
+    //% blockId="showImage" block="show image%myImage|on Matrix in%rgb=mb_colours"
     //% weight=50
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -1035,8 +1059,7 @@ namespace minibit
       * @param rgb colour of image
       * @param size size of pupil. Small or Large
       */
-    //% blockId="matShowEyeball" block="Matrix eyeball%pos|in %rgb %size"
-    //% rgb.shadow="colorNumberPicker"
+    //% blockId="matShowEyeball" block="Matrix eyeball%pos|in %rgb=mb_colours|%size"
     //% weight=55
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -1118,12 +1141,11 @@ namespace minibit
     }
 
     /**
-      * Sets all Bitface LEDs to a given color (range 0-255 for r, g, b).
+      * Sets all Bitface LEDs to a given color
       * @param rgb RGB color of the LED
       */
     //% blockId="setBitface"
-    //% block="set Bitface to%rgb"
-    //% rgb.shadow="colorNumberPicker"
+    //% block="set Bitface to%rgb=mb_colours"
     //% weight=100
     //% subcategory=Addons
     //% group="Bitface"
@@ -1140,8 +1162,7 @@ namespace minibit
       * @param rgb colour to set
       */
     //% blockId="setBitEye"
-    //% block="set Bitface%eye| eye(s) to%rgb"
-    //% rgb.shadow="colorNumberPicker"
+    //% block="set Bitface%eye| eye(s) to%rgb=mb_colours"
     //% weight=90
     //% subcategory=Addons
     //% group="Bitface"
@@ -1160,8 +1181,7 @@ namespace minibit
       * @param rgb colour to set
       */
     //% blockId="setBitNose"
-    //% block="set Bitface nose to%rgb"
-    //% rgb.shadow="colorNumberPicker"
+    //% block="set Bitface nose to%rgb=mb_colours"
     //% weight=80
     //% subcategory=Addons
     //% group="Bitface"
@@ -1178,8 +1198,7 @@ namespace minibit
       * @param rgb colour to set
       */
     //% blockId="setBitMouth"
-    //% block="set Bitface mouth to%mouth|with%rgb"
-    //% rgb.shadow="colorNumberPicker"
+    //% block="set Bitface mouth to%mouth|with%rgb=mb_colours"
     //% weight=70
     //% subcategory=Addons
     //% group="Bitface"
