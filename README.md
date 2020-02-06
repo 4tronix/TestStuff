@@ -5,8 +5,8 @@ https://4tronix.co.uk/minibit/
 
 ## Driving the robot    
 The simplest way to drive robot is by using the `go()` or `goms()` blocks.
-With each of these blocks you specify Forward or Reverse, and a speed from 0 to 100
-Both motors will be driven at the selected speed and direction   
+With each of these blocks you specify Forward or Reverse, and a speed from 0 to 100.
+Both motors will be driven at the selected speed and direction.
 ```blocks
 // Move forward at speed 60 forever
 minibit.go(mbDirection.Forward, 60)
@@ -25,10 +25,10 @@ minibit.rotatems(mbRobotDirection.Right, 50, 400)
 
 ## Stopping
 When the motor speed is set to zero then it stops. However, we can also use the motor itself to create a reverse generated current to brake much quicker.
-This helps when aiming for more accurate manoeuvres. Use the `stop(...)` command to stop with braking, or coast to a halt
+This helps when aiming for more accurate manoeuvres. Use the `stop(...)` command to stop with braking, or coast to a halt.
 ```blocks
-minibit.stop(MBStopMode.Coast) # slowly coast to a stop
-minibit.stop(MBStopMode.Brake) # rapidly brake
+minibit.stop(mbStopMode.Coast) # slowly coast to a stop
+minibit.stop(mbStopMode.Brake) # rapidly brake
 ```
 
 ## Driving the motors individually
@@ -58,6 +58,7 @@ If your robot is veering to the right, then set the bias to the left.
 Conversely, if your robot is turing to the left, then se the bias to the right.
 It varies with speed and battery condition etc, but an approximation is that a 10% bias will result in about 15cm (6 inches)
 change of course over about 2m (6 feet).
+Note that the bias setting does not affect the old style motor blocks.
 
 ```blocks
 // eg. robot leaves straight line to the right by about 10cm over 2m, so bias it to the left by 5%
@@ -109,10 +110,10 @@ minibit.ledShift()
 minibit.ledRotate()
 ```
 
-There are some more advanced blocks tahat allow you to select colours using separate RGB values
+There are some more advanced blocks that allow you to select colours using separate RGB values
 and select the brightness of the FireLeds.
 The brightness is set to 40 by default, but can go as high as 255
-You should be careful not to look directly at them when they are bright as they can damage eyes
+You should be careful not to look directly at them when they are bright as they can damage eyes.
 ```blocks
 // Switch FireLedss Update Mode to Manual or Automatic
 miniBit.setUpdateMode(mbMode.Manual);

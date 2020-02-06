@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 117 Bluetooth"
+    //% block="%enable| 118 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -584,7 +584,7 @@ namespace minibit
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
-    //% blockHidden=false
+    //% blockHidden=true
     export function wheel(pos: number): number
     {
         /* Generate rainbow colors across 0-255 positions */
@@ -771,7 +771,7 @@ namespace minibit
     //% color.fieldEditor="colornumber"
     //% color.fieldOptions.decompileLiterals=true
     //% color.defl='#ff0000'
-    //% color.fieldOptions.colours='["#d4ff00","#99ff00","#00ff00","#00ff55","#00ff99","#ffb300","#ffff00","#5eff00","#00ff55","#00ffb3","#ff7700","#ffd500","#ffffff","#00ffff","#00ffcc","#ff3c00", "#ff3399","#ff00ff","#00cdff","#00bbff","#ff0000","#ff0080","#9900ff","#5500ff","#0000ff"]'
+    //% color.fieldOptions.colours='["#FF0000","#D82600","#B24C00","#8B7300","#659900","#3FC000","#00FF00","#00F10D","#00CA34","#00A45A","#007E81","#0057A7","#0031CD","#0000FF","#1B00E3","#4200BD", "#680096","#8E0070","#B50049","#DB0023","#ff8080","#80ff80","#40c0ff","#ffffff","#000000"]'
     //% color.fieldOptions.columns=5
     //% color.fieldOptions.className='rgbColorPicker'
     export function mbColours(color: number): number
