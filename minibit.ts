@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 111 Bluetooth"
+    //% block="%enable| 112 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -731,14 +731,19 @@ namespace minibit
 
     /**
       * Get numeric value of colour
-      * @param color Standard RGB Led Colours
+      * @param color Standard RGB Led Colours eg: #ff0000
       */
     //% blockId="mb_colours" block=%color
-    //% color.shadow="colorNumberPicker"
+    //% blockHidden=false
     //% weight=70
     //% subcategory=FireLeds
     //% group=Advanced
     //% blockGap=8
+    //% shim=TD_ID colorSecondary="#e7660b"
+    //% value.fieldEditor="colornumber" value.fieldOptions.decompileLiterals=true
+    //% value.defl='#ff0000'
+    //% value.fieldOptions.colours='["#d4ff00","#99ff00","#00ff00","#00ff55","#00ff99","#ffb300","#ffff00","#5eff00","#00ff55","#00ffb3","#ff7700","#ffd500","#ffffff","#00ffff","#00ffcc","#ff3c00", "#ff3399","#ff00ff","#00cdff","#00bbff","#ff0000","#ff0080","#9900ff","#5500ff","#0000ff"]'
+    //% value.fieldOptions.columns=5 value.fieldOptions.className='rgbColorPicker'
     export function mbColours(color: number): number
     {
         return color;
