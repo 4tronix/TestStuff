@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 120 Bluetooth"
+    //% block="%enable| 121 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -771,7 +771,7 @@ namespace minibit
     //% color.fieldEditor="colornumber"
     //% color.fieldOptions.decompileLiterals=true
     //% color.defl='#ff0000'
-    //% color.fieldOptions.colours='["#FF0000","#D82600","#8B7300","#00E600","#007E81","#B24C00","#659900","#00F10D","#0057A7","#1B00E3","#3FC000","#00CA34","#0031CD","#4200BD","#08E0070","#00A45A","#0000FF","#680096","#B50049","#DB0023","#FF8080","#80FF80","#40C0FF","#FFFFFF","#000000"]'
+    //% color.fieldOptions.colours='["#FF0000","#D82600","#8B7300","#00E600","#007E81","#B24C00","#659900","#00F10D","#0057A7","#1B00E3","#3FC000","#00CA34","#0031CD","#4200BD","#8E0070","#00A45A","#0000FF","#680096","#B50049","#DB0023","#FF8080","#80FF80","#40C0FF","#FFFFFF","#000000"]'
     //% color.fieldOptions.columns=5
     //% color.fieldOptions.className='rgbColorPicker'
     export function mbColours(color: number): number
