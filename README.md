@@ -4,7 +4,7 @@ This library provides a Microsoft Makecode package for 4tronix MiniBit, see
 https://4tronix.co.uk/minibit/
 
 ## Driving the robot    
-The simplest way to drive robot is by using the `go()` or `goms()` blocks.
+The simplest way to drive the robot is by using the `go(...)` or `goms(...)` blocks.
 With each of these blocks you specify Forward or Reverse, and a speed from 0 to 100.
 Both motors will be driven at the selected speed and direction.
 ```blocks
@@ -14,7 +14,7 @@ minibit.go(mbDirection.Forward, 60)
 // Move backward at speed 100 for 2000 ms
 minibit.goms(mbDirection.Reverse, 100, 2000)
 ```
-You can also spin/rotate the robot with the `rotate()` or `rotatems()` blocks
+You can also spin/rotate the robot with the `rotate(...)` or `rotatems(...)` blocks
 ```blocks
 // Rotate left at speed 70
 minibit.rotate(mbRobotDirection.Left, 70)
@@ -33,7 +33,7 @@ minibit.stop(mbStopMode.Brake) # rapidly brake
 
 ## Driving the motors individually
 
-If you want more fine grain control of individal motors, use `minibit.move()` to drive motor either forward or reverse.
+If you want more fine grain control of individal motors, use `minibit.move(...)` to drive motor either forward or reverse.
 You can specify the direction (Forward or Reverse) and speed between 0 and 100.
 If the left motor truns slower than the right motor, the robot will turn to the left
 ```blocks
@@ -75,9 +75,9 @@ If you have mounted the optional sonar sensor for the MiniBit you can
 also use the `MiniBit.sonar(..)` function to read the distance to obstacles.
 ```blocks
 // Read sonar values
-let v1 = miniBit.sonar(MBPingUnit.MicroSeconds);
-let v2 = miniBit.sonar(MBPingUnit.Centimeters);
-let v3 = miniBit.sonar(MBPingUnit.Inches);
+let v1 = miniBit.sonar(mbPingUnit.MicroSeconds);
+let v2 = miniBit.sonar(mbPingUnit.Centimeters);
+let v3 = miniBit.sonar(mbPingUnit.Inches);
 ```
 
 ## FireLed Functions
@@ -119,7 +119,7 @@ You should be careful not to look directly at them when they are bright as they 
 miniBit.setUpdateMode(mbMode.Manual);
 miniBit.setUpdateMode(mbMode.Auto);
 
-// Select colour from separate Red, Green nd Blue values
+// Select colour from separate Red, Green and Blue values
 // Each of the Red, Green and Blue values can range from 0 to 255
 // This example produces a pale blue colour
 let myColour = minibit.convertRGB(50, 100, 200)
