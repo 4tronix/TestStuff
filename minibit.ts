@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 132 Bluetooth"
+    //% block="%enable| 134 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -881,20 +881,6 @@ namespace minibit
         return matrix5;
     }
 
-    /**
-      * Show changes on Matrix
-      */
-    //% blockId="matShow" block="show Matrix changes"
-    //% weight=80
-    //% subcategory=Addons
-    //% group="5x5 Matrix"
-    //% blockGap=8
-    export function matShow(): void
-    {
-        if (btDisabled)
-            mat5().updateBand();
-    }
-
     // update Matrix if _updateMode set to Auto
     function matUpdate(): void
     {
@@ -903,11 +889,25 @@ namespace minibit
     }
 
     /**
+      * Clear all Matrix leds
+      */
+    //% blockId="matClear" block="Matrix clear"
+    //% weight=100
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function matClear(): void
+    {
+        mat5().clearBand();
+        matUpdate();
+    }
+
+    /**
       * Sets all Matrix LEDs to a given color
       * @param rgb RGB color of the LED
       */
-    //% blockId="setMatrix" block="set whole Matrix to %rgb=mb_colours"
-    //% weight=100
+    //% blockId="setMatrix" block="Matrix all pixels to %rgb=mb_colours"
+    //% weight=90
     //% subcategory=Addons
     //% group="5x5 Matrix"
     //% blockGap=8
@@ -923,25 +923,11 @@ namespace minibit
     }
 
     /**
-      * Clear all Matrix leds
-      */
-    //% blockId="matClear" block="clear Matrix"
-    //% weight=90
-    //% subcategory=Addons
-    //% group="5x5 Matrix"
-    //% blockGap=8
-    export function matClear(): void
-    {
-        mat5().clearBand();
-        matUpdate();
-    }
-
-    /**
      * Set single Matrix LED to a given color
      * @param ledId linear position of the LED (0 to 24)
      * @param rgb RGB color of the LED
      */
-    //% blockId="setPixel" block="set Matrix LED at %ledId|to %rgb=mb_colours"
+    //% blockId="setPixel" block="Matrix LED at %ledId|to %rgb=mb_colours"
     //% weight=80
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -961,8 +947,8 @@ namespace minibit
      * @param y up/down position of the LED (0 to 4). Top is 0
      * @param rgb RGB color of the LED
      */
-    //% blockId="setArrayPixel" block="set Matrix LED at %x|,%y|to %rgb=mb_colours"
-    //% weight=75
+    //% blockId="setArrayPixel" block="Matrix LED at x,y%x|,%y|to%rgb=mb_colours"
+    //% weight=70
     //% subcategory=Addons
     //% group="5x5 Matrix"
     //% blockGap=8
@@ -980,8 +966,8 @@ namespace minibit
     /**
       * Shows a rainbow pattern on all Matrix LEDs
       */
-    //% blockId="matRainbow" block="set Matrix rainbow"
-    //% weight=70
+    //% blockId="matRainbow" block="Matrix rainbow"
+    //% weight=60
     //% subcategory=Addons
     //% group="5x5 Matrix"
     //% blockGap=8
@@ -1002,10 +988,10 @@ namespace minibit
       * @param fill selct to fill in area
       */
     //% blockId="matRectangle"
-    //% block="Draw rectangle from x%x1|y%y1|to x%x2|y%y2 in %rgb=mb_colours| and fill%fill"
+    //% block="Matrix rectangle from x,y%x1|,%y1|to x,y%x2|,%y2 in%rgb=mb_colours|fill%fill"
     //% subcategory=Addons
     //% group="5x5 Matrix"
-    //% weight=60
+    //% weight=50
     //% inlineInputMode=inline
     //% fill.shadow="toggleYesNo"
     //% blockGap=8
@@ -1029,38 +1015,13 @@ namespace minibit
     }
 
     /**
-      * Shows an Image on the Matrix
-      * @param myImage image to show
-      * @param rgb colour of image
-      */
-    //% blockId="showImage" block="show image%myImage|on Matrix in%rgb=mb_colours"
-    //% weight=50
-    //% subcategory=Addons
-    //% group="5x5 Matrix"
-    //% blockGap=8
-    export function matShowImage(myImage: Image, rgb: number): void
-    {
-        myImage.showImage(0);
-        for (let i=0; i<5; i++)
-        {
-            for (let j=0; j<5; j++)
-            {
-                if (myImage.pixel(i, j))
-                    rawArrayPixel(i, j, rgb);
-            }
-        }
-        matUpdate();
-    }
-
-
-    /**
       * Shows an Eyeball on the Matrix
       * @param pos position of pupil (up, down, left, etc)
       * @param rgb colour of image
       * @param size size of pupil. Small or Large
       */
-    //% blockId="matShowEyeball" block="Matrix eyeball%pos|in %rgb=mb_colours|%size"
-    //% weight=55
+    //% blockId="matShowEyeball" block="Matrix eyeball%pos|in%rgb=mb_colours|%size"
+    //% weight=50
     //% subcategory=Addons
     //% group="5x5 Matrix"
     //% blockGap=8
@@ -1114,6 +1075,45 @@ namespace minibit
          rawArrayPixel(x+1, y+1, 0);
      }
 
+    /**
+      * Shows an Image on the Matrix
+      * @param myImage image to show
+      * @param rgb colour of image
+      */
+    //% blockId="showImage" block="Matrix image%myImage|in%rgb=mb_colours"
+    //% weight=40
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function matShowImage(myImage: Image, rgb: number): void
+    {
+        myImage.showImage(0);
+        for (let i=0; i<5; i++)
+        {
+            for (let j=0; j<5; j++)
+            {
+                if (myImage.pixel(i, j))
+                    rawArrayPixel(i, j, rgb);
+            }
+        }
+        matUpdate();
+    }
+
+
+    /**
+      * Show changes on Matrix
+      */
+    //% blockId="matShow" block="Matrix show changes"
+    //% weight=30
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function matShow(): void
+    {
+        if (btDisabled)
+            mat5().updateBand();
+    }
+
 // BitFace Addon
     /* create a FireLed band for the BitFace if not got one already. Default to brightness 40 */
     function bitf(): fireled.Band
@@ -1144,11 +1144,11 @@ namespace minibit
       * Sets all Bitface LEDs to a given color
       * @param rgb RGB color of the LED
       */
-    //% blockId="setBitface"
-    //% block="set Bitface to%rgb=mb_colours"
+    //% blockId="setBitFace"
+    //% block="set BitFace to%rgb=mb_colours"
     //% weight=100
     //% subcategory=Addons
-    //% group="Bitface"
+    //% group="BitFace"
     //% blockGap=8
     export function setBitface(rgb: number)
     {
@@ -1162,10 +1162,10 @@ namespace minibit
       * @param rgb colour to set
       */
     //% blockId="setBitEye"
-    //% block="set Bitface%eye| eye(s) to%rgb=mb_colours"
+    //% block="set BitFace%eye|eye(s) to%rgb=mb_colours"
     //% weight=90
     //% subcategory=Addons
-    //% group="Bitface"
+    //% group="BitFace"
     //% blockGap=8
     export function setBitEye(eye: bfEyes, rgb: number)
     {
@@ -1181,10 +1181,10 @@ namespace minibit
       * @param rgb colour to set
       */
     //% blockId="setBitNose"
-    //% block="set Bitface nose to%rgb=mb_colours"
+    //% block="set BitFace nose to%rgb=mb_colours"
     //% weight=80
     //% subcategory=Addons
-    //% group="Bitface"
+    //% group="BitFace"
     //% blockGap=8
     export function setBitNose(rgb: number)
     {
@@ -1198,10 +1198,10 @@ namespace minibit
       * @param rgb colour to set
       */
     //% blockId="setBitMouth"
-    //% block="set Bitface mouth to%mouth|with%rgb=mb_colours"
+    //% block="set BitFace mouth to%mouth|with%rgb=mb_colours"
     //% weight=70
     //% subcategory=Addons
-    //% group="Bitface"
+    //% group="BitFace"
     //% blockGap=8
     export function setBitMouth(mouth: bfMouth, rgb: number)
     {
@@ -1234,7 +1234,7 @@ namespace minibit
 
     /**
       * Show Text on OLED
-      * @param text text string to display eg: '4tronix'
+      * @param text text string to display eg: 'Hello!'
       * @param x x position to start
       * @param y y position to start
       * @param inv inverse or normal text eg: false
@@ -1276,7 +1276,7 @@ namespace minibit
       * Update OLED from buffer
       */
     //% blockId="OledUpdate"
-    //% block="Update OLED"
+    //% block="OLED update"
     //% subcategory=Addons
     //% group="OLED 128x64"
     //% weight=80
@@ -1291,7 +1291,7 @@ namespace minibit
       * @param set all OLED pixels on or off. eg: false
       */
     //% blockId="OledSet"
-    //% block="All OLED pixels%set"
+    //% block="OLED all pixels%set"
     //% set.shadow="toggleOnOff"
     //% subcategory=Addons
     //% group="OLED 128x64"
@@ -1303,10 +1303,10 @@ namespace minibit
     }
 
     /**
-      * Invert display
+      * Invert display colours Black <-> White
       * @param inv inverse video: eg: true
       */
-    //% blockId="OledInvert" block="OLED inverse text%inv"
+    //% blockId="OledInvert" block="OLED invert text%inv"
     //% inv.shadow="toggleOnOff"
     //% subcategory=Addons
     //% group="OLED 128x64"
@@ -1340,7 +1340,7 @@ namespace minibit
       * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
       */
     //% blockId="OledPlotPixel"
-    //% block="Set pixel at x,y%x|,%y|to%doSet|with update%update"
+    //% block="OLED pixel at x,y%x|,%y|to%doSet|with update%update"
     //% doSet.shadow="toggleOnOff"
     //% update.shadow="toggleYesNo"
     //% subcategory=Addons
