@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 124 Bluetooth"
+    //% block="%enable| 125 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1348,7 +1348,7 @@ namespace minibit
       * @param doSet set or clear. eg: true
       * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
       */
-    //% blockId="OledGLine" block="OLED%dir|line from x,y%x1|,%y1|to x,y%x2|,%y2|set%doSet|update%update"
+    //% blockId="OledGLine" block="OLED line from x,y%x1|,%y1|to x,y%x2|,%y2|set%doSet|update%update"
     //% inlineInputMode=inline
     //% doSet.shadow="toggleOnOff"
     //% update.shadow="toggleYesNo"
@@ -1369,7 +1369,7 @@ namespace minibit
             let dy = (y2 - y1) / xSteps;
             for (let i=0; i < xSteps; i++)
             {
-                oScreen().plotPixel(x, y, doSet, update);
+                oScreen().plotPixel(x, Math.floor(y), doSet, update);
                 x += dx;
                 y += dy;
             }
@@ -1380,7 +1380,7 @@ namespace minibit
             let dy = (y2 > y1) ? 1 : -1;
             for (let i=0; i < ySteps; i++)
             {
-                oScreen().plotPixel(x, y, doSet, update);
+                oScreen().plotPixel(Math.floor(x), y, doSet, update);
                 x += dx;
                 y += dy;
             }
