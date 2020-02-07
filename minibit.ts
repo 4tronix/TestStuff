@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 125 Bluetooth"
+    //% block="%enable| 126 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1273,6 +1273,20 @@ namespace minibit
     }
 
     /**
+      * Update OLED from buffer
+      */
+    //% blockId="OledUpdate"
+    //% block="Update OLED"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=80
+    //% blockGap=8
+    export function oledUpdate()
+    {
+        oScreen().updateScreen();
+    }
+
+    /**
       * Set Oled all White or all Black
       * @param set all OLED pixels on or off. eg: false
       */
@@ -1369,7 +1383,7 @@ namespace minibit
             let dy = (y2 - y1) / xSteps;
             for (let i=0; i < xSteps; i++)
             {
-                oScreen().plotPixel(x, Math.floor(y), doSet, update);
+                oScreen().plotPixel(x, Math.round(y), doSet, update);
                 x += dx;
                 y += dy;
             }
@@ -1380,37 +1394,11 @@ namespace minibit
             let dy = (y2 > y1) ? 1 : -1;
             for (let i=0; i < ySteps; i++)
             {
-                oScreen().plotPixel(Math.floor(x), y, doSet, update);
+                oScreen().plotPixel(Math.round(x), y, doSet, update);
                 x += dx;
                 y += dy;
             }
         }
-    }
-
-    /**
-      * draw a line
-      * @param dir line direction. Horizontal or vertical. eg: Horizontal
-      * @param x x start
-      * @param y y start
-      * @param len length of line, eg: 10
-      * @param doSet set or clear. eg: true
-      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
-      */
-    //% blockId="OledLine" block="OLED%dir|line at x,y%x|,%y|length%length|set%doSet|update%update"
-    //% inlineInputMode=inline
-    //% doSet.shadow="toggleOnOff"
-    //% update.shadow="toggleYesNo"
-    //% subcategory=Addons
-    //% group="OLED 128x64"
-    //% weight=40
-    //% inlineInputMode=inline
-    //% blockGap=8
-    export function oledLine(dir: lineDirection, x: number, y: number, length: number, doSet: boolean, update: boolean)
-    {
-        if (dir == lineDirection.Vertical)
-            oScreen().oledVLine(x, y, length, doSet, update);
-        else
-            oScreen().oledHLine(x, y, length, doSet, update);
     }
 
     /**
