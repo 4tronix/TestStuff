@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 129 Bluetooth"
+    //% block="%enable| 130 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1441,7 +1441,7 @@ namespace minibit
     //% weight=30
     //% inlineInputMode=inline
     //% blockGap=8
-    export function oledCircle (x0: number, y0: number, r: number, doSet: boolen, update: boolean)
+    export function oledCircle (x0: number, y0: number, r: number, doSet: boolean, update: boolean)
     {
         let d3 = r / Math.sqrt(2);
         let x = 0;
