@@ -7,7 +7,7 @@
         "core": "*",
         "sk6812": "github:4tronix/SK6812",
         "fireled": "github:4tronix/FireLedsBase#0.1.1",
-        "firescreen": "github:4tronix/FireScreen#0.0.2"
+        "firescreen": "github:4tronix/FireScreen#0.0.3"
     },
     "files": [
         "README.md",
