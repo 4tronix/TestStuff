@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 123 Bluetooth"
+    //% block="%enable| 124 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1348,7 +1348,7 @@ namespace minibit
       * @param doSet set or clear. eg: true
       * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
       */
-    //% blockId="OledGLine" block="OLED%dir|line from x,y%x|,%y|to x,y%x|,%y|set%doSet|update%update"
+    //% blockId="OledGLine" block="OLED%dir|line from x,y%x1|,%y1|to x,y%x2|,%y2|set%doSet|update%update"
     //% inlineInputMode=inline
     //% doSet.shadow="toggleOnOff"
     //% update.shadow="toggleYesNo"
