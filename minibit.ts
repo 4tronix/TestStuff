@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 127 Bluetooth"
+    //% block="%enable| 128 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1425,14 +1425,14 @@ namespace minibit
     }
 
     /**
-      * draw a cricle
+      * draw a circle
       * @param x0 x centre
       * @param y0 y centre
       * @param r radius. eg: 30
       * @param doSet set or clear. eg: true
-      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
+      * @param update set true to show immediately on screen. Requires updateOled otherwise. eg: true
       */
-    //% blockId="OledCircle" block="OLED circle at x,y%x1|,%y1|radius%r|set%doSet|update%update"
+    //% blockId="OledCircle" block="OLED circle at x,y%x0|,%y0|radius%r|set%doSet|update%update"
     //% inlineInputMode=inline
     //% doSet.shadow="toggleOnOff"
     //% update.shadow="toggleYesNo"
