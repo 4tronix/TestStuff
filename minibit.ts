@@ -260,7 +260,7 @@ namespace minibit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="mbEnableBluetooth"
-    //% block="%enable| 126 Bluetooth"
+    //% block="%enable| 127 Bluetooth"
     //% blockGap=8
     export function mbEnableBluetooth(enable: mbBluetooth)
     {
@@ -1422,6 +1422,46 @@ namespace minibit
     export function oledRectangle(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
     {
         oScreen().oledRect(x1, y1, x2, y2, doSet, update);
+    }
+
+    /**
+      * draw a cricle
+      * @param x0 x centre
+      * @param y0 y centre
+      * @param r radius. eg: 30
+      * @param doSet set or clear. eg: true
+      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
+      */
+    //% blockId="OledCircle" block="OLED circle at x,y%x1|,%y1|radius%r|set%doSet|update%update"
+    //% inlineInputMode=inline
+    //% doSet.shadow="toggleOnOff"
+    //% update.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=30
+    //% inlineInputMode=inline
+    //% blockGap=8
+    export function oledCircle (x0: number, y0: number, r: number, doSet, update)
+    {
+        let d3 = r / Math.sqrt(2);
+        let x = 0;
+        let y = 0;
+        while (x < d3)
+        {
+            y = Math.sqrt(r * r - x * x);
+            y = Math.round(y);
+            oScreen().plotPixel(x0 + x, y0 + y, doSet, false);
+            oScreen().plotPixel(x0 - x, y0 + y, doSet, false);
+            oScreen().plotPixel(x0 + x, y0 - y, doSet, false);
+            oScreen().plotPixel(x0 - x, y0 - y, doSet, false);
+            oScreen().plotPixel(x0 + y, y0 + x, doSet, false);
+            oScreen().plotPixel(x0 - y, y0 + x, doSet, false);
+            oScreen().plotPixel(x0 + y, y0 - x, doSet, false);
+            oScreen().plotPixel(x0 - y, y0 - x, doSet, false);
+            x += 1;
+        }
+        if (update)
+            oScreen().updateScreen();
     }
 
 }
