@@ -108,7 +108,7 @@ namespace DriveBit
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="dbGo" block="go 05 %direction|at speed %speed"
+    //% blockId="dbGo" block="go 06 %direction|at speed %speed"
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
@@ -372,7 +372,7 @@ namespace DriveBit
       * @param color the colour to flash
       * @param delay time in ms for each flash, eg: 100,50,200,500
       */
-    //% blockId="startFlash" block="start flash %color=val_colours| at %delay|(ms)"
+    //% blockId="startFlash" block="start flash %color=db_colours| at %delay|(ms)"
     //% subcategory=FireLed
     //% delay.min=1 delay.max=10000
     //% weight=90
