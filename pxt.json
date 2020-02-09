@@ -1,20 +1,16 @@
 {
-    "name": "BitBot",
-    "version": "1.3.0",
-    "description": "Microsoft MakeCode package for 4tronix BitBot robot",
+    "name": "ServoBit",
+    "version": "0.2.0",
+    "description": "Microsoft MakeCode package for 4tronix ServoBit",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "neopixel": "github:microsoft/pxt-neopixel#v0.6.10"
+        "fireled": "github:4tronix/FireLedsBase"
     },
     "files": [
         "README.md",
-        "main.ts",
-        "_locales/no/BitBot-strings.json",
-        "_locales/no/BitBot-jsdoc-strings.json",
-        "_locales/fr/BitBot-strings.json",
-        "_locales/fr/BitBot-jsdoc-strings.json"
-    ],
+        "servobit.ts"
+     ],
     "testFiles": [
         "tests.ts"
     ],

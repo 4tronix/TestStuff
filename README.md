@@ -1,172 +1,97 @@
-# BitBot Package for Microsoft PXT
+# MakeCode Package for 4tronix ServoBit Servo Controller Board
 
-Based off [initial work](https://github.com/srs/pxt-bitbot) by [Sten Roger Sandvik](https://github.com/srs), updated/expanded by [Gareth Davies](https://github.com/4tronix) and [Andrew Mulholland](https://github.com/gbaman). 
+The [4tronix ServoBit](https://4tronix.co.uk/servobit) uses a PCA9685 to control 16 independent servos.
+Helper commands are available to centre all servos, or set individual servos to any angle from -90 to +90 degrees
 
-This library provides a Microsoft PXT package for BitBot and BitBot XL, see
-https://4tronix.co.uk/bitbot/.
+It is also possible to set the speed at which each servo moves to its new position, which gives a smoother operation
 
-## Selecting the Model of BitBot
-You can now use either a classic BitBot or a BitBot XL. The pins used for motors and sensors are different
-so it is necessary to select the correct model. You can force the selection using:
+In addition, the 4tronix ServoBit contains a single Smart RGB status LED which can be set to any colour and brightness
+and a flashing function is also available.
+
+
+## Setting the servos
+
+![](http://4tronix.co.uk/servobit/centreServos.jpg)
+
+![](http://4tronix.co.uk/servobit/setServo.jpg)
+
 ```blocks
-bitbot.select_model(BBModel.Auto)  // this will force the BitBot to re-select the correct model
-bitbot.select_model(BBModel.Classic)
-bitbot.select_model(BBModel.XL)
-```
-Or you can leave the BitBot to automatically decide and not use this command at all. It will do this at the start of the program so it requires the BitBot to be switched on
-to make the correct selection. If you do it automatically then you can use the same hex code for both models.
-You can check what model is being used by:
-```blocks
-bitbot.getModel()
-```
+// Set all 16 servos to the centre position
+ServoBit.centreServos();
 
-## Driving the robot    
-The simplest way to drive robot is by using the `driveMilliseconds(...)` and `driveTurnMilliseconds(...)` blocks.   
-Note with `driveMilliseconds(...)`, you can specify a negative speed to reverse.   
-```blocks
-// Drive forward for 2000 ms
-bitbot.driveMilliseconds(1023, 2000)
+// Set Servo 5 to +30 degrees
+ServoBit.setServo(5, 30);
 
-// Drive backwards for 2000 ms
-bitbot.driveMilliseconds(-1023, 2000)
-
-// Turn left for 200 ms
-bitbot.driveTurnMilliseconds(BBRobotDirection.Left, 1023, 200)
-
-// Turn right for 200 ms
-bitbot.driveTurnMilliseconds(BBRobotDirection.Right, 1023, 200)
-```   
-
-These blocks are also available in non blocking version. The following example performs the same operation as above.   
-```blocks
-bitbot.drive(1023)
-basic.pause(1000)
-
-bitbot.drive(0)
-basic.pause(1000)
-
-bitbot.driveTurn(BBRobotDirection.Left, 1023)
-basic.pause(250)
-
-bitbot.driveTurn(BBRobotDirection.Right, 1023)
-basic.pause(250)
-
-bitbot.drive(0)
+// Set Servo 13 to -90 degrees
+ServoBit.setServo(13, -90);
 ```
 
-## Stopping
-When the motor speed is set to zero then it stops. However, we can also use the motor itself to create a reverse generated current to brake much quicker.
-This helps when aiming for more accurate manoeuvres. Use the `bitbot.stop(...)` command to stop with braking, or coast to a halt
-```blocks
-bitbot.robot_stop(BBStopMode.Coast) # slowly coast to a stop
-bitbot.robot_stop(BBStopMode.Brake) # rapidly brake
-```
+## Controlling servo movements and speeds
+You can control the number of degrees per second that the servo moves. A typical servo would have a maximum speed of around 500 degrees per second.
+Reasonable values for slower movements are between 30 and 200 degrees per second, although a range of 1 to 1000 is supported.
+Setting the servo position whilst it is still moving, will cancel the movement command.
+Creating a new movement command for a servo with an existing movement will cancel the first and then start the second.
+You can also check if the servo has reached its target position, or wait until it has completed.
 
-## Driving the motor
+![](http://4tronix.co.uk/servobit/moveServo.jpg)
 
-If you want more fine grain control of individal motors, use `bitbot.motor(..)` to drive motor either forward or reverse. The value
-indicates speed and is between `-1023` to `1023`. Minus indicates reverse.
+![](http://4tronix.co.uk/servobit/servoActual.jpg)
 
-```blocks
-// Drive 1000 ms forward
-bitbot.motor(BBMotor.All, 1023);
-basic.pause(1000);
+![](http://4tronix.co.uk/servobit/servoTarget.jpg)
 
-// Drive 1000 ms reverse
-bitbot.motor(BBMotor.All, -1023);
-basic.pause(1000);
+![](http://4tronix.co.uk/servobit/servoComplete.jpg)
 
-// Drive 1000 ms forward on left and reverse on right
-bitbot.motor(BBMotor.Left, 1023);
-bitbot.motor(BBMotor.Right, -1023);
-basic.pause(1000);
-```
+![](http://4tronix.co.uk/servobit/waitServo.jpg)
 
-## Buzz sound
-
-To use the buzzer, just use `bitbot.buzz(..)` function with either `1`
-(sound) or `0` (no-sound).
 
 ```blocks
-// Buzz for 100 ms
-bitbot.buzz(1);
-basic.pause(100);
-bitbot.buzz(0);
+// Move servo 5 to 30 degrees at 40 degrees per second
+ServoBit.moveServo(5, 30, 40);
+
+// Check current actual position of servo 5
+let variable = ServoBit.getServoActual(5);
+
+// check current target positon for servo 5
+let variable = ServoBit.getServoTarget(5);
+
+// Wait for servo 5 to complete its movement
+ServoBit.waitServo(5);
 ```
 
-## Read line sensor
+## Smart RGB LED helpers
 
-The BitBot has two line-sensors: left and right. To read the value of the
-sensors, use `bitbot.readLine(..)` function.
+The 4tronix ServoBit has a single smart RGB LED (aka neopixel) fitted. This library defines some helpers
+for using it.
+The LED is automatically updated after every setting
+
+![](http://4tronix.co.uk/servobit/clearLed.jpg)
+
+![](http://4tronix.co.uk/servobit/setLed.jpg)
+
+![](http://4tronix.co.uk/servobit/setBrightness.jpg)
+
+![](http://4tronix.co.uk/servobit/startFlash.jpg)
+
+![](http://4tronix.co.uk/servobit/stopFlash.jpg)
+
 
 ```blocks
-// Read left and right line sensor
-let left = bitbot.readLine(BBLineSensor.Left);
-let right = bitbot.readLine(BBLineSensor.Right);
+// Clear LED
+ServoBit.ledClear();
+
+// Set LED to Red
+ServoBit.setLedColor(ServoBit.vColours(vColors.Red));
+
+// Set brightness of LED
+ServoBit.ledBrightness(40);
+
+// Start Flashing the LED with Green
+ServoBit.startFlash(ServoBit.vColours(vColors.Green), 100);
+
+// Stop flashing the LED
+ServoBit.stopFlash();
 ```
 
-## Read light sensor
-
-Light sensors can be read using `bitbot.readLight(..)` function.
-
-```blocks
-// Read left and right light sensor
-let left = bitbot.readLight(BBLightSensor.Left);
-let right = bitbot.readLight(BBLightSensor.Right);
-```
-
-## Read sonar value
-
-If you have mounted the optional sonar sensor for the BitBot you can
-also use the `bitbot.sonar(..)` function to read the distance to obstacles.
-
-```blocks
-// Read sonar values
-let v1 = bitbot.sonar(BBPingUnit.MicroSeconds);
-let v2 = bitbot.sonar(BBPingUnit.Centimeters);
-let v3 = bitbot.sonar(BBPingUnit.Inches);
-```
-
-## NeoPixel helpers
-
-The BitBot has 12 NeoPixels mounted. This library defines some helpers
-for using the NeoPixels.
-
-```blocks
-// Show all leds
-bitbot.neoSetColor(neopixel.colors(NeoPixelColors.Red));
-bitbot.neoShow();
-
-// Clear all leds
-bitbot.neoClear();
-bitbot.neoShow();
-
-// Show led at position 1
-bitbot.neoSetPixelColor(0, neopixel.colors(NeoPixelColors.Red));
-bitbot.neoShow();
-
-// Show led rainbow
-bitbot.neoRainbow();
-bitbot.neoShow();
-
-// Show led rainbow and shift
-bitbot.neoRainbow();
-bitbot.neoShift();
-bitbot.neoShow();
-
-// Show led rainbow and rotate
-bitbot.neoRainbow();
-bitbot.neoRotate();
-bitbot.neoShow();
-
-// Set brightness of leds
-bitbot.neoBrightness(100);
-bitbot.neoShow();
-
-// Use neo() variable
-bitbot.neo().clear();
-bitbot.neo().show();
-```
 
 ## Supported targets
 
