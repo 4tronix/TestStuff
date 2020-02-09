@@ -33,7 +33,7 @@ enum vColors
 //% weight=50 color=#e7660b icon="\uf1da"
 namespace ServoBit
 {
-    let neoStrip: neopixel.Strip;
+    let fireBand: fireled.Band;
     let _flashing = false;
 
 // Servo PCA9685
@@ -83,7 +83,7 @@ namespace ServoBit
     }
 
     /**
-      * Initialise all 01 servos to Angle=0
+      * Initialise all 02 servos to Angle=0
       */
     //% blockId="centreServos"
     //% block="centre all servos"
@@ -227,32 +227,32 @@ namespace ServoBit
 
 
 
-// LED Blocks
+// FireLed Status Blocks
 
-    // create a neopixel strip if not got one already. Default to brightness 40
-    function neo(): neopixel.Strip
+    // create a FireLed band if not got one already. Default to brightness 40
+    function fire(): fireled.Band
     {
-        if (!neoStrip)
+        if (!fireBand)
         {
-            neoStrip = neopixel.create(DigitalPin.P16, 4, NeoPixelMode.RGB);
-            neoStrip.setBrightness(40);
+            fireBand = fireled.newBand(DigitalPin.P13, 4);
+            fireBand.setBrightness(40);
         }
-        return neoStrip;
+        return fireBand;
     }
 
-    // update LEDs always
+    // Always update status LED
     function updateLEDs(): void
     {
-        neo().show();
+        fire().updateBand();
     }
 
     /**
-      * Sets the LED to a given color (range 0-255 for r, g, b).
-      * @param rgb RGB color of the LED
+      * Sets the status LED to a given color (range 0-255 for r, g, b).
+      * @param rgb colour of the LED
       */
     //% blockId="val_set_led_color" block="set LED to %rgb=val_colours"
     //% weight=100
-    //% subcategory=LEDs
+    //% subcategory=FireLed
     export function setLedColor(rgb: number)
     {
         stopFlash();
@@ -270,7 +270,7 @@ namespace ServoBit
       */
     //% blockId="val_led_clear" block="clear LED"
     //% weight=90
-    //% subcategory=LEDs
+    //% subcategory=FireLed
     export function ledClear(): void
     {
         stopFlash();
@@ -279,7 +279,7 @@ namespace ServoBit
 
     function ledClearRaw(): void
     {
-        neo().clear();
+        fire().clearBand();
         updateLEDs();
     }
 
@@ -289,23 +289,31 @@ namespace ServoBit
      */
     //% blockId="val_led_brightness" block="set LED brightness %brightness"
     //% brightness.min=0 brightness.max=255
-    //% weight=70
-    //% subcategory=LEDs
+    //% weight=80
+    //% subcategory=FireLed
     export function ledBrightness(brightness: number): void
     {
-        neo().setBrightness(brightness);
+        fire().setBrightness(brightness);
         updateLEDs();
     }
 
     /**
       * Get numeric value of colour
-      *
-      * @param color Standard RGB Led Colours
+      * @param color Standard RGB Led Colours eg: #ff0000
       */
     //% blockId="val_colours" block=%color
-    //% weight=50
-    //% subcategory=LEDs
-    export function vColours(color: vColors): number
+    //% blockHidden=false
+    //% weight=70
+    //% subcategory=FireLed
+    //% blockGap=8
+    //% shim=TD_ID colorSecondary="#e7660b"
+    //% color.fieldEditor="colornumber"
+    //% color.fieldOptions.decompileLiterals=true
+    //% color.defl='#ff0000'
+    //% color.fieldOptions.colours='["#FF0000","#D82600","#8B7300","#18E600","#007E81","#B24C00","#659900","#00FF00","#0057A7","#1B00E3","#3FC000","#00CA34","#0031CD","#4200BD","#8E0070","#00A45A","#0000FF","#680096","#B50049","#DB0023","#FF8080","#80FF80","#40C0FF","#FFFFFF","#000000"]'
+    //% color.fieldOptions.columns=5
+    //% color.fieldOptions.className='rgbColorPicker'
+    export function vColours(color: number): number
     {
         return color;
     }
@@ -319,7 +327,7 @@ namespace ServoBit
       */
     //% blockId="val_convertRGB" block="convert from red %red| green %green| blue %blue"
     //% weight=20
-    //% subcategory=LEDs
+    //% subcategory=FireLed
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
@@ -331,7 +339,7 @@ namespace ServoBit
       * @param delay time in ms for each flash, eg: 100,50,200,500
       */
     //% blockId="startFlash" block="start flash %color=val_colours| at %delay|(ms)"
-    //% subcategory=LEDs
+    //% subcategory=FireLed
     //% delay.min=1 delay.max=10000
     //% weight=15
     export function startFlash(color: number, delay: number): void
@@ -358,7 +366,7 @@ namespace ServoBit
       * Stop Flashing
       */
     //% block
-    //% subcategory=LEDs
+    //% subcategory=FireLed
     //% weight=10
     export function stopFlash(): void
     {
