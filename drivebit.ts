@@ -108,7 +108,7 @@ namespace DriveBit
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="dbGo" block="go 06 %direction|at speed %speed"
+    //% blockId="dbGo" block="go 07 %direction|at speed %speed"
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
@@ -147,13 +147,13 @@ namespace DriveBit
     {
         if (direction == dbRobotDirection.Left)
         {
-            move(dbMotor.Left, dbDirection.Reverse, speed);
-            move(dbMotor.Right, dbDirection.Forward, speed);
+            move(dbMotor.M1, dbDirection.Reverse, speed);
+            move(dbMotor.M2, dbDirection.Forward, speed);
         }
         else if (direction == dbRobotDirection.Right)
         {
-            move(dbMotor.Left, dbDirection.Forward, speed);
-            move(dbMotor.Right, dbDirection.Reverse, speed);
+            move(dbMotor.M1, dbDirection.Forward, speed);
+            move(dbMotor.M2, dbDirection.Reverse, speed);
         }
     }
 
@@ -208,7 +208,7 @@ namespace DriveBit
         setPWM(speed);
         let lSpeed = Math.round(speed * (100 - leftBias) / 100);
         let rSpeed = Math.round(speed * (100 - rightBias) / 100);
-        if ((motor == dbMotor.Left) || (motor == dbMotor.Both))
+        if ((motor == dbMotor.M1) || (motor == dbMotor.Both))
         {
             if (direction == dbDirection.Forward)
             {
@@ -217,11 +217,11 @@ namespace DriveBit
             }
             else
             {
-                pins.analogWritePin(AnalogPin.P14, 0);
-                pins.analogWritePin(AnalogPin.P15, lSpeed);
+                pins.analogWritePin(AnalogPin.P12, 0);
+                pins.analogWritePin(AnalogPin.P13, lSpeed);
             }
         }
-        if ((motor == dbMotor.Right) || (motor == dbMotor.Both))
+        if ((motor == dbMotor.M2) || (motor == dbMotor.Both))
         {
             if (direction == dbDirection.Forward)
             {
