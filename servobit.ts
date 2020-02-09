@@ -83,10 +83,10 @@ namespace ServoBit
     }
 
     /**
-      * Initialise all 03 servos to Angle=0
+      * Initialise all servos to Angle=0
       */
     //% blockId="centreServos"
-    //% block="centre all servos"
+    //% block="centre 03 all servos"
     //% subcategory=Servos
     export function centreServos(): void
     {
