@@ -83,7 +83,7 @@ namespace ServoBit
     }
 
     /**
-      * Initialise all 02 servos to Angle=0
+      * Initialise all 03 servos to Angle=0
       */
     //% blockId="centreServos"
     //% block="centre all servos"
@@ -234,7 +234,7 @@ namespace ServoBit
     {
         if (!fireBand)
         {
-            fireBand = fireled.newBand(DigitalPin.P13, 4);
+            fireBand = fireled.newBand(DigitalPin.P16, 1);
             fireBand.setBrightness(40);
         }
         return fireBand;
@@ -261,7 +261,7 @@ namespace ServoBit
 
     function setLedColorRaw(rgb: number)
     {
-        neo().showColor(rgb);
+        fire().setBand(rgb);
         updateLEDs();
     }
 
@@ -269,7 +269,7 @@ namespace ServoBit
       * Clear LED
       */
     //% blockId="val_led_clear" block="clear LED"
-    //% weight=90
+    //% weight=70
     //% subcategory=FireLed
     export function ledClear(): void
     {
@@ -289,7 +289,7 @@ namespace ServoBit
      */
     //% blockId="val_led_brightness" block="set LED brightness %brightness"
     //% brightness.min=0 brightness.max=255
-    //% weight=80
+    //% weight=50
     //% subcategory=FireLed
     export function ledBrightness(brightness: number): void
     {
@@ -303,7 +303,7 @@ namespace ServoBit
       */
     //% blockId="val_colours" block=%color
     //% blockHidden=false
-    //% weight=70
+    //% weight=60
     //% subcategory=FireLed
     //% blockGap=8
     //% shim=TD_ID colorSecondary="#e7660b"
@@ -326,7 +326,7 @@ namespace ServoBit
       * @param blue Blue value of the LED (0 to 255)
       */
     //% blockId="val_convertRGB" block="convert from red %red| green %green| blue %blue"
-    //% weight=20
+    //% weight=40
     //% subcategory=FireLed
     export function convertRGB(r: number, g: number, b: number): number
     {
@@ -341,7 +341,7 @@ namespace ServoBit
     //% blockId="startFlash" block="start flash %color=val_colours| at %delay|(ms)"
     //% subcategory=FireLed
     //% delay.min=1 delay.max=10000
-    //% weight=15
+    //% weight=90
     export function startFlash(color: number, delay: number): void
     {
         if(_flashing == false)
@@ -367,7 +367,7 @@ namespace ServoBit
       */
     //% block
     //% subcategory=FireLed
-    //% weight=10
+    //% weight=80
     export function stopFlash(): void
     {
         _flashing = false;
