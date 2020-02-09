@@ -2,7 +2,7 @@
 /**
   * Enumeration of motors.
   */
-enum DBMotor
+enum dbMotor
 {
     //% block="motor 1"
     M1,
@@ -13,9 +13,20 @@ enum DBMotor
 }
 
 /**
+  * Enumeration of forward/reverse directions
+  */
+enum dbDirection
+{
+    //% block="forward"
+    Forward,
+    //% block="reverse"
+    Reverse
+}
+
+/**
   * Enumeration of directions.
   */
-enum DBRobotDirection
+enum dbRobotDirection
 {
     //% block="left"
     Left,
@@ -26,7 +37,7 @@ enum DBRobotDirection
 /**
   * Stop modes. Coast or Brake
   */
-enum DBStopMode
+enum dbStopMode
 {
     //% block="no brake"
     Coast,
@@ -37,7 +48,7 @@ enum DBStopMode
 /**
   * Pre-Defined LED colours
   */
-enum DBColors
+enum dbColors
 {
     //% block=red
     Red = 0xff0000,
@@ -69,8 +80,16 @@ namespace DriveBit
 {
     let fireBand: fireled.Band;
     let _flashing = false;
+    let leftBias = 0;
+    let rightBias = 0;
+
 
 // Motor Blocks
+
+    function clamp(value: number, min: number, max: number): number
+    {
+        return Math.max(Math.min(max, value), min);
+    }
 
     // slow PWM frequency for slower speeds to improve torque
     // only one PWM frequency available for all pins
@@ -85,142 +104,160 @@ namespace DriveBit
     }
 
     /**
-      * Drive motor(s) forward or reverse.
-      * @param motor motor to drive.
-      * @param speed speed of motor (-1023 to 1023). eg: 600
+      * Move both motors forward (or backward) at speed.
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="db_motor" block="drive 04 %motor|motor(s) at speed %speed"
-    //% weight=50
+    //% blockId="dbGo" block="go 05 %direction|at speed %speed"
+    //% speed.min=0 speed.max=100
+    //% weight=100
     //% subcategory=Motors
-    export function motor(motor: DBMotor, speed: number): void
+    export function go(direction: dbDirection, speed: number): void
     {
-        let reverse = 0;
-        if (speed < 0)
+        move(dbMotor.Both, direction, speed);
+    }
+
+    /**
+      * Move both motors forward (or backward) at speed for milliseconds
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      */
+    //% blockId="dbGoms" block="go %direction|at speed %speed|for %milliseconds|(ms)"
+    //% speed.min=0 speed.max=100
+    //% weight=90
+    //% subcategory=Motors
+    export function goms(direction: dbDirection, speed: number, milliseconds: number): void
+    {
+        go(direction, speed);
+        basic.pause(milliseconds);
+        stop(dbStopMode.Coast);
+    }
+
+    /**
+      * Rotate robot in direction at speed
+      * @param direction direction to turn
+      * @param speed speed of motors (0 to 100). eg: 60
+      */
+    //% blockId="dbRotate" block="spin %direction|at speed %speed"
+    //% speed.min=0 speed.max=100
+    //% weight=80
+    //% subcategory=Motors
+    export function rotate(direction: dbRobotDirection, speed: number): void
+    {
+        if (direction == dbRobotDirection.Left)
         {
-            reverse = 1;
-            speed = -speed;
+            move(dbMotor.Left, dbDirection.Reverse, speed);
+            move(dbMotor.Right, dbDirection.Forward, speed);
         }
-        setPWM(speed);
-        if ((motor == DBMotor.M1) || (motor == DBMotor.Both))
+        else if (direction == dbRobotDirection.Right)
         {
-            if (reverse == 0)
-            {
-                pins.analogWritePin(AnalogPin.P12, speed);
-                pins.analogWritePin(AnalogPin.P13, 0);
-            }
-            else
-            {
-                pins.analogWritePin(AnalogPin.P12, 0);
-                pins.analogWritePin(AnalogPin.P13, speed);
-            }
+            move(dbMotor.Left, dbDirection.Forward, speed);
+            move(dbMotor.Right, dbDirection.Reverse, speed);
         }
-        if ((motor == DBMotor.M2) || (motor == DBMotor.Both))
-        {
-            if (reverse == 0)
-            {
-                pins.analogWritePin(AnalogPin.P14, speed);
-                pins.analogWritePin(AnalogPin.P15, 0);
-            }
-            else
-            {
-                pins.analogWritePin(AnalogPin.P14, 0);
-                pins.analogWritePin(AnalogPin.P15, speed);
-            }
-        }
+    }
+
+    /**
+      * Rotate robot in direction at speed for milliseconds.
+      * @param direction direction to spin
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
+      */
+    //% blockId="dbRotatems" block="spin %direction|at speed %speed|for %milliseconds|(ms)"
+    //% speed.min=0 speed.max=100
+    //% weight=70
+    //% subcategory=Motors
+    export function rotatems(direction: dbRobotDirection, speed: number, milliseconds: number): void
+    {
+        rotate(direction, speed);
+        basic.pause(milliseconds);
+        stop(dbStopMode.Coast);
     }
 
     /**
       * Stop robot by coasting slowly to a halt or braking
       * @param mode Brakes on or off
       */
-    //% blockId="db_stop" block="stop with %mode"
-    //% weight=80
-    //% subcategory=Motors
-    export function stop(mode: DBStopMode): void
-    {
-	// clear all analog PWM daemons
-        pins.analogWritePin(AnalogPin.P12, 0);
-        pins.analogWritePin(AnalogPin.P13, 0);
-        pins.analogWritePin(AnalogPin.P14, 0);
-        pins.analogWritePin(AnalogPin.P15, 0);
-        if (mode == DBStopMode.Brake)
-        {
-            pins.digitalWritePin(DigitalPin.P12, 1);
-            pins.digitalWritePin(DigitalPin.P13, 1);
-            pins.digitalWritePin(DigitalPin.P14, 1);
-            pins.digitalWritePin(DigitalPin.P15, 1);
-        }
-    }
-
-    /**
-      * Drive robot forward (or backward) at speed.
-      * @param speed speed of motor between -1023 and 1023. eg: 600
-      */
-    //% blockId="db_drive" block="drive at speed %speed"
-    //% speed.min=-1023 speed.max=1023
-    //% weight=100
-    //% subcategory=Motors
-    export function drive(speed: number): void
-    {
-        motor(DBMotor.Both, speed);
-    }
-
-    /**
-      * Drive robot forward (or backward) at speed for milliseconds.
-      * @param speed speed of motor between -1023 and 1023. eg: 600
-      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
-      */
-    //% blockId="db_drive_milliseconds" block="drive at speed %speed| for %milliseconds|(ms)"
-    //% speed.min=-1023 speed.max=1023
-    //% weight=70
-    //% subcategory=Motors
-    export function driveMilliseconds(speed: number, milliseconds: number): void
-    {
-        drive(speed);
-        basic.pause(milliseconds);
-        stop(DBStopMode.Coast);
-    }
-
-    /**
-      * Turn robot in direction at speed.
-      * @param direction direction to turn.
-      * @param speed speed of motor between 0 and 1023. eg: 600
-      */
-    //% blockId="db_spin" block="spin %direction|at speed %speed"
-    //% speed.min=0 speed.max=1023
-    //% weight=90
-    //% subcategory=Motors
-    export function spin(direction: DBRobotDirection, speed: number): void
-    {
-        if (speed < 0)
-            speed = 0;
-        if (direction == DBRobotDirection.Left)
-        {
-            motor(DBMotor.M1, -speed);
-            motor(DBMotor.M2, speed);
-        }
-        else if (direction == DBRobotDirection.Right)
-        {
-            motor(DBMotor.M1, speed);
-            motor(DBMotor.M2, -speed);
-        }
-    }
-
-    /**
-      * Spin robot in direction at speed for milliseconds.
-      * @param direction direction to spin
-      * @param speed speed of motor between 0 and 1023. eg: 600
-      * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
-      */
-    //% blockId="db_spin_milliseconds" block="spin %direction|at speed %speed| for %milliseconds|(ms)"
-    //% speed.min=0 speed.max=1023
+    //% blockId=dbStop" block="stop with %mode"
     //% weight=60
     //% subcategory=Motors
-    export function spinMilliseconds(direction: DBRobotDirection, speed: number, milliseconds: number): void
+    export function stop(mode: dbStopMode): void
     {
-        spin(direction, speed);
-        basic.pause(milliseconds);
-        stop(DBStopMode.Coast);
+        let stopMode = 0;
+        if (mode == dbStopMode.Brake)
+            stopMode = 1;
+        pins.digitalWritePin(DigitalPin.P14, stopMode);
+        pins.digitalWritePin(DigitalPin.P15, stopMode);
+        pins.digitalWritePin(DigitalPin.P12, stopMode);
+        pins.digitalWritePin(DigitalPin.P13, stopMode);
+    }
+
+    /**
+      * Move individual motors forward or reverse
+      * @param motor motor to drive
+      * @param direction select forwards or reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      */
+    //% blockId="dbMove" block="move %motor|motor(s) %direction|at speed %speed"
+    //% weight=50
+    //% speed.min=0 speed.max=100
+    //% subcategory=Motors
+    export function move(motor: dbMotor, direction: dbDirection, speed: number): void
+    {
+        speed = clamp(speed, 0, 100) * 10.23;
+        setPWM(speed);
+        let lSpeed = Math.round(speed * (100 - leftBias) / 100);
+        let rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        if ((motor == dbMotor.Left) || (motor == dbMotor.Both))
+        {
+            if (direction == dbDirection.Forward)
+            {
+                pins.analogWritePin(AnalogPin.P12, lSpeed);
+                pins.analogWritePin(AnalogPin.P13, 0);
+            }
+            else
+            {
+                pins.analogWritePin(AnalogPin.P14, 0);
+                pins.analogWritePin(AnalogPin.P15, lSpeed);
+            }
+        }
+        if ((motor == dbMotor.Right) || (motor == dbMotor.Both))
+        {
+            if (direction == dbDirection.Forward)
+            {
+                pins.analogWritePin(AnalogPin.P14, rSpeed);
+                pins.analogWritePin(AnalogPin.P15, 0);
+            }
+            else
+            {
+                pins.analogWritePin(AnalogPin.P14, 0);
+                pins.analogWritePin(AnalogPin.P15, rSpeed);
+            }
+        }
+    }
+
+    /**
+      * Set left/right bias to match motors
+      * @param direction direction to turn more (if robot goes right, set this to left)
+      * @param bias percentage of speed to bias with eg: 10
+      */
+    //% blockId="dbBias" block="bias%direction|by%bias|%"
+    //% bias.min=0 bias.max=80
+    //% weight=40
+    //% subcategory=Motors
+    export function dbBias(direction: dbRobotDirection, bias: number): void
+    {
+        bias = clamp(bias, 0, 80);
+        if (direction == dbRobotDirection.Left)
+        {
+            leftBias = bias;
+            rightBias = 0;
+        }
+        else
+        {
+            leftBias = 0;
+            rightBias = bias;
+        }
     }
 
 
