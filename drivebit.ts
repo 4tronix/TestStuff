@@ -67,7 +67,7 @@ enum DBColors
 //% weight=50 color=#e7660b icon="\uf0f9"
 namespace DriveBit
 {
-    let neoStrip: neopixel.Strip;
+    let fireBand: fireled.Band;
     let _flashing = false;
 
 // Motor Blocks
@@ -89,7 +89,7 @@ namespace DriveBit
       * @param motor motor to drive.
       * @param speed speed of motor (-1023 to 1023). eg: 600
       */
-    //% blockId="db_motor" block="drive %motor|motor(s) at speed %speed"
+    //% blockId="db_motor" block="drive 04 %motor|motor(s) at speed %speed"
     //% weight=50
     //% subcategory=Motors
     export function motor(motor: DBMotor, speed: number): void
@@ -224,47 +224,59 @@ namespace DriveBit
     }
 
 
-// LED Blocks
+// FireLed Status Blocks
 
-    // create a neopixel strip if not got one already. Default to brightness 40
-    function neo(): neopixel.Strip
+    // create a FireLed band if not got one already. Default to brightness 40
+    function fire(): fireled.Band
     {
-        if (!neoStrip)
+        if (!fireBand)
         {
-            neoStrip = neopixel.create(DigitalPin.P16, 4, NeoPixelMode.RGB);
-            neoStrip.setBrightness(40);
+            fireBand = fireled.newBand(DigitalPin.P16, 1);
+            fireBand.setBrightness(40);
         }
-        return neoStrip;
+        return fireBand;
     }
 
-    // update LEDs always
+    // Always update status LED
     function updateLEDs(): void
     {
-        neo().show();
+        fire().updateBand();
     }
 
     /**
-      * Sets LED to a given color (range 0-255 for r, g, b).
-      * @param rgb RGB color of the LED
+      * Sets the status LED to a given color (range 0-255 for r, g, b).
+      * @param rgb colour of the LED
       */
     //% blockId="db_set_led_color" block="set LED to %rgb=db_colours"
     //% weight=100
-    //% subcategory=LEDs
+    //% subcategory=FireLed
     export function setLedColor(rgb: number)
     {
-        neo().showColor(rgb);
+        stopFlash();
+        setLedColorRaw(rgb);
+    }
+
+    function setLedColorRaw(rgb: number)
+    {
+        fire().setBand(rgb);
         updateLEDs();
     }
 
     /**
-      * Clears LED
+      * Clear LED
       */
     //% blockId="db_led_clear" block="clear LED"
-    //% weight=90
-    //% subcategory=LEDs
+    //% weight=70
+    //% subcategory=FireLed
     export function ledClear(): void
     {
-        neo().clear();
+        stopFlash();
+        ledClearRaw();
+    }
+
+    function ledClearRaw(): void
+    {
+        fire().clearBand();
         updateLEDs();
     }
 
@@ -274,23 +286,31 @@ namespace DriveBit
      */
     //% blockId="db_led_brightness" block="set LED brightness %brightness"
     //% brightness.min=0 brightness.max=255
-    //% weight=70
-    //% subcategory=LEDs
+    //% weight=50
+    //% subcategory=FireLed
     export function ledBrightness(brightness: number): void
     {
-        neo().setBrightness(brightness);
+        fire().setBrightness(brightness);
         updateLEDs();
     }
 
     /**
       * Get numeric value of colour
-      *
-      * @param color Standard RGB Led Colours
+      * @param color Standard RGB Led Colours eg: #ff0000
       */
     //% blockId="db_colours" block=%color
-    //% weight=50
-    //% subcategory=LEDs
-    export function DBColours(color: DBColors): number
+    //% blockHidden=false
+    //% weight=60
+    //% subcategory=FireLed
+    //% blockGap=8
+    //% shim=TD_ID colorSecondary="#e7660b"
+    //% color.fieldEditor="colornumber"
+    //% color.fieldOptions.decompileLiterals=true
+    //% color.defl='#ff0000'
+    //% color.fieldOptions.colours='["#FF0000","#D82600","#8B7300","#18E600","#007E81","#B24C00","#659900","#00FF00","#0057A7","#1B00E3","#3FC000","#00CA34","#0031CD","#4200BD","#8E0070","#00A45A","#0000FF","#680096","#B50049","#DB0023","#FF8080","#80FF80","#40C0FF","#FFFFFF","#000000"]'
+    //% color.fieldOptions.columns=5
+    //% color.fieldOptions.className='rgbColorPicker'
+    export function dbColours(color: number): number
     {
         return color;
     }
@@ -303,8 +323,8 @@ namespace DriveBit
       * @param blue Blue value of the LED (0 to 255)
       */
     //% blockId="db_convertRGB" block="convert from red %red| green %green| blue %blue"
-    //% weight=20
-    //% subcategory=LEDs
+    //% weight=40
+    //% subcategory=FireLed
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
@@ -315,10 +335,10 @@ namespace DriveBit
       * @param color the colour to flash
       * @param delay time in ms for each flash, eg: 100,50,200,500
       */
-    //% blockId="startFlash" block="start flash %color=db_colours| at %delay|(ms)"
-    //% subcategory=LEDs
+    //% blockId="startFlash" block="start flash %color=val_colours| at %delay|(ms)"
+    //% subcategory=FireLed
     //% delay.min=1 delay.max=10000
-    //% weight=15
+    //% weight=90
     export function startFlash(color: number, delay: number): void
     {
         if(_flashing == false)
@@ -328,9 +348,11 @@ namespace DriveBit
             {
                 while (_flashing)
                 {                                
-                    setLedColor(color);
+                    setLedColorRaw(color);
                     basic.pause(delay);
-                    setLedColor(0);
+                    if (! _flashing)
+                        break;
+                    ledClearRaw();
                     basic.pause(delay);
                 }
             })
@@ -341,8 +363,8 @@ namespace DriveBit
       * Stop Flashing
       */
     //% block
-    //% subcategory=LEDs
-    //% weight=10
+    //% subcategory=FireLed
+    //% weight=80
     export function stopFlash(): void
     {
         _flashing = false;
