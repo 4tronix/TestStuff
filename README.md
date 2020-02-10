@@ -1,93 +1,170 @@
-# MakeCode Package for Drive:Bit Motor Controller Board
+# MakeCode Package for 4tronix BitBot Robot
 
-This library provides a Microsoft Makecode package for 4tronix Drive:Bit, see
-https://4tronix.co.uk/drivebit/
+This library provides a Microsoft Makecode package for 4tronix BitBot and BitBot XL, see
+https://4tronix.co.uk/bitbot/
+
+
+## Selecting the Model of BitBot
+You can now use either a classic BitBot or a BitBot XL. The pins used for motors and sensors are different
+so it is necessary to select the correct model. You can force the selection using:
+```blocks
+bitbot.select_model(BBModel.Auto)  // this will force the BitBot to re-select the correct model
+bitbot.select_model(BBModel.Classic)
+bitbot.select_model(BBModel.XL)
+```
+Or you can leave the BitBot to automatically decide and not use this command at all. It will do this at the start of the program so it requires the BitBot to be switched on
+to make the correct selection. If you do it automatically then you can use the same hex code for both models.
+You can check what model is being used by:
+```blocks
+bitbot.getModel()
+```
 
 ## Driving the robot    
-The simplest way to drive the robot is by using the `go(...)` or `goms(...)` blocks.
-With each of these blocks you specify Forward or Reverse, and a speed from 0 to 100.
-Both motors will be driven at the selected speed and direction.
+The simplest way to drive robot is by using the `driveMilliseconds(...)` and `driveTurnMilliseconds(...)` blocks.   
+Note with `driveMilliseconds(...)`, you can specify a negative speed to reverse.   
 ```blocks
-// Move forward at speed 60 forever
-DriveBit.go(dbDirection.Forward, 60)
+// Drive forward for 2000 ms
+bitbot.driveMilliseconds(1023, 2000)
 
-// Move backward at speed 100 for 2000 ms
-DriveBit.goms(dbDirection.Reverse, 100, 2000)
-```
-You can also spin/rotate the robot with the `rotate(...)` or `rotatems(...)` blocks
-```blocks
-// Rotate left at speed 70
-DriveBit.rotate(dbRobotDirection.Left, 70)
+// Drive backwards for 2000 ms
+bitbot.driveMilliseconds(-1023, 2000)
 
-// Rotate right at speed 50 for 400ms
-DriveBit.rotatems(dbRobotDirection.Right, 50, 400)
+// Turn left for 200 ms
+bitbot.driveTurnMilliseconds(BBRobotDirection.Left, 1023, 200)
+
+// Turn right for 200 ms
+bitbot.driveTurnMilliseconds(BBRobotDirection.Right, 1023, 200)
 ```   
+
+These blocks are also available in non blocking version. The following example performs the same operation as above.   
+```blocks
+bitbot.drive(1023)
+basic.pause(1000)
+
+bitbot.drive(0)
+basic.pause(1000)
+
+bitbot.driveTurn(BBRobotDirection.Left, 1023)
+basic.pause(250)
+
+bitbot.driveTurn(BBRobotDirection.Right, 1023)
+basic.pause(250)
+
+bitbot.drive(0)
+```
 
 ## Stopping
 When the motor speed is set to zero then it stops. However, we can also use the motor itself to create a reverse generated current to brake much quicker.
-This helps when aiming for more accurate manoeuvres. Use the `stop(...)` command to stop with braking, or coast to a halt.
+This helps when aiming for more accurate manoeuvres. Use the `bitbot.stop(...)` command to stop with braking, or coast to a halt
 ```blocks
-DriveBit.stop(dbStopMode.Coast) # slowly coast to a stop
-DriveBit.stop(dbStopMode.Brake) # rapidly brake
+bitbot.robot_stop(BBStopMode.Coast) # slowly coast to a stop
+bitbot.robot_stop(BBStopMode.Brake) # rapidly brake
 ```
 
-## Driving the motors individually
+## Driving the motor
 
-If you want more fine grain control of individal motors, use `DriveBit.move(...)` to drive motor either forward or reverse.
-You can specify the direction (Forward or Reverse) and speed between 0 and 100.
-If the left motor turns slower than the right motor, the robot will turn to the left
+If you want more fine grain control of individal motors, use `bitbot.motor(..)` to drive motor either forward or reverse. The value
+indicates speed and is between `-1023` to `1023`. Minus indicates reverse.
+
 ```blocks
-// Drive both motors forward at speed 60. Equivalent to DriveBit.go(dbDirection.Forward, 60)
-DriveBit.move(dbMotor.Both, dbDirection.Forward, 60)
+// Drive 1000 ms forward
+bitbot.motor(BBMotor.All, 1023);
+basic.pause(1000);
 
-// Drive left motor in reverse at speed 30
-DriveBit.move(dbMotor.Left, dbDirection.Reverse, 30)
+// Drive 1000 ms reverse
+bitbot.motor(BBMotor.All, -1023);
+basic.pause(1000);
 
-// Drive forward in a leftward curve
-DriveBit.move(dbMotor.Left, dbDirection.Forward, 40)
-DriveBit.move(dbMotor.Right, dbDirection.Forward, 70)
+// Drive 1000 ms forward on left and reverse on right
+bitbot.motor(BBMotor.Left, 1023);
+bitbot.motor(BBMotor.Right, -1023);
+basic.pause(1000);
 ```
 
-## Making the Robot Drive Straight
+## Buzz sound
 
-The small DC motors typically used with the DriveBit are not guaranteed to go at the same speed as each other.
-This can cause the robot to veer off the straight line, either to left or to right, even when both motors are programmed to go
-at the same speed.
-We can partially correct for this by adding a direction bias to the motor speed settings.
-If your robot is veering to the right, then set the bias to the left.
-Conversely, if your robot is turning to the left, then set the bias to the right.
-It varies with speed and battery condition etc, but an approximation is that a 10% bias will result in about 15cm (6 inches)
-change of course over about 2m (6 feet).
+To use the buzzer, just use `bitbot.buzz(..)` function with either `1`
+(sound) or `0` (no-sound).
 
 ```blocks
-// eg. robot leaves straight line to the right by about 10cm over 2m, so bias it to the left by 5%
-DriveBit.dbBias(dbRobotDirection.Left, 5)
-
-// eg. robot leaves straight line to left by 25cm, so bias it to the right by 15%
-DriveBit.dbBias(dbRobotDirection.Right, 15)
+// Buzz for 100 ms
+bitbot.buzz(1);
+basic.pause(100);
+bitbot.buzz(0);
 ```
 
-## FireLed helpers
+## Read line sensor
 
-The DriveBit has a single FireLed fitted. This library defines some helpers
-for using it.
-The FireLed is automatically updated after every setting
+The BitBot has two line-sensors: left and right. To read the value of the
+sensors, use `bitbot.readLine(..)` function.
 
 ```blocks
-// Set status FireLed to Green (hard-coded RGB color)
-DriveBit.setLedColor(0x00FF00)
+// Read left and right line sensor
+let left = bitbot.readLine(BBLineSensor.Left);
+let right = bitbot.readLine(BBLineSensor.Right);
+```
 
-// Set status FireLed to Green (built-in colour selection)
-DriveBit.setLedColor(dbColors.Green)
+## Read light sensor
 
-// Start flashing the status LED in Red, once per second
-DriveBit.startFlash(0xff0000, 1000)
+Light sensors can be read using `bitbot.readLight(..)` function.
 
-// Stop flashing the status LED
-DriveBit.stopFlash()
+```blocks
+// Read left and right light sensor
+let left = bitbot.readLight(BBLightSensor.Left);
+let right = bitbot.readLight(BBLightSensor.Right);
+```
 
-// Clear the status LED
-DriveBit.ledClear()
+## Read sonar value
+
+If you have mounted the optional sonar sensor for the BitBot you can
+also use the `bitbot.sonar(..)` function to read the distance to obstacles.
+
+```blocks
+// Read sonar values
+let v1 = bitbot.sonar(BBPingUnit.MicroSeconds);
+let v2 = bitbot.sonar(BBPingUnit.Centimeters);
+let v3 = bitbot.sonar(BBPingUnit.Inches);
+```
+
+## NeoPixel helpers
+
+The BitBot has 12 NeoPixels mounted. This library defines some helpers
+for using the NeoPixels.
+
+```blocks
+// Show all leds
+bitbot.neoSetColor(neopixel.colors(NeoPixelColors.Red));
+bitbot.neoShow();
+
+// Clear all leds
+bitbot.neoClear();
+bitbot.neoShow();
+
+// Show led at position 1
+bitbot.neoSetPixelColor(0, neopixel.colors(NeoPixelColors.Red));
+bitbot.neoShow();
+
+// Show led rainbow
+bitbot.neoRainbow();
+bitbot.neoShow();
+
+// Show led rainbow and shift
+bitbot.neoRainbow();
+bitbot.neoShift();
+bitbot.neoShow();
+
+// Show led rainbow and rotate
+bitbot.neoRainbow();
+bitbot.neoRotate();
+bitbot.neoShow();
+
+// Set brightness of leds
+bitbot.neoBrightness(100);
+bitbot.neoShow();
+
+// Use neo() variable
+bitbot.neo().clear();
+bitbot.neo().show();
 ```
 
 ## Supported targets

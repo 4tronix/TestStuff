@@ -1,16 +1,21 @@
 {
-    "name": "DriveBit",
-    "version": "1.1.0",
-    "description": "Microsoft MakeCode extension for 4tronix Drive:Bit",
+    "name": "BitBot",
+    "version": "1.4.0",
+    "description": "Microsoft MakeCode package for 4tronix BitBot robot",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "fireled": "github:4tronix/FireLedsBase"
+        "fireled": "github:4tronix/FireLedsBase",
+        "firescreen": "github:4tronix/FireScreen"
     },
     "files": [
         "README.md",
-        "drivebit.ts"
-     ],
+        "bitbot.ts",
+        "_locales/no/BitBot-strings.json",
+        "_locales/no/BitBot-jsdoc-strings.json",
+        "_locales/fr/BitBot-strings.json",
+        "_locales/fr/BitBot-jsdoc-strings.json"
+    ],
     "testFiles": [
         "tests.ts"
     ],
