@@ -196,7 +196,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|Bluetooth"
+    //% block="%enable| 03 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -211,12 +211,12 @@ namespace bitbot
       * Force Model of BitBot (Determines Pins used)
       * @param model Model of BitBot; Classic or XL
       */
-    //% blockId="bitbot_model" block="select 02 BitBot model %model=bb_models"
+    //% blockId="bitbot_model" block="select BitBot model %model"
     //% weight=100
     //% subcategory=BitBot_Model
-    export function select_model(model: number): void
+    export function select_model(model: BBModel): void
     {
-        if((model >= BBModels(BBModel.Classic)) && (model <= BBModels(BBModel.Auto)))
+        if((model==BBModel.Classic) || (model==BBModel.XL) || (model==BBModel.Auto))
         {
             _model = model;
             if (_model == BBModels.Classic)
@@ -256,7 +256,7 @@ namespace bitbot
         {
             if ((pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) & 0xf0) == 0)
             {
-                select_model(BModel.Classic);
+                select_model(BBModel.Classic);
             }
             else
             {
