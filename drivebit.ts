@@ -108,7 +108,7 @@ namespace DriveBit
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="dbGo" block="go 09 %direction|at speed %speed"
+    //% blockId="dbGo" block="go 10 %direction|at speed %speed"
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
@@ -339,7 +339,6 @@ namespace DriveBit
     //% blockHidden=false
     //% weight=60
     //% subcategory=FireLed
-    //% blockGap=8
     //% shim=TD_ID colorSecondary="#e7660b"
     //% color.fieldEditor="colornumber"
     //% color.fieldOptions.decompileLiterals=true
