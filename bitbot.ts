@@ -196,7 +196,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 03 Bluetooth"
+    //% block="%enable| 04 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -219,7 +219,7 @@ namespace bitbot
         if((model==BBModel.Classic) || (model==BBModel.XL) || (model==BBModel.Auto))
         {
             _model = model;
-            if (_model == BBModels.Classic)
+            if (_model == BBModel.Classic)
             {
                 lMotorD0 = DigitalPin.P0;
                 lMotorD1 = DigitalPin.P8;
