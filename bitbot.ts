@@ -196,7 +196,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 04 Bluetooth"
+    //% block="%enable| 05 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -290,7 +290,7 @@ namespace bitbot
         else if (speed < 300)
             pins.analogSetPeriod(lMotorA0, 40000);
         else
-            pins.analogSetPeriod(lMotorA0.P0, 30000);
+            pins.analogSetPeriod(lMotorA0, 30000);
     }
 
     /**
