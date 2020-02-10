@@ -108,7 +108,7 @@ namespace DriveBit
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="dbGo" block="go 07 %direction|at speed %speed"
+    //% blockId="dbGo" block="go 08 %direction|at speed %speed"
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
@@ -344,7 +344,7 @@ namespace DriveBit
     //% color.fieldEditor="colornumber"
     //% color.fieldOptions.decompileLiterals=true
     //% color.defl='#ff0000'
-    //% color.fieldOptions.colours='["#FF0000","#D82600","#8B7300","#18E600","#007E81","#B24C00","#659900","#00FF00","#0057A7","#1B00E3","#3FC000","#00CA34","#0031CD","#4200BD","#8E0070","#00A45A","#0000FF","#680096","#B50049","#DB0023","#FF8080","#80FF80","#40C0FF","#FFFFFF","#000000"]'
+    //% color.fieldOptions.colours='["#FF0000","#659900","#18E600","#80FF00","#00FF00","#FF8000","#D82600","#B24C00","#00FFC0","#00FF80","#FFC000","#B09EFF","#FF00FF","#FF0080","#00FFFF","#FFFF00","#8000FF","#0080FF","#0000FF","#FFFFFF","#FF8080","#80FF80","#40C0FF","#999999","#000000"]'
     //% color.fieldOptions.columns=5
     //% color.fieldOptions.className='rgbColorPicker'
     export function dbColours(color: number): number
