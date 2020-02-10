@@ -196,7 +196,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 05 Bluetooth"
+    //% block="%enable| 06 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -875,7 +875,7 @@ namespace bitbot
     //% subcategory=FireLeds
     //% group=Advanced
     //% blockGap=8
-    export function bbLedShow(): void
+    export function ledShow(): void
     {
         if (btDisabled)
             fire().updateBand();
