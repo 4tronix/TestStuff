@@ -196,7 +196,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 11 Bluetooth"
+    //% block="%enable| 12 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -598,7 +598,199 @@ namespace bitbot
         stop(BBStopMode.Coast);
     }
 
-// Sensors and Addons
+// Inbuilt FireLed Blocks
+
+    // create a FireLed band if not got one already. Default to brightness 40
+    function fire(): fireled.Band
+    {
+        if (!fireBand)
+        {
+            fireBand = fireled.newBand(DigitalPin.P13, 12);
+            fireBand.setBrightness(40);
+        }
+        return fireBand;
+    }
+
+    // update FireLeds if _updateMode set to Auto
+    function updateLEDs(): void
+    {
+        if (_updateMode == BBMode.Auto)
+            ledShow();
+    }
+
+    /**
+      * Sets all LEDs to a given color (range 0-255 for r, g, b).
+      * @param rgb RGB color of the LED
+      */
+    //% blockId="bitbot_set_led_color" block="set all LEDs to %rgb=bb_colours"
+    //% weight=100
+    //% subcategory=FireLeds
+    //% group=Basic
+    //% blockGap=8
+    export function setLedColor(rgb: number)
+    {
+        fire().setBand(rgb);
+        updateLEDs();
+    }
+
+    /**
+      * Clear all leds.
+      */
+    //% blockId="bitbot_led_clear" block="clear all LEDs"
+    //% weight=90
+    //% subcategory=FireLeds
+    //% group=Basic
+    //% blockGap=8
+    export function ledClear(): void
+    {
+        fire().clearBand();
+        updateLEDs();
+    }
+
+    /**
+     * Set single LED to a given color (range 0-255 for r, g, b).
+     *
+     * @param ledId position of the LED (0 to 11)
+     * @param rgb RGB color of the LED
+     */
+    //% blockId="bitbot_set_pixel_color" block="set LED at %ledId|to %rgb=bb_colours"
+    //% weight=80
+    //% subcategory=FireLeds
+    //% group=Basic
+    //% blockGap=8
+    export function setPixelColor(ledId: number, rgb: number): void
+    {
+        fire().setPixel(ledId, rgb);
+        updateLEDs();
+    }
+
+    /**
+      * Shows a rainbow pattern on all LEDs.
+      */
+    //% blockId="bitbot_rainbow" block="set LED rainbow"
+    //% weight=70
+    //% subcategory=FireLeds
+    //% group=Basic
+    //% blockGap=8
+    export function ledRainbow(): void
+    {
+        fire().setRainbow();
+        updateLEDs()
+    }
+
+    /**
+     * Shift LEDs forward and clear with zeros.
+     */
+    //% blockId="bitbot_led_shift" block="shift LEDs"
+    //% weight=60
+    //% subcategory=FireLeds
+    //% group=Basic
+    //% blockGap=8
+    export function ledShift(): void
+    {
+        fire().shiftBand();
+        updateLEDs()
+    }
+
+    /**
+     * Rotate LEDs forward.
+     */
+    //% blockId="bitbot_led_rotate" block="rotate LEDs"
+    //% weight=50
+    //% subcategory=FireLeds
+    //% group=Basic
+    //% blockGap=8
+    export function ledRotate(): void
+    {
+        fire().rotateBand();
+        updateLEDs()
+    }
+
+    // Advanced blocks
+
+    /**
+     * Set the brightness of the LEDs
+     * @param brightness a measure of LED brightness in 0-255. eg: 40
+     */
+    //% blockId="bitbot_led_brightness" block="set LED brightness %brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=100
+    //% subcategory=FireLeds
+    //% group=Advanced
+    //% blockGap=8
+    export function ledBrightness(brightness: number): void
+    {
+        fire().setBrightness(brightness);
+        updateLEDs();
+    }
+
+    /**
+      * Set LED update mode (Manual or Automatic)
+      * @param updateMode setting automatic will show LED changes automatically
+      */
+    //% blockId="bitbot_set_updateMode" block="set %updateMode|update mode"
+    //% weight=90
+    //% subcategory=FireLeds
+    //% group=Advanced
+    //% blockGap=8
+    export function setUpdateMode(updateMode: BBMode): void
+    {
+        _updateMode = updateMode;
+    }
+
+    /**
+      * Show LED changes
+      */
+    //% blockId="BBledShow" block="show FireLed changes"
+    //% weight=80
+    //% subcategory=FireLeds
+    //% group=Advanced
+    //% blockGap=8
+    export function ledShow(): void
+    {
+        if (btDisabled)
+            fire().updateBand();
+    }
+
+    /**
+      * Get numeric value of colour
+      * @param color Standard RGB Led Colours eg: #ff0000
+      */
+    //% blockId="bb_colours" block=%color
+    //% blockHidden=false
+    //% weight=70
+    //% subcategory=FireLeds
+    //% group=Advanced
+    //% blockGap=8
+    //% shim=TD_ID colorSecondary="#e7660b"
+    //% color.fieldEditor="colornumber"
+    //% color.fieldOptions.decompileLiterals=true
+    //% color.defl='#ff0000'
+    //% color.fieldOptions.colours='["#FF0000","#659900","#18E600","#80FF00","#00FF00","#FF8000","#D82600","#B24C00","#00FFC0","#00FF80","#FFC000","#FF0080","#FF00FF","#B09EFF","#00FFFF","#FFFF00","#8000FF","#0080FF","#0000FF","#FFFFFF","#FF8080","#80FF80","#40C0FF","#999999","#000000"]'
+    //% color.fieldOptions.columns=5
+    //% color.fieldOptions.className='rgbColorPicker'
+    export function BBColours(color: number): number
+    {
+        return color;
+    }
+
+    /**
+      * Convert from RGB values to colour number
+      * @param red Red value of the LED (0 to 255)
+      * @param green Green value of the LED (0 to 255)
+      * @param blue Blue value of the LED (0 to 255)
+      */
+    //% blockId="bitbot_convertRGB" block="convert from red%red|green%green|blue%blue"
+    //% weight=60
+    //% subcategory=FireLeds
+    //% group=Advanced
+    //% blockGap=8
+    export function convertRGB(r: number, g: number, b: number): number
+    {
+        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+    }
+
+// Built-in Sensors
 
     /**
       * Sound a buzz.
