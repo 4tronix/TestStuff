@@ -263,7 +263,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 18 Bluetooth"
+    //% block="%enable| 19 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1006,6 +1006,23 @@ namespace bitbot
             else
                 pins.servoWritePin(AnalogPin.P2, degrees);
         }
+    }
+
+    /**
+      * Disable servos (Talon for both Classic & XL, P1 and P2 for XL only)
+      */
+    //% blockId="BBStopServos" block="disable all servos"
+    //% weight=40
+    //% subcategory=Sensors
+    export function bbStopServos(): void
+    {
+        if (getModel() == BBModel.XL)
+        {
+            pins.digitalWritePin(DigitalPin.P1, 0);
+            pins.digitalWritePin(DigitalPin.P2, 0);
+        }
+        else
+            pins.digitalWritePin(DigitalPin.P15, 0);
     }
 
 // Addon Boards
