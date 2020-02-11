@@ -257,7 +257,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 15 Bluetooth"
+    //% block="%enable| 16 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -346,11 +346,11 @@ namespace bitbot
     function setPWM(speed: number): void
     {
         if (speed < 200)
-            pins.analogSetPeriod(lMotorA0, 60000);
+            pins.analogSetPeriod(AnalogPin.Pin0, 60000);
         else if (speed < 300)
-            pins.analogSetPeriod(lMotorA0, 40000);
+            pins.analogSetPeriod(AnalogPin.Pin0, 40000);
         else
-            pins.analogSetPeriod(lMotorA0, 30000);
+            pins.analogSetPeriod(AnalogPin.Pin0, 30000);
     }
 
     /**
@@ -443,10 +443,10 @@ namespace bitbot
     //% blockGap=8
     export function stop(mode: BBStopMode): void
     {
+        getModel();
         let stopMode = 0;
         if (mode == BBStopMode.Brake)
             stopMode = 1;
-        getModel();
         pins.digitalWritePin(lMotorD0, stopMode);
         pins.digitalWritePin(lMotorD1, stopMode);
         pins.digitalWritePin(rMotorD0, stopMode);
@@ -467,6 +467,7 @@ namespace bitbot
     //% blockGap=8
     export function move(motor: BBMotor, direction: BBDirection, speed: number): void
     {
+        getModel();
         speed = clamp(speed, 0, 100) * 10.23;
         setPWM(speed);
         let lSpeed = Math.round(speed * (100 - leftBias) / 100);
