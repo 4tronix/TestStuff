@@ -1,5 +1,66 @@
 ﻿
 /**
+  * Eyeball directions
+  */
+enum eyePos
+{
+    //% block="forward"
+    Forward,
+    //% block="down"
+    Down,
+    //% block="up"
+    Up,
+    //% block="left"
+    Left,
+    //% block="right"
+    Right,
+    //% block="down-left"
+    DownLeft,
+    //% block="down-right"
+    DownRight,
+    //% block="up-left"
+    UpLeft,
+    //% block="up-right"
+    UpRight
+}
+
+enum eyeSize
+{
+    //% block="small"
+    Small,
+    //% block="large"
+    Large
+}
+
+enum bfEyes
+{
+    //% block="left"
+    Left,
+    //% block="right"
+    Right,
+    //% block="both"
+    Both
+}
+
+enum bfMouth
+{
+    //% block="smile"
+    Smile,
+    //% block="grin"
+    Grin,
+    //% block="sad"
+    Sad,
+    //% block="frown"
+    Frown,
+    //% block="straight"
+    Straight,
+    //% block="oooh"
+    Oooh,
+    //% block="eeeh"
+    Eeeh
+}
+
+/**
   * Enumeration of motors.
   */
 enum BBMotor
@@ -196,7 +257,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 12 Bluetooth"
+    //% block="%enable| 13 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -916,6 +977,254 @@ namespace bitbot
             pins.servoWritePin(AnalogPin.P15, degrees);
         else
             pins.servoWritePin(AnalogPin.P2, degrees);
+    }
+
+// Addon Boards
+
+// 5x5 FireLed Matrix 
+
+    /* create a FireLed band for the Matrix if not got one already. Default to brightness 40 */
+    function mat5(): fireled.Band
+    {
+        if (!matrix5)
+        {
+            matrix5 = fireled.newBand(DigitalPin.P15, 25);
+            matrix5.setBrightness(40);
+        }
+        return matrix5;
+    }
+
+    // update Matrix if _updateMode set to Auto
+    function matUpdate(): void
+    {
+        if (_updateMode == BBMode.Auto)
+            matShow();
+    }
+
+    /**
+      * Clear all Matrix leds
+      */
+    //% blockId="matClear" block="Matrix clear"
+    //% weight=100
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function matClear(): void
+    {
+        mat5().clearBand();
+        matUpdate();
+    }
+
+    /**
+      * Sets all Matrix LEDs to a given color
+      * @param rgb RGB color of the LED
+      */
+    //% blockId="setMatrix" block="Matrix all pixels to %rgb=bb_colours"
+    //% weight=90
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function setMatrix(rgb: number)
+    {
+        rawSetMatrix(rgb);
+        matUpdate();
+    }
+
+    function rawSetMatrix(rgb: number)
+    {
+        mat5().setBand(rgb);
+    }
+
+    /**
+     * Set single Matrix LED to a given color
+     * @param ledId linear position of the LED (0 to 24)
+     * @param rgb RGB color of the LED
+     */
+    //% blockId="setPixel" block="Matrix LED at %ledId|to %rgb=bb_colours"
+    //% weight=80
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function setPixel(ledId: number, rgb: number): void
+    {
+        // need to map to match Microbit: top left is 0, bottom right is 24
+        let x = 4 - ledId % 5;
+        let y = 4 - Math.idiv(ledId, 5);
+        mat5().setPixel(x + y*5, rgb);
+        matUpdate();
+    }
+
+    /**
+     * Set x, y position to a given color
+     * @param x left/right position of the LED (0 to 4). Left is 0
+     * @param y up/down position of the LED (0 to 4). Top is 0
+     * @param rgb RGB color of the LED
+     */
+    //% blockId="setArrayPixel" block="Matrix LED at x,y%x|,%y|to%rgb=bb_colours"
+    //% weight=70
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function setArrayPixel(x: number, y: number, rgb: number): void
+    {
+        rawArrayPixel(x, y, rgb);
+        matUpdate();
+    }
+
+    function rawArrayPixel(x: number, y: number, rgb: number): void
+    {
+        mat5().setPixel((4-x) + (4-y)*5, rgb);
+    }
+
+    /**
+      * Shows a rainbow pattern on all Matrix LEDs
+      */
+    //% blockId="matRainbow" block="Matrix rainbow"
+    //% weight=60
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function matRainbow(): void
+    {
+        // TODO Fix so it uses top left to bottom right
+        mat5().setRainbow();
+        matUpdate();
+    }
+
+    /**
+      * Draw Rectangle on Matrix
+      * @param x1 x position to start
+      * @param y1 y position to start
+      * @param x2 x position to end
+      * @param y2 y position to end
+      * @param rgb colour to draw with
+      * @param fill selct to fill in area
+      */
+    //% blockId="matRectangle"
+    //% block="Matrix rectangle from x,y%x1|,%y1|to x,y%x2|,%y2 in%rgb=bb_colours|fill%fill"
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% weight=50
+    //% inlineInputMode=inline
+    //% fill.shadow="toggleYesNo"
+    //% blockGap=8
+    export function matRectangle(x1: number, y1: number, x2: number, y2: number, rgb: number, fill: boolean)
+    {
+        for (let x=x1; x <= x2; x++)
+        {
+            for (let y=y1; y <= y2; y++)
+            {
+                if (inRange(x, y) && (x==x1 || x==x2 || y==y1 || y==y2 || fill))
+                    rawArrayPixel(x, y, rgb);
+            }
+        }
+        matUpdate();
+    }
+
+    /* check x, y is within range */
+    function inRange(x: number, y: number): boolean
+    {
+        return (x>=0 && x<5 && y>=0 && y<5);
+    }
+
+    /**
+      * Shows an Eyeball on the Matrix
+      * @param pos position of pupil (up, down, left, etc)
+      * @param rgb colour of image
+      * @param size size of pupil. Small or Large
+      */
+    //% blockId="matShowEyeball" block="Matrix eyeball%pos|in%rgb=bb_colours|%size"
+    //% weight=50
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function matShowEyeball(pos: eyePos, rgb: number, size: eyeSize): void
+    {
+        rawSetMatrix(rgb);
+        // Clear corners to make a circle-ish
+        rawArrayPixel(0, 0, 0);
+        rawArrayPixel(0, 4, 0);
+        rawArrayPixel(4, 0, 0);
+        rawArrayPixel(4, 4, 0);
+        // draw pupil
+        switch(pos)
+        {
+            case eyePos.Forward:
+                (size==eyeSize.Small) ? rawArrayPixel(2,2,0) : pupil5(2,2); break;
+            case eyePos.Down:
+                (size==eyeSize.Small) ? rawArrayPixel(2,3,0) : pupil5(2,3); break;
+            case eyePos.Up:
+                (size==eyeSize.Small) ? rawArrayPixel(2,1,0) : pupil5(2,1); break;
+            case eyePos.Left:
+                (size==eyeSize.Small) ? rawArrayPixel(3,2,0) : pupil5(3,2); break;
+            case eyePos.Right:
+                (size==eyeSize.Small) ? rawArrayPixel(1,2,0) : pupil5(1,2); break;
+            case eyePos.DownLeft:
+                (size==eyeSize.Small) ? rawArrayPixel(3,3,0) : pupil4(2,2); break;
+            case eyePos.DownRight:
+                (size==eyeSize.Small) ? rawArrayPixel(1,3,0) : pupil4(1,2); break;
+            case eyePos.UpLeft:
+                (size==eyeSize.Small) ? rawArrayPixel(3,1,0) : pupil4(2,1); break;
+            case eyePos.UpRight:
+                (size==eyeSize.Small) ? rawArrayPixel(1,1,0) : pupil4(1,1); break;
+        }
+        matUpdate();
+    }
+ 
+     function pupil5(x: number, y: number)
+     {
+        rawArrayPixel(x, y, 0);
+        rawArrayPixel(x+1, y, 0);
+        rawArrayPixel(x-1, y, 0);
+        rawArrayPixel(x, y+1, 0);
+        rawArrayPixel(x, y-1, 0);
+    }
+
+     function pupil4(x: number, y: number)
+     {
+         rawArrayPixel(x, y, 0);
+         rawArrayPixel(x+1, y, 0);
+         rawArrayPixel(x, y+1, 0);
+         rawArrayPixel(x+1, y+1, 0);
+     }
+
+    /**
+      * Shows an Image on the Matrix
+      * @param myImage image to show
+      * @param rgb colour of image
+      */
+    //% blockId="showImage" block="Matrix image%myImage|in%rgb=bb_colours"
+    //% weight=40
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function matShowImage(myImage: Image, rgb: number): void
+    {
+        myImage.showImage(0);
+        for (let i=0; i<5; i++)
+        {
+            for (let j=0; j<5; j++)
+            {
+                if (myImage.pixel(i, j))
+                    rawArrayPixel(i, j, rgb);
+            }
+        }
+        matUpdate();
+    }
+
+
+    /**
+      * Show changes on Matrix
+      */
+    //% blockId="matShow" block="Matrix show changes"
+    //% weight=30
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function matShow(): void
+    {
+        if (btDisabled)
+            mat5().updateBand();
     }
 
 
