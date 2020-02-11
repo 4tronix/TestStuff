@@ -257,7 +257,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 14 Bluetooth"
+    //% block="%enable| 15 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1329,6 +1329,207 @@ namespace bitbot
             case bfMouth.Eeeh: drawMouth(mouthEeeh, rgb); break;
         }
         bitfUpdate();
+    }
+
+// OLED 128x64 Addon
+
+    /* create a new OLED object if needed */
+    function oScreen(): firescreen.Screen
+    {
+        if (!oled)
+        {
+            oled = firescreen.newScreen(0x3c);
+        }
+        return oled;
+    }
+
+    /**
+      * Show Text on OLED
+      * @param text text string to display eg: 'Hello!'
+      * @param x x position to start
+      * @param y y position to start
+      * @param inv inverse or normal text eg: false
+      */
+    //% blockId="OledText"
+    //% block="OLED text%text|at x,y%x|,%y|inverse%inv"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=100
+    //% inlineInputMode=inline
+    //% inv.shadow="toggleYesNo"
+    //% blockGap=8
+    export function oledText(text: string, x: number, y: number, inv: boolean)
+    {
+        oScreen().doText(text, x, y, inv);
+    }
+
+    /**
+      * Show Number on OLED
+      * @param num number to display eg: 100
+      * @param x x position to start
+      * @param y y position to start
+      * @param inv inverse or normal text eg: false
+      */
+    //% blockId="OledNumber"
+    //% block="OLED number%num|at x,y%x|,%y|inverse%inv"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=90
+    //% inlineInputMode=inline
+    //% inv.shadow="toggleYesNo"
+    //% blockGap=8
+    export function oledNumber(num: number, x: number, y: number, inv: boolean)
+    {
+        oScreen().doNumber(num, x, y, inv);
+    }
+
+    /**
+      * Update OLED from buffer
+      */
+    //% blockId="OledUpdate"
+    //% block="OLED update"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=80
+    //% blockGap=8
+    export function oledUpdate()
+    {
+        oScreen().updateScreen();
+    }
+
+    /**
+      * Set Oled all White or all Black
+      * @param set all OLED pixels on or off. eg: false
+      */
+    //% blockId="OledSet"
+    //% block="OLED all pixels%set"
+    //% set.shadow="toggleOnOff"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=80
+    //% blockGap=8
+    export function oledSet(set: boolean)
+    {
+        oScreen().setScreen(set);
+    }
+
+    /**
+      * Invert display colours Black <-> White
+      * @param inv inverse video: eg: true
+      */
+    //% blockId="OledInvert" block="OLED invert text%inv"
+    //% inv.shadow="toggleOnOff"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=70
+    //% blockGap=8
+    export function oledInvert(inv: boolean)
+    {
+        oScreen().invertOled(inv);
+    }
+
+    /**
+      * Zoom display
+      * @param zoom zoomed text: eg: true
+      */
+    //% blockId="OledZoom" block="OLED zoom%zoom"
+    //% zoom.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=60
+    //% blockGap=8
+    export function oledZOOM(zoom: boolean)
+    {
+        oScreen().zoomOled(zoom);
+    }
+
+    /**
+      * Plot pixel on OLED
+      * @param x x position to plot
+      * @param y y position to plot
+      * @param doSet on or off. eg: true
+      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
+      */
+    //% blockId="OledPlotPixel"
+    //% block="OLED pixel at x,y%x|,%y|to%doSet|with update%update"
+    //% doSet.shadow="toggleOnOff"
+    //% update.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=50
+    //% inlineInputMode=inline
+    //% blockGap=8
+    export function oledPlotPixel(x: number, y: number, doSet: boolean, update: boolean)
+    {
+        oScreen().plotPixel(x, y, doSet, update);
+    }
+
+    /**
+      * draw a line from x1,y1 to x2,y2
+      * @param x1 x start
+      * @param y1 y start
+      * @param x2 x end
+      * @param y2 y end
+      * @param doSet set or clear. eg: true
+      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
+      */
+    //% blockId="OledLine" block="OLED line from x,y%x1|,%y1|to x,y%x2|,%y2|set%doSet|update%update"
+    //% inlineInputMode=inline
+    //% doSet.shadow="toggleOnOff"
+    //% update.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=45
+    //% inlineInputMode=inline
+    //% blockGap=8
+    export function oledLine(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
+    {
+        oScreen().oledLine(x1, y1, x2, y2, doSet, update);
+    }
+
+    /**
+      * draw a rectangle
+      * @param x1 x start
+      * @param y1 y start
+      * @param x2 x finish
+      * @param y2 y finish
+      * @param doSet set or clear. eg: true
+      * @param update set true to show immediately on screen. requires updateOled otherwise. eg: true
+      */
+    //% blockId="OledRectangle" block="OLED rectangle from x,y%x1|,%y1|to x,y%x2|,%y2|set%doSet|update%update"
+    //% inlineInputMode=inline
+    //% doSet.shadow="toggleOnOff"
+    //% update.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=30
+    //% inlineInputMode=inline
+    //% blockGap=8
+    export function oledRectangle(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
+    {
+        oScreen().oledRect(x1, y1, x2, y2, doSet, update);
+    }
+
+    /**
+      * draw a circle
+      * @param x x centre. eg: 60
+      * @param y y centre. eg: 30
+      * @param r radius. eg: 20
+      * @param doSet set or clear. eg: true
+      * @param update set true to show immediately on screen. Requires updateOled otherwise. eg: true
+      */
+    //% blockId="OledCircle" block="OLED circle at x,y%x|,%y|radius%r|set%doSet|update%update"
+    //% inlineInputMode=inline
+    //% doSet.shadow="toggleOnOff"
+    //% update.shadow="toggleYesNo"
+    //% subcategory=Addons
+    //% group="OLED 128x64"
+    //% weight=30
+    //% inlineInputMode=inline
+    //% blockGap=8
+    export function oledCircle (x: number, y: number, r: number, doSet: boolean, update: boolean)
+    {
+        oScreen().oledCircle(x, y, r, doSet, update);
     }
 
 }
