@@ -163,6 +163,12 @@ enum BBPingUnit
     MicroSeconds
 }
 
+enum BBServos
+{
+    P1,
+    P2
+}
+
 /**
   * Update mode for LEDs
   * setting to Manual requires show LED changes blocks
@@ -257,7 +263,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 17 Bluetooth"
+    //% block="%enable| 18 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -859,7 +865,7 @@ namespace bitbot
       * @param flag state of buzzer (On or Off)
       */
     //% blockId="bitbot_buzz" block="turn buzzer %flag"
-    //% weight=95
+    //% weight=100
     //% subcategory=Sensors
     export function buzz(flag: BBBuzz): void
     {
@@ -912,7 +918,7 @@ namespace bitbot
       * @param sensor Line sensor to read.
       */
     //% blockId="bitbot_read_line" block="%sensor|line sensor"
-    //% weight=85
+    //% weight=80
     //% subcategory=Sensors
     export function readLine(sensor: BBLineSensor): number
     {
@@ -938,7 +944,7 @@ namespace bitbot
       * @param sensor Light sensor to read.
       */
     //% blockId="bitbot_read_light" block="%sensor|light sensor"
-    //% weight=80
+    //% weight=70
     //% subcategory=Sensors
     export function readLight(sensor: BBLightSensor): number
     {
@@ -969,15 +975,37 @@ namespace bitbot
       * @param degrees Degrees to open Talon (0 to 80). eg: 30
       */
     //% blockId="bitbot_set_talon" block="open talon %degrees|degrees"
-    //% weight=75
+    //% weight=60
     //% degrees.min=0 degrees.max=80
     //% subcategory=Sensors
     export function setTalon(degrees: number): void
     {
+        degrees = clamp(degrees, 0, 80);
         if (getModel() == BBModel.Classic)
             pins.servoWritePin(AnalogPin.P15, degrees);
         else
             pins.servoWritePin(AnalogPin.P2, degrees);
+    }
+
+    /**
+      * Position Servos on P1 and P2 (XL Only)
+      * @param servo servo to control. P1 or P2
+      * @param degrees Degrees to open Talon (0 to 180). eg: 90
+      */
+    //% blockId="BBSetServo" block="set servo%servo|to %degrees|degrees"
+    //% weight=50
+    //% degrees.min=0 degrees.max=180
+    //% subcategory=Sensors
+    export function bbSetServo(servo: BBServos, degrees: number): void
+    {
+        degrees = clamp(degrees, 0, 180);
+        if (getModel() == BBModel.XL)
+        {
+            if (servo == BBServos.P1)
+                pins.servoWritePin(AnalogPin.P1, degrees);
+            else
+                pins.servoWritePin(AnalogPin.P2, degrees);
+        }
     }
 
 // Addon Boards
