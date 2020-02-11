@@ -196,7 +196,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 08 Bluetooth"
+    //% block="%enable| 09 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -375,12 +375,12 @@ namespace bitbot
       * Stop robot by coasting slowly to a halt or braking
       * @param mode Brakes on or off
       */
-    //% blockId="robot_stop" block="stop with %mode"
+    //% blockId="BBstop" block="stop with %mode"
     //% weight=60
     //% subcategory=Motors
     //% group="New style blocks"
     //% blockGap=8
-    export function robot_stop(mode: BBStopMode): void
+    export function stop(mode: BBStopMode): void
     {
         let stopMode = 0;
         if (mode == BBStopMode.Brake)
