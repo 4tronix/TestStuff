@@ -263,7 +263,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 19 Bluetooth"
+    //% block="%enable| 20 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1273,6 +1273,22 @@ namespace bitbot
             mat5().updateBand();
     }
 
+    /**
+     * Set the brightness of the Matrix
+     * @param brightness a measure of LED brightness in 0-255. eg: 40
+     */
+    //% blockId="matBrightness" block="set Matrix brightness%brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=20
+    //% subcategory=Addons
+    //% group="5x5 Matrix"
+    //% blockGap=8
+    export function matBrightness(brightness: number): void
+    {
+        mat5().setBrightness(brightness);
+        matUpdate();
+    }
+
 // BitFace Addon
     /* create a FireLed band for the BitFace if not got one already. Default to brightness 40 */
     function bitf(): fireled.Band
@@ -1374,6 +1390,22 @@ namespace bitbot
             case bfMouth.Oooh: drawMouth(mouthOooh, rgb); break;
             case bfMouth.Eeeh: drawMouth(mouthEeeh, rgb); break;
         }
+        bitfUpdate();
+    }
+
+    /**
+     * Set the brightness of the BitFace
+     * @param brightness a measure of LED brightness in 0-255. eg: 40
+     */
+    //% blockId="bitBrightness" block="set BitFace brightness%brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=60
+    //% subcategory=Addons
+    //% group="BitFace"
+    //% blockGap=8
+    export function bitBrightness(brightness: number): void
+    {
+        bitf().setBrightness(brightness);
         bitfUpdate();
     }
 
