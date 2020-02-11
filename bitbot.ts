@@ -257,7 +257,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 16 Bluetooth"
+    //% block="%enable| 17 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -346,11 +346,11 @@ namespace bitbot
     function setPWM(speed: number): void
     {
         if (speed < 200)
-            pins.analogSetPeriod(AnalogPin.Pin0, 60000);
+            pins.analogSetPeriod(AnalogPin.P0, 60000);
         else if (speed < 300)
-            pins.analogSetPeriod(AnalogPin.Pin0, 40000);
+            pins.analogSetPeriod(AnalogPin.P0, 40000);
         else
-            pins.analogSetPeriod(AnalogPin.Pin0, 30000);
+            pins.analogSetPeriod(AnalogPin.P0, 30000);
     }
 
     /**
@@ -1201,7 +1201,7 @@ namespace bitbot
     //% blockGap=8
     export function matShowImage(myImage: Image, rgb: number): void
     {
-        myImage.showImage(0);
+        //myImage.showImage(0);
         for (let i=0; i<5; i++)
         {
             for (let j=0; j<5; j++)
