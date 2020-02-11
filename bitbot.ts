@@ -257,7 +257,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 13 Bluetooth"
+    //% block="%enable| 14 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1227,5 +1227,108 @@ namespace bitbot
             mat5().updateBand();
     }
 
+// BitFace Addon
+    /* create a FireLed band for the BitFace if not got one already. Default to brightness 40 */
+    function bitf(): fireled.Band
+    {
+        if (!bitface)
+        {
+            bitface = fireled.newBand(DigitalPin.P15, 17);
+            bitface.setBrightness(40);
+        }
+        return bitface;
+    }
+
+    function bitfUpdate(): void
+    {
+        if (btDisabled)
+            bitf().updateBand();
+    }
+
+    function drawMouth(myList: number[], rgb: number)
+    {
+        for (let i=0; i<14; i++)
+            bitf().setPixel(i, 0);
+        for (let i=0; i<myList.length; i++)
+            bitf().setPixel(myList[i], rgb);
+    }
+
+    /**
+      * Sets all Bitface LEDs to a given color
+      * @param rgb RGB color of the LED
+      */
+    //% blockId="setBitFace"
+    //% block="set BitFace to%rgb=bb_colours"
+    //% weight=100
+    //% subcategory=Addons
+    //% group="BitFace"
+    //% blockGap=8
+    export function setBitface(rgb: number)
+    {
+        bitf().setBand(rgb);
+        bitfUpdate();
+    }
+
+    /**
+      * Set BitFace eye(s) to selected colour
+      * @param eye select the eye(s) to set
+      * @param rgb colour to set
+      */
+    //% blockId="setBitEye"
+    //% block="set BitFace%eye|eye(s) to%rgb=bb_colours"
+    //% weight=90
+    //% subcategory=Addons
+    //% group="BitFace"
+    //% blockGap=8
+    export function setBitEye(eye: bfEyes, rgb: number)
+    {
+        if (eye == bfEyes.Left || eye == bfEyes.Both)
+            bitf().setPixel(15, rgb);
+        if (eye == bfEyes.Right || eye == bfEyes.Both)
+            bitf().setPixel(16, rgb);
+        bitfUpdate();
+    }
+
+    /**
+      * Set BitFace nose to selected colour
+      * @param rgb colour to set
+      */
+    //% blockId="setBitNose"
+    //% block="set BitFace nose to%rgb=bb_colours"
+    //% weight=80
+    //% subcategory=Addons
+    //% group="BitFace"
+    //% blockGap=8
+    export function setBitNose(rgb: number)
+    {
+        bitf().setPixel(14, rgb);
+        bitfUpdate();
+    }
+
+    /**
+      * Set BitFace mouth to selected style and colour
+      * @param mouth style of mouth. eg: smile
+      * @param rgb colour to set
+      */
+    //% blockId="setBitMouth"
+    //% block="set BitFace mouth to%mouth|with%rgb=bb_colours"
+    //% weight=70
+    //% subcategory=Addons
+    //% group="BitFace"
+    //% blockGap=8
+    export function setBitMouth(mouth: bfMouth, rgb: number)
+    {
+        switch (mouth)
+        {
+            case bfMouth.Smile: drawMouth(mouthSmile, rgb); break;
+            case bfMouth.Grin: drawMouth(mouthGrin, rgb); break;
+            case bfMouth.Sad: drawMouth(mouthSad, rgb); break;
+            case bfMouth.Frown: drawMouth(mouthFrown, rgb); break;
+            case bfMouth.Straight: drawMouth(mouthStraight, rgb); break;
+            case bfMouth.Oooh: drawMouth(mouthOooh, rgb); break;
+            case bfMouth.Eeeh: drawMouth(mouthEeeh, rgb); break;
+        }
+        bitfUpdate();
+    }
 
 }
