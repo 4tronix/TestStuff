@@ -196,7 +196,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 10 Bluetooth"
+    //% block="%enable| 11 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -596,6 +596,134 @@ namespace bitbot
         driveTurn(direction, speed)
         basic.pause(milliseconds)
         stop(BBStopMode.Coast);
+    }
+
+// Sensors and Addons
+
+    /**
+      * Sound a buzz.
+      * @param flag state of buzzer (On or Off)
+      */
+    //% blockId="bitbot_buzz" block="turn buzzer %flag"
+    //% weight=95
+    //% subcategory=Sensors
+    export function buzz(flag: BBBuzz): void
+    {
+        let buzz = 0;
+        if (flag==BBBuzz.On)
+            buzz = 1;
+        if (getModel() == BBModel.Classic)
+            pins.digitalWritePin(DigitalPin.P14, buzz);
+        else
+            pins.digitalWritePin(DigitalPin.P0, buzz);
+    }
+
+    /**
+    * Read distance from sonar module connected to accessory connector.
+    * @param unit desired conversion unit
+    */
+    //% blockId="bitbot_sonar" block="read sonar as %unit"
+    //% weight=90
+    //% subcategory=Sensors
+    export function sonar(unit: BBPingUnit): number
+    {
+        // send pulse
+        let trig = DigitalPin.P15;
+        let echo = DigitalPin.P15;
+        let maxCmDistance = 500;
+        let d=10;
+        pins.setPull(trig, PinPullMode.PullNone);
+        for (let x=0; x<10; x++)
+        {
+            pins.digitalWritePin(trig, 0);
+            control.waitMicros(2);
+            pins.digitalWritePin(trig, 1);
+            control.waitMicros(10);
+            pins.digitalWritePin(trig, 0);
+            // read pulse
+            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            if (d>0)
+                break;
+        }
+        switch (unit)
+        {
+            case BBPingUnit.Centimeters: return Math.round(d / 58);
+            case BBPingUnit.Inches: return Math.round(d / 148);
+            default: return d;
+        }
+    }
+
+    /**
+      * Read line sensor.
+      * @param sensor Line sensor to read.
+      */
+    //% blockId="bitbot_read_line" block="%sensor|line sensor"
+    //% weight=85
+    //% subcategory=Sensors
+    export function readLine(sensor: BBLineSensor): number
+    {
+        if (getModel() == BBModel.Classic)
+        {
+            if (sensor == BBLineSensor.Left)
+                return pins.digitalReadPin(DigitalPin.P11);
+            else
+                return pins.digitalReadPin(DigitalPin.P5);
+        }
+        else
+        {
+            let value = pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false);
+            if (sensor == BBLineSensor.Left)
+                return value & 0x01;
+            else
+                return (value & 0x02) >> 1;
+        }
+    }
+
+    /**
+      * Read light sensor.
+      * @param sensor Light sensor to read.
+      */
+    //% blockId="bitbot_read_light" block="%sensor|light sensor"
+    //% weight=80
+    //% subcategory=Sensors
+    export function readLight(sensor: BBLightSensor): number
+    {
+        if (getModel() == BBModel.Classic)
+        {
+            if (sensor == BBLightSensor.Left)
+            {
+                pins.digitalWritePin(DigitalPin.P16, 0);
+                return pins.analogReadPin(AnalogPin.P2);
+            }
+            else
+            {
+                pins.digitalWritePin(DigitalPin.P16, 1);
+                return pins.analogReadPin(AnalogPin.P2);
+            }
+        }
+        else
+        {
+            if (sensor == BBLightSensor.Left)
+                return pins.analogReadPin(AnalogPin.P2);
+            else
+                return pins.analogReadPin(AnalogPin.P1);
+        }
+    }
+
+    /**
+      * Adjust opening of Talon attachment
+      * @param degrees Degrees to open Talon (0 to 80). eg: 30
+      */
+    //% blockId="bitbot_set_talon" block="open talon %degrees|degrees"
+    //% weight=75
+    //% degrees.min=0 degrees.max=80
+    //% subcategory=Sensors
+    export function setTalon(degrees: number): void
+    {
+        if (getModel() == BBModel.Classic)
+            pins.servoWritePin(AnalogPin.P15, degrees);
+        else
+            pins.servoWritePin(AnalogPin.P2, degrees);
     }
 
 
