@@ -196,7 +196,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 07 Bluetooth"
+    //% block="%enable| 08 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -278,6 +278,190 @@ namespace bitbot
     export function BBModels(model: BBModel): number
     {
         return model;
+    }
+
+// New Style Motor Blocks
+    // slow PWM frequency for slower speeds to improve torque
+    function setPWM(speed: number): void
+    {
+        if (speed < 200)
+            pins.analogSetPeriod(lMotorA0, 60000);
+        else if (speed < 300)
+            pins.analogSetPeriod(lMotorA0, 40000);
+        else
+            pins.analogSetPeriod(lMotorA0, 30000);
+    }
+
+    /**
+      * Move robot forward (or backward) at speed.
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      */
+    //% blockId="BBGo" block="go %direction|at speed %speed"
+    //% speed.min=0 speed.max=100
+    //% weight=100
+    //% subcategory=Motors
+    //% group="New style blocks"
+    //% blockGap=8
+    export function go(direction: BBDirection, speed: number): void
+    {
+        move(BBMotor.Both, direction, speed);
+    }
+
+    /**
+      * Move robot forward (or backward) at speed for milliseconds
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      */
+    //% blockId="BBGoms" block="go %direction|at speed %speed|for %milliseconds|(ms)"
+    //% speed.min=0 speed.max=100
+    //% weight=90
+    //% subcategory=Motors
+    //% group="New style blocks"
+    //% blockGap=8
+    export function goms(direction: BBDirection, speed: number, milliseconds: number): void
+    {
+        go(direction, speed);
+        basic.pause(milliseconds);
+        stop(BBStopMode.Coast);
+    }
+
+    /**
+      * Rotate robot in direction at speed
+      * @param direction direction to turn
+      * @param speed speed of motors (0 to 100). eg: 60
+      */
+    //% blockId="BBRotate" block="spin %direction|at speed %speed"
+    //% speed.min=0 speed.max=100
+    //% weight=80
+    //% subcategory=Motors
+    //% group="New style blocks"
+    //% blockGap=8
+    export function rotate(direction: BBRobotDirection, speed: number): void
+    {
+        if (direction == BBRobotDirection.Left)
+        {
+            move(BBMotor.Left, BBDirection.Reverse, speed);
+            move(BBMotor.Right, BBDirection.Forward, speed);
+        }
+        else if (direction == BBRobotDirection.Right)
+        {
+            move(BBMotor.Left, BBDirection.Forward, speed);
+            move(BBMotor.Right, BBDirection.Reverse, speed);
+        }
+    }
+
+    /**
+      * Rotate robot in direction at speed for milliseconds.
+      * @param direction direction to spin
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
+      */
+    //% blockId="BBRotatems" block="spin %direction|at speed %speed|for %milliseconds|(ms)"
+    //% speed.min=0 speed.max=100
+    //% weight=70
+    //% subcategory=Motors
+    //% group="New style blocks"
+    //% blockGap=8
+    export function rotatems(direction: BBRobotDirection, speed: number, milliseconds: number): void
+    {
+        rotate(direction, speed);
+        basic.pause(milliseconds);
+        stop(BBStopMode.Coast);
+    }
+
+    /**
+      * Stop robot by coasting slowly to a halt or braking
+      * @param mode Brakes on or off
+      */
+    //% blockId="robot_stop" block="stop with %mode"
+    //% weight=60
+    //% subcategory=Motors
+    //% group="New style blocks"
+    //% blockGap=8
+    export function robot_stop(mode: BBStopMode): void
+    {
+        let stopMode = 0;
+        if (mode == BBStopMode.Brake)
+            stopMode = 1;
+        getModel();
+        pins.digitalWritePin(lMotorD0, stopMode);
+        pins.digitalWritePin(lMotorD1, stopMode);
+        pins.digitalWritePin(rMotorD0, stopMode);
+        pins.digitalWritePin(rMotorD1, stopMode);
+    }
+
+    /**
+      * Move individual motors forward or reverse
+      * @param motor motor to drive
+      * @param direction select forwards or reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      */
+    //% blockId="BBMove" block="move %motor|motor(s) %direction|at speed %speed"
+    //% weight=50
+    //% speed.min=0 speed.max=100
+    //% subcategory=Motors
+    //% group="New style blocks"
+    //% blockGap=8
+    export function move(motor: BBMotor, direction: BBDirection, speed: number): void
+    {
+        speed = clamp(speed, 0, 100) * 10.23;
+        setPWM(speed);
+        let lSpeed = Math.round(speed * (100 - leftBias) / 100);
+        let rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
+        {
+            if (direction == BBDirection.Forward)
+            {
+                pins.analogWritePin(lMotorA0, lSpeed);
+                pins.analogWritePin(lMotorA1, 0);
+            }
+            else
+            {
+                pins.analogWritePin(lMotorA0, 0);
+                pins.analogWritePin(lMotorA1, lSpeed);
+            }
+        }
+        if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
+        {
+            if (direction == BBDirection.Forward)
+            {
+                pins.analogWritePin(rMotorA0, rSpeed);
+                pins.analogWritePin(rMotorA1, 0);
+            }
+            else
+            {
+                pins.analogWritePin(rMotorA0, 0);
+                pins.analogWritePin(rMotorA1, rSpeed);
+            }
+        }
+    }
+
+    /**
+      * Set left/right bias to match motors
+      * @param direction direction to turn more (if robot goes right, set this to left)
+      * @param bias percentage of speed to bias with eg: 10
+      */
+    //% blockId="BBBias" block="bias%direction|by%bias|%"
+    //% bias.min=0 bias.max=80
+    //% weight=40
+    //% subcategory=Motors
+    //% group="New style blocks"
+    //% blockGap=8
+    export function BBBias(direction: BBRobotDirection, bias: number): void
+    {
+        bias = clamp(bias, 0, 80);
+        if (direction == BBRobotDirection.Left)
+        {
+            leftBias = bias;
+            rightBias = 0;
+        }
+        else
+        {
+            leftBias = 0;
+            rightBias = bias;
+        }
     }
 
 
