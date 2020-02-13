@@ -251,6 +251,9 @@ namespace bitbot
     let rMotorD1: DigitalPin;
     let rMotorA0: AnalogPin;
     let rMotorA1: AnalogPin;
+    let _deadband = 2;
+    let _p1Trim = 0;
+    let _p2Trim = 0;
 
     function clamp(value: number, min: number, max: number): number
     {
@@ -263,7 +266,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 21 Bluetooth"
+    //% block="%enable| 22 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1014,9 +1017,9 @@ namespace bitbot
       * @param direction rotate Forward or Reverse
       * @param speed rotational speed  (0 to 100). eg: 50
       */
-    //% blockId="BB360Servo" block="continuous servo%servo|%direction at%speed|\\%%"
+    //% blockId="BB360Servo" block="continuous servo%servo|%direction at%speed|\\%"
     //% weight=40
-    //% speed.min=0 degrees.max=100
+    //% speed.min=0 speed.max=100
     //% subcategory="Inputs & Outputs"
     export function bb360Servo(servo: BBServos, direction: BBDirection, speed: number)
     {
@@ -1027,14 +1030,16 @@ namespace bitbot
         {
             if (servo == BBServos.P1)
             {
-                if (speed <= 2)
+                degrees = clamp(degrees - _p1Trim, 0, 180);
+                if (speed <= _deadband)
                     pins.digitalWritePin(DigitalPin.P1, 0);
                 else
                     pins.servoWritePin(AnalogPin.P1, degrees);
             }
             else
             {
-                if (speed <= 2)
+                degrees = clamp(degrees - _p2Trim, 0, 180);
+                if (speed <= _deadband)
                     pins.digitalWritePin(DigitalPin.P2, 0);
                 else
                     pins.servoWritePin(AnalogPin.P2, degrees);
@@ -1043,10 +1048,46 @@ namespace bitbot
     }
 
     /**
+      * Set deadband for continuous rotation Servos on P1 and P2 (XL Only)
+      * @param deadband speed below which servos are off eg: 5
+      */
+    //% blockId="BBServoDeadband" block="continuous servo deadband%deadband|\\%"
+    //% weight=30
+    //% deadband.min=0 deadband.max=10
+    //% subcategory="Inputs & Outputs"
+    export function bbServoDeadband(deadband: number)
+    {
+        _deadband = clamp(deadband, 0, 5);
+    }
+
+    /**
+      * Set trim for continuous rotation Servos on P1 and P2 (XL Only)
+      * @param servo servo to slow down. P1 or P2
+      * @param trim speed reduction eg: 5
+      */
+    //% blockId="BBServoTrim" block="continuous servo%servo|trim by%trim|\\%"
+    //% weight=30
+    //% trim.min=0 trim.max=50
+    //% subcategory="Inputs & Outputs"
+    export function bbServoTrim(servo: BBServos, trim: number)
+    {
+        if (servo == BBServos.P1)
+        {
+            _p1Trim = clamp(trim, 0, 50);
+            _p2Trim = 0;
+        }
+        else
+        {
+            _p1Trim = 0;
+            _p2Trim = clamp(trim, 0, 50);
+        }
+    }
+
+    /**
       * Disable servos (Talon for both Classic & XL, P1 and P2 for XL only)
       */
     //% blockId="BBStopServos" block="disable all servos"
-    //% weight=30
+    //% weight=20
     //% subcategory="Inputs & Outputs"
     export function bbStopServos(): void
     {
