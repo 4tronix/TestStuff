@@ -263,7 +263,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable| 20 Bluetooth"
+    //% block="%enable| 21 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -858,7 +858,7 @@ namespace bitbot
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
 
-// Built-in Sensors
+// Built-in Sensors - Inputs and Outputs
 
     /**
       * Sound a buzz.
@@ -866,7 +866,7 @@ namespace bitbot
       */
     //% blockId="bitbot_buzz" block="turn buzzer %flag"
     //% weight=100
-    //% subcategory=Sensors
+    //% subcategory="Inputs & Outputs"
     export function buzz(flag: BBBuzz): void
     {
         let buzz = 0;
@@ -884,7 +884,7 @@ namespace bitbot
     */
     //% blockId="bitbot_sonar" block="read sonar as %unit"
     //% weight=90
-    //% subcategory=Sensors
+    //% subcategory="Inputs & Outputs"
     export function sonar(unit: BBPingUnit): number
     {
         // send pulse
@@ -919,7 +919,7 @@ namespace bitbot
       */
     //% blockId="bitbot_read_line" block="%sensor|line sensor"
     //% weight=80
-    //% subcategory=Sensors
+    //% subcategory="Inputs & Outputs"
     export function readLine(sensor: BBLineSensor): number
     {
         if (getModel() == BBModel.Classic)
@@ -945,7 +945,7 @@ namespace bitbot
       */
     //% blockId="bitbot_read_light" block="%sensor|light sensor"
     //% weight=70
-    //% subcategory=Sensors
+    //% subcategory="Inputs & Outputs"
     export function readLight(sensor: BBLightSensor): number
     {
         if (getModel() == BBModel.Classic)
@@ -977,7 +977,7 @@ namespace bitbot
     //% blockId="bitbot_set_talon" block="open talon %degrees|degrees"
     //% weight=60
     //% degrees.min=0 degrees.max=80
-    //% subcategory=Sensors
+    //% subcategory="Inputs & Outputs"
     export function setTalon(degrees: number): void
     {
         degrees = clamp(degrees, 0, 80);
@@ -990,12 +990,12 @@ namespace bitbot
     /**
       * Position Servos on P1 and P2 (XL Only)
       * @param servo servo to control. P1 or P2
-      * @param degrees Degrees to open Talon (0 to 180). eg: 90
+      * @param degrees Degrees to turn servo (0 to 180). eg: 90
       */
     //% blockId="BBSetServo" block="set servo%servo|to %degrees|degrees"
     //% weight=50
     //% degrees.min=0 degrees.max=180
-    //% subcategory=Sensors
+    //% subcategory="Inputs & Outputs"
     export function bbSetServo(servo: BBServos, degrees: number): void
     {
         degrees = clamp(degrees, 0, 180);
@@ -1009,11 +1009,45 @@ namespace bitbot
     }
 
     /**
+      * Set speed and direction for continuous rotation Servos on P1 and P2 (XL Only)
+      * @param servo servo to control. P1 or P2
+      * @param direction rotate Forward or Reverse
+      * @param speed rotational speed  (0 to 100). eg: 50
+      */
+    //% blockId="BB360Servo" block="continuous servo%servo|%direction at%speed|\\%%"
+    //% weight=40
+    //% speed.min=0 degrees.max=100
+    //% subcategory="Inputs & Outputs"
+    export function bb360Servo(servo: BBServos, direction: BBDirection, speed: number)
+    {
+        speed = clamp(speed, 0, 100);
+        let dir = (direction == BBDirection.Forward) ? 1 : -1;
+        let degrees = 90 + dir * speed * 90 / 100
+        if (getModel() == BBModel.XL)
+        {
+            if (servo == BBServos.P1)
+            {
+                if (speed <= 2)
+                    pins.digitalWritePin(DigitalPin.P1, 0);
+                else
+                    pins.servoWritePin(AnalogPin.P1, degrees);
+            }
+            else
+            {
+                if (speed <= 2)
+                    pins.digitalWritePin(DigitalPin.P2, 0);
+                else
+                    pins.servoWritePin(AnalogPin.P2, degrees);
+            }
+        }
+    }
+
+    /**
       * Disable servos (Talon for both Classic & XL, P1 and P2 for XL only)
       */
     //% blockId="BBStopServos" block="disable all servos"
-    //% weight=40
-    //% subcategory=Sensors
+    //% weight=30
+    //% subcategory="Inputs & Outputs"
     export function bbStopServos(): void
     {
         if (getModel() == BBModel.XL)
