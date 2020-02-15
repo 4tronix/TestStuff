@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 02 Robobit model %model"
+    //% blockId="robobit_model" block="select 03 Robobit model %model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -462,10 +462,11 @@ namespace robobit
       * @param speed speed of motor between -1023 and 1023. eg: 600
       */
     //% subcategory=Motors
-    //% group=Motors
+    //% group="Old style blocks"
     //% blockId="robobit_motor_forward" block="drive at speed %speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=110
+    //% blockGap=8
     export function drive(speed: number): void
     {
         motor(RBMotor.Both, speed);
@@ -477,10 +478,11 @@ namespace robobit
       * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 1000
       */
     //% subcategory=Motors
-    //% group=Motors
+    //% group="Old style blocks"
     //% blockId="robobit_motor_forward_milliseconds" block="drive at speed %speed| for %milliseconds|(ms)"
     //% speed.min=-1023 speed.max=1023
     //% weight=131
+    //% blockGap=8
     export function driveMilliseconds(speed: number, milliseconds: number): void
     {
         drive(speed);
@@ -494,10 +496,11 @@ namespace robobit
       * @param speed speed of motor between 0 and 1023. eg: 600
       */
     //% subcategory=Motors
-    //% group=Motors
+    //% group="Old style blocks"
     //% blockId="robobit_turn" block="spin %direction|at speed %speed"
     //% speed.min=0 speed.max=1023
     //% weight=109
+    //% blockGap=8
     export function driveTurn(direction: RBRobotDirection, speed: number): void
     {
         if (speed < 0)
@@ -521,10 +524,11 @@ namespace robobit
       * @param milliseconds duration in milliseconds to turn for, then stop. eg: 1000
       */
     //% subcategory=Motors
-    //% group=Motors
+    //% group="Old style blocks"
     //% blockId="robobit_turn_milliseconds" block="spin %direction|at speed %speed| for %milliseconds|(ms)"
     //% speed.min=0 speed.max=1023
     //% weight=130
+    //% blockGap=8
     export function driveTurnMilliseconds(direction: RBRobotDirection, speed: number, milliseconds: number): void
     {
         driveTurn(direction, speed)
@@ -538,9 +542,10 @@ namespace robobit
       * @param speed speed of motor eg: 600
       */
     //% subcategory=Motors
-    //% group=Motors
+    //% group="Old style blocks"
     //% blockId="robobit_motor" block="drive %motor| motor at speed %speed"
     //% weight=100
+    //% blockGap=8
     export function motor(motor: RBMotor, speed: number): void
     {
         let forward = (speed >= 0);
@@ -581,98 +586,6 @@ namespace robobit
             pins.analogWritePin(AnalogPin.P1, realSpeed);
             pins.digitalWritePin(DigitalPin.P12, forward ? 0 : 1);
         }
-    }
-
-    /**
-      * Read line sensor.
-      *
-      * @param sensor Line sensor to read.
-      */
-    //% subcategory=Sensors
-    //% group=Sensors
-    //% blockId="robobit_read_line" block="read line sensor %sensor"
-    //% weight=80
-    export function readLine(sensor: RBLineSensor): number
-    {
-        if (sensor == RBLineSensor.Left)
-	{
-	    if (_model == RBModel.Mk3)
-            	return pins.digitalReadPin(DigitalPin.P16);
-	    else
-            	return pins.digitalReadPin(DigitalPin.P11);
-        }
-        else
-	{
-	    if (_model == RBModel.Mk3)
-            	return pins.digitalReadPin(DigitalPin.P14);
-	    else
-            	return pins.digitalReadPin(DigitalPin.P5);
-        }
-    }
-
-
-    /**
-    * Read distance from sonar module connected to accessory connector.
-    *
-    * @param unit desired conversion unit
-    */
-    //% subcategory=Sensors
-    //% group=Sensors
-    //% blockId="robobit_sonar" block="read sonar as %unit"
-    //% weight=90
-    export function sonar(unit: RBPingUnit): number
-    {
-        // send pulse
-        let trig = DigitalPin.P13;
-	if (_model == RBModel.Mk3)
-	    trig = DigitalPin.P15;
-	if (_model == RBModel.Mk2A)
-	    trig = DigitalPin.P15;
-        let echo = trig;
-        let maxCmDistance = 500;
-        let d=10;
-        pins.setPull(trig, PinPullMode.PullNone);
-        for (let x=0; x<10; x++)
-        {
-            pins.digitalWritePin(trig, 0);
-            control.waitMicros(2);
-            pins.digitalWritePin(trig, 1);
-            control.waitMicros(10);
-            pins.digitalWritePin(trig, 0);
-            // read pulse
-            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
-            if (d>0)
-                break;
-        }
-        switch (unit)
-        {
-            case RBPingUnit.Centimeters: Math.round(return d / 58);
-            case RBPingUnit.Inches: Math.round(return d / 148);
-            default: return d;
-        }
-    }
-
-    /**
-      * Adjust opening of Talon attachment
-      * @param degrees Degrees to open Talon. eg: 30
-      */
-    //% subcategory=Sensors
-    //% group=Sensors
-    //% blockId="robobit_set_talon" block="open talon%degrees|degrees"
-    //% weight=70
-    export function setTalon(degrees: number): void
-    {
-        pins.servoWritePin(AnalogPin.P13, clamp(0, 80, degrees))
-    }
-
-    function neo(): neopixel.Strip
-    {
-        if (!ledBar)
-        {
-            ledBar = neopixel.create(DigitalPin.P13, 8, NeoPixelMode.RGB);
-            ledBar.setBrightness(40);
-        }
-        return ledBar;
     }
 
 // Inbuilt LedBar Blocks (FireLeds)
@@ -952,4 +865,94 @@ namespace robobit
                 setPixel(x, 0);
         }
     }
+// Inputs and Outputs (Sensors)
+    /**
+      * Read line sensor.
+      *
+      * @param sensor Line sensor to read.
+      */
+    //% subcategory="Inputs & Outputs"
+    //% blockId="robobit_read_line" block="read line sensor %sensor"
+    //% weight=80
+    export function readLine(sensor: RBLineSensor): number
+    {
+        if (sensor == RBLineSensor.Left)
+	{
+	    if (_model == RBModel.Mk3)
+            	return pins.digitalReadPin(DigitalPin.P16);
+	    else
+            	return pins.digitalReadPin(DigitalPin.P11);
+        }
+        else
+	{
+	    if (_model == RBModel.Mk3)
+            	return pins.digitalReadPin(DigitalPin.P14);
+	    else
+            	return pins.digitalReadPin(DigitalPin.P5);
+        }
+    }
+
+
+    /**
+    * Read distance from sonar module connected to accessory connector.
+    *
+    * @param unit desired conversion unit
+    */
+    //% subcategory="Inputs & Outputs"
+    //% blockId="robobit_sonar" block="read sonar as %unit"
+    //% weight=90
+    export function sonar(unit: RBPingUnit): number
+    {
+        // send pulse
+        let trig = DigitalPin.P13;
+	if (_model == RBModel.Mk3)
+	    trig = DigitalPin.P15;
+	if (_model == RBModel.Mk2A)
+	    trig = DigitalPin.P15;
+        let echo = trig;
+        let maxCmDistance = 500;
+        let d=10;
+        pins.setPull(trig, PinPullMode.PullNone);
+        for (let x=0; x<10; x++)
+        {
+            pins.digitalWritePin(trig, 0);
+            control.waitMicros(2);
+            pins.digitalWritePin(trig, 1);
+            control.waitMicros(10);
+            pins.digitalWritePin(trig, 0);
+            // read pulse
+            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            if (d>0)
+                break;
+        }
+        switch (unit)
+        {
+            case RBPingUnit.Centimeters: Math.round(return d / 58);
+            case RBPingUnit.Inches: Math.round(return d / 148);
+            default: return d;
+        }
+    }
+
+    /**
+      * Adjust opening of Talon attachment
+      * @param degrees Degrees to open Talon. eg: 30
+      */
+    //% subcategory="Inputs & Outputs"
+    //% blockId="robobit_set_talon" block="open talon%degrees|degrees"
+    //% weight=70
+    export function setTalon(degrees: number): void
+    {
+        pins.servoWritePin(AnalogPin.P13, clamp(0, 80, degrees))
+    }
+
+    function neo(): neopixel.Strip
+    {
+        if (!ledBar)
+        {
+            ledBar = neopixel.create(DigitalPin.P13, 8, NeoPixelMode.RGB);
+            ledBar.setBrightness(40);
+        }
+        return ledBar;
+    }
+
 }
