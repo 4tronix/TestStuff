@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 15 Robobit model%model"
+    //% blockId="robobit_model" block="select 16 Robobit model%model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -638,8 +638,8 @@ namespace robobit
         }
         switch (unit)
         {
-            case RBPingUnit.Centimeters: Math.round(return d / 58);
-            case RBPingUnit.Inches: Math.round(return d / 148);
+            case RBPingUnit.Centimeters: return Math.round(d / 58);
+            case RBPingUnit.Inches: return Math.round(d / 148);
             default: return d;
         }
     }
