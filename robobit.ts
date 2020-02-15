@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 06 Robobit model %model"
+    //% blockId="robobit_model" block="select 07 Robobit model%model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -288,7 +288,7 @@ namespace robobit
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="RBGo" block="go %direction|at speed %speed"
+    //% blockId="RBGo" block="go%direction|at speed%speed"
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
@@ -305,7 +305,7 @@ namespace robobit
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
       */
-    //% blockId="RBGoms" block="go %direction|at speed %speed|for %milliseconds|(ms)"
+    //% blockId="RBGoms" block="go%direction|at speed%speed|for%milliseconds|ms"
     //% speed.min=0 speed.max=100
     //% weight=90
     //% subcategory=Motors
@@ -323,7 +323,7 @@ namespace robobit
       * @param direction direction to turn
       * @param speed speed of motors (0 to 100). eg: 60
       */
-    //% blockId="RBRotate" block="spin %direction|at speed %speed"
+    //% blockId="RBRotate" block="spin%direction|at speed%speed"
     //% speed.min=0 speed.max=100
     //% weight=80
     //% subcategory=Motors
@@ -349,7 +349,7 @@ namespace robobit
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
       */
-    //% blockId="RBRotatems" block="spin%direction|at speed%speed|for%milliseconds|(ms)"
+    //% blockId="RBRotatems" block="spin%direction|at speed%speed|for%milliseconds|ms"
     //% speed.min=0 speed.max=100
     //% weight=70
     //% subcategory=Motors
@@ -433,7 +433,7 @@ namespace robobit
       * @param direction direction to turn more (if robot goes right, set this to left)
       * @param bias percentage of speed to bias with eg: 10
       */
-    //% blockId="RBBias" block="bias%direction|by%bias|//%"
+    //% blockId="RBBias" block="bias%direction|by%bias|\\%"
     //% bias.min=0 bias.max=80
     //% weight=40
     //% subcategory=Motors
@@ -461,7 +461,7 @@ namespace robobit
       */
     //% subcategory=Motors
     //% group="Old style blocks"
-    //% blockId="robobit_motor_forward" block="drive at speed %speed"
+    //% blockId="robobit_motor_forward" block="drive at speed%speed"
     //% speed.min=-1023 speed.max=1023
     //% weight=110
     //% blockGap=8
@@ -477,7 +477,7 @@ namespace robobit
       */
     //% subcategory=Motors
     //% group="Old style blocks"
-    //% blockId="robobit_motor_forward_milliseconds" block="drive at speed %speed| for %milliseconds|(ms)"
+    //% blockId="robobit_motor_forward_milliseconds" block="drive at speed%speed|for%milliseconds|ms"
     //% speed.min=-1023 speed.max=1023
     //% weight=131
     //% blockGap=8
@@ -495,7 +495,7 @@ namespace robobit
       */
     //% subcategory=Motors
     //% group="Old style blocks"
-    //% blockId="robobit_turn" block="spin %direction|at speed %speed"
+    //% blockId="robobit_turn" block="spin%direction|at speed%speed"
     //% speed.min=0 speed.max=1023
     //% weight=109
     //% blockGap=8
@@ -523,7 +523,7 @@ namespace robobit
       */
     //% subcategory=Motors
     //% group="Old style blocks"
-    //% blockId="robobit_turn_milliseconds" block="spin%direction|at speed%speed|for%milliseconds|(ms)"
+    //% blockId="robobit_turn_milliseconds" block="spin%direction|at speed%speed|for%milliseconds|ms"
     //% speed.min=0 speed.max=1023
     //% weight=130
     //% blockGap=8
@@ -552,7 +552,7 @@ namespace robobit
             leftSpeed = absSpeed;
         if ((motor == RBMotor.Right) || (motor == RBMotor.Both))
             rightSpeed = absSpeed;
-        setPWM();
+        setPWM(absSpeed);
         if (speed > 1023)
         {
             speed = 1023;
