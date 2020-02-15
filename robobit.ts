@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 11 Robobit model%model"
+    //% blockId="robobit_model" block="select 12 Robobit model%model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -582,12 +582,11 @@ namespace robobit
 // Inputs and Outputs (Sensors)
     /**
       * Read line sensor.
-      *
       * @param sensor Line sensor to read.
       */
-    //% subcategory="Inputs & Outputs"
     //% blockId="robobit_read_line" block="read%sensor|line sensor"
     //% weight=80
+    //% subcategory="Inputs & Outputs"
     export function readLine(sensor: RBLineSensor): number
     {
         if (sensor == RBLineSensor.Left)
@@ -609,12 +608,11 @@ namespace robobit
 
     /**
     * Read distance from sonar module connected to accessory connector.
-    *
     * @param unit desired conversion unit
     */
-    //% subcategory="Inputs & Outputs"
     //% blockId="robobit_sonar" block="read sonar as%unit"
     //% weight=90
+    //% subcategory="Inputs & Outputs"
     export function sonar(unit: RBPingUnit): number
     {
         // send pulse
@@ -651,12 +649,14 @@ namespace robobit
       * Adjust opening of Talon attachment
       * @param degrees Degrees to open Talon. eg: 30
       */
-    //% subcategory="Inputs & Outputs"
     //% blockId="robobit_set_talon" block="open talon%degrees|degrees"
     //% weight=70
+    //% degrees.min=0 degrees.max=80
+    //% subcategory="Inputs & Outputs"
     export function setTalon(degrees: number): void
     {
-        pins.servoWritePin(AnalogPin.P13, clamp(0, 80, degrees))
+        degrees = clamp(degrees, 0, 80);
+        pins.servoWritePin(AnalogPin.P13, degrees);
     }
 
 }
