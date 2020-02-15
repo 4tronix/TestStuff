@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 10 Robobit model%model"
+    //% blockId="robobit_model" block="select 11 Robobit model%model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -288,7 +288,7 @@ namespace robobit
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="RBGo" block="go%direction|at speed%speed"
+    //% blockId="RBGo" block="go%direction|at speed%speed|\\%"
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
@@ -305,7 +305,7 @@ namespace robobit
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
       */
-    //% blockId="RBGoms" block="go%direction|at speed%speed|for%milliseconds|ms"
+    //% blockId="RBGoms" block="go%direction|at speed%speed|\\% for%milliseconds|ms"
     //% speed.min=0 speed.max=100
     //% weight=90
     //% subcategory=Motors
@@ -323,7 +323,7 @@ namespace robobit
       * @param direction direction to turn
       * @param speed speed of motors (0 to 100). eg: 60
       */
-    //% blockId="RBRotate" block="spin%direction|at speed%speed"
+    //% blockId="RBRotate" block="spin%direction|at speed%speed|\\%"
     //% speed.min=0 speed.max=100
     //% weight=80
     //% subcategory=Motors
@@ -349,7 +349,7 @@ namespace robobit
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
       */
-    //% blockId="RBRotatems" block="spin%direction|at speed%speed|for%milliseconds|ms"
+    //% blockId="RBRotatems" block="spin%direction|at speed%speed|\\% for%milliseconds|ms"
     //% speed.min=0 speed.max=100
     //% weight=70
     //% subcategory=Motors
@@ -388,7 +388,7 @@ namespace robobit
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="RBMove" block="move%motor|motor(s)%direction|at speed%speed"
+    //% blockId="RBMove" block="move%motor|motor(s)%direction|at speed%speed|\\%"
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
@@ -578,5 +578,85 @@ namespace robobit
         }
     }
 
+
+// Inputs and Outputs (Sensors)
+    /**
+      * Read line sensor.
+      *
+      * @param sensor Line sensor to read.
+      */
+    //% subcategory="Inputs & Outputs"
+    //% blockId="robobit_read_line" block="read%sensor|line sensor"
+    //% weight=80
+    export function readLine(sensor: RBLineSensor): number
+    {
+        if (sensor == RBLineSensor.Left)
+	{
+	    if (_model == RBModel.Mk3)
+            	return pins.digitalReadPin(DigitalPin.P16);
+	    else
+            	return pins.digitalReadPin(DigitalPin.P11);
+        }
+        else
+	{
+	    if (_model == RBModel.Mk3)
+            	return pins.digitalReadPin(DigitalPin.P14);
+	    else
+            	return pins.digitalReadPin(DigitalPin.P5);
+        }
+    }
+
+
+    /**
+    * Read distance from sonar module connected to accessory connector.
+    *
+    * @param unit desired conversion unit
+    */
+    //% subcategory="Inputs & Outputs"
+    //% blockId="robobit_sonar" block="read sonar as%unit"
+    //% weight=90
+    export function sonar(unit: RBPingUnit): number
+    {
+        // send pulse
+        let trig = DigitalPin.P13;
+	if (_model == RBModel.Mk3)
+	    trig = DigitalPin.P15;
+	if (_model == RBModel.Mk2A)
+	    trig = DigitalPin.P15;
+        let echo = trig;
+        let maxCmDistance = 500;
+        let d=10;
+        pins.setPull(trig, PinPullMode.PullNone);
+        for (let x=0; x<10; x++)
+        {
+            pins.digitalWritePin(trig, 0);
+            control.waitMicros(2);
+            pins.digitalWritePin(trig, 1);
+            control.waitMicros(10);
+            pins.digitalWritePin(trig, 0);
+            // read pulse
+            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            if (d>0)
+                break;
+        }
+        switch (unit)
+        {
+            case RBPingUnit.Centimeters: Math.round(return d / 58);
+            case RBPingUnit.Inches: Math.round(return d / 148);
+            default: return d;
+        }
+    }
+
+    /**
+      * Adjust opening of Talon attachment
+      * @param degrees Degrees to open Talon. eg: 30
+      */
+    //% subcategory="Inputs & Outputs"
+    //% blockId="robobit_set_talon" block="open talon%degrees|degrees"
+    //% weight=70
+    export function setTalon(degrees: number): void
+    {
+        pins.servoWritePin(AnalogPin.P13, clamp(0, 80, degrees))
+    }
 
 }
