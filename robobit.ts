@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 16 Robobit model%model"
+    //% blockId="robobit_model" block="select 17 Robobit model%model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -581,36 +581,11 @@ namespace robobit
 
 // Inputs and Outputs (Sensors)
     /**
-      * Read line sensor.
-      * @param sensor Line sensor to read.
-      */
-    //% blockId="robobit_read_line" block="read%sensor|line sensor"
-    //% weight=80
-    //% subcategory="Inputs & Outputs"
-    export function readLine(sensor: RBLineSensor): number
-    {
-        if (sensor == RBLineSensor.Left)
-	{
-	    if (_model == RBModel.Mk3)
-            	return pins.digitalReadPin(DigitalPin.P16);
-	    else
-            	return pins.digitalReadPin(DigitalPin.P11);
-        }
-        else
-	{
-	    if (_model == RBModel.Mk3)
-            	return pins.digitalReadPin(DigitalPin.P14);
-	    else
-            	return pins.digitalReadPin(DigitalPin.P5);
-        }
-    }
-
-    /**
     * Read distance from sonar module connected to accessory connector.
     * @param unit desired conversion unit
     */
     //% blockId="robobit_sonar" block="read sonar as%unit"
-    //% weight=90
+    //% weight=100
     //% subcategory="Inputs & Outputs"
     export function sonar(unit: RBPingUnit): number
     {
@@ -644,6 +619,44 @@ namespace robobit
         }
     }
 
+    /**
+      * Read line sensor.
+      * @param sensor Line sensor to read.
+      */
+    //% blockId="robobit_read_line" block="read%sensor|line sensor"
+    //% weight=90
+    //% subcategory="Inputs & Outputs"
+    export function readLine(sensor: RBLineSensor): number
+    {
+        if (sensor == RBLineSensor.Left)
+	{
+	    if (_model == RBModel.Mk3)
+            	return pins.digitalReadPin(DigitalPin.P16);
+	    else
+            	return pins.digitalReadPin(DigitalPin.P11);
+        }
+        else
+	{
+	    if (_model == RBModel.Mk3)
+            	return pins.digitalReadPin(DigitalPin.P14);
+	    else
+            	return pins.digitalReadPin(DigitalPin.P5);
+        }
+    }
+
+    /**
+      * Adjust opening of Talon attachment
+      * @param degrees Degrees to open Talon. eg: 30
+      */
+    //% blockId="robobit_set_talon" block="open talon%degrees|degrees"
+    //% weight=80
+    //% degrees.min=0 degrees.max=80
+    //% subcategory="Inputs & Outputs"
+    export function setTalon(degrees: number): void
+    {
+        degreees = clamp(degrees, 0, 80);
+        pins.servoWritePin(AnalogPin.P13, degrees);
+    }
 
 
 }
