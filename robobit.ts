@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 14 Robobit model%model"
+    //% blockId="robobit_model" block="select 15 Robobit model%model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -607,12 +607,11 @@ namespace robobit
 
     /**
     * Read distance from sonar module connected to accessory connector.
-    *
     * @param unit desired conversion unit
     */
-    //% subcategory="Inputs & Outputs"
     //% blockId="robobit_sonar" block="read sonar as%unit"
     //% weight=90
+    //% subcategory="Inputs & Outputs"
     export function sonar(unit: RBPingUnit): number
     {
         // send pulse
