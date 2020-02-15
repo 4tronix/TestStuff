@@ -203,7 +203,7 @@ enum RBColors
 namespace robobit
 {
     let ledBar: fireled.Band;
-    let _updateMode = BBMode.Auto;
+    let _updateMode = RBMode.Auto;
     let btDisabled = true;
     let matrix5: fireled.Band;
     let bitface: fireled.Band;
@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 04 Robobit model %model"
+    //% blockId="robobit_model" block="select 05 Robobit model %model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -694,6 +694,95 @@ namespace robobit
         updateLEDs()
     }
 
+    /**
+      * Start Scanner
+      * @param color the colour to use for scanning
+      * @param delay time in ms between scan steps, eg: 100,50,200,500
+      */
+    //% blockId="rb_startScanner" block="start scan %color=rb_colours| with %delay|(ms)"
+    //% subcategory=LedBar
+    //% group=Basic
+    //% delay.min=1 delay.max=10000
+    //% weight=40
+    //% blockGap=8
+    export function startScanner(color: number, delay: number): void
+    {
+        scanColor1 = color;
+        scanColor2 = reduce(scanColor1, 8);
+        scanColor3 = reduce(scanColor2, 4);
+        if(_scanning == false)
+        {
+            _scanning = true;
+            control.inBackground(() =>
+            {
+                while (_scanning)
+                {                                
+                    ledScan();
+                    ledShow();
+                    basic.pause(delay);
+                }
+            })
+        }
+    }
+
+    /**
+      * Reduce colour RGB separately by divisor
+      */
+    function reduce(color: number, reducer: number): number
+    {
+        let red = ((color & 0xff0000) / reducer) & 0xff0000;
+        let green = ((color & 0x00ff00) / reducer) & 0x00ff00;
+        let blue = ((color & 0x0000ff) / reducer) & 0x0000ff;
+        return red + green + blue;
+    }
+
+    /**
+      * Stop Scanner
+      */
+    //% block
+    //% subcategory=LedBar
+    //% group=Basic
+    //% weight=30
+    //% blockGap=8
+    export function stopScanner(): void
+    {
+        _scanning = false;
+    }
+
+    /**
+     * Use centre 6 LEDs as Larsson Scanner. Each call moves the scan by one pixel
+     */
+    //% subcategory=LedBar
+    //% group=Basic
+    //% blockId="robobit_ledScan" block="scan centre pixels"
+    //% weight=20
+    //% blockGap=8
+    //% deprecated=true
+    export function ledScan(): void
+    {
+        if (!larsson)
+        {
+            larsson = 1;
+            scandir = 1;
+        }
+        larsson += scandir;
+        if (larsson >= (ledCount - 2))
+            scandir = -1;
+        else if (larsson <= 1)
+            scandir = 1;
+        for (let x = 1; x < (ledCount-1); x++)
+        {
+            if ((x == (larsson - 2)) || (x == (larsson + 2)))
+                setPixel(x, scanColor3);
+            else if ((x == (larsson - 1)) || (x == (larsson + 1)))
+                setPixel(x, scanColor2);
+            else if (x == larsson)
+                setPixel(x, scanColor1);
+            else
+                setPixel(x, 0);
+        }
+    }
+
 // Advanced blocks
 
     /**
@@ -778,91 +867,6 @@ namespace robobit
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
 
-    /**
-      * Start Scanner
-      * @param color the colour to use for scanning
-      * @param delay time in ms between scan steps, eg: 100,50,200,500
-      */
-    //% blockId="rb_startScanner" block="start scan %color=rb_colours| with %delay|(ms)"
-    //% subcategory=LedBar
-    //% group=Basic
-    //% delay.min=1 delay.max=10000
-    //% weight=40
-    export function startScanner(color: number, delay: number): void
-    {
-        scanColor1 = color;
-        scanColor2 = reduce(scanColor1, 8);
-        scanColor3 = reduce(scanColor2, 4);
-        if(_scanning == false)
-        {
-            _scanning = true;
-            control.inBackground(() =>
-            {
-                while (_scanning)
-                {                                
-                    ledScan();
-                    ledShow();
-                    basic.pause(delay);
-                }
-            })
-        }
-    }
-
-    /**
-      * Reduce colour RGB separately by divisor
-      */
-    function reduce(color: number, reducer: number): number
-    {
-        let red = ((color & 0xff0000) / reducer) & 0xff0000;
-        let green = ((color & 0x00ff00) / reducer) & 0x00ff00;
-        let blue = ((color & 0x0000ff) / reducer) & 0x0000ff;
-        return red + green + blue;
-    }
-
-    /**
-      * Stop Scanner
-      */
-    //% block
-    //% subcategory=LedBar
-    //% group=Basic
-    //% weight=30
-    export function stopScanner(): void
-    {
-        _scanning = false;
-    }
-
-    /**
-     * Use centre 6 LEDs as Larsson Scanner. Each call moves the scan by one pixel
-     */
-    //% subcategory=LedBar
-    //% group=Basic
-    //% blockId="robobit_ledScan" block="scan centre pixels"
-    //% weight=30
-    //% deprecated=true
-    export function ledScan(): void
-    {
-        if (!larsson)
-        {
-            larsson = 1;
-            scandir = 1;
-        }
-        larsson += scandir;
-        if (larsson >= (ledCount - 2))
-            scandir = -1;
-        else if (larsson <= 1)
-            scandir = 1;
-        for (let x = 1; x < (ledCount-1); x++)
-        {
-            if ((x == (larsson - 2)) || (x == (larsson + 2)))
-                setPixel(x, scanColor3);
-            else if ((x == (larsson - 1)) || (x == (larsson + 1)))
-                setPixel(x, scanColor2);
-            else if (x == larsson)
-                setPixel(x, scanColor1);
-            else
-                setPixel(x, 0);
-        }
-    }
 // Inputs and Outputs (Sensors)
     /**
       * Read line sensor.
