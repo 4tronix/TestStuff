@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 05 Robobit model %model"
+    //% blockId="robobit_model" block="select 06 Robobit model %model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -349,7 +349,7 @@ namespace robobit
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
       */
-    //% blockId="RBRotatems" block="spin %direction|at speed %speed|for %milliseconds|(ms)"
+    //% blockId="RBRotatems" block="spin%direction|at speed%speed|for%milliseconds|(ms)"
     //% speed.min=0 speed.max=100
     //% weight=70
     //% subcategory=Motors
@@ -366,7 +366,7 @@ namespace robobit
       * Stop robot by coasting slowly to a halt or braking
       * @param mode Brakes on or off
       */
-    //% blockId="RBstop" block="stop with %mode"
+    //% blockId="RBstop" block="stop with%mode"
     //% weight=60
     //% subcategory=Motors
     //% group="New style blocks"
@@ -388,7 +388,7 @@ namespace robobit
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="RBMove" block="move %motor|motor(s) %direction|at speed %speed"
+    //% blockId="RBMove" block="move%motor|motor(s)%direction|at speed%speed"
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
@@ -433,7 +433,7 @@ namespace robobit
       * @param direction direction to turn more (if robot goes right, set this to left)
       * @param bias percentage of speed to bias with eg: 10
       */
-    //% blockId="RBBias" block="bias%direction|by%bias|%"
+    //% blockId="RBBias" block="bias%direction|by%bias|//%"
     //% bias.min=0 bias.max=80
     //% weight=40
     //% subcategory=Motors
@@ -523,7 +523,7 @@ namespace robobit
       */
     //% subcategory=Motors
     //% group="Old style blocks"
-    //% blockId="robobit_turn_milliseconds" block="spin %direction|at speed %speed| for %milliseconds|(ms)"
+    //% blockId="robobit_turn_milliseconds" block="spin%direction|at speed%speed|for%milliseconds|(ms)"
     //% speed.min=0 speed.max=1023
     //% weight=130
     //% blockGap=8
@@ -541,7 +541,7 @@ namespace robobit
       */
     //% subcategory=Motors
     //% group="Old style blocks"
-    //% blockId="robobit_motor" block="drive %motor| motor at speed %speed"
+    //% blockId="robobit_motor" block="drive%motor|motor at speed%speed"
     //% weight=100
     //% blockGap=8
     export function motor(motor: RBMotor, speed: number): void
@@ -610,7 +610,7 @@ namespace robobit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="robobit_set_led_color" block="set all LEDs to %rgb=rb_colours"
+    //% blockId="robobit_set_led_color" block="set all LEDs to%rgb=rb_colours"
     //% weight=100
     //% subcategory=LedBar
     //% group=Basic
@@ -641,7 +641,7 @@ namespace robobit
      * @param ledId position of the LED (0 to 11)
      * @param rgb RGB color of the LED
      */
-    //% blockId="robobit_set_pixel_color" block="set LED at %ledId|to %rgb=rb_colours"
+    //% blockId="robobit_set_pixel_color" block="set LED at%ledId|to%rgb=rb_colours"
     //% weight=80
     //% subcategory=LedBar
     //% group=Basic
@@ -699,7 +699,7 @@ namespace robobit
       * @param color the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="rb_startScanner" block="start scan %color=rb_colours| with %delay|(ms)"
+    //% blockId="rb_startScanner" block="start scan%color=rb_colours|with%delay|ms"
     //% subcategory=LedBar
     //% group=Basic
     //% delay.min=1 delay.max=10000
@@ -789,7 +789,7 @@ namespace robobit
      * Set the brightness of the LedBar
      * @param brightness a measure of LED brightness in 0-255. eg: 40
      */
-    //% blockId="robobit_led_brightness" block="set LED brightness %brightness"
+    //% blockId="robobit_led_brightness" block="set LedBar brightness%brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=100
     //% subcategory=LedBar
@@ -805,7 +805,7 @@ namespace robobit
       * Set LED update mode (Manual or Automatic)
       * @param updateMode setting automatic will show LED changes automatically
       */
-    //% blockId="robobit_set_updateMode" block="set %updateMode|update mode"
+    //% blockId="robobit_set_updateMode" block="set%updateMode|update mode"
     //% weight=90
     //% subcategory=LedBar
     //% group=Advanced
@@ -874,7 +874,7 @@ namespace robobit
       * @param sensor Line sensor to read.
       */
     //% subcategory="Inputs & Outputs"
-    //% blockId="robobit_read_line" block="read line sensor %sensor"
+    //% blockId="robobit_read_line" block="read%sensor|line sensor"
     //% weight=80
     export function readLine(sensor: RBLineSensor): number
     {
@@ -901,7 +901,7 @@ namespace robobit
     * @param unit desired conversion unit
     */
     //% subcategory="Inputs & Outputs"
-    //% blockId="robobit_sonar" block="read sonar as %unit"
+    //% blockId="robobit_sonar" block="read sonar as%unit"
     //% weight=90
     export function sonar(unit: RBPingUnit): number
     {
@@ -945,16 +945,6 @@ namespace robobit
     export function setTalon(degrees: number): void
     {
         pins.servoWritePin(AnalogPin.P13, clamp(0, 80, degrees))
-    }
-
-    function neo(): neopixel.Strip
-    {
-        if (!ledBar)
-        {
-            ledBar = neopixel.create(DigitalPin.P13, 8, NeoPixelMode.RGB);
-            ledBar.setBrightness(40);
-        }
-        return ledBar;
     }
 
 }
