@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 03 Robobit model %model"
+    //% blockId="robobit_model" block="select 04 Robobit model %model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -373,7 +373,6 @@ namespace robobit
     //% blockGap=8
     export function stop(mode: RBStopMode): void
     {
-        getModel();
         let stopMode = 0;
         if (mode == RBStopMode.Brake)
             stopMode = 1;
@@ -397,7 +396,6 @@ namespace robobit
     //% blockGap=8
     export function move(motor: RBMotor, direction: RBDirection, speed: number): void
     {
-        getModel();
         speed = clamp(speed, 0, 100) * 10.23;
         setPWM(speed);
         let lSpeed = Math.round(speed * (100 - leftBias) / 100);
