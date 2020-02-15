@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 07 Robobit model%model"
+    //% blockId="robobit_model" block="select 08 Robobit model%model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -501,8 +501,7 @@ namespace robobit
     //% blockGap=8
     export function driveTurn(direction: RBRobotDirection, speed: number): void
     {
-        if (speed < 0)
-            speed = 0;
+        speed = clamp(speed, 0, 1023);
         if (direction == RBRobotDirection.Left)
         {
             motor(RBMotor.Left, -speed);
@@ -546,6 +545,7 @@ namespace robobit
     //% blockGap=8
     export function motor(motor: RBMotor, speed: number): void
     {
+        speed = clamp(speed, -1023, 1023);
         let forward = (speed >= 0);
         let absSpeed = Math.abs(speed);
         if ((motor == RBMotor.Left) || (motor == RBMotor.Both))
@@ -553,14 +553,6 @@ namespace robobit
         if ((motor == RBMotor.Right) || (motor == RBMotor.Both))
             rightSpeed = absSpeed;
         setPWM(absSpeed);
-        if (speed > 1023)
-        {
-            speed = 1023;
-        }
-        else if (speed < -1023)
-        {
-            speed = -1023;
-        }
         let realSpeed = speed;
         if (!forward)
         {
@@ -773,13 +765,13 @@ namespace robobit
         for (let x = 1; x < (ledCount-1); x++)
         {
             if ((x == (larsson - 2)) || (x == (larsson + 2)))
-                setPixel(x, scanColor3);
+                setPixelColor(x, scanColor3);
             else if ((x == (larsson - 1)) || (x == (larsson + 1)))
-                setPixel(x, scanColor2);
+                setPixelColor(x, scanColor2);
             else if (x == larsson)
-                setPixel(x, scanColor1);
+                setPixelColor(x, scanColor1);
             else
-                setPixel(x, 0);
+                setPixelColor(x, 0);
         }
     }
 
