@@ -52,7 +52,7 @@ If you want more fine grain control of individal motors, use `bitbot.move(...)` 
 You can specify the direction (Forward or Reverse) and speed between 0 and 100.
 If the left motor turns slower than the right motor, the robot will turn to the left
 ```blocks
-// Drive both motors forward at speed 60. Equivalent to bitbot.go(mbDirection.Forward, 60)
+// Drive both motors forward at speed 60. Equivalent to bitbot.go(BBDirection.Forward, 60)
 bitbot.move(BBMotor.Both, BBDirection.Forward, 60)
 
 // Drive left motor in reverse at speed 30
@@ -65,7 +65,7 @@ bitbot.move(BBMotor.Right, BBDirection.Forward, 70)
 
 ## Making the Robot Drive Straight
 
-The small DC motors used in the BitBot and many other small robots are not guaranteed to go at the speed as each other.
+The small DC motors used in the BitBot and many other small robots are not guaranteed to go at the same speed as each other.
 This can cause the robot to veer off the straight line, either to left or to right, even when both motors are programmed to go
 at the same speed.
 We can partially correct for this by adding a direction bias to the motor speed settings.
@@ -139,12 +139,12 @@ Manual or Automatic:
 // Set all FireLeds to Green (hard-coded RGB color)
 bitbot.setLedColor(0x00FF00)
 // Set all FireLeds to Green (built-in colour selection)
-bitbot.setLedColor(mbColors.Green)
+bitbot.setLedColor(BBColors.Green)
 
 // Clear all leds
 bitbot.ledClear()
 
-// Set the FireLed at position 0 to 4 to selected colour.
+// Set the FireLed at position 0 to 11 to selected colour.
 // eg. set Fireled 3 to Red
 bitbot.setPixelColor(3, 0xff0000)
 
@@ -163,14 +163,14 @@ and select the brightness of the FireLeds.
 The brightness is set to 40 by default, but can go as high as 255
 You should be careful not to look directly at them when they are bright as they can damage eyes.
 ```blocks
-// Switch FireLedss Update Mode to Manual or Automatic
+// Switch FireLeds Update Mode to Manual or Automatic
 bitbot.setUpdateMode(BBMode.Manual);
 bitbot.setUpdateMode(BBMode.Auto);
 
 // Select colour from separate Red, Green and Blue values
-// Each of the Red, Green and Blue values can range from 0 to 255
+// Each of the Red, Green and Blue values can range from 0 to 255.
 // This example produces a pale blue colour
-let myColour = bitbot.convertRGB(50, 100, 200)
+let myColour = bitbot.convertRGB(50, 100, 200);
 
 // Set brightness of FireLeds to 100
 bitbot.ledBrightness(100);
