@@ -1,7 +1,7 @@
 {
-    "name": "BitBot",
-    "version": "1.4.0",
-    "description": "Microsoft MakeCode package for 4tronix BitBot robot",
+    "name": "RoboBit",
+    "version": "1.3.0",
+    "description": "Microsoft MakeCode package for 4tronix RoboBit Buggy",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -10,11 +10,8 @@
     },
     "files": [
         "README.md",
-        "bitbot.ts",
-        "_locales/no/BitBot-strings.json",
-        "_locales/no/BitBot-jsdoc-strings.json",
-        "_locales/fr/BitBot-strings.json",
-        "_locales/fr/BitBot-jsdoc-strings.json"
+        "robobit.ts",
+        "_locales/no/robobit-strings.json"
     ],
     "testFiles": [
         "tests.ts"
