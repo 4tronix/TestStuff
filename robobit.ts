@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 12 Robobit model%model"
+    //% blockId="robobit_model" block="select 13 Robobit model%model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -606,57 +606,5 @@ namespace robobit
     }
 
 
-    /**
-    * Read distance from sonar module connected to accessory connector.
-    * @param unit desired conversion unit
-    */
-    //% blockId="robobit_sonar" block="read sonar as%unit"
-    //% weight=90
-    //% subcategory="Inputs & Outputs"
-    export function sonar(unit: RBPingUnit): number
-    {
-        // send pulse
-        let trig = DigitalPin.P13;
-	if (_model == RBModel.Mk3)
-	    trig = DigitalPin.P15;
-	if (_model == RBModel.Mk2A)
-	    trig = DigitalPin.P15;
-        let echo = trig;
-        let maxCmDistance = 500;
-        let d=10;
-        pins.setPull(trig, PinPullMode.PullNone);
-        for (let x=0; x<10; x++)
-        {
-            pins.digitalWritePin(trig, 0);
-            control.waitMicros(2);
-            pins.digitalWritePin(trig, 1);
-            control.waitMicros(10);
-            pins.digitalWritePin(trig, 0);
-            // read pulse
-            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
-            if (d>0)
-                break;
-        }
-        switch (unit)
-        {
-            case RBPingUnit.Centimeters: Math.round(return d / 58);
-            case RBPingUnit.Inches: Math.round(return d / 148);
-            default: return d;
-        }
-    }
-
-    /**
-      * Adjust opening of Talon attachment
-      * @param degrees Degrees to open Talon. eg: 30
-      */
-    //% blockId="robobit_set_talon" block="open talon%degrees|degrees"
-    //% weight=70
-    //% degrees.min=0 degrees.max=80
-    //% subcategory="Inputs & Outputs"
-    export function setTalon(degrees: number): void
-    {
-        degrees = clamp(degrees, 0, 80);
-        pins.servoWritePin(AnalogPin.P13, degrees);
-    }
 
 }
