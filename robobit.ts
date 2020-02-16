@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 23 Robobit model%model"
+    //% blockId="robobit_model" block="select 24 Robobit model%model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -577,6 +577,289 @@ namespace robobit
             pins.digitalWritePin(DigitalPin.P12, forward ? 0 : 1);
         }
     }
+
+// Inbuilt LedBar Blocks (FireLeds)
+
+    // create a FireLed band if not got one already. Default to brightness 40
+    function fire(): fireled.Band
+    {
+        if (!ledBar)
+        {
+            ledBar = fireled.newBand(DigitalPin.P13, 8);
+            ledBar.setBrightness(40);
+        }
+        return ledBar;
+    }
+
+    // update LedBar if _updateMode set to Auto
+    function updateLEDs(): void
+    {
+        if (_updateMode == RBMode.Auto)
+            ledShow();
+    }
+
+    /**
+      * Sets all LEDs to a given color (range 0-255 for r, g, b).
+      * @param rgb RGB color of the LED
+      */
+    //% blockId="robobit_set_led_color" block="set all LEDs to%rgb=rb_colours"
+    //% weight=100
+    //% subcategory=LedBar
+    //% group=Basic
+    //% blockGap=8
+    export function setLedColor(rgb: number)
+    {
+        fire().setBand(rgb);
+        updateLEDs();
+    }
+
+    /**
+      * Clear all leds.
+      */
+    //% blockId="robobit_led_clear" block="clear all LEDs"
+    //% weight=90
+    //% subcategory=LedBar
+    //% group=Basic
+    //% blockGap=8
+    export function ledClear(): void
+    {
+        fire().clearBand();
+        updateLEDs();
+    }
+
+    /**
+     * Set single LED to a given color (range 0-255 for r, g, b).
+     *
+     * @param ledId position of the LED (0 to 11)
+     * @param rgb RGB color of the LED
+     */
+    //% blockId="robobit_set_pixel_color" block="set LED at%ledId|to%rgb=rb_colours"
+    //% weight=80
+    //% subcategory=LedBar
+    //% group=Basic
+    //% blockGap=8
+    export function setPixelColor(ledId: number, rgb: number): void
+    {
+        fire().setPixel(ledId, rgb);
+        updateLEDs();
+    }
+
+    /**
+      * Shows a rainbow pattern on all LEDs.
+      */
+    //% blockId="robobit_rainbow" block="set LED rainbow"
+    //% weight=70
+    //% subcategory=LedBar
+    //% group=Basic
+    //% blockGap=8
+    export function ledRainbow(): void
+    {
+        fire().setRainbow();
+        updateLEDs()
+    }
+
+    /**
+     * Shift LEDs forward and clear with zeros.
+     */
+    //% blockId="robobit_led_shift" block="shift LEDs"
+    //% weight=60
+    //% subcategory=LedBar
+    //% group=Basic
+    //% blockGap=8
+    export function ledShift(): void
+    {
+        fire().shiftBand();
+        updateLEDs()
+    }
+
+    /**
+     * Rotate LEDs forward.
+     */
+    //% blockId="robobit_led_rotate" block="rotate LEDs"
+    //% weight=50
+    //% subcategory=LedBar
+    //% group=Basic
+    //% blockGap=8
+    export function ledRotate(): void
+    {
+        fire().rotateBand();
+        updateLEDs()
+    }
+
+// Advanced blocks
+
+    /**
+     * Set the brightness of the LedBar
+     * @param brightness a measure of LED brightness in 0-255. eg: 40
+     */
+    //% blockId="robobit_led_brightness" block="set LedBar brightness%brightness"
+    //% brightness.min=0 brightness.max=255
+    //% weight=100
+    //% subcategory=LedBar
+    //% group=Advanced
+    //% blockGap=8
+    export function ledBrightness(brightness: number): void
+    {
+        fire().setBrightness(brightness);
+        updateLEDs();
+    }
+
+    /**
+      * Set LED update mode (Manual or Automatic)
+      * @param updateMode setting automatic will show LED changes automatically
+      */
+    //% blockId="robobit_set_updateMode" block="set%updateMode|update mode"
+    //% weight=90
+    //% subcategory=LedBar
+    //% group=Advanced
+    //% blockGap=8
+    export function setUpdateMode(updateMode: RBMode): void
+    {
+        _updateMode = updateMode;
+    }
+
+    /**
+      * Show LED changes
+      */
+    //% blockId="RBledShow" block="show LedBar changes"
+    //% weight=80
+    //% subcategory=LedBar
+    //% group=Advanced
+    //% blockGap=8
+    export function ledShow(): void
+    {
+        if (btDisabled)
+            fire().updateBand();
+    }
+
+    /**
+      * Get numeric value of colour
+      * @param color Standard RGB Led Colours eg: #ff0000
+      */
+    //% blockId="rb_colours" block=%color
+    //% blockHidden=false
+    //% weight=70
+    //% subcategory=LedBar
+    //% group=Advanced
+    //% blockGap=8
+    //% shim=TD_ID colorSecondary="#e7660b"
+    //% color.fieldEditor="colornumber"
+    //% color.fieldOptions.decompileLiterals=true
+    //% color.defl='#ff0000'
+    //% color.fieldOptions.colours='["#FF0000","#659900","#18E600","#80FF00","#00FF00","#FF8000","#D82600","#B24C00","#00FFC0","#00FF80","#FFC000","#FF0080","#FF00FF","#B09EFF","#00FFFF","#FFFF00","#8000FF","#0080FF","#0000FF","#FFFFFF","#FF8080","#80FF80","#40C0FF","#999999","#000000"]'
+    //% color.fieldOptions.columns=5
+    //% color.fieldOptions.className='rgbColorPicker'
+    export function RBColours(color: number): number
+    {
+        return color;
+    }
+
+    /**
+      * Convert from RGB values to colour number
+      * @param red Red value of the LED (0 to 255)
+      * @param green Green value of the LED (0 to 255)
+      * @param blue Blue value of the LED (0 to 255)
+      */
+    //% blockId="robobit_convertRGB" block="convert from red%red|green%green|blue%blue"
+    //% weight=60
+    //% subcategory=LedBar
+    //% group=Advanced
+    //% blockGap=8
+    export function convertRGB(r: number, g: number, b: number): number
+    {
+        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+    }
+
+
+    /**
+      * Start Scanner
+      * @param color the colour to use for scanning
+      * @param delay time in ms between scan steps, eg: 100,50,200,500
+      */
+    //% blockId="rb_startScanner" block="start scan%color=rb_colours|with%delay|ms"
+    //% subcategory=LedBar
+    //% group=Basic
+    //% delay.min=1 delay.max=10000
+    //% weight=40
+    //% blockGap=8
+    export function startScanner(color: number, delay: number): void
+    {
+        scanColor1 = color;
+        scanColor2 = reduce(scanColor1, 8);
+        scanColor3 = reduce(scanColor2, 4);
+        if(_scanning == false)
+        {
+            _scanning = true;
+            control.inBackground(() =>
+            {
+                while (_scanning)
+                {                                
+                    ledScan();
+                    ledShow();
+                    basic.pause(delay);
+                }
+            })
+        }
+    }
+
+    /**
+      * Reduce colour RGB separately by divisor
+      */
+    function reduce(color: number, reducer: number): number
+    {
+        let red = ((color & 0xff0000) / reducer) & 0xff0000;
+        let green = ((color & 0x00ff00) / reducer) & 0x00ff00;
+        let blue = ((color & 0x0000ff) / reducer) & 0x0000ff;
+        return red + green + blue;
+    }
+
+    /**
+      * Stop Scanner
+      */
+    //% block
+    //% subcategory=LedBar
+    //% group=Basic
+    //% weight=30
+    //% blockGap=8
+    export function stopScanner(): void
+    {
+        _scanning = false;
+    }
+
+    /**
+     * Use centre 6 LEDs as Larsson Scanner. Each call moves the scan by one pixel
+     */
+    //% subcategory=LedBar
+    //% group=Basic
+    //% blockId="robobit_ledScan" block="scan centre pixels"
+    //% weight=20
+    //% blockGap=8
+    //% deprecated=true
+    export function ledScan(): void
+    {
+        if (!larsson)
+        {
+            larsson = 1;
+            scandir = 1;
+        }
+        larsson += scandir;
+        if (larsson >= (ledCount - 2))
+            scandir = -1;
+        else if (larsson <= 1)
+            scandir = 1;
+        for (let x = 1; x < (ledCount-1); x++)
+        {
+            if ((x == (larsson - 2)) || (x == (larsson + 2)))
+                setPixelColor(x, scanColor3);
+            else if ((x == (larsson - 1)) || (x == (larsson + 1)))
+                setPixelColor(x, scanColor2);
+            else if (x == larsson)
+                setPixelColor(x, scanColor1);
+            else
+                setPixelColor(x, 0);
+        }
+    }
+
 
 // Inputs and Outputs (Sensors)
     /**
