@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 22 Robobit model%model"
+    //% blockId="robobit_model" block="select 23 Robobit model%model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -653,7 +653,7 @@ namespace robobit
     //% subcategory="Inputs & Outputs"
     export function setTalon(degrees: number): void
     {
-        degreees = clamp(degrees, 0, 80);
+        degrees = clamp(degrees, 0, 80);
         pins.servoWritePin(AnalogPin.P13, degrees);
     }
 
