@@ -106,45 +106,64 @@ let v3 = robobit.sonar(RBPingUnit.Inches);
 The Robobit optionally has 8 NeoPixels mounted on a LEDBar. This library defines some helpers
 for using the NeoPixels.
 
+## FireLed Functions
+
+The Robobit optionally has 8 FireLeds fitted (integrated into the Mk3)
+By default, the FireLeds are automatically updated after every setting. This makes it easy to understand.
+However, it can slow down some effects so there is a block provided to switch the update mode to
+Manual or Automatic:
+
 ```blocks
-// Show all leds
-robobit.setColor(neopixel.colors(NeoPixelColors.Red));
-robobit.neoShow();
+// Set all FireLeds to Green (hard-coded RGB color)
+robobit.setLedColor(0x00FF00)
+// Set all FireLeds to Green (built-in colour selection)
+robobit.setLedColor(RBColors.Green)
 
 // Clear all leds
-robobit.neoClear();
-robobit.neoShow();
+robobit.ledClear()
 
-// Show led at position 1 (0 to 7)
-robobit.setPixel(1, neopixel.colors(NeoPixelColors.Red));
-robobit.neoShow();
+// Set the FireLed at position 0 to 7 to selected colour.
+// eg. set Fireled 3 to Red
+robobit.setPixelColor(3, 0xff0000)
 
-// Show led rainbow
-robobit.neoRainbow();
-robobit.neoShow();
+// Set all the FireLeds to Rainbow (uses the colour wheel from Red to Purple)
+robobit.ledRainbow()
 
-// Show led rainbow and shift
-robobit.neoRainbow();
-robobit.neoShift();
-robobit.neoShow();
+// Shift FireLeds up one place, blanking the first FireLed
+robobit.ledShift()
 
-// Show led rainbow and rotate
-robobit.neoRainbow();
-robobit.neoRotate();
-robobit.neoShow();
+// Rotate FireLeds by shifting up one and replace the first with the last
+robobit.ledRotate()
+```
 
-// Set brightness of leds (0 to 255)
-robobit.neoBrightness(100);
-robobit.neoShow();
+There are some more advanced blocks that allow you to select colours using separate RGB values
+and select the brightness of the FireLeds.
+The brightness is set to 40 by default, but can go as high as 255
+You should be careful not to look directly at them when they are bright as they can damage eyes.
+```blocks
+// Switch FireLeds Update Mode to Manual or Automatic
+robobit.setUpdateMode(RBMode.Manual);
+robobit.setUpdateMode(RBMode.Auto);
 
+// Select colour from separate Red, Green and Blue values
+// Each of the Red, Green and Blue values can range from 0 to 255.
+// This example produces a pale blue colour
+let myColour = robobit.convertRGB(50, 100, 200);
+
+// Set brightness of FireLeds to 100
+robobit.ledBrightness(100);
+```
+
+## Larsson Scanner
+The Robobit can automatically drive a Larsson scanner on the middle 6 FireLeds.
+This moves a group of LEDs in the selected colour backwards and forwards across the LedBar.
+```blocks
 // Start the scanner to run in the background at the speed and colour you choose
-robobit.startScanner(robobit.RBColours(RBColors.Red), 100);
+// here we select the Red and 100ms scanning rate
+robobit.startScanner(0xff0000, 100);
+
 // and stop it with
 robobit.stopScanner();
-
-// Define your own colours using convertRGB(red, green, blue)
-robobit.setColor(robobit.convertRGB(40, 50, 200));
-robobit.neoShow();
 ```
 
 ## Supported targets
