@@ -101,11 +101,6 @@ let v2 = robobit.sonar(RBPingUnit.Centimeters);
 let v3 = robobit.sonar(RBPingUnit.Inches);
 ```
 
-## NeoPixel helpers
-
-The Robobit optionally has 8 NeoPixels mounted on a LEDBar. This library defines some helpers
-for using the NeoPixels.
-
 ## FireLed Functions
 
 The Robobit optionally has 8 FireLeds fitted (integrated into the Mk3)
