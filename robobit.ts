@@ -248,7 +248,7 @@ namespace robobit
       * Select Model of Robobit (Determines Pins used)
       * @param model Model of Robobit buggy. Mk1, Mk2, or Mk3
       */
-    //% blockId="robobit_model" block="select 28 Robobit model%model"
+    //% blockId="robobit_model" block="select 29 Robobit model%model"
     //% weight=100
     export function select_model(model: RBModel): void
     {
@@ -585,7 +585,7 @@ namespace robobit
     {
         if (!ledBar)
         {
-            ledBar = fireled.newBand(DigitalPin.P13, 8);
+            ledBar = fireled.newBand(DigitalPin.P1, 16);
             ledBar.setBrightness(40);
         }
         return ledBar;
