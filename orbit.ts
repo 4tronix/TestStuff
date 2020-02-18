@@ -19,7 +19,7 @@ enum LatLong
 /**
  * Custom blocks
  */
-//% weight=50 color=#e7660b icon="\uf2f1"
+//% weight=50 color=#e7660b icon="\uf021"
 //% groups='["Bluetooth","Basic","Advanced"]'
 namespace orbit
 {
@@ -40,7 +40,7 @@ namespace orbit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="enable 01 Bluetooth & disable FireLeds%enable"
+    //% block="enable 02 Bluetooth & disable FireLeds%enable"
     //% enable.shadow="toggleYesNo"
     //% weight=100
     //% blockGap=8
@@ -154,19 +154,19 @@ namespace orbit
 // LatLong Addressing. 
     /**
      * Set single LED to a given color (range 0-255 for r, g, b).
-     * @param lat latitudinal value 0-15
-     * @param long longitudinal value 0-15
+     * @param latitude latitudinal value 0-15
+     * @param longitude longitudinal value 0-15
      * @param rgb RGB color of the LED
      */
-    //% blockId="SetLLPixelColor" block="set LED at lat%lat|long%long|to%rgb=FireColours"
+    //% blockId="SetLLPixelColor" block="set LED at lat%latitude|long%longitude|to%rgb=FireColours"
     //% subcategory="Latitude Longitude"
     //% weight=100
     //% blockGap=8
-    export function setLLPixelColor(lat: number, long: number, rgb: number)
+    export function setLLPixelColor(latitude: number, longitude: number, rgb: number)
     {
-        lat = clamp(lat, 0, 15);
-        long = clamp(long, 0, 15);
-        fire().setPixel(lat*16+long, rgb);
+        latitude = clamp(latitude, 0, 15);
+        longitude = clamp(longitude, 0, 15);
+        fire().setPixel(latitude*16+longitude, rgb);
         updateLEDs();
     }
 
@@ -185,12 +185,12 @@ namespace orbit
         value = clamp(value, 0, 15);
         if (latlong == LatLong.Latitude)
         {
-            for (let i=0; i<15, i++)
+            for (let i=0; i<16, i++)
                 fire().setPixel(i*16 + value, rgb);
         }
         else
         {
-            for (let i=0; i<15, i++)
+            for (let i=0; i<16, i++)
                 fire().setPixel(value*16 + i, rgb);
         }
         updateLEDs();
