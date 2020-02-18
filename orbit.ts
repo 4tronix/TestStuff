@@ -40,7 +40,7 @@ namespace orbit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="enable 03 Bluetooth & disable FireLeds%enable"
+    //% block="enable 04 Bluetooth & disable FireLeds%enable"
     //% enable.shadow="toggleYesNo"
     //% weight=100
     //% blockGap=8
@@ -166,7 +166,36 @@ namespace orbit
     {
         latitude = clamp(latitude, 0, 15);
         longitude = clamp(longitude, 0, 15);
-        fire().setPixel(latitude*16+longitude, rgb);
+        fire().setPixel(longitude*16+latitude, rgb);
+        updateLEDs();
+    }
+
+    /**
+     * Set circle to given colour
+     * @param latilong circle on longitude or latitude
+     * @param val position of circle 0-15
+     * @param rgb RGB color of the LED
+     */
+    //% blockId="SetLLCircleColor" block="set circle at %latilong|%val|to%rgb=FireColours"
+    //% subcategory="Latitude Longitude"
+    //% weight=90
+    //% blockGap=8
+    export function setLLCircleColor(latilong: LatLong, val: number, rgb: number)
+    {
+        val = clamp(val, 0, 15);
+        if (latilong == LatLong.Latitude)
+        {
+            for (let i=0; i<16; i++)
+                fire().setPixel(i*16 + val, rgb);
+        }
+        else
+        {
+            for (let i=0; i<16; i++)
+            {
+                fire().setPixel(val*16 + i, rgb);
+                fire().setPixel(((val+8)%16)*16 + i, rgb);
+            }
+        }
         updateLEDs();
     }
 
