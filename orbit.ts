@@ -16,6 +16,13 @@ enum LatLong
     Longitude
 }
 
+enum Direction
+{
+    Forward,
+    Reverse
+}
+
+
 /**
  * Custom blocks
  */
@@ -40,7 +47,7 @@ namespace orbit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="enable 04 Bluetooth & disable FireLeds%enable"
+    //% block="enable 05 Bluetooth & disable FireLeds%enable"
     //% enable.shadow="toggleYesNo"
     //% weight=100
     //% blockGap=8
@@ -198,6 +205,34 @@ namespace orbit
         }
         updateLEDs();
     }
+
+// Rotate Leds in Latitude or Longitude (all Leds at latitude x move to x+1)
+    /**
+     * Rotate LEDs in latitude or longitude
+     * @param latilong select latitude or longitude to rotate
+     * @param direction positive or negative direction
+     */
+    //% blockId="RotateLatLong" block="rotate all LEDs in%latilong|%direction"
+    //% subcategory="Latitude Longitude"
+    //% weight=90
+    //% blockGap=8
+    export function rotateLatLong(latilong: LatLong, direction: Direction)
+    {
+        if (latilong == LatLong.Latitude)
+        {
+            for (let i=15; i>0; i--)
+                for (let j=0; j>16; j++)
+                    fire().ledBuffer[j*16+i] = fire().ledBuffer[j*16+i-1];
+        }
+        else
+        {
+            for (let i=15; i>0; i--)
+                for (let j=0; j>16; j++)
+                    fire().ledBuffer[j*16+i] = fire().ledBuffer[j*16+i-1];
+        }
+        updateLEDs();
+    }
+
 
 // Advanced generic blocks
 
