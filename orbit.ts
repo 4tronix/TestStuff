@@ -47,7 +47,7 @@ namespace orbit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="enable 08 Bluetooth & disable FireLeds%enable"
+    //% block="enable 09 Bluetooth & disable FireLeds%enable"
     //% enable.shadow="toggleYesNo"
     //% weight=100
     //% blockGap=8
@@ -221,7 +221,7 @@ namespace orbit
         if (latilong == LatLong.Latitude)
         {
             for (let i=15; i>0; i--)
-                for (let j=0; j>16; j++)
+                for (let j=0; j<16; j++)
                 {
                     let t = (j*16+i) * 3;
                     fire().ledBuffer[t] = fire().ledBuffer[t-3];
