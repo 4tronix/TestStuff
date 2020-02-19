@@ -66,7 +66,7 @@ namespace orbit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="SetLedColor" block="set 21 all LEDs to%rgb=FireColours"
+    //% blockId="SetLedColor" block="set 22 all LEDs to%rgb=FireColours"
     //% subcategory=Generic
     //% group=Basic
     //% weight=100
@@ -270,12 +270,14 @@ namespace orbit
      * @param longitude longitudinal value 0-15
      * @param rgb RGB color of the LED
      */
-    //% blockId="GetPixel" block="put LED at lat%latitude|long%longitude|to%rgb=FireColours"
+    //% blockId="putPixel" block="put LED at lat%latitude|long%longitude|to%rgb=FireColours"
     //% subcategory="Latitude Longitude"
     //% weight=95
     //% blockGap=8
-    putPixel(latitude: number, longitude: number, rgb: number)
+    export function putPixel(latitude: number, longitude: number, rgb: number)
     {
+        latitude = clamp(latitude, 0, 15);
+        longitude = clamp(longitude, 0, 15);
         let r = (rgb >> 16) & 0xff;
         let g = (rgb >> 8) & 0xff;
         let b = (rgb) & 0xff;
