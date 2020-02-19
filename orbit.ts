@@ -47,7 +47,7 @@ namespace orbit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="enable 14 Bluetooth & disable FireLeds%enable"
+    //% block="enable 15 Bluetooth & disable FireLeds%enable"
     //% enable.shadow="toggleYesNo"
     //% weight=100
     //% blockGap=8
@@ -236,23 +236,24 @@ namespace orbit
     //% blockGap=8
     export function rainbowLatLong(latilong: LatLong, direction: MoveDirection)
     {
+        let rgb: number;
         if (latilong == LatLong.Latitude)
         {
-            if (direction == MoveDirection.Forward)
+            for (let i=0; i<16; i++)
             {
-                for (let i=0; i<16; i++)
-                    for (let j=0; j<16; j++)
-                        fire().setPixel(i*16+j, wheel(i*16));
-            }
-            else
-            {
-                for (let i=0; i<16; i++)
-                    for (let j=0; j<16; j++)
-                        fire().setPixel(i*16+j, wheel(256-i*16));
+                rgb = (direction == MoveDirection.Forward) ? wheel(i*16) : wheel(256-i*16)
+                for (let j=0; j<16; j++)
+                    fire().setPixel(i*16+j, rgb);
             }
         }
         else
         {
+            for (let i=0; i<16; i++)
+            {
+                rgb = (direction == MoveDirection.Forward) ? wheel(i*16) : wheel(256-i*16)
+                for (let j=0; j<16; j++)
+                    fire().setPixel(j*16+i, rgb);
+            }
         }
     }
 
