@@ -47,7 +47,7 @@ namespace orbit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="enable 17 Bluetooth & disable FireLeds%enable"
+    //% block="enable 18 Bluetooth & disable FireLeds%enable"
     //% enable.shadow="toggleYesNo"
     //% weight=100
     //% blockGap=8
@@ -337,7 +337,7 @@ namespace orbit
                 for (let t=0; t<48; t++)
                     tBuf[t] = fire().ledBuffer[t+p];
                 for (let i=15; i>0; i--)
-                    for (let j=0; j<16; j++)
+                    for (let j=0; j<48; j++)
                         fire().ledBuffer[i*48+j] = fire().ledBuffer[i*48+j-48];
                 for (let t=0; t<48; t++)
                     fire().ledBuffer[t] = tBuf[t];
@@ -347,7 +347,7 @@ namespace orbit
                 for (let t=0; t<48; t++)
                     tBuf[t] = fire().ledBuffer[t];
                 for (let i=0; i<15; i++)
-                    for (let j=0; j<16; j++)
+                    for (let j=0; j<48; j++)
                         fire().ledBuffer[i*48+j] = fire().ledBuffer[i*48+j+48];
                 for (let t=0; t<48; t++)
                     fire().ledBuffer[t+p] = tBuf[t];
