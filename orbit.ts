@@ -47,7 +47,7 @@ namespace orbit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="enable 09 Bluetooth & disable FireLeds%enable"
+    //% block="enable 10 Bluetooth & disable FireLeds%enable"
     //% enable.shadow="toggleYesNo"
     //% weight=100
     //% blockGap=8
@@ -218,16 +218,36 @@ namespace orbit
     //% blockGap=8
     export function rotateLatLong(latilong: LatLong, direction: MoveDirection)
     {
+        let tBuf = pins.createBuffer(48);
         if (latilong == LatLong.Latitude)
         {
-            for (let i=15; i>0; i--)
-                for (let j=0; j<16; j++)
+            if (direction == MoveDirection.Forward)
+            {
+                let p = 45;
+                for (let t=0; t<48; t+=3)
                 {
-                    let t = (j*16+i) * 3;
-                    fire().ledBuffer[t] = fire().ledBuffer[t-3];
-                    fire().ledBuffer[t+1] = fire().ledBuffer[t-2];
-                    fire().ledBuffer[t+2] = fire().ledBuffer[t-1];
+                    tBuf[t] = fire().ledBuffer[p];
+                    tBuf[t+1] = fire().ledBuffer[p+1];
+                    tBuf[t+2] = fire().ledBuffer[p+2];
+                    p += 48;
                 }
+                for (let i=15; i>0; i--)
+                    for (let j=0; j<16; j++)
+                    {
+                        let t = (j*16+i) * 3;
+                        fire().ledBuffer[t] = fire().ledBuffer[t-3];
+                        fire().ledBuffer[t+1] = fire().ledBuffer[t-2];
+                        fire().ledBuffer[t+2] = fire().ledBuffer[t-1];
+                    }
+                p = 0;
+                for (let t=0; t<48; t+=3)
+                {
+                    fire().ledBuffer[p] = tBuf[t];
+                    fire().ledBuffer[p+1] = tBuf[t+1];
+                    fire().ledBuffer[p+2] = tBuf[t+2];
+                    p += 48;
+                }
+            }
         }
         else
         {
