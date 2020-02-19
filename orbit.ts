@@ -66,7 +66,7 @@ namespace orbit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="SetLedColor" block="set 19 all LEDs to%rgb=FireColours"
+    //% blockId="SetLedColor" block="set 20 all LEDs to%rgb=FireColours"
     //% subcategory=Generic
     //% group=Basic
     //% weight=100
@@ -265,6 +265,25 @@ namespace orbit
         updateLEDs();
     }
 
+    /** get pixel at address lat/long
+     * Get LED color value.
+     * @param latitude latitudinal value 0-15
+     * @param longitude longitudinal value 0-15
+     */
+    //% blockId="GetPixel" block="get LED colour at lat%latitude|long%longitude"
+    //% subcategory="Latitude Longitude"
+    //% weight=95
+    //% blockGap=8
+    export function getPixel(latitude: number, longitude: number): number
+    {
+        latitude = clamp(latitude, 0, 15);
+        longitude = clamp(longitude, 0, 15);
+        let g = fire().ledBuffer[longitude*16+latitude];
+        let r = fire().ledBuffer[longitude*16+latitude+1];
+        let b = fire().ledBuffer[longitude*16+latitude+2];
+        return convertRGB(r,g,b);
+    }
+
     /**
      * Set circle to given colour
      * @param latilong circle on longitude or latitude
@@ -312,9 +331,8 @@ namespace orbit
         }
     }
 
-// Set Rainbow in Latitude or Longitude (all circles at same colour)
     /**
-     * Rotate LEDs in latitude or longitude
+     * Set rainbow LEDs in latitude or longitude. All circles same colour
      * @param latilong select latitude or longitude to apply Rainbow to
      * @param direction positive or negative direction Red to Blue, or vice versa
      */
@@ -444,6 +462,19 @@ namespace orbit
         updateLEDs();
     }
 
+    /**
+     * Radiate LEDs from point in all directions latitude or longitude. Stops at 0 or 15 on either axis
+     * @param latitude latitude of radiation centre
+     * @param longitude longitude of radiation centre
+     */
+    //% blockId="RadiateLatLong" block="radiate from lat%latitude|long%longitude"
+    //% subcategory="Latitude Longitude"
+    //% weight=60
+    //% blockGap=8
+    export function radiateLatLong(latitude: number, longitude: number)
+    {
+        let rgb: number;
+    }
 
 
 }
