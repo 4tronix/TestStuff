@@ -47,7 +47,7 @@ namespace orbit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="enable 11 Bluetooth & disable FireLeds%enable"
+    //% block="enable 12 Bluetooth & disable FireLeds%enable"
     //% enable.shadow="toggleYesNo"
     //% weight=100
     //% blockGap=8
@@ -206,6 +206,57 @@ namespace orbit
         updateLEDs();
     }
 
+    /* get rgb colour number for Rainbow */
+    function wheel(pos: number): number
+    {
+        /* Generate rainbow colors across 0-255 positions */
+        if (pos < 85)
+            return fromRGB(255 - pos * 3, pos * 3, 0); // Red -> Green
+        else if (pos < 170)
+        {
+            pos = pos - 85;
+            return fromRGB(0, 255 - pos * 3, pos * 3); // Green -> Blue
+        }
+        else
+        {
+            pos = pos - 170;
+            return fromRGB(pos * 3, 0, 255 - pos * 3); // Blue -> Red
+        }
+    }
+
+// Set Rainbow in Latitude or Longitude (all circles at same colour)
+    /**
+     * Rotate LEDs in latitude or longitude
+     * @param latilong select latitude or longitude to apply Rainbow to
+     * @param direction positive or negative direction Red to Blue, or vice versa
+     */
+    //% blockId="RainbowLatLong" block="set Rainbow in%latilong|%direction"
+    //% subcategory="Latitude Longitude"
+    //% weight=90
+    //% blockGap=8
+    export function rainbowLatLong(latilong: LatLong, direction: MoveDirection)
+    {
+        if (latilong == LatLong.Latitude)
+        {
+            if (direction == MoveDirection.Forward)
+            {
+                for (let i=0; i<16; i++)
+                    for (let j=0; j<16; j++)
+                        fire().setPixel(i*16+j, wheel(i*16);
+            }
+            else
+            {
+                for (let i=0; i<16; i++)
+                    for (let j=0; j<16; j++)
+                        fire().setPixel(i*16+j, wheel(256-i*16);
+            }
+        }
+        else
+        {
+        }
+    }
+
+
 // Rotate Leds in Latitude or Longitude (all Leds at latitude x move to x+1)
     /**
      * Rotate LEDs in latitude or longitude
@@ -214,7 +265,7 @@ namespace orbit
      */
     //% blockId="RotateLatLong" block="rotate all LEDs in%latilong|%direction"
     //% subcategory="Latitude Longitude"
-    //% weight=90
+    //% weight=80
     //% blockGap=8
     export function rotateLatLong(latilong: LatLong, direction: MoveDirection)
     {
@@ -262,9 +313,9 @@ namespace orbit
                     for (let j=0; j<16; j++)
                     {
                         let k = (j*16+i) * 3;
-                        fire().ledBuffer[k] = fire().ledBuffer[k-3];
-                        fire().ledBuffer[k+1] = fire().ledBuffer[k-2];
-                        fire().ledBuffer[k+2] = fire().ledBuffer[k-1];
+                        fire().ledBuffer[k] = fire().ledBuffer[k+3];
+                        fire().ledBuffer[k+1] = fire().ledBuffer[k+4];
+                        fire().ledBuffer[k+2] = fire().ledBuffer[k+5];
                     }
                 p = 45;
                 for (let t=0; t<48; t+=3)
