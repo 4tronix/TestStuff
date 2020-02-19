@@ -47,7 +47,7 @@ namespace orbit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="enable 13 Bluetooth & disable FireLeds%enable"
+    //% block="enable 14 Bluetooth & disable FireLeds%enable"
     //% enable.shadow="toggleYesNo"
     //% weight=100
     //% blockGap=8
@@ -242,13 +242,13 @@ namespace orbit
             {
                 for (let i=0; i<16; i++)
                     for (let j=0; j<16; j++)
-                        fire().setPixel(i*16+j, wheel(i*16);
+                        fire().setPixel(i*16+j, wheel(i*16));
             }
             else
             {
                 for (let i=0; i<16; i++)
                     for (let j=0; j<16; j++)
-                        fire().setPixel(i*16+j, wheel(256-i*16);
+                        fire().setPixel(i*16+j, wheel(256-i*16));
             }
         }
         else
