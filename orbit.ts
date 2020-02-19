@@ -47,7 +47,7 @@ namespace orbit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="enable 10 Bluetooth & disable FireLeds%enable"
+    //% block="enable 11 Bluetooth & disable FireLeds%enable"
     //% enable.shadow="toggleYesNo"
     //% weight=100
     //% blockGap=8
@@ -234,12 +234,39 @@ namespace orbit
                 for (let i=15; i>0; i--)
                     for (let j=0; j<16; j++)
                     {
-                        let t = (j*16+i) * 3;
-                        fire().ledBuffer[t] = fire().ledBuffer[t-3];
-                        fire().ledBuffer[t+1] = fire().ledBuffer[t-2];
-                        fire().ledBuffer[t+2] = fire().ledBuffer[t-1];
+                        let k = (j*16+i) * 3;
+                        fire().ledBuffer[k] = fire().ledBuffer[k-3];
+                        fire().ledBuffer[k+1] = fire().ledBuffer[k-2];
+                        fire().ledBuffer[k+2] = fire().ledBuffer[k-1];
                     }
                 p = 0;
+                for (let t=0; t<48; t+=3)
+                {
+                    fire().ledBuffer[p] = tBuf[t];
+                    fire().ledBuffer[p+1] = tBuf[t+1];
+                    fire().ledBuffer[p+2] = tBuf[t+2];
+                    p += 48;
+                }
+            }
+            else  // Reverse
+            {
+                let p = 0;
+                for (let t=0; t<48; t+=3)
+                {
+                    tBuf[t] = fire().ledBuffer[p];
+                    tBuf[t+1] = fire().ledBuffer[p+1];
+                    tBuf[t+2] = fire().ledBuffer[p+2];
+                    p += 48;
+                }
+                for (let i=0; i<15; i++)
+                    for (let j=0; j<16; j++)
+                    {
+                        let k = (j*16+i) * 3;
+                        fire().ledBuffer[k] = fire().ledBuffer[k-3];
+                        fire().ledBuffer[k+1] = fire().ledBuffer[k-2];
+                        fire().ledBuffer[k+2] = fire().ledBuffer[k-1];
+                    }
+                p = 45;
                 for (let t=0; t<48; t+=3)
                 {
                     fire().ledBuffer[p] = tBuf[t];
