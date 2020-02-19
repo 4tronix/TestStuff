@@ -47,7 +47,7 @@ namespace orbit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="enable 16 Bluetooth & disable FireLeds%enable"
+    //% block="enable 17 Bluetooth & disable FireLeds%enable"
     //% enable.shadow="toggleYesNo"
     //% weight=100
     //% blockGap=8
@@ -241,18 +241,18 @@ namespace orbit
         {
             for (let i=0; i<16; i++)
             {
-                rgb = (direction == MoveDirection.Forward) ? wheel(i*16) : wheel(256-i*16)
+                rgb = (direction == MoveDirection.Forward) ? wheel(i*16) : wheel(240-i*16)
                 for (let j=0; j<16; j++)
-                    fire().setPixel(i*16+j, rgb);
+                    fire().setPixel(j*16+i, rgb);
             }
         }
         else
         {
             for (let i=0; i<16; i++)
             {
-                rgb = (direction == MoveDirection.Forward) ? wheel(i*16) : wheel(256-i*16)
+                rgb = (direction == MoveDirection.Forward) ? wheel(i*16) : wheel(240-i*16)
                 for (let j=0; j<16; j++)
-                    fire().setPixel(j*16+i, rgb);
+                    fire().setPixel(i*16+j, rgb);
             }
         }
         updateLEDs();
@@ -329,12 +329,29 @@ namespace orbit
                 }
             }
         }
-        else
+        else // rotate in longitude
         {
-            for (let i=15; i>0; i--)
-                for (let j=0; j>16; j++)
-                    ;
-                    //fire().ledBuffer[j*16+i] = fire().ledBuffer[j*16+i-1];
+            let p = 240*3;
+            if (direction == MoveDirection.Forward)
+            {
+                for (let t=0; t<48; t++)
+                    tBuf[t] = fire().ledBuffer[t+p];
+                for (let i=15; i>0; i--)
+                    for (let j=0; j<16; j++)
+                        fire().ledBuffer[i*48+j] = fire().ledBuffer[i*48+j-48];
+                for (let t=0; t<48; t++)
+                    fire().ledBuffer[t] = tBuf[t];
+            }
+            else  // Reverse
+            {
+                for (let t=0; t<48; t++)
+                    tBuf[t] = fire().ledBuffer[t];
+                for (let i=0; i<15; i++)
+                    for (let j=0; j<16; j++)
+                        fire().ledBuffer[i*48+j] = fire().ledBuffer[i*48+j+48];
+                for (let t=0; t<48; t++)
+                    fire().ledBuffer[t+p] = tBuf[t];
+            }
         }
         updateLEDs();
     }
