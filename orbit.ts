@@ -47,7 +47,7 @@ namespace orbit
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="enable 12 Bluetooth & disable FireLeds%enable"
+    //% block="enable 13 Bluetooth & disable FireLeds%enable"
     //% enable.shadow="toggleYesNo"
     //% weight=100
     //% blockGap=8
@@ -211,16 +211,16 @@ namespace orbit
     {
         /* Generate rainbow colors across 0-255 positions */
         if (pos < 85)
-            return fromRGB(255 - pos * 3, pos * 3, 0); // Red -> Green
+            return convertRGB(255 - pos * 3, pos * 3, 0); // Red -> Green
         else if (pos < 170)
         {
             pos = pos - 85;
-            return fromRGB(0, 255 - pos * 3, pos * 3); // Green -> Blue
+            return convertRGB(0, 255 - pos * 3, pos * 3); // Green -> Blue
         }
         else
         {
             pos = pos - 170;
-            return fromRGB(pos * 3, 0, 255 - pos * 3); // Blue -> Red
+            return convertRGB(pos * 3, 0, 255 - pos * 3); // Blue -> Red
         }
     }
 
