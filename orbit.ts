@@ -66,7 +66,7 @@ namespace orbit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="SetLedColor" block="set 20 all LEDs to%rgb=FireColours"
+    //% blockId="SetLedColor" block="set 21 all LEDs to%rgb=FireColours"
     //% subcategory=Generic
     //% group=Basic
     //% weight=100
@@ -265,6 +265,26 @@ namespace orbit
         updateLEDs();
     }
 
+    /** put pixel at address lat/long (ignores brightness setting
+     * @param latitude latitudinal value 0-15
+     * @param longitude longitudinal value 0-15
+     * @param rgb RGB color of the LED
+     */
+    //% blockId="GetPixel" block="put LED at lat%latitude|long%longitude|to%rgb=FireColours"
+    //% subcategory="Latitude Longitude"
+    //% weight=95
+    //% blockGap=8
+    putPixel(latitude: number, longitude: number, rgb: number)
+    {
+        let r = (rgb >> 16) & 0xff;
+        let g = (rgb >> 8) & 0xff;
+        let b = (rgb) & 0xff;
+        let pixel = longitude * 16 + latitude;
+        fire().ledBuffer [pixel*3] = g;
+        fire().ledBuffer [pixel*3+1] = r; // yes, I know. Right?
+        fire().ledBuffer [pixel*3+2] = b;
+    }
+
     /** get pixel at address lat/long
      * Get LED color value.
      * @param latitude latitudinal value 0-15
@@ -278,9 +298,10 @@ namespace orbit
     {
         latitude = clamp(latitude, 0, 15);
         longitude = clamp(longitude, 0, 15);
-        let g = fire().ledBuffer[longitude*16+latitude];
-        let r = fire().ledBuffer[longitude*16+latitude+1];
-        let b = fire().ledBuffer[longitude*16+latitude+2];
+        let pixel = longitude * 16 + latitude;
+        let g = fire().ledBuffer[pixel*3];
+        let r = fire().ledBuffer[pixel*3+1];
+        let b = fire().ledBuffer[pixel*3+2];
         return convertRGB(r,g,b);
     }
 
