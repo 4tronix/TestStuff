@@ -66,7 +66,7 @@ namespace orbit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="SetLedColor" block="set 22 all LEDs to%rgb=FireColours"
+    //% blockId="SetLedColor" block="set 23 all LEDs to%rgb=FireColours"
     //% subcategory=Generic
     //% group=Basic
     //% weight=100
@@ -487,16 +487,49 @@ namespace orbit
 
     /**
      * Radiate LEDs from point in all directions latitude or longitude. Stops at 0 or 15 on either axis
-     * @param latitude latitude of radiation centre
-     * @param longitude longitude of radiation centre
+     * @param x0 latitude of radiation centre
+     * @param y0 longitude of radiation centre
      */
-    //% blockId="RadiateLatLong" block="radiate from lat%latitude|long%longitude"
+    //% blockId="RadiateLatLong" block="radiate from lat%x0|long%y0"
     //% subcategory="Latitude Longitude"
     //% weight=60
     //% blockGap=8
-    export function radiateLatLong(latitude: number, longitude: number)
+    export function radiateLatLong(x0: number, y0: number)
     {
-        let rgb: number;
+        let x1: number;
+        let y1: number;
+        let dx: number;
+        let dy: number;
+        for (let x=0; x<16; x++)
+        {
+            for (let y=0; y<16; y++)
+            {
+                dx = x0 - x;
+                dy = y0 - y;
+                if (dx == 0 && dy!=0)
+                {
+                    x1 = x;
+                    y1 = y + (dy>0) ? 1 : -1;
+                }
+                else if (dy == 0 && dx!=0)
+                {
+                    y1 = y;
+                    x1 = x + (dx>0) ? 1 : -1;
+                }
+                else if (Math.abs(dx) == Math.abs(dy))
+                {
+                    x1 = x + (dx>0) ? 1 : -1;
+                    y1 = y + (dy>0) ? 1 : -1;
+                }
+                else
+                {
+                    x1 = x;
+                    y1 = y;
+                }
+                putPixel(x, y, getPixel(x1,y1))
+            }
+        }
+        updateLeds();
     }
 
 
