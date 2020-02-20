@@ -66,7 +66,7 @@ namespace orbit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="SetLedColor" block="set 26 all LEDs to%rgb=FireColours"
+    //% blockId="SetLedColor" block="set 27 all LEDs to%rgb=FireColours"
     //% subcategory=Generic
     //% group=Basic
     //% weight=100
@@ -485,6 +485,33 @@ namespace orbit
         updateLEDs();
     }
 
+    function radiateXY(x0, y0, x, y)
+    {
+        let dx = x0 - x;
+        let dy = y0 - y;
+        if (dx == 0 && dy!=0)
+        {
+            x1 = x;
+            y1 = y + ((dy>0) ? 1 : -1);
+        }
+        else if (dy == 0 && dx!=0)
+        {
+            y1 = y;
+            x1 = x + ((dx>0) ? 1 : -1);
+        }
+        else if (Math.abs(dx) == Math.abs(dy))
+        {
+            x1 = x + ((dx>0) ? 1 : -1);
+            y1 = y + ((dy>0) ? 1 : -1);
+        }
+        else
+        {
+            x1 = x;
+            y1 = y;
+        }
+        putPixel(x, y, getPixel(x1,y1))
+    }
+
     /**
      * Radiate LEDs from point in all directions. Stops at 0 or 15 on either axis
      * @param x0 latitude of radiation centre
@@ -500,35 +527,18 @@ namespace orbit
         let y1: number;
         let dx: number;
         let dy: number;
-        for (let x=0; x<16; x++)
-        {
-            for (let y=0; y<16; y++)
-            {
-                dx = x0 - x;
-                dy = y0 - y;
-                if (dx == 0 && dy!=0)
-                {
-                    x1 = x;
-                    y1 = y + ((dy>0) ? 1 : -1);
-                }
-                else if (dy == 0 && dx!=0)
-                {
-                    y1 = y;
-                    x1 = x + ((dx>0) ? 1 : -1);
-                }
-                else if (Math.abs(dx) == Math.abs(dy))
-                {
-                    x1 = x + ((dx>0) ? 1 : -1);
-                    y1 = y + ((dy>0) ? 1 : -1);
-                }
-                else
-                {
-                    x1 = x;
-                    y1 = y;
-                }
-                putPixel(x, y, getPixel(x1,y1))
-            }
-        }
+        for (let x=0; x<=x0; x++)
+            for (let y=0; y<=y0; y++)
+                radiateXY(x0, y0, x, y);
+        for (let x=15; x>x0; x--)
+            for (let y=0; y<=y0; y++)
+                radiateXY(x0, y0, x, y);
+        for (let x=0; x<=x0; x++)
+            for (let y=15; y>y0; y--)
+                radiateXY(x0, y0, x, y);
+        for (let x=15; x>x0; x--)
+            for (let y=15; y>y0; y--)
+                radiateXY(x0, y0, x, y);
         updateLEDs();
     }
 
