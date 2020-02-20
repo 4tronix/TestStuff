@@ -66,7 +66,7 @@ namespace orbit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="SetLedColor" block="set 27 all LEDs to%rgb=FireColours"
+    //% blockId="SetLedColor" block="set 28 all LEDs to%rgb=FireColours"
     //% subcategory=Generic
     //% group=Basic
     //% weight=100
@@ -487,6 +487,8 @@ namespace orbit
 
     function radiateXY(x0, y0, x, y)
     {
+        let x1: number;
+        let y1: number;
         let dx = x0 - x;
         let dy = y0 - y;
         if (dx == 0 && dy!=0)
