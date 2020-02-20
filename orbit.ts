@@ -66,7 +66,7 @@ namespace orbit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="SetLedColor" block="set 29 all LEDs to%rgb=FireColours"
+    //% blockId="SetLedColor" block="set 30 all LEDs to%rgb=FireColours"
     //% subcategory=Generic
     //% group=Basic
     //% weight=100
@@ -491,6 +491,8 @@ namespace orbit
         let y1: number;
         let dx = x0 - x;
         let dy = y0 - y;
+        let adx = Math.abs(dx);
+        let ady = Math.abs(dy);
         if (dx == 0 && dy!=0)
         {
             x1 = x;
@@ -501,10 +503,20 @@ namespace orbit
             y1 = y;
             x1 = x + ((dx>0) ? 1 : -1);
         }
-        else if (Math.abs(dx) == Math.abs(dy))
+        else if (adx == ady)
         {
             x1 = x + ((dx>0) ? 1 : -1);
             y1 = y + ((dy>0) ? 1 : -1);
+        }
+        else if (adx > ady)
+        {
+            x1 = x + ((dx>0) ? 1 : -1);
+            y1 = Math.round(y + (dy * (adx -1) / adx));
+        }
+        else if (adx < ady)
+        {
+            y1 = y + ((yx>0) ? 1 : -1);
+            x1 = Math.round(x + (dx * (ady -1) / ady));
         }
         else
         {
