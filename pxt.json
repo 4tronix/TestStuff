@@ -1,17 +1,19 @@
 {
-    "name": "Orbit",
-    "version": "0.0.1",
-    "description": "Microsoft MakeCode package for 4tronix Orbit RGB Sphere",
+    "name": "MARS-Rover",
+    "version": "0.0.2",
+    "description": "Microsoft MakeCode package for 4tronix Rover",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "fireled": "github:4tronix/FireLedsBase#0.1.2"
+        "neopixel": "github:microsoft/pxt-neopixel#v0.6.12"
     },
     "files": [
         "README.md",
-        "orbit.ts"
+        "rover.ts"
     ],
-    "testFiles": [],
+    "testFiles": [
+        "tests.ts"
+    ],
     "yotta": {},
     "public": true
 }
