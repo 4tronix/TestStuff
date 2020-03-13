@@ -66,7 +66,7 @@ namespace orbit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="SetLedColor" block="set 32 all LEDs to%rgb=FireColours"
+    //% blockId="SetLedColor" block="set 33 all LEDs to%rgb=FireColours"
     //% subcategory=Generic
     //% group=Basic
     //% weight=100
@@ -577,10 +577,11 @@ namespace orbit
             putPixel (x, 0, getPixel(x+8, 0));
             for (let y=0; y<15; y++)
             {
-                putPixel(x+8, y, getPixel(x, y+1));
+                putPixel(x+8, y, getPixel(x+8, y+1));
             }
             putPixel (x+8, 15, t);
         }
+        updateLEDs();
     }
 
 }
