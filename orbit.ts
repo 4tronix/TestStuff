@@ -66,7 +66,7 @@ namespace orbit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="SetLedColor" block="set 31 all LEDs to%rgb=FireColours"
+    //% blockId="SetLedColor" block="set 32 all LEDs to%rgb=FireColours"
     //% subcategory=Generic
     //% group=Basic
     //% weight=100
@@ -388,7 +388,7 @@ namespace orbit
     }
 
 
-// Rotate Leds in Latitude or Longitude (all Leds at latitude x move to x+1)
+    // Rotate Leds in Latitude or Longitude (all Leds at latitude x move to x+1)
     /**
      * Rotate LEDs in latitude or longitude
      * @param latilong select latitude or longitude to rotate
@@ -523,7 +523,7 @@ namespace orbit
             x1 = x;
             y1 = y;
         }
-        putPixel(x, y, getPixel(x1,y1))
+        putPixel(x, y, getPixel(x1,y1));
     }
 
     /**
@@ -556,5 +556,31 @@ namespace orbit
         updateLEDs();
     }
 
+    /**
+     * Orbit the globe north to south, or vice versa
+     * Similar to rotate but moves up in lonigtudes 0 to 7, down from 8 to 15
+     * @param direction positive or negative direction
+     */
+    //% blockId="OrbitNorthSouth" block="orbit all LEDs%direction"
+    //% subcategory="Latitude Longitude"
+    //% weight=50
+    //% blockGap=8
+    export function orbitNorthSouth(direction: MoveDirection)
+    {
+        for (let x=0; x<8; x++)
+        {
+            let t=getPixel(x, 15);
+            for (let y=15; y>0; y--)
+            {
+                putPixel(x, y, getPixel(x, y-1));
+            }
+            putPixel (x, 0, getPixel(x+8, 0));
+            for (let y=0; y<15; y++)
+            {
+                putPixel(x+8, y, getPixel(x, y+1));
+            }
+            putPixel (x+8, 15, t);
+        }
+    }
 
 }
