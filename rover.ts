@@ -179,6 +179,11 @@ namespace Rover
 
 // HELPER FUNCTIONS
 
+    function clamp(value: number, min: number, max: number): number
+    {
+        return Math.max(Math.min(max, value), min);
+    }
+
     // initialise the servo driver and the offset array values
     function initPCA(): void
     {
@@ -232,26 +237,26 @@ namespace Rover
       * param group which group of servos to centre
       */
     //% blockId="zeroServos"
-    //% block="Centre 01 %group|servos"
+    //% block="Centre 02 %group|servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(group: eServoGroup): void
     {
         switch(group)
         {
-        case eServoGroup.Wheel:
-            setServo(getServoNumber(eServos.FL), 0);
-            setServo(getServoNumber(eServos.FR), 0);
-            setServo(getServoNumber(eServos.RL), 0);
-            setServo(getServoNumber(eServos.RR), 0);
-            break;
-        case eServoGroup.Mast:
-            setServo(getServoNumber(eServos.Mast), 0);
-            break;
-        default:
-            for (let i=0; i<16; i++)
-                setServo(i, 0);
-            break;
+            case eServoGroup.Wheel:
+                setServo(getServoNumber(eServos.FL), 0);
+                setServo(getServoNumber(eServos.FR), 0);
+                setServo(getServoNumber(eServos.RL), 0);
+                setServo(getServoNumber(eServos.RR), 0);
+                break;
+            case eServoGroup.Mast:
+                setServo(getServoNumber(eServos.Mast), 0);
+                break;
+            default:
+                for (let i=0; i<16; i++)
+                    setServo(i, 0);
+                break;
         }
     }
 
@@ -266,7 +271,7 @@ namespace Rover
     //% subcategory=Servos
     export function steer(direction: eDirection, angle: number): void
     { 
-        angle = Math.max(Math.min(90, angle),0);
+        angle = clamp(angle, 0, 90);
         if (direction==eDirection.Left)
             angle = 0-angle;
         setServo(getServoNumber(eServos.FL), angle);
@@ -297,10 +302,7 @@ namespace Rover
 
         let i2cData = pins.createBuffer(2);
         let start = 0;
-        if (angle > 90)
-            angle = 90;
-        if (angle < -90)
-            angle = -90;
+        angle = clamp(angle, -90, 90);
         let stop = 369 + (angle + servoOffset[servo]) * 223 / 90;
 
         i2cData[0] = SERVOS + servo*4 + 2;	// Servo register
@@ -314,7 +316,6 @@ namespace Rover
 
     /**
       * Return servo number from name
-      *
       * @param value servo name
       */
     //% blockId="e_servos"
@@ -337,7 +338,7 @@ namespace Rover
     //% subcategory=Servos
     export function setOffset(servo: number, offset: number): void
     {
-        servo = Math.max(Math.min(15, servo),0);
+        servo = clamp(servo, 0, 15);
         servoOffset[servo] = offset;
     }
 
@@ -351,7 +352,7 @@ namespace Rover
     //% subcategory=Servos
     export function getOffset(servo: number): number
     {
-        servo = Math.max(Math.min(15, servo),0);
+        servo = clamp(servo, 0, 15);
         return servoOffset[servo];
     }
 
@@ -382,7 +383,7 @@ namespace Rover
     //% subcategory=Motors
     export function move(direction: eVector, speed: number): void
     {
-        speed = Math.max(Math.min(100, speed),0);
+        speed = clamp(speed, 0, 100);
         motor(eMotor.Both, direction, speed);
     }
 
@@ -399,7 +400,7 @@ namespace Rover
     //% subcategory=Motors
     export function move_milli(direction: eVector, speed: number, millis: number): void
     {
-        speed = Math.max(Math.min(100, speed),0);
+        speed = clamp(speed, 0, 100);
         motor(eMotor.Both, direction, speed);
         basic.pause(millis);
         stop(eStopMode.Coast);
@@ -436,7 +437,7 @@ namespace Rover
     //% subcategory=Motors
     export function motor(motor: eMotor, direction: eVector, speed: number): void
     {
-        speed = Math.max(Math.min(100, speed),0) * 10.23;
+        speed = clamp(speed, 0, 100) * 10.23;
         let speed0 = 0;
         let speed1 = 0;
         setPWM(speed);
@@ -475,7 +476,7 @@ namespace Rover
     //% subcategory=Motors
     export function spin(direction: eDirection, speed: number): void
     { 
-        speed=Math.max(Math.min(100, speed),0);
+        speed = clamp(speed, 0, 100);
         setServo(getServoNumber(eServos.FL), 45);
         setServo(getServoNumber(eServos.FR), -45);
         setServo(getServoNumber(eServos.RL), -45);
@@ -524,8 +525,8 @@ namespace Rover
         }
         switch (unit)
         {
-            case ePingUnit.Centimeters: return d / 58;
-            case ePingUnit.Inches: return d / 148;
+            case ePingUnit.Centimeters: return Math.round(d / 58);
+            case ePingUnit.Inches: return Math.round(d / 148);
             default: return d;
         }
     }
