@@ -237,7 +237,7 @@ namespace Rover
       * param group which group of servos to centre
       */
     //% blockId="zeroServos"
-    //% block="Centre 03 %group|servos"
+    //% block="Centre 04 %group|servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(group: eServoGroup): void
@@ -629,7 +629,7 @@ namespace Rover
     // update FireLeds if _updateMode set to Auto
     function updateLEDs(): void
     {
-        if (_updateMode == BBMode.Auto)
+        if (_updateMode == eUpdateMode.Auto)
             ledShow();
     }
 
@@ -736,7 +736,7 @@ namespace Rover
     //% blockId="convertRGB"
     //% block="convert from red %red| green %green| blue %blue"
     //% weight=40
-    //% subcategory=LEDs
+    //% subcategory=FireLeds
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
