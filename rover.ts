@@ -237,7 +237,7 @@ namespace Rover
       * param group which group of servos to centre
       */
     //% blockId="zeroServos"
-    //% block="Centre 05 %group|servos"
+    //% block="Centre 06 %group|servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(group: eServoGroup): void
@@ -620,7 +620,7 @@ namespace Rover
     {
         if (!fireBand)
         {
-            fireBand = fireled.newBand(DigitalPin.P16, 1);
+            fireBand = fireled.newBand(DigitalPin.P2, 1);
             fireBand.setBrightness(40);
         }
         return fireBand;
