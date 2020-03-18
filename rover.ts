@@ -237,7 +237,7 @@ namespace Rover
       * param group which group of servos to centre
       */
     //% blockId="zeroServos"
-    //% block="Centre 07 %group|servos"
+    //% block="Centre 08 %group|servos"
     //% weight=100
     //% subcategory=Servos
     export function zeroServos(group: eServoGroup): void
