@@ -57,6 +57,7 @@ enum CBColors
 namespace cubebit {
 
     let nCube: fireled.Band;
+    let btEnabled = false;
     let cubeHeight: number;
     let cubeSide: number;
     let cubeSide2: number;
@@ -150,7 +151,7 @@ namespace cubebit {
     // update FireLeds if updateMode set to Auto  
     function updateLEDs()
     {
-        if (updateMode == CBMode.Auto)
+        if (_updateMode == CBMode.Auto)
             ledShow();
     }
 
@@ -161,7 +162,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side. eg: 3, 4, 5, 8
      */
-    //% blockId="cbCreate" block="create 02 Cube:Bit on%pin|with side%side"
+    //% blockId="cbCreate" block="create 03 Cube:Bit on%pin|with side%side"
     //% weight=100
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -220,19 +221,19 @@ namespace cubebit {
         {
             for (let y=0; y<cubeSide; y++)
                 for (let z=0; z<cubeHeight; z++)
-                    nCube.setPixelColor(pixelMap(plane,y,z), rgb);
+                    nCube.setPixel(pixelMap(plane,y,z), rgb);
         }
         else if (axis == CBAxis.XZ)
         {
             for (let x=0; x<cubeSide; x++)
                 for (let z=0; z<cubeHeight; z++)
-                    nCube.setPixelColor(pixelMap(x,plane,z), rgb);
+                    nCube.setPixel(pixelMap(x,plane,z), rgb);
         }
         else if (axis == CBAxis.XY)
         {
             for (let x=0; x<cubeSide; x++)
                 for (let y=0; y<cubeSide; y++)
-                    nCube.setPixelColor(pixelMap(x,y,plane), rgb);
+                    nCube.setPixel(pixelMap(x,y,plane), rgb);
         }
         updateLEDs();
     }
