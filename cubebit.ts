@@ -162,7 +162,7 @@ namespace cubebit {
      * @param pin Micro:Bit pin to connect to Cube:Bit
      * @param side number of pixels on each side. eg: 3, 4, 5, 8
      */
-    //% blockId="cbCreate" block="create 03 Cube:Bit on%pin|with side%side"
+    //% blockId="cbCreate" block="create 04 Cube:Bit on%pin|with side%side"
     //% weight=100
     //% side.min=3 side.max=8
     export function create(pin: DigitalPin, side: number): void
@@ -329,7 +329,7 @@ namespace cubebit {
       * Get numeric value of colour
       * @param colour Standard RGB Led Colours eg: #ff0000
       */
-    //% blockId="cbFireColours" block=%colour
+    //% blockId="FireColours" block=%colour
     //% subcategory=Generic
     //% weight=60
     //% advanced=true
