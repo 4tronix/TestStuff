@@ -1,99 +1,41 @@
-# BitCommander Package for Microsoft PXT
+# MakeCode Package for 4tronix Cube:Bit Magical RGB Cubes of Awesome
 
-This library provides a Microsoft PXT package for Bit:Commander, see
-https://4tronix.co.uk/bitcommander/.
+Helper routines for using the neopixels in the Cube:Bit range of Cubes https://4tronix.co.uk/cubebit/.
 
-## Reading the buttons
-
-There are 5 buttons that can be checked: `Red`, `Yellow`, `Green` and `Blue` on the left and the `Joystick` on the right can be pressed as well
-If the button is pressed it will return a '1'. If it isn't pressed, then it returns a '0'
-The following code checks the Green button and does something if it is pressed
-
-```
-// Check Green button
-if (bitcommander.readButton(BCButtons.Green) == 1) {
-    ... do something ...
-}
-```
-
-## Reading the position of the Dial
-
-When writing code, be aware that the Dial control input is shared with the speaker output and so the input range is limited to around 0 - 850 instead of the normal 0 - 1023. 
-Use the readDial block to get the value (0 to ~850) into a variable, or test the value directly
-
-```
-// Read the Dial value into the myDial variable
-myDial = bitcommander.readDial()
-if (myDial > 500) {
-   ... do something ...
-}
-
-or this is equivalent:
-
-if (bitcommander.readDial() > 500) {
-   ... do something ...
-}
-```
-
-## Reading the position of the Joystick
-
-Both the X and Y axes of the joystick have a range 0 to 1023. Specify the axis as part of the function call.
-Use the readJoystick block to get the value.
-
-```
-// Read the Joystick X axis value in to the xAxis variable
-xAxis = bitcommander.readJoystick(BCJoystick.X)
-```
-
-## Playing music
-
-There is a small speaker on Bit:Commander wired to Pin 0, which is the default for playing music files. Use the standard Music blocks for this:
-
+## Defining the Cube
+The first thing you should do is create a Cube object with the required dimensions per side. Use the block:
 ```blocks
-// Play The Entertainer music clip
-music.beginMelody(music.builtInMelody(Melodies.Entertainer), MelodyOptions.Once)
+create cube:bit on pin0 with side <3/4/5/6/7/8>
 ```
 
-
-
-## NeoPixel helpers
-
-The Bit:Commander has 6 NeoPixels
-
+Then set the brightness to be used from 0 to 255. If this block is not used, then the brightness is set to 40. We strongly recommend keeping this at less than 100. All values sent to the LEDs after this command will be scaled down to fit in this maximum brightness level.
 ```blocks
-// Show all leds
-bitcommander.neoSetColor(neopixel.colors(NeoPixelColors.Red));
-bitcommander.neoShow();
+set cube:bit brightness to <0..255>
+```
 
-// Clear all leds
-bitcommander.neoClear();
-bitcommander.neoShow();
+## Using Cube:Bit Pixels
+Each pixel can be addressed by using the pixel ID which is a number from 0 to the number of pixels in the cube minus one. eg. a 3x3x3 cube has 27 pixels so the ID can be 0 to 26, 4x4x4 has 64 (ID 0 to 63) and 5x5x5 has 125 (ID 0 to 124)
+```blocks
+set pixel color at ID to <colour>
+```
+The colour value is a number. There are some pre-define colours (eg. Red, Yellow, etc) or you can put in a simple number, or you can define separate Red, Green and Blue values using the map colour block
+```blocks
+convert from red, green, blue
+```
 
-// Show led at position 1
-bitcommander.neoSetPixelColor(0, neopixel.colors(NeoPixelColors.Red));
-bitcommander.neoShow();
+If you want to specify the x,y,z position of the pixel then use the mapping block to create the pixel ID
+```blocks
+map from x y z
+```
 
-// Show led rainbow
-bitcommander.neoRainbow();
-bitcommander.neoShow();
+If you have set the Manual update mode, then whenever changing the colour of pixels or clearing them, or rotating them, you will need to display the result afterwards. Use the show changes block for this. The default update mode is automatic so any changes to the LED values will immediately appear on the LEDs
+```blocks
+show Cube:Bit changes
+```
 
-// Show led rainbow and shift
-bitcommander.neoRainbow();
-bitcommander.neoShift();
-bitcommander.neoShow();
-
-// Show led rainbow and rotate
-bitcommander.neoRainbow();
-bitcommander.neoRotate();
-bitcommander.neoShow();
-
-// Set brightness of leds
-bitcommander.neoBrightness(100);
-bitcommander.neoShow();
-
-// Use neo() variable
-bitcommander.neo().clear();
-bitcommander.neo().show();
+You can also set a whole plane of pixels to the same colour. eg. set the top slice to blue, or the left side to green. Use the set plane block:
+```blocks
+set plane <number> on axis <xy, xz, yz> to <colour>
 ```
 
 ## Supported targets
@@ -101,4 +43,5 @@ bitcommander.neo().show();
 * for PXT/microbit
 
 ## License
+
 MIT
