@@ -1,7 +1,7 @@
 {
-    "name": "CubeBit",
-    "version": "1.0.2",
-    "description": "Microsoft MakeCode package for 4tronix CubeBit",
+    "name": "RUB",
+    "version": "0.0.1",
+    "description": "Microsoft MakeCode package for 4tronix Really Useless Box",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -9,11 +9,9 @@
     },
     "files": [
         "README.md",
-        "cubebit.ts"
+        "rub.ts"
     ],
-    "testFiles": [
-        "tests.ts"
-    ],
+    "testFiles": [],
     "yotta": {},
     "public": true
 }
