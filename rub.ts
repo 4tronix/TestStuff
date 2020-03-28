@@ -10,6 +10,15 @@ enum ledMode
     Auto
 }
 
+// Servo motion speed
+enum servoSpeed
+{
+    VerySlow,
+    Slow,
+    Medium,
+    Fast,
+    VeryFast
+}
 
 /**
  * Custom blocks
@@ -37,7 +46,7 @@ namespace rub
       * @param Closed Degrees when fully closed (0 to 180). eg: 70
       * @param Open Degrees when fully open (0 to 180). eg: 150
       */
-    //% blockId="SetServoLimits" block="set 03 closed to%Closed|, open to%Open"
+    //% blockId="SetServoLimits" block="set 04 closed to%Closed|, open to%Open"
     //% weight=100
     //% Closed.min=0 Closed.max=180
     //% Open.min=0 Open.max=180
@@ -72,21 +81,33 @@ namespace rub
     /**
       * Move Servo at specified speed
       * @param degrees Degrees to turn servo (0 to 180). eg: 90
-      * @param speed speed of moving (1 to 100). eg: 40
+      * @param speed speed of moving (Very Slow to Fast)
       */
     //% blockId="MoveServo" block="move servo to%degrees|degrees at speed%speed"
     //% weight=80
     //% degrees.min=0 degrees.max=180
     //% speed.min=1 speed.max=100
     //% subcategory=Servo
-    export function moveServo(degrees: number, speed: number): void
+    export function moveServo(degrees: number, speed: servoSpeed): void
     {
         degrees = clamp(degrees, svClosed, svOpen);
-        let delay = Math.round(100/clamp(speed,1,100));
-        for (let pos = deg2ms(svPos); pos <= deg2ms(degrees); pos += ((degrees>svPos) ? 1 : -1))
+        let step = 1;
+        let delay = 1;
+        if (speed == servoSpeed.VeryFast)
+            setServo(degrees);
+        else
         {
-            pins.servoSetPulse(AnalogPin.P1, pos);
-            basic.pause(delay);
+           switch (speed)
+           {
+               case servoSpeed.Fast: step=3; break;
+               case servoSpeed.Medium: step=2; break;
+               case servoSpeed.Slow: delay=3; break;
+           }
+            for (let pos = deg2ms(svPos); pos <= deg2ms(degrees); pos += ((degrees>svPos) ? step : -step))
+            {
+                pins.servoSetPulse(AnalogPin.P1, pos);
+                basic.pause(delay);
+            }
         }
         svPos = degrees;
     }
