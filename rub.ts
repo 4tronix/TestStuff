@@ -37,7 +37,7 @@ namespace rub
       * @param Closed Degrees when fully closed (0 to 180). eg: 70
       * @param Open Degrees when fully open (0 to 180). eg: 150
       */
-    //% blockId="SetServoLimits" block="set 02 closed to%Closed|, open to%Open"
+    //% blockId="SetServoLimits" block="set 03 closed to%Closed|, open to%Open"
     //% weight=100
     //% Closed.min=0 Closed.max=180
     //% Open.min=0 Open.max=180
@@ -66,7 +66,7 @@ namespace rub
     // Convert positon in degrees to microseconds
     function deg2ms(degrees: number): number
     {
-        return 500 + (degrees*1000)/180;
+        return 500 + (degrees*1000)/90;
     }
 
     /**
