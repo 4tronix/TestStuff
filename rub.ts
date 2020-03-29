@@ -87,7 +87,7 @@ namespace rub
       * @param Closed Degrees when fully closed (0 to 180). eg: 70
       * @param Open Degrees when fully open (0 to 180). eg: 150
       */
-    //% blockId="SetServoLimits" block="set 07 closed to%Closed|, open to%Open"
+    //% blockId="SetServoLimits" block="set 08 closed to%Closed|, open to%Open"
     //% weight=100
     //% Closed.min=0 Closed.max=180
     //% Open.min=0 Open.max=180

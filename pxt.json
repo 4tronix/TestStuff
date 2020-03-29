@@ -10,6 +10,7 @@
     "files": [
         "README.md",
         "rub.ts",
+        "main.cpp",
         "shims.d.ts",
         "enums.d.ts"
     ],
