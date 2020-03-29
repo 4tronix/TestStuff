@@ -46,7 +46,7 @@ namespace rub
       * @param Closed Degrees when fully closed (0 to 180). eg: 70
       * @param Open Degrees when fully open (0 to 180). eg: 150
       */
-    //% blockId="SetServoLimits" block="set 04 closed to%Closed|, open to%Open"
+    //% blockId="SetServoLimits" block="set 05 closed to%Closed|, open to%Open"
     //% weight=100
     //% Closed.min=0 Closed.max=180
     //% Open.min=0 Open.max=180
@@ -97,16 +97,27 @@ namespace rub
             setServo(degrees);
         else
         {
-           switch (speed)
-           {
-               case servoSpeed.Fast: step=3; break;
-               case servoSpeed.Medium: step=2; break;
-               case servoSpeed.Slow: delay=3; break;
-           }
-            for (let pos = deg2ms(svPos); pos <= deg2ms(degrees); pos += ((degrees>svPos) ? step : -step))
+            switch (speed)
             {
-                pins.servoSetPulse(AnalogPin.P1, pos);
-                basic.pause(delay);
+                case servoSpeed.Fast: step=3; break;
+                case servoSpeed.Medium: step=2; break;
+                case servoSpeed.Slow: delay=3; break;
+            }
+            if (degrees < svPos)
+            {
+                for (let pos = deg2ms(svPos); pos > deg2ms(degrees); pos -= step)
+                {
+                    pins.servoSetPulse(AnalogPin.P1, pos);
+                    basic.pause(delay);
+                }
+            }
+            else
+            {
+                for (let pos = deg2ms(svPos); pos < deg2ms(degrees); pos += step)
+                {
+                    pins.servoSetPulse(AnalogPin.P1, pos);
+                    basic.pause(delay);
+                }
             }
         }
         svPos = degrees;
