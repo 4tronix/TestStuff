@@ -9,7 +9,9 @@
     },
     "files": [
         "README.md",
-        "rub.ts"
+        "rub.ts",
+        "shims.d.ts",
+        "enums.d.ts"
     ],
     "testFiles": [],
     "yotta": {},

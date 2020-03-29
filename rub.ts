@@ -21,6 +21,16 @@ enum servoSpeed
 }
 
 /**
+ * Button events
+ */
+enum RubEvents {
+    //% block="on"
+    Down = DAL.MICROBIT_BUTTON_EVT_UP,
+    //% block="off"
+    Up = DAL.MICROBIT_BUTTON_EVT_DOWN
+}
+
+/**
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf021"
@@ -41,13 +51,43 @@ namespace rub
         return Math.max(Math.min(max, value), min);
     }
 
+// Switch Handling Blocks
+
+    //% shim=rub::init
+    function init(): void {
+        return;
+    }
+
+    /**
+      * Registers event code
+      */
+    //% weight=100
+    //% blockId=rubOnEvent block="on switch %event"
+    //% subcategory=Switch
+    export function onEvent(event: RubEvents, handler: Action)
+    {
+        init();
+        control.onEvent(<number>DAL.MICROBIT_ID_IO_P0, <number>event, handler); // register handler
+    }
+
+    /**
+      * check switch state
+      */
+    //% blockId="CheckSwitch" block="switch state"
+    //% weight=90
+    //% subcategory=Switch
+    export function checkSwitch(): boolean
+    {
+	 return pins.digitalReadPin(DigitalPin.P0)==1;
+    }
+
 // Servo Blocks
     /**
       * Set Servo Position Limits
       * @param Closed Degrees when fully closed (0 to 180). eg: 70
       * @param Open Degrees when fully open (0 to 180). eg: 150
       */
-    //% blockId="SetServoLimits" block="set 06 closed to%Closed|, open to%Open"
+    //% blockId="SetServoLimits" block="set 07 closed to%Closed|, open to%Open"
     //% weight=100
     //% Closed.min=0 Closed.max=180
     //% Open.min=0 Open.max=180
