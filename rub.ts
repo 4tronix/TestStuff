@@ -33,6 +33,7 @@ namespace rub
     let btEnabled = false;
     let svClosed = 70;
     let svOpen = 150;
+    let svMoving = false;
     let svPos = 90;  // current position of servo in degrees. 90 is centre
 
     function clamp(value: number, min: number, max: number): number
@@ -46,7 +47,7 @@ namespace rub
       * @param Closed Degrees when fully closed (0 to 180). eg: 70
       * @param Open Degrees when fully open (0 to 180). eg: 150
       */
-    //% blockId="SetServoLimits" block="set 05 closed to%Closed|, open to%Open"
+    //% blockId="SetServoLimits" block="set 06 closed to%Closed|, open to%Open"
     //% weight=100
     //% Closed.min=0 Closed.max=180
     //% Open.min=0 Open.max=180
@@ -68,6 +69,8 @@ namespace rub
     export function setServo(degrees: number): void
     {
         degrees = clamp(degrees, svClosed, svOpen);
+        while (svMoving)
+            basic.pause(5);
         pins.servoWritePin(AnalogPin.P1, degrees);
         svPos = degrees;
     }
@@ -97,12 +100,15 @@ namespace rub
             setServo(degrees);
         else
         {
+            while (svMoving)
+                basic.pause(5);
             switch (speed)
             {
                 case servoSpeed.Fast: step=3; break;
                 case servoSpeed.Medium: step=2; break;
                 case servoSpeed.Slow: delay=3; break;
             }
+            svMoving = true;
             if (degrees < svPos)
             {
                 for (let pos = deg2ms(svPos); pos > deg2ms(degrees); pos -= step)
@@ -119,6 +125,7 @@ namespace rub
                     basic.pause(delay);
                 }
             }
+            svMoving = false;
         }
         svPos = degrees;
     }
