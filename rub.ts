@@ -101,15 +101,17 @@ namespace rub
       * @param open Degrees when lid open (0 to 180). eg: 90
       * @param switched Degrees when switch actuated (0 to 180). eg: 150
       */
-    //% blockId="SetServoLimits" block="set 10 closed%closed|open%0pen|switched%switched"
+    //% blockId="SetServoLimits" block="set 11 closed%closed|open%0pen|switched%switched"
     //% weight=100
-    //% Closed.min=0 Closed.max=180
-    //% Open.min=0 Open.max=180
+    //% closed.min=0 closed.max=180
+    //% open.min=0 open.max=180
+    //% switched.min=0 switched.max=180
     //% subcategory=Servo
-    export function setServoLimits(Closed: number, Open: number): void
+    export function setServoLimits(closed: number, open: number, switched: number): void
     {
-        svClosed = clamp(Closed,0,180);
-        svOpen = clamp(Open,0,180);
+        svClosed = clamp(closed,0,180);
+        svOpen = clamp(open,0,180);
+        svSwitched = clamp(switched,0,180);
     }
 
     /**
