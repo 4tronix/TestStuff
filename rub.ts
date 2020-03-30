@@ -31,9 +31,9 @@ enum servoPos
 // Switch events
 enum RubEvents {
     //% block="on"
-    Down = DAL.MICROBIT_BUTTON_EVT_UP,
+    Up = DAL.MICROBIT_BUTTON_EVT_UP,
     //% block="off"
-    Up = DAL.MICROBIT_BUTTON_EVT_DOWN
+    Click = DAL.MICROBIT_BUTTON_EVT_CLICK
 }
 
 /**
@@ -75,9 +75,9 @@ namespace rub
       * Registers event code
       */
     //% weight=100
-    //% blockId=rubOnEvent block="on switch %event"
+    //% blockId=OnSwitchEvent block="on switch %event"
     //% subcategory=Switch
-    export function onEvent(event: RubEvents, handler: Action)
+    export function onSwitchEvent(event: RubEvents, handler: Action)
     {
         eventInit();
         control.onEvent(<number>DAL.MICROBIT_ID_IO_P0, <number>event, handler); // register handler
@@ -102,18 +102,18 @@ namespace rub
     }
 
     /**
-      * Set Servo Position Limits
+      * Set Servo Position Presets
       * @param closed Degrees when fully closed (0 to 180). eg: 70
       * @param open Degrees when lid open (0 to 180). eg: 90
       * @param switched Degrees when switch actuated (0 to 180). eg: 150
       */
-    //% blockId="SetServoLimits" block="set 13 closed%closed|open%0pen|switched%switched"
+    //% blockId="SetServoPresets" block="set 14 closed%closed|open%0pen|switched%switched"
     //% weight=100
     //% closed.min=0 closed.max=180
     //% open.min=0 open.max=180
     //% switched.min=0 switched.max=180
     //% subcategory=Servo
-    export function setServoLimits(closed: number, open: number, switched: number): void
+    export function setServoPresets(closed: number, open: number, switched: number): void
     {
         svClosed = clamp(closed,0,180);
         svOpen = clamp(open,0,180);
