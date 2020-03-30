@@ -52,6 +52,7 @@ namespace rub
     let svSwitched = 150;
     let svMoving = false;
     let svPos = -1;  // current position of servo in degrees. 90 is centre, -1 is unknown
+    let switchInit = true;
 
     function clamp(value: number, min: number, max: number): number
     {
@@ -60,9 +61,14 @@ namespace rub
 
 // Switch Handling Blocks
 
-    //% shim=rub::init
-    function init(): void {
-        return;
+    function eventInit()
+    {
+        if (switchInit)
+        {
+            pins.setPull(DigitalPin.P0, PinPullMode.PullDown)
+            pins.setEvents(DigitalPin.P0, PinEventType.Edge)
+            switchInit = false;
+        }
     }
 
     /**
@@ -73,7 +79,7 @@ namespace rub
     //% subcategory=Switch
     export function onEvent(event: RubEvents, handler: Action)
     {
-        init();
+        eventInit();
         control.onEvent(<number>DAL.MICROBIT_ID_IO_P0, <number>event, handler); // register handler
     }
 
@@ -101,7 +107,7 @@ namespace rub
       * @param open Degrees when lid open (0 to 180). eg: 90
       * @param switched Degrees when switch actuated (0 to 180). eg: 150
       */
-    //% blockId="SetServoLimits" block="set 12 closed%closed|open%0pen|switched%switched"
+    //% blockId="SetServoLimits" block="set 13 closed%closed|open%0pen|switched%switched"
     //% weight=100
     //% closed.min=0 closed.max=180
     //% open.min=0 open.max=180
