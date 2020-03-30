@@ -51,7 +51,7 @@ namespace rub
     let svOpen = 90;
     let svSwitched = 150;
     let svMoving = false;
-    let svPos = 90;  // current position of servo in degrees. 90 is centre
+    let svPos = -1;  // current position of servo in degrees. 90 is centre, -1 is unknown
 
     function clamp(value: number, min: number, max: number): number
     {
@@ -101,7 +101,7 @@ namespace rub
       * @param open Degrees when lid open (0 to 180). eg: 90
       * @param switched Degrees when switch actuated (0 to 180). eg: 150
       */
-    //% blockId="SetServoLimits" block="set 11 closed%closed|open%0pen|switched%switched"
+    //% blockId="SetServoLimits" block="set 12 closed%closed|open%0pen|switched%switched"
     //% weight=100
     //% closed.min=0 closed.max=180
     //% open.min=0 open.max=180
@@ -124,7 +124,7 @@ namespace rub
     //% subcategory=Servo
     export function setServo(degrees: number): void
     {
-        degrees = clamp(degrees, svClosed, svOpen);
+        degrees = clamp(degrees, svClosed, svSwitched);
         while (svMoving)
             basic.pause(5);
         pins.servoWritePin(AnalogPin.P1, degrees);
@@ -143,9 +143,11 @@ namespace rub
     //% subcategory=Servo
     export function moveServo(degrees: number, speed: servoSpeed): void
     {
-        degrees = clamp(degrees, svClosed, svOpen);
+        degrees = clamp(degrees, svClosed, svSwitched);
         let step = 1;
         let delay = 1;
+        if (svPos == -1)	// first movement always unknown start position
+            speed = servoSpeed.VeryFast;
         if (speed == servoSpeed.VeryFast)
             setServo(degrees);
         else
