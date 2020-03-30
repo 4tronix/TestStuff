@@ -30,10 +30,10 @@ enum servoPos
 
 // Switch events
 enum RubEvents {
-    //% block="on"
-    Up = DAL.MICROBIT_BUTTON_EVT_UP,
     //% block="off"
-    Click = DAL.MICROBIT_BUTTON_EVT_CLICK
+    Off = DAL.MICROBIT_BUTTON_EVT_UP,
+    //% block="on"
+    On = DAL.MICROBIT_BUTTON_EVT_CLICK
 }
 
 /**
@@ -86,12 +86,12 @@ namespace rub
     /**
       * check switch state
       */
-    //% blockId="CheckSwitch" block="switch state"
+    //% blockId="CheckSwitch" block="switch on"
     //% weight=90
     //% subcategory=Switch
     export function checkSwitch(): boolean
     {
-	 return pins.digitalReadPin(DigitalPin.P0)==1;
+	 return pins.digitalReadPin(DigitalPin.P0)==0;
     }
 
 // Servo Blocks
@@ -107,7 +107,7 @@ namespace rub
       * @param open Degrees when lid open (0 to 180). eg: 90
       * @param switched Degrees when switch actuated (0 to 180). eg: 150
       */
-    //% blockId="SetServoPresets" block="set 14 closed%closed|open%0pen|switched%switched"
+    //% blockId="SetServoPresets" block="set 15 closed%closed|open%0pen|switched%switched"
     //% weight=100
     //% closed.min=0 closed.max=180
     //% open.min=0 open.max=180
