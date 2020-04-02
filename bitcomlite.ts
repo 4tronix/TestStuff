@@ -55,28 +55,26 @@ namespace bclite
 
     /**
       * Registers event code
-      * @param switch name of switch to handle
+      * @param button name of button to handle
       * @param event type of event to handle
       */
     //% weight=100
-    //% blockId=OnSwitchEvent block="on 02 switch%switch|%event"
-    //% subcategory=Switch
-    export function onSwitchEvent(switch: bclPins, event: blcEvents, handler: Action)
+    //% blockId=OnButtonEvent block="on 03 button%button|%event"
+    export function onButtonEvent(button: bclPins, event: bclEvents, handler: Action)
     {
         eventInit();
-        control.onEvent(<number>switch, <number>event, handler); // register handler
+        control.onEvent(<number>button, <number>event, handler); // register handler
     }
 
     /**
-      * check switch state
-      * @param switch name of switch to check
+      * check button state
+      * @param button name of button to check
       */
-    //% blockId="CheckSwitch" block="switch%switch|on"
+    //% blockId="CheckButton" block="button%button|pressed"
     //% weight=90
-    //% subcategory=Switch
-    export function checkSwitch(switch: bclPins): boolean
+    export function checkButton(button: bclPins): boolean
     {
-	 return pins.digitalReadPin(<number>switch)==0;
+	 return pins.digitalReadPin(<number>button)==0;
     }
 
 
