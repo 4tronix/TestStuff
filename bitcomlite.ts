@@ -30,7 +30,7 @@ enum bclPins
 /**
  * Custom blocks
  */
-//% weight=50 color=#e7660b icon="\uf466"
+//% weight=50 color=#e7660b icon="\uf187"
 namespace bclite
 {
     let switchInit = true;
@@ -59,7 +59,7 @@ namespace bclite
       * @param event type of event to handle
       */
     //% weight=100
-    //% blockId=OnButtonEvent block="on 04 button%button|%event"
+    //% blockId=OnButtonEvent block="on 05 button%button|%event"
     export function onButtonEvent(button: bclPins, event: bclEvents, handler: Action)
     {
         eventInit();
