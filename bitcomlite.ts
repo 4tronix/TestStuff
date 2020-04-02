@@ -1,9 +1,9 @@
 ﻿// Switch events
 enum bclEvents {
-    //% block="off"
-    Off = DAL.MICROBIT_BUTTON_EVT_UP,
-    //% block="on"
-    On = DAL.MICROBIT_BUTTON_EVT_CLICK
+    //% block="pressed"
+    Pressed = DAL.MICROBIT_BUTTON_EVT_UP,
+    //% block="released"
+    Released = DAL.MICROBIT_BUTTON_EVT_CLICK
 }
 
 enum bclPins
@@ -30,7 +30,7 @@ enum bclPins
 /**
  * Custom blocks
  */
-//% weight=50 color=#e7660b icon="\uf49e"
+//% weight=50 color=#e7660b icon="\uf466"
 namespace bclite
 {
     let switchInit = true;
@@ -59,7 +59,7 @@ namespace bclite
       * @param event type of event to handle
       */
     //% weight=100
-    //% blockId=OnButtonEvent block="on 03 button%button|%event"
+    //% blockId=OnButtonEvent block="on 04 button%button|%event"
     export function onButtonEvent(button: bclPins, event: bclEvents, handler: Action)
     {
         eventInit();
@@ -74,7 +74,7 @@ namespace bclite
     //% weight=90
     export function checkButton(button: bclPins): boolean
     {
-	 return pins.digitalReadPin(<number>button)==0;
+	 return pins.digitalReadPin(<number>button)==1;
     }
 
 
