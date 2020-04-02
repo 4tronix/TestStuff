@@ -30,7 +30,7 @@ enum bclPins
 /**
  * Custom blocks
  */
-//% weight=50 color=#e7660b icon="\uf021"
+//% weight=50 color=#e7660b icon="\uf49e"
 namespace bclite
 {
     let switchInit = true;
