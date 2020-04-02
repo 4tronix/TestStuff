@@ -59,7 +59,7 @@ namespace bclite
       * @param event type of event to handle
       */
     //% weight=100
-    //% blockId=OnSwitchEvent block="on 01 switch%switch|%event"
+    //% blockId=OnSwitchEvent block="on 02 switch%switch|%event"
     //% subcategory=Switch
     export function onSwitchEvent(switch: bclPins, event: blcEvents, handler: Action)
     {

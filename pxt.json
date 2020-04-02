@@ -1,15 +1,14 @@
 {
-    "name": "RUB",
+    "name": "BitComLite",
     "version": "0.0.1",
-    "description": "Microsoft MakeCode package for 4tronix Really Useless Box",
+    "description": "Microsoft MakeCode package for 4tronix BitCommander Lite",
     "license": "MIT",
     "dependencies": {
-        "core": "*",
-        "fireled": "github:4tronix/FireLedsBase#0.1.4"
+        "core": "*"
     },
     "files": [
         "README.md",
-        "rub.ts"
+        "bitcomlite.ts"
     ],
     "testFiles": [],
     "yotta": {},
