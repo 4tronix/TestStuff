@@ -30,7 +30,7 @@ enum bclPins
 /**
  * Custom blocks
  */
-//% weight=50 color=#e7660b icon="\uf187"
+//% weight=50 color=#e7660b icon="\uf11b"
 namespace bclite
 {
     let switchInit = true;
@@ -41,6 +41,15 @@ namespace bclite
     {
         if (switchInit)
         {
+            pins.setPull(DigitalPin.P1, PinPullMode.PullDown)
+            pins.setPull(DigitalPin.P2, PinPullMode.PullDown)
+            pins.setPull(DigitalPin.P8, PinPullMode.PullDown)
+            pins.setPull(DigitalPin.P12, PinPullMode.PullDown)
+            pins.setPull(DigitalPin.P13, PinPullMode.PullDown)
+            pins.setPull(DigitalPin.P14, PinPullMode.PullDown)
+            pins.setPull(DigitalPin.P15, PinPullMode.PullDown)
+            pins.setPull(DigitalPin.P16, PinPullMode.PullDown)
+
             pins.setEvents(DigitalPin.P1, PinEventType.Edge)
             pins.setEvents(DigitalPin.P2, PinEventType.Edge)
             pins.setEvents(DigitalPin.P8, PinEventType.Edge)
@@ -49,6 +58,7 @@ namespace bclite
             pins.setEvents(DigitalPin.P14, PinEventType.Edge)
             pins.setEvents(DigitalPin.P15, PinEventType.Edge)
             pins.setEvents(DigitalPin.P16, PinEventType.Edge)
+
             switchInit = false;
         }
     }
@@ -59,7 +69,7 @@ namespace bclite
       * @param event type of event to handle
       */
     //% weight=100
-    //% blockId=OnButtonEvent block="on 05 button%button|%event"
+    //% blockId=OnButtonEvent block="on 06 button%button|%event"
     export function onButtonEvent(button: bclPins, event: bclEvents, handler: Action)
     {
         eventInit();
