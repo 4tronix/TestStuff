@@ -92,6 +92,7 @@ namespace valenta
     let initI2C = false;
     let _i2cError = 0;
     let SERVOS = 0x06; // first servo address for start byte low
+    let servoOffset: number[] = [];
 
 // Helper functions
 
@@ -128,6 +129,8 @@ namespace valenta
             i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
             i2cData[1] = 0x00;			// high byte start - always 0
             pins.i2cWriteBuffer(PCA, i2cData, false);
+
+            servoOffset[i] = 0;
         }
     }
 
@@ -135,12 +138,31 @@ namespace valenta
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block
+    //% block="centre all 03 servos"
     //% subcategory=Servos
     export function zeroServos(): void
     {
         for (let i=0; i<16; i++)
             setServo(i, 0);
+    }
+
+    /**
+      * Set offsets for servos
+      * @param servo servo or pin to set offset
+      * @param degrees degrees +ve or -ve to offset servo
+      */
+    //% blockId="OffsetServos"
+    //% block="Offset servo%servo|by%degrees|degrees"
+    //% subcategory=Servos
+    export function offsetServos(servo: number, degrees: number): void
+    {
+        if (initI2C == false)
+        {
+            initPCA();
+        }
+        servo = clamp(servo, 0, 15);
+        degrees = clamp(degrees, -20, 20);
+        servoOffset[servo] = degrees;
     }
 
     /**
@@ -152,11 +174,15 @@ namespace valenta
     //% blockId="an_setServo" block="set servo %servo| to angle %angle"
     //% weight = 70
     //% angle.min=-90 angle.max=90
-    //% servo.min=0 servo.max=15
     //% subcategory=Servos
     export function setServo(servo: number, angle: number): void
     {
-        angle = clamp(angle, -90, 90);
+        if (initI2C == false)
+        {
+            initPCA();
+        }
+        servo = clamp(servo, 0, 15);
+        angle = clamp(angle, -90, 90) + servoOffset[servo];
         if (_model == vModel.Zero)
         {
             // servo is pin number
@@ -170,10 +196,6 @@ namespace valenta
         }
         else
         {
-            if (initI2C == false)
-            {
-                initPCA();
-            }
             // two bytes need setting for start and stop positions of the servo
             // servos start at SERVOS (0x06) and are then consecutive blocks of 4 bytes
             // the start position (always 0x00) is set during init for all servos
