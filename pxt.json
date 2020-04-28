@@ -1,16 +1,15 @@
 {
-    "name": "BitRoller",
-    "version": "0.0.1",
-    "description": "Microsoft MakeCode package for 4tronix BitRoller Robot",
+    "name": "Valenta",
+    "version": "1.0.3",
+    "description": "Microsoft MakeCode package for Valenta Zero & Plus",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "fireled": "github:4tronix/FireLedsBase",
-        "firescreen": "github:4tronix/FireScreen#0.0.5"
+        "fireled": "github:4tronix/FireLedsBase#0.1.4"
     },
     "files": [
         "README.md",
-        "bitroller.ts"
+        "valenta.ts"
      ],
     "testFiles": [
         "tests.ts"
