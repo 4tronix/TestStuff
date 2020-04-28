@@ -11,9 +11,7 @@
         "README.md",
         "valenta.ts"
      ],
-    "testFiles": [
-        "tests.ts"
-    ],
+    "testFiles": [],
     "yotta": {},
     "public": true
 }
