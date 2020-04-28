@@ -130,7 +130,7 @@ namespace valenta
             i2cData[1] = 0x00;			// high byte start - always 0
             pins.i2cWriteBuffer(PCA, i2cData, false);
 
-            servoOffset[i] = 0;
+            servoOffset[servo] = 0;
         }
     }
 
@@ -138,7 +138,7 @@ namespace valenta
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="centre all 03 servos"
+    //% block="centre all 04 servos"
     //% subcategory=Servos
     export function zeroServos(): void
     {
