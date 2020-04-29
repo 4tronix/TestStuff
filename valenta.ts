@@ -13,6 +13,17 @@ enum vMotor
 }
 
 /**
+  * Enumeration of forward/reverse directions
+  */
+enum vDirection
+{
+    //% block="forward"
+    Forward,
+    //% block="reverse"
+    Reverse
+}
+
+/**
   * Enumeration of directions.
   */
 enum vRobotDirection
@@ -138,7 +149,7 @@ namespace valenta
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="centre all 04 servos"
+    //% block="centre all 05 servos"
     //% subcategory=Servos
     export function zeroServos(): void
     {
@@ -277,6 +288,167 @@ namespace valenta
     }
 
     /**
+      * Move both motors forward (or backward) at speed.
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      */
+    //% blockId="vGo" block="go%direction|at speed%speed"
+    //% speed.min=0 speed.max=100
+    //% weight=100
+    //% subcategory=Motors
+    export function go(direction: vDirection, speed: number): void
+    {
+        move(vMotor.Both, direction, speed);
+    }
+
+    /**
+      * Move both motors forward (or backward) at speed for milliseconds
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      */
+    //% blockId="vGoms" block="go%direction|at speed%speed|for%milliseconds|(ms)"
+    //% speed.min=0 speed.max=100
+    //% weight=90
+    //% subcategory=Motors
+    export function goms(direction: vDirection, speed: number, milliseconds: number): void
+    {
+        go(direction, speed);
+        basic.pause(milliseconds);
+        stop(vStopMode.Coast);
+    }
+
+    /**
+      * Rotate 2WD robot in direction at speed
+      * @param direction direction to turn
+      * @param speed speed of motors (0 to 100). eg: 60
+      */
+    //% blockId="vRotate" block="spin%direction|at speed%speed"
+    //% speed.min=0 speed.max=100
+    //% weight=80
+    //% subcategory=Motors
+    export function rotate(direction: vRobotDirection, speed: number): void
+    {
+        if (direction == vRobotDirection.Left)
+        {
+            move(vMotor.M1, vDirection.Reverse, speed);
+            move(vMotor.M2, vDirection.Forward, speed);
+        }
+        else if (direction == vRobotDirection.Right)
+        {
+            move(vMotor.M1, vDirection.Forward, speed);
+            move(vMotor.M2, vDirection.Reverse, speed);
+        }
+    }
+
+    /**
+      * Rotate 2WD robot in direction at speed for milliseconds.
+      * @param direction direction to spin
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
+      */
+    //% blockId="vRotatems" block="spin%direction|at speed%speed|for%milliseconds|(ms)"
+    //% speed.min=0 speed.max=100
+    //% weight=70
+    //% subcategory=Motors
+    export function rotatems(direction: vRobotDirection, speed: number, milliseconds: number): void
+    {
+        rotate(direction, speed);
+        basic.pause(milliseconds);
+        stop(vStopMode.Coast);
+    }
+
+    /**
+      * Stop robot by coasting slowly to a halt or braking
+      * @param mode Brakes on or off
+      */
+    //% blockId="val_stop" block="stop with%mode"
+    //% weight=80
+    //% subcategory=Motors
+    export function stop(mode: vStopMode): void
+    {
+        let stopMode = 0;
+        if (mode == vStopMode.Brake)
+            stopMode = 1;
+        if (getModel() == vModel.Zero)
+        {
+            pins.digitalWritePin(DigitalPin.P12, stopMode);
+            pins.digitalWritePin(DigitalPin.P13, stopMode);
+            pins.digitalWritePin(DigitalPin.P14, stopMode);
+            pins.digitalWritePin(DigitalPin.P15, stopMode);
+        }
+        else
+        {
+            pins.digitalWritePin(DigitalPin.P12, 0);
+            pins.digitalWritePin(DigitalPin.P13, lDir ^ stopMode);
+            pins.digitalWritePin(DigitalPin.P14, 0);
+            pins.digitalWritePin(DigitalPin.P15, rDir ^ stopMode);
+        }
+    }
+
+    /**
+      * Move individual motors forward or reverse
+      * @param motor motor to drive
+      * @param direction select forwards or reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      */
+    //% blockId="vMove" block="move%motor|motor(s)%direction|at speed%speed"
+    //% weight=50
+    //% speed.min=0 speed.max=100
+    //% subcategory=Motors
+    export function move(motor: vMotor, direction: vDirection, speed: number): void
+    {
+        speed = clamp(speed, 0, 100) * 10.23;
+        setPWM(speed);
+        let lSpeed = Math.round(speed * (100 - leftBias) / 100);
+        let rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        if (getModel() == vModel.Plus)
+        {
+            if ((motor == vMotor.M1) || (motor == vMotor.Both))
+            {
+                if (direction == vDirection.Forward)
+                {
+                    pins.analogWritePin(AnalogPin.P12, lSpeed);
+                    pins.analogWritePin(AnalogPin.P13, 0);
+                }
+                else
+                {
+                    pins.analogWritePin(AnalogPin.P12, 0);
+                    pins.analogWritePin(AnalogPin.P13, lSpeed);
+                }
+            }
+            if ((motor == vMotor.M2) || (motor == vMotor.Both))
+            {
+                if (direction == vDirection.Forward)
+                {
+                    pins.analogWritePin(AnalogPin.P14, rSpeed);
+                    pins.analogWritePin(AnalogPin.P15, 0);
+                }
+                else
+                {
+                    pins.analogWritePin(AnalogPin.P14, 0);
+                    pins.analogWritePin(AnalogPin.P15, rSpeed);
+                }
+            }
+        }
+        else // model == Plus
+        {
+            if ((motor == vMotor.M1) || (motor == vMotor.Both))
+            {
+                pins.analogWritePin(AnalogPin.P12, speed);
+                pins.digitalWritePin(DigitalPin.P13, reverse);
+                lDir = (direction == vDirection.Reverse);
+            }
+            if ((motor == vMotor.M2) || (motor == vMotor.Both))
+            {
+                pins.analogWritePin(AnalogPin.P14, speed);
+                pins.digitalWritePin(DigitalPin.P15, reverse);
+                rDir = (direction == vDirection.Reverse);
+            }
+        }
+    }
+
+    /**
       * Drive motor(s) forward or reverse.
       * @param motor motor to drive.
       * @param speed speed of motor (-1023 to 1023). eg: 600
@@ -341,34 +513,6 @@ namespace valenta
                     pins.analogWritePin(AnalogPin.P15, speed);
                 }
             }
-        }
-    }
-
-    /**
-      * Stop robot by coasting slowly to a halt or braking
-      * @param mode Brakes on or off
-      */
-    //% blockId="val_stop" block="stop with %mode"
-    //% weight=80
-    //% subcategory=Motors
-    export function stop(mode: vStopMode): void
-    {
-        let stopMode = 0;
-        if (mode == vStopMode.Brake)
-            stopMode = 1;
-        if (getModel() == vModel.Zero)
-        {
-            pins.digitalWritePin(DigitalPin.P12, stopMode);
-            pins.digitalWritePin(DigitalPin.P13, stopMode);
-            pins.digitalWritePin(DigitalPin.P14, stopMode);
-            pins.digitalWritePin(DigitalPin.P15, stopMode);
-        }
-        else
-        {
-            pins.digitalWritePin(DigitalPin.P12, 0);
-            pins.digitalWritePin(DigitalPin.P13, lDir ^ stopMode);
-            pins.digitalWritePin(DigitalPin.P14, 0);
-            pins.digitalWritePin(DigitalPin.P15, rDir ^ stopMode);
         }
     }
 
