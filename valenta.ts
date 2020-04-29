@@ -119,7 +119,7 @@ namespace valenta
       *
       * @param model Model of Board; Zero or Plus
       */
-    //% blockId="val_model" block="select 07 board model %model=v_models"
+    //% blockId="val_model" block="select 08 board model %model=v_models"
     //% weight=100
     //% subcategory=Board_Model
     export function select_model(model: number): void
@@ -157,41 +157,6 @@ namespace valenta
     export function vModels(model: vModel): number
     {
         return model;
-    }
-
-// Servo Blocks
-
-    // initialise the servo driver and the offset array values
-    function initPCA(): void
-    {
-
-        let i2cData = pins.createBuffer(2);
-        initI2C = true;
-
-        i2cData[0] = 0;		// Mode 1 register
-        i2cData[1] = 0x10;	// put to sleep
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = 0xFE;	// Prescale register
-        i2cData[1] = 101;	// set to 60 Hz
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = 0;		// Mode 1 register
-        i2cData[1] = 0x81;	// Wake up
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        for (let servo=0; servo<16; servo++)
-        {
-            i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
-            i2cData[1] = 0x00;			// low byte start - always 0
-            _i2cError = pins.i2cWriteBuffer(PCA, i2cData, false);
-
-            i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
-            i2cData[1] = 0x00;			// high byte start - always 0
-            pins.i2cWriteBuffer(PCA, i2cData, false);
-
-            servoOffset[servo] = 0;
-        }
     }
 
 // Motor Blocks
@@ -370,143 +335,39 @@ namespace valenta
         }
     }
 
-    /**
-      * Drive motor(s) forward or reverse.
-      * @param motor motor to drive.
-      * @param speed speed of motor (-1023 to 1023). eg: 600
-      */
-    //% blockId="val_motor" block="drive %motor|motor(s) at speed %speed"
-    //% weight=50
-    //% subcategory=Motors
-    export function motor(motor: vMotor, speed: number): void
-    {
-        let reverse = 0;
-        if (speed == 0)
-        {
-            stop(vStopMode.Coast);
-            return;
-        }
-        if (speed < 0)
-        {
-            reverse = 1;
-            speed = -speed;
-        }
-        setPWM(speed);
-        if (getModel() == vModel.Plus)
-        {
-            if ((motor == vMotor.M1) || (motor == vMotor.Both))
-            {
-                pins.analogWritePin(AnalogPin.P12, speed);
-                pins.digitalWritePin(DigitalPin.P13, reverse);
-                lDir = reverse;
-            }
-            if ((motor == vMotor.M2) || (motor == vMotor.Both))
-            {
-                pins.analogWritePin(AnalogPin.P14, speed);
-                pins.digitalWritePin(DigitalPin.P15, reverse);
-                rDir = reverse;
-            }
-        }
-        else // model == Zero
-        {
-            if ((motor == vMotor.M1) || (motor == vMotor.Both))
-            {
-                if (reverse == 0)
-                {
-                    pins.analogWritePin(AnalogPin.P12, speed);
-                    pins.analogWritePin(AnalogPin.P13, 0);
-                }
-                else
-                {
-                    pins.analogWritePin(AnalogPin.P12, 0);
-                    pins.analogWritePin(AnalogPin.P13, speed);
-                }
-            }
-            if ((motor == vMotor.M2) || (motor == vMotor.Both))
-            {
-                if (reverse == 0)
-                {
-                    pins.analogWritePin(AnalogPin.P14, speed);
-                    pins.analogWritePin(AnalogPin.P15, 0);
-                }
-                else
-                {
-                    pins.analogWritePin(AnalogPin.P14, 0);
-                    pins.analogWritePin(AnalogPin.P15, speed);
-                }
-            }
-        }
-    }
+// Servo Blocks
 
-    /**
-      * Drive robot forward (or backward) at speed.
-      * @param speed speed of motor between -1023 and 1023. eg: 600
-      */
-    //% blockId="val_drive" block="drive at speed %speed"
-    //% speed.min=-1023 speed.max=1023
-    //% weight=100
-    //% subcategory=Motors
-    export function drive(speed: number): void
+    // initialise the servo driver and the offset array values
+    function initPCA(): void
     {
-        motor(vMotor.Both, speed);
-    }
 
-    /**
-      * Drive robot forward (or backward) at speed for milliseconds.
-      * @param speed speed of motor between -1023 and 1023. eg: 600
-      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
-      */
-    //% blockId="val_drive_milliseconds" block="drive at speed %speed| for %milliseconds|(ms)"
-    //% speed.min=-1023 speed.max=1023
-    //% weight=70
-    //% subcategory=Motors
-    export function driveMilliseconds(speed: number, milliseconds: number): void
-    {
-        drive(speed);
-        basic.pause(milliseconds);
-        stop(vStopMode.Coast);
-    }
+        let i2cData = pins.createBuffer(2);
+        initI2C = true;
 
-    /**
-      * Turn robot in direction at speed.
-      * @param direction direction to turn.
-      * @param speed speed of motor between 0 and 1023. eg: 600
-      */
-    //% blockId="val_spin" block="spin %direction|at speed %speed"
-    //% speed.min=0 speed.max=1023
-    //% weight=90
-    //% subcategory=Motors
-    export function spin(direction: vRobotDirection, speed: number): void
-    {
-        if (speed < 0)
-            speed = 0;
-        if (direction == vRobotDirection.Left)
+        i2cData[0] = 0;		// Mode 1 register
+        i2cData[1] = 0x10;	// put to sleep
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = 0xFE;	// Prescale register
+        i2cData[1] = 101;	// set to 60 Hz
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = 0;		// Mode 1 register
+        i2cData[1] = 0x81;	// Wake up
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        for (let servo=0; servo<16; servo++)
         {
-            motor(vMotor.M1, -speed);
-            motor(vMotor.M2, speed);
-        }
-        else if (direction == vRobotDirection.Right)
-        {
-            motor(vMotor.M1, speed);
-            motor(vMotor.M2, -speed);
-        }
-    }
+            i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
+            i2cData[1] = 0x00;			// low byte start - always 0
+            _i2cError = pins.i2cWriteBuffer(PCA, i2cData, false);
 
-    /**
-      * Spin robot in direction at speed for milliseconds.
-      * @param direction direction to spin
-      * @param speed speed of motor between 0 and 1023. eg: 600
-      * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
-      */
-    //% blockId="val_spin_milliseconds" block="spin %direction|at speed %speed| for %milliseconds|(ms)"
-    //% speed.min=0 speed.max=1023
-    //% weight=60
-    //% subcategory=Motors
-    export function spinMilliseconds(direction: vRobotDirection, speed: number, milliseconds: number): void
-    {
-        spin(direction, speed);
-        basic.pause(milliseconds);
-        stop(vStopMode.Coast);
+            i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
+            i2cData[1] = 0x00;			// high byte start - always 0
+            pins.i2cWriteBuffer(PCA, i2cData, false);
+
+            servoOffset[servo] = 0;
+        }
     }
 
     /**
