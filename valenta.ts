@@ -119,7 +119,7 @@ namespace valenta
       *
       * @param model Model of Board; Zero or Plus
       */
-    //% blockId="val_model" block="select 08 board model %model=v_models"
+    //% blockId="val_model" block="select 09 board model %model=v_models"
     //% weight=100
     //% subcategory=Board_Model
     export function select_model(model: number): void
@@ -188,30 +188,13 @@ namespace valenta
     }
 
     /**
-      * Move both motors forward (or backward) at speed for milliseconds
-      * @param direction Move Forward or Reverse
-      * @param speed speed of motor between 0 and 100. eg: 60
-      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
-      */
-    //% blockId="vGoms" block="go%direction|at speed%speed|for%milliseconds|(ms)"
-    //% speed.min=0 speed.max=100
-    //% weight=90
-    //% subcategory=Motors
-    export function goms(direction: vDirection, speed: number, milliseconds: number): void
-    {
-        go(direction, speed);
-        basic.pause(milliseconds);
-        stop(vStopMode.Coast);
-    }
-
-    /**
       * Rotate 2WD robot in direction at speed
       * @param direction direction to turn
       * @param speed speed of motors (0 to 100). eg: 60
       */
     //% blockId="vRotate" block="spin%direction|at speed%speed"
     //% speed.min=0 speed.max=100
-    //% weight=80
+    //% weight=90
     //% subcategory=Motors
     export function rotate(direction: vRobotDirection, speed: number): void
     {
@@ -225,23 +208,6 @@ namespace valenta
             move(vMotor.M1, vDirection.Forward, speed);
             move(vMotor.M2, vDirection.Reverse, speed);
         }
-    }
-
-    /**
-      * Rotate 2WD robot in direction at speed for milliseconds.
-      * @param direction direction to spin
-      * @param speed speed of motor between 0 and 100. eg: 60
-      * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
-      */
-    //% blockId="vRotatems" block="spin%direction|at speed%speed|for%milliseconds|(ms)"
-    //% speed.min=0 speed.max=100
-    //% weight=70
-    //% subcategory=Motors
-    export function rotatems(direction: vRobotDirection, speed: number, milliseconds: number): void
-    {
-        rotate(direction, speed);
-        basic.pause(milliseconds);
-        stop(vStopMode.Coast);
     }
 
     /**
@@ -270,6 +236,40 @@ namespace valenta
             pins.digitalWritePin(DigitalPin.P14, 0);
             pins.digitalWritePin(DigitalPin.P15, rDir ^ stopMode);
         }
+    }
+
+    /**
+      * Move both motors forward (or backward) at speed for milliseconds
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      */
+    //% blockId="vGoms" block="go%direction|at speed%speed|for%milliseconds|(ms)"
+    //% speed.min=0 speed.max=100
+    //% weight=70
+    //% subcategory=Motors
+    export function goms(direction: vDirection, speed: number, milliseconds: number): void
+    {
+        go(direction, speed);
+        basic.pause(milliseconds);
+        stop(vStopMode.Coast);
+    }
+
+    /**
+      * Rotate 2WD robot in direction at speed for milliseconds.
+      * @param direction direction to spin
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
+      */
+    //% blockId="vRotatems" block="spin%direction|at speed%speed|for%milliseconds|(ms)"
+    //% speed.min=0 speed.max=100
+    //% weight=60
+    //% subcategory=Motors
+    export function rotatems(direction: vRobotDirection, speed: number, milliseconds: number): void
+    {
+        rotate(direction, speed);
+        basic.pause(milliseconds);
+        stop(vStopMode.Coast);
     }
 
     /**
