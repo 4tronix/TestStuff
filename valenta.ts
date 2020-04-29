@@ -149,7 +149,7 @@ namespace valenta
       * Initialise all servos to Angle=0
       */
     //% blockId="zeroServos"
-    //% block="centre all 05 servos"
+    //% block="centre all 06 servos"
     //% subcategory=Servos
     export function zeroServos(): void
     {
@@ -433,17 +433,18 @@ namespace valenta
         }
         else // model == Plus
         {
+            let reverse = (direction == vDirection.Reverse) ? 1 : 0;
             if ((motor == vMotor.M1) || (motor == vMotor.Both))
             {
                 pins.analogWritePin(AnalogPin.P12, speed);
                 pins.digitalWritePin(DigitalPin.P13, reverse);
-                lDir = (direction == vDirection.Reverse);
+                lDir = reverse;
             }
             if ((motor == vMotor.M2) || (motor == vMotor.Both))
             {
                 pins.analogWritePin(AnalogPin.P14, speed);
                 pins.digitalWritePin(DigitalPin.P15, reverse);
-                rDir = (direction == vDirection.Reverse);
+                rDir = reverse;
             }
         }
     }
