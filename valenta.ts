@@ -112,120 +112,6 @@ namespace valenta
         return Math.max(Math.min(max, value), min);
     }
 
-    // initialise the servo driver and the offset array values
-    function initPCA(): void
-    {
-
-        let i2cData = pins.createBuffer(2);
-        initI2C = true;
-
-        i2cData[0] = 0;		// Mode 1 register
-        i2cData[1] = 0x10;	// put to sleep
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = 0xFE;	// Prescale register
-        i2cData[1] = 101;	// set to 60 Hz
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        i2cData[0] = 0;		// Mode 1 register
-        i2cData[1] = 0x81;	// Wake up
-        pins.i2cWriteBuffer(PCA, i2cData, false);
-
-        for (let servo=0; servo<16; servo++)
-        {
-            i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
-            i2cData[1] = 0x00;			// low byte start - always 0
-            _i2cError = pins.i2cWriteBuffer(PCA, i2cData, false);
-
-            i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
-            i2cData[1] = 0x00;			// high byte start - always 0
-            pins.i2cWriteBuffer(PCA, i2cData, false);
-
-            servoOffset[servo] = 0;
-        }
-    }
-
-    /**
-      * Initialise all servos to Angle=0
-      */
-    //% blockId="zeroServos"
-    //% block="centre all 06 servos"
-    //% subcategory=Servos
-    export function zeroServos(): void
-    {
-        for (let i=0; i<16; i++)
-            setServo(i, 0);
-    }
-
-    /**
-      * Set offsets for servos
-      * @param servo servo or pin to set offset
-      * @param degrees degrees +ve or -ve to offset servo
-      */
-    //% blockId="OffsetServos"
-    //% block="Offset servo%servo|by%degrees|degrees"
-    //% subcategory=Servos
-    export function offsetServos(servo: number, degrees: number): void
-    {
-        if (initI2C == false)
-        {
-            initPCA();
-        }
-        servo = clamp(servo, 0, 15);
-        degrees = clamp(degrees, -20, 20);
-        servoOffset[servo] = degrees;
-    }
-
-    /**
-      * Set Servo Position by Angle
-      * For Valenta Zero, servo number is the pin number
-      * @param servo Servo number (0 to 15)
-      * @param angle degrees to turn servo (-90 to +90)
-      */
-    //% blockId="an_setServo" block="set servo %servo| to angle %angle"
-    //% weight = 70
-    //% angle.min=-90 angle.max=90
-    //% subcategory=Servos
-    export function setServo(servo: number, angle: number): void
-    {
-        if (initI2C == false)
-        {
-            initPCA();
-        }
-        servo = clamp(servo, 0, 15);
-        angle = clamp(angle, -90, 90) + servoOffset[servo];
-        if (_model == vModel.Zero)
-        {
-            // servo is pin number
-            switch(servo)
-            {
-                case 0: pins.servoWritePin(AnalogPin.P0, angle + 90); break;
-                case 1: pins.servoWritePin(AnalogPin.P1, angle + 90); break;
-                case 2: pins.servoWritePin(AnalogPin.P2, angle + 90); break;
-                case 8: pins.servoWritePin(AnalogPin.P8, angle + 90); break;
-            }
-        }
-        else
-        {
-            // two bytes need setting for start and stop positions of the servo
-            // servos start at SERVOS (0x06) and are then consecutive blocks of 4 bytes
-            // the start position (always 0x00) is set during init for all servos
-            // the zero offset for each servo is read during init into the servoOffset array
-            let i2cData = pins.createBuffer(2);
-            let start = 0;
-            let stop = 369 + angle * 223 / 90;
-
-            i2cData[0] = SERVOS + servo*4 + 2;	// Servo register
-            i2cData[1] = (stop & 0xff);		// low byte stop
-            pins.i2cWriteBuffer(PCA, i2cData, false);
-
-            i2cData[0] = SERVOS + servo*4 + 3;	// Servo register
-            i2cData[1] = (stop >> 8);		// high byte stop
-            pins.i2cWriteBuffer(PCA, i2cData, false);
-        }
-    }
-
-
 // Blocks for selecting Board Model
 
     /**
@@ -233,7 +119,7 @@ namespace valenta
       *
       * @param model Model of Board; Zero or Plus
       */
-    //% blockId="val_model" block="select board model %model=v_models"
+    //% blockId="val_model" block="select 07 board model %model=v_models"
     //% weight=100
     //% subcategory=Board_Model
     export function select_model(model: number): void
@@ -271,6 +157,41 @@ namespace valenta
     export function vModels(model: vModel): number
     {
         return model;
+    }
+
+// Servo Blocks
+
+    // initialise the servo driver and the offset array values
+    function initPCA(): void
+    {
+
+        let i2cData = pins.createBuffer(2);
+        initI2C = true;
+
+        i2cData[0] = 0;		// Mode 1 register
+        i2cData[1] = 0x10;	// put to sleep
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = 0xFE;	// Prescale register
+        i2cData[1] = 101;	// set to 60 Hz
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        i2cData[0] = 0;		// Mode 1 register
+        i2cData[1] = 0x81;	// Wake up
+        pins.i2cWriteBuffer(PCA, i2cData, false);
+
+        for (let servo=0; servo<16; servo++)
+        {
+            i2cData[0] = SERVOS + servo*4 + 0;	// Servo register
+            i2cData[1] = 0x00;			// low byte start - always 0
+            _i2cError = pins.i2cWriteBuffer(PCA, i2cData, false);
+
+            i2cData[0] = SERVOS + servo*4 + 1;	// Servo register
+            i2cData[1] = 0x00;			// high byte start - always 0
+            pins.i2cWriteBuffer(PCA, i2cData, false);
+
+            servoOffset[servo] = 0;
+        }
     }
 
 // Motor Blocks
@@ -402,7 +323,7 @@ namespace valenta
         setPWM(speed);
         let lSpeed = Math.round(speed * (100 - leftBias) / 100);
         let rSpeed = Math.round(speed * (100 - rightBias) / 100);
-        if (getModel() == vModel.Plus)
+        if (getModel() == vModel.Zero)
         {
             if ((motor == vMotor.M1) || (motor == vMotor.Both))
             {
@@ -587,6 +508,87 @@ namespace valenta
         basic.pause(milliseconds);
         stop(vStopMode.Coast);
     }
+
+    /**
+      * Initialise all servos to Angle=0
+      */
+    //% blockId="zeroServos"
+    //% block="centre all servos"
+    //% subcategory=Servos
+    export function zeroServos(): void
+    {
+        for (let i=0; i<16; i++)
+            setServo(i, 0);
+    }
+
+    /**
+      * Set offsets for servos
+      * @param servo servo or pin to set offset
+      * @param degrees degrees +ve or -ve to offset servo
+      */
+    //% blockId="OffsetServos"
+    //% block="Offset servo%servo|by%degrees|degrees"
+    //% subcategory=Servos
+    export function offsetServos(servo: number, degrees: number): void
+    {
+        if (initI2C == false)
+        {
+            initPCA();
+        }
+        servo = clamp(servo, 0, 15);
+        degrees = clamp(degrees, -20, 20);
+        servoOffset[servo] = degrees;
+    }
+
+    /**
+      * Set Servo Position by Angle
+      * For Valenta Zero, servo number is the pin number
+      * @param servo Servo number (0 to 15)
+      * @param angle degrees to turn servo (-90 to +90)
+      */
+    //% blockId="an_setServo" block="set servo %servo| to angle %angle"
+    //% weight = 70
+    //% angle.min=-90 angle.max=90
+    //% subcategory=Servos
+    export function setServo(servo: number, angle: number): void
+    {
+        if (initI2C == false)
+        {
+            initPCA();
+        }
+        servo = clamp(servo, 0, 15);
+        angle = clamp(angle, -90, 90) + servoOffset[servo];
+        if (_model == vModel.Zero)
+        {
+            // servo is pin number
+            switch(servo)
+            {
+                case 0: pins.servoWritePin(AnalogPin.P0, angle + 90); break;
+                case 1: pins.servoWritePin(AnalogPin.P1, angle + 90); break;
+                case 2: pins.servoWritePin(AnalogPin.P2, angle + 90); break;
+                case 8: pins.servoWritePin(AnalogPin.P8, angle + 90); break;
+            }
+        }
+        else
+        {
+            // two bytes need setting for start and stop positions of the servo
+            // servos start at SERVOS (0x06) and are then consecutive blocks of 4 bytes
+            // the start position (always 0x00) is set during init for all servos
+            // the zero offset for each servo is read during init into the servoOffset array
+            let i2cData = pins.createBuffer(2);
+            let start = 0;
+            let stop = 369 + angle * 223 / 90;
+
+            i2cData[0] = SERVOS + servo*4 + 2;	// Servo register
+            i2cData[1] = (stop & 0xff);		// low byte stop
+            pins.i2cWriteBuffer(PCA, i2cData, false);
+
+            i2cData[0] = SERVOS + servo*4 + 3;	// Servo register
+            i2cData[1] = (stop >> 8);		// high byte stop
+            pins.i2cWriteBuffer(PCA, i2cData, false);
+        }
+    }
+
 
 // FireLed Status Blocks
 
