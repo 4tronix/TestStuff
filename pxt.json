@@ -1,7 +1,7 @@
 {
-    "name": "Valenta",
-    "version": "1.0.3",
-    "description": "Microsoft MakeCode package for Valenta Zero & Plus",
+    "name": "RUB",
+    "version": "0.0.1",
+    "description": "Microsoft MakeCode package for 4tronix Really Useless Box",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -9,8 +9,8 @@
     },
     "files": [
         "README.md",
-        "valenta.ts"
-     ],
+        "rub.ts"
+    ],
     "testFiles": [],
     "yotta": {},
     "public": true
