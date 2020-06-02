@@ -268,7 +268,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|02 Bluetooth"
+    //% block="%enable|03 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -306,11 +306,13 @@ namespace bitbot
         initADC();
         let i2cData = pins.createBuffer(3);
 
-        i2cData[0] = 0;			// Conversion register
-        i2cData[1] = 0;	// data
-        i2cData[2] = 0;	// data
-        i2cData = pins.i2cReadBuffer(_addrADC, 2, false);
-        return ((i2cData[1] << 8) + (i2cData[2] >> 4));
+        pins.i2cWriteNumber(72, 0, NumberFormat.Int8LE, false);
+        return pins.i2cReadNumber(72, NumberFormat.UInt16BE);
+        //i2cData[0] = 0;			// Conversion register
+        //i2cData[1] = 0;	// data
+        //i2cData[2] = 0;	// data
+        //i2cData = pins.i2cReadBuffer(_addrADC, 2, false);
+        //return ((i2cData[1] << 8) + (i2cData[2] >> 4));
     }
 
 // Blocks for selecting BitBot Model
