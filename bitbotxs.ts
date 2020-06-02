@@ -268,7 +268,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|Bluetooth"
+    //% block="%enable|02 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -289,7 +289,7 @@ namespace bitbot
 
         i2cData[0] = 1;			// Config register
         i2cData[1] = config & 0xff;	// defaults
-        i2cData[2] = config > 8;	// defaults
+        i2cData[2] = config >> 8;	// defaults
         pins.i2cWriteBuffer(_addrADC, i2cData, false);
 
     }
@@ -361,7 +361,7 @@ namespace bitbot
     {
         if (_model == BBModel.Auto)
         {
-            if ((pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) & 0xf0) == 0)
+            if ((pins.i2cReadNumber(_addrADC, NumberFormat.Int8LE, false) & 0xf0) == 0)
             {
                 select_model(BBModel.Classic);
             }
@@ -829,7 +829,7 @@ namespace bitbot
         }
         else
         {
-            let value = pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false);
+            let value = pins.i2cReadNumber(_addrADC, NumberFormat.Int8LE, false);
             if (sensor == BBLineSensor.Left)
                 return value & 0x01;
             else
