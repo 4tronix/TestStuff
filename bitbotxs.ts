@@ -293,7 +293,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|05 Bluetooth"
+    //% block="%enable|06 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -327,7 +327,7 @@ namespace bitbot
     export function readADC(channel: number): number
     {
         initADC();
-        channel = (clamp(channel, 0, 3) | 0x4000) << 13;
+        channel = (clamp(channel, 0, 3) << 12) | 0x4000;
 
         // select channel
         i2cData[0] = 1
