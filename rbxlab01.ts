@@ -235,6 +235,8 @@ namespace rxlab01
     let rMotorA0: AnalogPin.P15;
     let rMotorA1: AnalogPin.P16;
 
+    const NUMLEDS = 14;
+
 // ----------------------------------------------------------
 // ATMega definitions
 
@@ -299,7 +301,7 @@ namespace rxlab01
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="%enable|02 Bluetooth"
+    //% block="%enable|03 Bluetooth"
     //% blockGap=8
     export function enableBluetooth(enable: RXBluetooth)
     {
@@ -437,7 +439,7 @@ namespace rxlab01
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
     //% blockGap=8
-    export function move(motor: RXMotor, direction: BBDirection, speed: number): void
+    export function motorMove(motor: RXMotor, direction: RXDirection, speed: number): void
     {
         speed = clamp(speed, 0, 100) * 10.23;
         setPWM(speed);
@@ -510,7 +512,7 @@ namespace rxlab01
     export function ledsColor(rgb: number)
     {
         i2cData6[0] = FIREDATA;			// Register for Pixel data
-        i2cData6[1] = RXMode;			// Auto Update 1 = True
+        i2cData6[1] = (_updateMode == RXMode.Auto) ? 1: 0;			// Auto Update 1 = True
         i2cData6[2] = NUMLEDS;			// Pixel ID or NUMLEDS for ALL
         i2cData6[3] = rgb >> 16;		// Red
         i2cData6[4] = (rgb >> 8) & 0xff;	// Green
@@ -529,7 +531,7 @@ namespace rxlab01
     export function ledClear(): void
     {
         i2cData6[0] = FIREDATA;		// Register for Pixel data
-        i2cData6[1] = RXMode;		// Auto Update 1 = True
+        i2cData6[1] = (_updateMode == RXMode.Auto) ? 1: 0;		// Auto Update 1 = True
         i2cData6[2] = NUMLEDS;		// Pixel ID or NUMLEDS for ALL
         i2cData6[3] = 0;		// Red
         i2cData6[4] = 0;		// Green
@@ -551,7 +553,7 @@ namespace rxlab01
     export function setPixel(ledId: number, rgb: number): void
     {
         i2cData6[0] = FIREDATA;			// Register for Pixel data
-        i2cData6[1] = RXMode;			// Auto Update 1 = True
+        i2cData6[1] = (_updateMode == RXMode.Auto) ? 1: 0;			// Auto Update 1 = True
         i2cData6[2] = ledId;			// Pixel ID or NUMLEDS for ALL
         i2cData6[3] = rgb >> 16;		// Red
         i2cData6[4] = (rgb >> 8) & 0xff;	// Green
@@ -623,7 +625,7 @@ namespace rxlab01
     //% subcategory=FireLeds
     //% group=Advanced
     //% blockGap=8
-    export function setUpdateMode(updateMode: BBMode): void
+    export function setUpdateMode(updateMode: RXMode): void
     {
         _updateMode = updateMode;
     }
@@ -777,7 +779,7 @@ namespace rxlab01
     // update Matrix if _updateMode set to Auto
     function matUpdate(): void
     {
-        if (_updateMode == BBMode.Auto)
+        if (_updateMode == RXMode.Auto)
             matShow();
     }
 
@@ -820,12 +822,12 @@ namespace rxlab01
      * @param ledId linear position of the LED (0 to 24)
      * @param rgb RGB color of the LED
      */
-    //% blockId="setPixel" block="Matrix LED at%ledId|to%rgb=bb_colours"
+    //% blockId="SetMatPixel" block="Matrix LED at%ledId|to%rgb=bb_colours"
     //% weight=80
     //% subcategory=Addons
     //% group="5x5 Matrix"
     //% blockGap=8
-    export function setPixel(ledId: number, rgb: number): void
+    export function SetMatPixel(ledId: number, rgb: number): void
     {
         // need to map to match Microbit: top left is 0, bottom right is 24
         let x = 4 - ledId % 5;
