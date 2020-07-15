@@ -226,14 +226,14 @@ namespace rxlab01
     let leftBias = 0;
     let rightBias = 0;
 
-    let lMotorD0: DigitalPin.P13;
-    let lMotorD1: DigitalPin.P14;
-    let lMotorA0: AnalogPin.P13;
-    let lMotorA1: AnalogPin.P14;
-    let rMotorD0: DigitalPin.P15;
-    let rMotorD1: DigitalPin.P16;
-    let rMotorA0: AnalogPin.P15;
-    let rMotorA1: AnalogPin.P16;
+    const lMotorD0 = DigitalPin.P13;
+    const lMotorD1 = DigitalPin.P14;
+    const lMotorA0 = AnalogPin.P13;
+    const lMotorA1 = AnalogPin.P14;
+    const rMotorD0 = DigitalPin.P15;
+    const rMotorD1 = DigitalPin.P16;
+    const rMotorA0 = AnalogPin.P15;
+    const rMotorA1 = AnalogPin.P16;
 
     const NUMLEDS = 14;
 
@@ -301,7 +301,7 @@ namespace rxlab01
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="%enable|03 Bluetooth"
+    //% block="%enable|04 Bluetooth"
     //% blockGap=8
     export function enableBluetooth(enable: RXBluetooth)
     {
