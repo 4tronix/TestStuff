@@ -1,6 +1,6 @@
-# MakeCode Package for 4tronix BitRoller Robot
+# MakeCode Package for robot
 
-This library provides a Microsoft Makecode package for 4tronix BitRoller, see
+This library provides a Microsoft Makecode package for robot, see
 https://4tronix.co.uk/bitroller/
 
 ## Driving the robot    

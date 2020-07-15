@@ -1,7 +1,7 @@
 {
-    "name": "BitBotXS",
+    "name": "RbxLab01",
     "version": "0.0.1",
-    "description": "Microsoft MakeCode package for 4tronix BitBot XS robot",
+    "description": "Microsoft MakeCode package for robot",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -10,7 +10,7 @@
     },
     "files": [
         "README.md",
-        "bitbotxs.ts"
+        "rbxlab01.ts"
     ],
     "testFiles": [],
     "public": true,

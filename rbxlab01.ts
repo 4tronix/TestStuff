@@ -63,7 +63,7 @@ enum bfMouth
 /**
   * Enumeration of motors.
   */
-enum BBMotor
+enum RXMotor
 {
     //% block="left"
     Left,
@@ -76,7 +76,7 @@ enum BBMotor
 /**
   * Enumeration of forward/reverse directions
   */
-enum BBDirection
+enum RXDirection
 {
     //% block="forward"
     Forward,
@@ -87,7 +87,7 @@ enum BBDirection
 /**
   * Enumeration of directions.
   */
-enum BBRobotDirection
+enum RXRobotDirection
 {
     //% block="left"
     Left,
@@ -98,7 +98,7 @@ enum BBRobotDirection
 /**
   * Stop modes. Coast or Brake
   */
-enum BBStopMode
+enum RXStopMode
 {
     //% block="no brake"
     Coast,
@@ -109,7 +109,7 @@ enum BBStopMode
 /**
   * Enable/Disable for Bluetooth and FireLeds
   */
-enum BBBluetooth
+enum RXBluetooth
 {
     //% block="Enable"
     btEnable,
@@ -120,7 +120,7 @@ enum BBBluetooth
 /**
   * Values for buzzer. On or Off
   */
-enum BBBuzz
+enum RXBuzz
 {
     //% block="on"
     On,
@@ -131,7 +131,7 @@ enum BBBuzz
 /**
   * Enumeration of line sensors.
   */
-enum BBLineSensor
+enum RXLineSensor
 {
     //% block="left"
     Left,
@@ -142,7 +142,7 @@ enum BBLineSensor
 /**
   * Enumeration of light sensors.
   */
-enum BBLightSensor
+enum RXLightSensor
 {
     //% block="left"
     Left,
@@ -153,7 +153,7 @@ enum BBLightSensor
 /**
  * Ping unit for sensor.
  */
-enum BBPingUnit
+enum RXPingUnit
 {
     //% block="cm"
     Centimeters,
@@ -163,31 +163,16 @@ enum BBPingUnit
     MicroSeconds
 }
 
-enum BBServos
-{
-    P1,
-    P2
-}
-
 /**
   * Update mode for LEDs
   * setting to Manual requires show LED changes blocks
   * setting to Auto will update the LEDs everytime they change
   */
-enum BBMode
+enum RXMode
 {
+    //% manual=0
     Manual,
-    Auto
-}
-
-/**
-  * Model Types of BitBot
-  * Classic or XL
-  */
-enum BBModel
-{
-    Classic,
-    XL,
+    //% auto=1
     Auto
 }
 
@@ -223,10 +208,10 @@ enum BBColors
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
 //% groups='["New style blocks","Basic","Advanced","Special","Ultrasonic","Line Sensor","5x5 Matrix","BitFace","OLED 128x64","Old style blocks"]'
-namespace bitbot
+namespace rxlab01
 {
     let fireBand: fireled.Band;
-    let _updateMode = BBMode.Auto;
+    let _updateMode = RXMode.Auto;
     let btDisabled = true;
     let matrix5: fireled.Band;
     let bitface: fireled.Band;
@@ -241,178 +226,98 @@ namespace bitbot
     let leftBias = 0;
     let rightBias = 0;
 
-    let _model = BBModel.Auto;
-    let lMotorD0: DigitalPin;
-    let lMotorD1: DigitalPin;
-    let lMotorA0: AnalogPin;
-    let lMotorA1: AnalogPin;
-    let rMotorD0: DigitalPin;
-    let rMotorD1: DigitalPin;
-    let rMotorA0: AnalogPin;
-    let rMotorA1: AnalogPin;
-    let _deadband = 2;
-    let _p1Trim = 0;
-    let _p2Trim = 0;
+    let lMotorD0: DigitalPin.P13;
+    let lMotorD1: DigitalPin.P14;
+    let lMotorA0: AnalogPin.P13;
+    let lMotorA1: AnalogPin.P14;
+    let rMotorD0: DigitalPin.P15;
+    let rMotorD1: DigitalPin.P16;
+    let rMotorA0: AnalogPin.P15;
+    let rMotorA1: AnalogPin.P16;
 
+----------------------------------------------------------
+// ATMega definitions
 
-// ADS1x15 definitions
-    const _addrADC = 72;
-    const ADCSTART = 0x8000;
-    const OPCONT   = 0x0000;
-    const OPSINGLE = 0x0100; // Default
-    const RATE128  = 0x0000;
-    const RATE250  = 0x0020;
-    const RATE490  = 0x0040;
-    const RATE920  = 0x0060;
-    const RATE1600 = 0x0080; // Default
-    const RATE2400 = 0x00A0;
-    const RATE3300 = 0x00C0;
-    const GAIN1    = 0x0200; // Default
-    const GAIN2    = 0x0400;
-    const GAIN4    = 0x0600;
-    const GAIN8    = 0x0800;
-    const GAIN16   = 0x0A00;
-    const CHAN0    = 0x4000;
-    const CHAN1    = 0x5000;
-    const CHAN2    = 0x6000;
-    const CHAN3    = 0x7000;
+// OUTPUT REGISTERS
+// define FIRELED_DATA  0
+// define SET_BRIGHT    1
+// define UPDATE_NOW    2
+// define OUTPUT0_CFG   3
+// define OUTPUT1_CFG   4
+// define OUTPUT0_DATA  5
+// define OUTPUT1_DATA  6
+// define INPUT0_CFG    7
+// define INPUT1_CFG    8
+// define RESET         20
+    const _addrATM = 0x22;
+    const ATMRESET = 20;
+    const FIREDATA = 0;
+    const FIREBRT  = 1;
+    const FIREUPDT = 2;
+    const OUTCFG0  = 3;
+    const OUTCFG1  = 4;
+    const OUTDAT0  = 5;
+    const OUTDAT1  = 6;
+    const INCFG0   = 7;
+    const INCFG1   = 8;
 
-    const CONFIGADC = ADCSTART | OPSINGLE | RATE1600 | GAIN1;
+// INPUT REGISTERS
+// define VERREV 0
+// define IN0 1
+// define IN1 2
+// define LINEL 3
+// define LINER 4
+// define LIGHTL 5
+// define LIGHTR 6
+// define DIAL 7
+// define PSU 8
+    const VERREV = 0;
+    const IN0 = 1;
+    const IN1 = 2;
+    const LINEL = 3
+    const LINER = 4
+    const LIGHTL = 5
+    const LIGHTR = 6
+    const DIAL = 7
+    const PSU = 8
 
-    let setupADC = false;
-    let i2cData  = pins.createBuffer(3);
+----------------------------------------------------------
+
+    let setupATM = false;
+    let i2cData2 = pins.createBuffer(2);
+    let i2cData3 = pins.createBuffer(3);
+    let i2cData6 = pins.createBuffer(6); // used for Fireled pixel data
 
     function clamp(value: number, min: number, max: number): number
     {
         return Math.max(Math.min(max, value), min);
     }
 
-// Block to enable Bluetooth and disable FireLeds.
+// Block to enable Bluetooth and disable FireLeds on accessories (doesn't affect built in Fireleds)
     /**
       * Enable/Disable Bluetooth support by disabling/enabling FireLeds
       * @param enable enable or disable Blueetoth
     */
-    //% blockId="BBEnableBluetooth"
-    //% block="%enable|06 Bluetooth"
+    //% blockId="EnableBluetooth"
+    //% block="%enable|01 Bluetooth"
     //% blockGap=8
-    export function bbEnableBluetooth(enable: BBBluetooth)
+    export function enableBluetooth(enable: RXBluetooth)
     {
-        if (enable == BBBluetooth.btEnable)
+        if (enable == RXBluetooth.btEnable)
             btDisabled = false;
         else
             btDisabled = true;
     }
 
-// Analog Data (line and Light sensors, using ADS1x15)
-    function initADC()
+// Setup Analog Data (line and Light sensors, etc, using ATMega)
+    function initATM()
     {
-        if (setupADC)
+        if (setupATM)
             return;
-        setupADC = true;
+        setupATM = true;
 
-        i2cData[0] = 1;			// Config register
-        i2cData[2] = CONFIGADC >> 8;	// defaults
-        i2cData[1] = CONFIGADC & 0xff;	// defaults
-        pins.i2cWriteBuffer(_addrADC, i2cData);
+        pins.i2cWriteNumber(_addrATM, ATMRESET, NumberFormat.Int8LE, false);
 
-    }
-
-    /**
-      * Read ADC values
-      * @param channel channel to read (0 - 3)
-      */
-    //% blockId="ReadADC" block="read ADC channel%channel"
-    //% weight=100
-    //% subcategory=ADC
-    export function readADC(channel: number): number
-    {
-        initADC();
-        channel = (clamp(channel, 0, 3) << 12) | 0x4000;
-
-        // select channel
-        i2cData[0] = 1
-        i2cData[1] = (CONFIGADC | channel) >> 8;
-        i2cData[2] = CONFIGADC & 0xff;
-        pins.i2cWriteBuffer(_addrADC, i2cData);
-        // wait for result
-        basic.pause(1);
-        // read data
-        pins.i2cWriteNumber(_addrADC, 0, NumberFormat.Int8LE, false);
-        return (pins.i2cReadNumber(_addrADC, NumberFormat.UInt16BE) >> 4);
-    }
-
-// Blocks for selecting BitBot Model
-    /**
-      * Force Model of BitBot (Determines Pins used)
-      * @param model Model of BitBot; Classic or XL
-      */
-    //% blockId="bitbot_model" block="select BitBot model%model"
-    //% weight=100
-    //% subcategory=BitBot_Model
-    export function select_model(model: BBModel): void
-    {
-        if((model==BBModel.Classic) || (model==BBModel.XL) || (model==BBModel.Auto))
-        {
-            _model = model;
-            if (_model == BBModel.Classic)
-            {
-                lMotorD0 = DigitalPin.P0;
-                lMotorD1 = DigitalPin.P8;
-                lMotorA0 = AnalogPin.P0;
-                lMotorA1 = AnalogPin.P8;
-                rMotorD0 = DigitalPin.P1;
-                rMotorD1 = DigitalPin.P12;
-                rMotorA0 = AnalogPin.P1;
-                rMotorA1 = AnalogPin.P12;
-            }
-            else
-            {
-                lMotorD0 = DigitalPin.P16;
-                lMotorD1 = DigitalPin.P8;
-                lMotorA0 = AnalogPin.P16;
-                lMotorA1 = AnalogPin.P8;
-                rMotorD0 = DigitalPin.P14;
-                rMotorD1 = DigitalPin.P12;
-                rMotorA0 = AnalogPin.P14;
-                rMotorA1 = AnalogPin.P12;
-            }
-        }
-    }
-
-    /**
-      * get Model of BitBot (Classic or XL)
-      */
-    //% blockId="bb_model" block="BitBot model"
-    //% weight=90
-    //% subcategory=BitBot_Model
-    export function getModel(): BBModel
-    {
-        if (_model == BBModel.Auto)
-        {
-            if ((pins.i2cReadNumber(_addrADC, NumberFormat.Int8LE, false) & 0xf0) == 0)
-            {
-                select_model(BBModel.Classic);
-            }
-            else
-            {
-                select_model(BBModel.XL);
-                pins.digitalWritePin(DigitalPin.P0, 0);
-            }
-        }
-        return _model;
-    }
-
-    /**
-      * Get numeric value of BitBot Model
-      *
-      * @param model BitBot Model eg: BBModel.Classic
-      */
-    //% blockId="bb_models" block=%model
-    //% weight=80
-    //% subcategory=BitBot_Model
-    export function BBModels(model: BBModel): number
-    {
-        return model;
     }
 
 // Motor Blocks
@@ -432,14 +337,14 @@ namespace bitbot
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="BBGo" block="go%direction|at speed%speed|\\%"
+    //% blockId="RobotGo" block="go%direction|at speed%speed|\\%"
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
     //% blockGap=8
-    export function go(direction: BBDirection, speed: number): void
+    export function robotGo(direction: RXDirection, speed: number): void
     {
-        move(BBMotor.Both, direction, speed);
+        motorMove(RXMotor.Both, direction, speed);
     }
 
     /**
@@ -448,16 +353,16 @@ namespace bitbot
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
       */
-    //% blockId="BBGoms" block="go%direction|at speed%speed|\\% for%milliseconds|ms"
+    //% blockId="RobotGoms" block="go%direction|at speed%speed|\\% for%milliseconds|ms"
     //% speed.min=0 speed.max=100
     //% weight=90
     //% subcategory=Motors
     //% blockGap=8
-    export function goms(direction: BBDirection, speed: number, milliseconds: number): void
+    export function robotGoms(direction: RXDirection, speed: number, milliseconds: number): void
     {
-        go(direction, speed);
+        robotGo(direction, speed);
         basic.pause(milliseconds);
-        stop(BBStopMode.Coast);
+        robotStop(RXStopMode.Coast);
     }
 
     /**
@@ -465,22 +370,22 @@ namespace bitbot
       * @param direction direction to turn
       * @param speed speed of motors (0 to 100). eg: 60
       */
-    //% blockId="BBRotate" block="spin%direction|at speed%speed|\\%"
+    //% blockId="RobotRotate" block="spin%direction|at speed%speed|\\%"
     //% speed.min=0 speed.max=100
     //% weight=80
     //% subcategory=Motors
     //% blockGap=8
-    export function rotate(direction: BBRobotDirection, speed: number): void
+    export function robotRotate(direction: RXRobotDirection, speed: number): void
     {
-        if (direction == BBRobotDirection.Left)
+        if (direction == RXRobotDirection.Left)
         {
-            move(BBMotor.Left, BBDirection.Reverse, speed);
-            move(BBMotor.Right, BBDirection.Forward, speed);
+            motorMove(RXMotor.Left, RXDirection.Reverse, speed);
+            motorMove(RXMotor.Right, RXDirection.Forward, speed);
         }
-        else if (direction == BBRobotDirection.Right)
+        else if (direction == RXRobotDirection.Right)
         {
-            move(BBMotor.Left, BBDirection.Forward, speed);
-            move(BBMotor.Right, BBDirection.Reverse, speed);
+            motorMove(RXMotor.Left, RXDirection.Forward, speed);
+            motorMove(RXMotor.Right, RXDirection.Reverse, speed);
         }
     }
 
@@ -490,31 +395,30 @@ namespace bitbot
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
       */
-    //% blockId="BBRotatems" block="spin%direction|at speed%speed|\\% for%milliseconds|ms"
+    //% blockId="RobotRotatems" block="spin%direction|at speed%speed|\\% for%milliseconds|ms"
     //% speed.min=0 speed.max=100
     //% weight=70
     //% subcategory=Motors
     //% blockGap=8
-    export function rotatems(direction: BBRobotDirection, speed: number, milliseconds: number): void
+    export function robotRotatems(direction: RXRobotDirection, speed: number, milliseconds: number): void
     {
-        rotate(direction, speed);
+        robotRotate(direction, speed);
         basic.pause(milliseconds);
-        stop(BBStopMode.Coast);
+        robotStop(RXStopMode.Coast);
     }
 
     /**
       * Stop robot by coasting slowly to a halt or braking
       * @param mode Brakes on or off
       */
-    //% blockId="BBstop" block="stop with%mode"
+    //% blockId="RobotStop" block="stop with%mode"
     //% weight=60
     //% subcategory=Motors
     //% blockGap=8
-    export function stop(mode: BBStopMode): void
+    export function robotStop(mode: RXStopMode): void
     {
-        getModel();
         let stopMode = 0;
-        if (mode == BBStopMode.Brake)
+        if (mode == RXStopMode.Brake)
             stopMode = 1;
         pins.digitalWritePin(lMotorD0, stopMode);
         pins.digitalWritePin(lMotorD1, stopMode);
@@ -528,21 +432,20 @@ namespace bitbot
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="BBMove" block="move%motor|motor(s)%direction|at speed%speed|\\%"
+    //% blockId="MotorMove" block="move%motor|motor(s)%direction|at speed%speed|\\%"
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
     //% blockGap=8
-    export function move(motor: BBMotor, direction: BBDirection, speed: number): void
+    export function move(motor: RXMotor, direction: BBDirection, speed: number): void
     {
-        getModel();
         speed = clamp(speed, 0, 100) * 10.23;
         setPWM(speed);
         let lSpeed = Math.round(speed * (100 - leftBias) / 100);
         let rSpeed = Math.round(speed * (100 - rightBias) / 100);
-        if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
+        if ((motor == RXMotor.Left) || (motor == RXMotor.Both))
         {
-            if (direction == BBDirection.Forward)
+            if (direction == RXDirection.Forward)
             {
                 pins.analogWritePin(lMotorA0, lSpeed);
                 pins.analogWritePin(lMotorA1, 0);
@@ -553,9 +456,9 @@ namespace bitbot
                 pins.analogWritePin(lMotorA1, lSpeed);
             }
         }
-        if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
+        if ((motor == RXMotor.Right) || (motor == RXMotor.Both))
         {
-            if (direction == BBDirection.Forward)
+            if (direction == RXDirection.Forward)
             {
                 pins.analogWritePin(rMotorA0, rSpeed);
                 pins.analogWritePin(rMotorA1, 0);
@@ -573,15 +476,15 @@ namespace bitbot
       * @param direction direction to turn more (if robot goes right, set this to left)
       * @param bias percentage of speed to bias with eg: 10
       */
-    //% blockId="BBBias" block="bias%direction|by%bias|\\%"
+    //% blockId="MotorBias" block="bias%direction|by%bias|\\%"
     //% bias.min=0 bias.max=80
     //% weight=40
     //% subcategory=Motors
     //% blockGap=8
-    export function BBBias(direction: BBRobotDirection, bias: number): void
+    export function motorBias(direction: RXRobotDirection, bias: number): void
     {
         bias = clamp(bias, 0, 80);
-        if (direction == BBRobotDirection.Left)
+        if (direction == RXRobotDirection.Left)
         {
             leftBias = bias;
             rightBias = 0;
@@ -593,53 +496,45 @@ namespace bitbot
         }
     }
 
-// Inbuilt FireLed Blocks
-
-    // create a FireLed band if not got one already. Default to brightness 40
-    function fire(): fireled.Band
-    {
-        if (!fireBand)
-        {
-            fireBand = fireled.newBand(DigitalPin.P13, 12);
-            fireBand.setBrightness(40);
-        }
-        return fireBand;
-    }
-
-    // update FireLeds if _updateMode set to Auto
-    function updateLEDs(): void
-    {
-        if (_updateMode == BBMode.Auto)
-            ledShow();
-    }
+// Inbuilt FireLed Blocks - Controlled via ATMega
 
     /**
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="bitbot_set_led_color" block="set all LEDs to%rgb=bb_colours"
+    //% blockId="LedsColour" block="set all LEDs to%rgb=RXColours"
     //% weight=100
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
-    export function setLedColor(rgb: number)
+    export function ledsColor(rgb: number)
     {
-        fire().setBand(rgb);
-        updateLEDs();
+        i2cData6[0] = FIREDATA;			// Register for Pixel data
+        i2cData6[1] = RXMode;			// Auto Update 1 = True
+        i2cData6[2] = NUMLEDS;			// Pixel ID or NUMLEDS for ALL
+        i2cData6[3] = rgb >> 16;		// Red
+        i2cData6[4] = (rgb >> 8) & 0xff;	// Green
+        i2cData6[5] = rgb & 0xff;		// Blue
+        pins.i2cWriteBuffer(_addrATM, i2cData6);
     }
 
     /**
       * Clear all leds.
       */
-    //% blockId="bitbot_led_clear" block="clear all LEDs"
+    //% blockId="LedClear" block="clear all LEDs"
     //% weight=90
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
     export function ledClear(): void
     {
-        fire().clearBand();
-        updateLEDs();
+        i2cData6[0] = FIREDATA;		// Register for Pixel data
+        i2cData6[1] = RXMode;		// Auto Update 1 = True
+        i2cData6[2] = NUMLEDS;		// Pixel ID or NUMLEDS for ALL
+        i2cData6[3] = 0;		// Red
+        i2cData6[4] = 0;		// Green
+        i2cData6[5] = 0;		// Blue
+        pins.i2cWriteBuffer(_addrATM, i2cData6);
     }
 
     /**
@@ -648,57 +543,56 @@ namespace bitbot
      * @param ledId position of the LED (0 to 11)
      * @param rgb RGB color of the LED
      */
-    //% blockId="bitbot_set_pixel_color" block="set LED at%ledId|to%rgb=bb_colours"
+    //% blockId="SetPixel" block="set LED at%ledId|to%rgb=RXColours"
     //% weight=80
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
-    export function setPixelColor(ledId: number, rgb: number): void
+    export function setPixel(ledId: number, rgb: number): void
     {
-        fire().setPixel(ledId, rgb);
-        updateLEDs();
+        i2cData6[0] = FIREDATA;			// Register for Pixel data
+        i2cData6[1] = RXMode;			// Auto Update 1 = True
+        i2cData6[2] = ledId;			// Pixel ID or NUMLEDS for ALL
+        i2cData6[3] = rgb >> 16;		// Red
+        i2cData6[4] = (rgb >> 8) & 0xff;	// Green
+        i2cData6[5] = rgb & 0xff;		// Blue
+        pins.i2cWriteBuffer(_addrATM, i2cData6);
     }
 
     /**
       * Shows a rainbow pattern on all LEDs.
       */
-    //% blockId="bitbot_rainbow" block="set LED rainbow"
+    //% blockId="LedRainbow" block="set LED rainbow"
     //% weight=70
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
     export function ledRainbow(): void
     {
-        fire().setRainbow();
-        updateLEDs()
     }
 
     /**
      * Shift LEDs forward and clear with zeros.
      */
-    //% blockId="bitbot_led_shift" block="shift LEDs"
+    //% blockId="LedShift" block="shift LEDs"
     //% weight=60
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
     export function ledShift(): void
     {
-        fire().shiftBand();
-        updateLEDs()
     }
 
     /**
      * Rotate LEDs forward.
      */
-    //% blockId="bitbot_led_rotate" block="rotate LEDs"
+    //% blockId="LedRotate" block="rotate LEDs"
     //% weight=50
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
     export function ledRotate(): void
     {
-        fire().rotateBand();
-        updateLEDs()
     }
 
     // Advanced blocks
@@ -707,7 +601,7 @@ namespace bitbot
      * Set the brightness of the LEDs
      * @param brightness a measure of LED brightness in 0-255. eg: 40
      */
-    //% blockId="bitbot_led_brightness" block="set LED brightness%brightness"
+    //% blockId="LedBrightness" block="set LED brightness%brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=100
     //% subcategory=FireLeds
@@ -715,8 +609,9 @@ namespace bitbot
     //% blockGap=8
     export function ledBrightness(brightness: number): void
     {
-        fire().setBrightness(brightness);
-        updateLEDs();
+        i2cData2[0] = FIREBRT;			// Register for Pixel data
+        i2cData2[1] = brightness;		// Brightness: 0 to 255
+        pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
 
     /**
@@ -743,15 +638,14 @@ namespace bitbot
     //% blockGap=8
     export function ledShow(): void
     {
-        if (btDisabled)
-            fire().updateBand();
+        pins.i2cWriteNumber(_addrATM, FIREUPDT, NumberFormat.Int8LE, false);
     }
 
     /**
       * Get numeric value of colour
       * @param color Standard RGB Led Colours eg: #ff0000
       */
-    //% blockId="bb_colours" block=%color
+    //% blockId="RXColours" block=%color
     //% blockHidden=false
     //% weight=70
     //% subcategory=FireLeds
@@ -764,7 +658,7 @@ namespace bitbot
     //% color.fieldOptions.colours='["#FF0000","#659900","#18E600","#80FF00","#00FF00","#FF8000","#D82600","#B24C00","#00FFC0","#00FF80","#FFC000","#FF0080","#FF00FF","#B09EFF","#00FFFF","#FFFF00","#8000FF","#0080FF","#0000FF","#FFFFFF","#FF8080","#80FF80","#40C0FF","#999999","#000000"]'
     //% color.fieldOptions.columns=5
     //% color.fieldOptions.className='rgbColorPicker'
-    export function BBColours(color: number): number
+    export function RXColours(color: number): number
     {
         return color;
     }
@@ -775,7 +669,7 @@ namespace bitbot
       * @param green Green value of the LED (0 to 255)
       * @param blue Blue value of the LED (0 to 255)
       */
-    //% blockId="bitbot_convertRGB" block="convert from red%red|green%green|blue%blue"
+    //% blockId="ConvertRGB" block="convert from red%red|green%green|blue%blue"
     //% weight=60
     //% subcategory=FireLeds
     //% group=Advanced
@@ -798,25 +692,22 @@ namespace bitbot
     export function buzz(flag: boolean): void
     {
         let buzz = flag ? 1 : 0;
-        if (getModel() == BBModel.Classic)
-            pins.digitalWritePin(DigitalPin.P14, buzz);
-        else
-            pins.digitalWritePin(DigitalPin.P0, buzz);
+        pins.digitalWritePin(DigitalPin.P8, buzz);
     }
 
     /**
     * Read distance from sonar module connected to accessory connector.
     * @param unit desired conversion unit
     */
-    //% blockId="bitbot_sonar" block="read sonar as%unit"
+    //% blockId="ReadSonar" block="read sonar as%unit"
     //% weight=90
     //% subcategory="Inputs & Outputs"
-    export function sonar(unit: BBPingUnit): number
+    export function readSonar(unit: RXPingUnit): number
     {
         // send pulse
-        let trig = DigitalPin.P15;
-        let echo = DigitalPin.P15;
-        let maxCmDistance = 500;
+        let trig = DigitalPin.P12;
+        let echo = DigitalPin.P12;
+        let maxDistance = 2000*37; // 2m
         let d=10;
         pins.setPull(trig, PinPullMode.PullNone);
         for (let x=0; x<10; x++)
@@ -827,14 +718,14 @@ namespace bitbot
             control.waitMicros(10);
             pins.digitalWritePin(trig, 0);
             // read pulse
-            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            d = pins.pulseIn(echo, PulseValue.High, maxDistance);
             if (d>0)
                 break;
         }
         switch (unit)
         {
-            case BBPingUnit.Centimeters: return Math.round(d / 58);
-            case BBPingUnit.Inches: return Math.round(d / 148);
+            case RXPingUnit.Centimeters: return Math.round(d / 37);
+            case RXPingUnit.Inches: return Math.round(d / 94);
             default: return d;
         }
     }
@@ -843,185 +734,30 @@ namespace bitbot
       * Read line sensor.
       * @param sensor Line sensor to read.
       */
-    //% blockId="bitbot_read_line" block="%sensor|line sensor"
+    //% blockId="ReadLine" block="%sensor|line sensor"
     //% weight=80
     //% subcategory="Inputs & Outputs"
-    export function readLine(sensor: BBLineSensor): number
+    export function readLine(sensor: RXLineSensor): number
     {
-        if (getModel() == BBModel.Classic)
-        {
-            if (sensor == BBLineSensor.Left)
-                return pins.digitalReadPin(DigitalPin.P11);
-            else
-                return pins.digitalReadPin(DigitalPin.P5);
-        }
-        else
-        {
-            let value = pins.i2cReadNumber(_addrADC, NumberFormat.Int8LE, false);
-            if (sensor == BBLineSensor.Left)
-                return value & 0x01;
-            else
-                return (value & 0x02) >> 1;
-        }
+        let reg = (sensor == RXLineSensor.Left) ? LINEL : LINER;
+        pins.i2cWriteNumber(_addrATM, reg, NumberFormat.Int8LE, false);
+        return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16BE));
     }
 
     /**
       * Read light sensor.
       * @param sensor Light sensor to read.
       */
-    //% blockId="bitbot_read_light" block="%sensor|light sensor"
+    //% blockId="ReadLight" block="%sensor|light sensor"
     //% weight=70
     //% subcategory="Inputs & Outputs"
-    export function readLight(sensor: BBLightSensor): number
+    export function readLight(sensor: RXLightSensor): number
     {
-        if (getModel() == BBModel.Classic)
-        {
-            if (sensor == BBLightSensor.Left)
-            {
-                pins.digitalWritePin(DigitalPin.P16, 0);
-                return pins.analogReadPin(AnalogPin.P2);
-            }
-            else
-            {
-                pins.digitalWritePin(DigitalPin.P16, 1);
-                return pins.analogReadPin(AnalogPin.P2);
-            }
-        }
-        else
-        {
-            if (sensor == BBLightSensor.Left)
-                return pins.analogReadPin(AnalogPin.P2);
-            else
-                return pins.analogReadPin(AnalogPin.P1);
-        }
+        let reg = (sensor == RXLightSensor.Left) ? LIGHTL : LIGHTR;
+        pins.i2cWriteNumber(_addrATM, reg, NumberFormat.Int8LE, false);
+        return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16BE));
     }
 
-    /**
-      * Adjust opening of Talon attachment
-      * @param degrees Degrees to open Talon (0 to 80). eg: 30
-      */
-    //% blockId="bitbot_set_talon" block="open talon%degrees|degrees"
-    //% weight=60
-    //% degrees.min=0 degrees.max=80
-    //% subcategory="Inputs & Outputs"
-    export function setTalon(degrees: number): void
-    {
-        degrees = clamp(degrees, 0, 80);
-        if (getModel() == BBModel.Classic)
-            pins.servoWritePin(AnalogPin.P15, degrees);
-        else
-            pins.servoWritePin(AnalogPin.P2, degrees);
-    }
-
-    /**
-      * Position Servos on P1 and P2 (XL Only)
-      * @param servo servo to control. P1 or P2
-      * @param degrees Degrees to turn servo (0 to 180). eg: 90
-      */
-    //% blockId="BBSetServo" block="set servo%servo|to%degrees|degrees"
-    //% weight=50
-    //% degrees.min=0 degrees.max=180
-    //% subcategory="Inputs & Outputs"
-    export function bbSetServo(servo: BBServos, degrees: number): void
-    {
-        degrees = clamp(degrees, 0, 180);
-        if (getModel() == BBModel.XL)
-        {
-            if (servo == BBServos.P1)
-                pins.servoWritePin(AnalogPin.P1, degrees);
-            else
-                pins.servoWritePin(AnalogPin.P2, degrees);
-        }
-    }
-
-    /**
-      * Set speed and direction for continuous rotation Servos on P1 and P2 (XL Only)
-      * @param servo servo to control. P1 or P2
-      * @param direction rotate Forward or Reverse
-      * @param speed rotational speed  (0 to 100). eg: 50
-      */
-    //% blockId="BB360Servo" block="continuous servo%servo|%direction at%speed|\\%"
-    //% weight=40
-    //% speed.min=0 speed.max=100
-    //% subcategory="Inputs & Outputs"
-    export function bb360Servo(servo: BBServos, direction: BBDirection, speed: number)
-    {
-        speed = clamp(speed, 0, 100);
-        let dir = (direction == BBDirection.Forward) ? 1 : -1;
-        let degrees = 90 + dir * speed * 90 / 100
-        if (getModel() == BBModel.XL)
-        {
-            if (servo == BBServos.P1)
-            {
-                degrees = clamp(degrees - _p1Trim, 0, 180);
-                if (speed <= _deadband)
-                    pins.digitalWritePin(DigitalPin.P1, 0);
-                else
-                    pins.servoWritePin(AnalogPin.P1, degrees);
-            }
-            else
-            {
-                degrees = clamp(degrees - _p2Trim, 0, 180);
-                if (speed <= _deadband)
-                    pins.digitalWritePin(DigitalPin.P2, 0);
-                else
-                    pins.servoWritePin(AnalogPin.P2, degrees);
-            }
-        }
-    }
-
-    /**
-      * Set deadband for continuous rotation Servos on P1 and P2 (XL Only)
-      * @param deadband speed below which servos are off eg: 5
-      */
-    //% blockId="BBServoDeadband" block="continuous servo deadband%deadband|\\%"
-    //% weight=30
-    //% deadband.min=0 deadband.max=10
-    //% subcategory="Inputs & Outputs"
-    export function bbServoDeadband(deadband: number)
-    {
-        _deadband = clamp(deadband, 0, 5);
-    }
-
-    /**
-      * Set trim for continuous rotation Servos on P1 and P2 (XL Only)
-      * @param servo servo to slow down. P1 or P2
-      * @param trim speed reduction eg: 5
-      */
-    //% blockId="BBServoTrim" block="continuous servo%servo|trim by%trim|\\%"
-    //% weight=30
-    //% trim.min=0 trim.max=50
-    //% subcategory="Inputs & Outputs"
-    export function bbServoTrim(servo: BBServos, trim: number)
-    {
-        if (servo == BBServos.P1)
-        {
-            _p1Trim = clamp(trim, 0, 50);
-            _p2Trim = 0;
-        }
-        else
-        {
-            _p1Trim = 0;
-            _p2Trim = clamp(trim, 0, 50);
-        }
-    }
-
-    /**
-      * Disable servos (Talon for both Classic & XL, P1 and P2 for XL only)
-      */
-    //% blockId="BBStopServos" block="disable all servos"
-    //% weight=20
-    //% subcategory="Inputs & Outputs"
-    export function bbStopServos(): void
-    {
-        if (getModel() == BBModel.XL)
-        {
-            pins.digitalWritePin(DigitalPin.P1, 0);
-            pins.digitalWritePin(DigitalPin.P2, 0);
-        }
-        else
-            pins.digitalWritePin(DigitalPin.P15, 0);
-    }
 
 // Addon Boards
 
