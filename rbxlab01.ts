@@ -235,7 +235,7 @@ namespace rxlab01
     let rMotorA0: AnalogPin.P15;
     let rMotorA1: AnalogPin.P16;
 
-----------------------------------------------------------
+// ----------------------------------------------------------
 // ATMega definitions
 
 // OUTPUT REGISTERS
@@ -281,7 +281,7 @@ namespace rxlab01
     const DIAL = 7
     const PSU = 8
 
-----------------------------------------------------------
+// ----------------------------------------------------------
 
     let setupATM = false;
     let i2cData2 = pins.createBuffer(2);
@@ -299,7 +299,7 @@ namespace rxlab01
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="%enable|01 Bluetooth"
+    //% block="%enable|02 Bluetooth"
     //% blockGap=8
     export function enableBluetooth(enable: RXBluetooth)
     {
