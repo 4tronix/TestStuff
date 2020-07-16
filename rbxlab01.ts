@@ -288,7 +288,7 @@ namespace rxlab01
     let setupATM = false;
     let i2cData2 = pins.createBuffer(2);
     let i2cData3 = pins.createBuffer(3);
-    let i2cData6 = pins.createBuffer(6); // used for Fireled pixel data
+    let i2cData5 = pins.createBuffer(5); // used for Fireled pixel data
 
     function clamp(value: number, min: number, max: number): number
     {
@@ -301,7 +301,7 @@ namespace rxlab01
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="%enable|05 Bluetooth"
+    //% block="%enable|06 Bluetooth"
     //% blockGap=8
     export function enableBluetooth(enable: RXBluetooth)
     {
@@ -511,13 +511,12 @@ namespace rxlab01
     //% blockGap=8
     export function ledsColor(rgb: number)
     {
-        i2cData6[0] = FIREDATA;			// Register for Pixel data
-        i2cData6[1] = (_updateMode == RXMode.Auto) ? 1: 0;			// Auto Update 1 = True
-        i2cData6[2] = NUMLEDS;			// Pixel ID or NUMLEDS for ALL
-        i2cData6[3] = rgb >> 16;		// Red
-        i2cData6[4] = (rgb >> 8) & 0xff;	// Green
-        i2cData6[5] = rgb & 0xff;		// Blue
-        pins.i2cWriteBuffer(_addrATM, i2cData6);
+        i2cData5[0] = (_updateMode == RXMode.Auto) ? 1: 0;			// Auto Update 1 = True
+        i2cData5[1] = NUMLEDS;			// Pixel ID or NUMLEDS for ALL
+        i2cData5[2] = rgb >> 16;		// Red
+        i2cData5[3] = (rgb >> 8) & 0xff;	// Green
+        i2cData5[4] = rgb & 0xff;		// Blue
+        pins.i2cWriteBuffer(_addrATM, i2cData5);
     }
 
     /**
