@@ -226,14 +226,14 @@ namespace rxlab01
     let leftBias = 0;
     let rightBias = 0;
 
-    const lMotorD0 = DigitalPin.P13;
-    const lMotorD1 = DigitalPin.P14;
-    const lMotorA0 = AnalogPin.P13;
-    const lMotorA1 = AnalogPin.P14;
-    const rMotorD0 = DigitalPin.P15;
-    const rMotorD1 = DigitalPin.P16;
-    const rMotorA0 = AnalogPin.P15;
-    const rMotorA1 = AnalogPin.P16;
+    const lMotorD0 = DigitalPin.P14;
+    const lMotorD1 = DigitalPin.P13;
+    const lMotorA0 = AnalogPin.P14;
+    const lMotorA1 = AnalogPin.P13;
+    const rMotorD0 = DigitalPin.P16;
+    const rMotorD1 = DigitalPin.P15;
+    const rMotorA0 = AnalogPin.P16;
+    const rMotorA1 = AnalogPin.P15;
 
     const NUMLEDS = 14;
 
@@ -301,7 +301,7 @@ namespace rxlab01
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="%enable|04 Bluetooth"
+    //% block="%enable|05 Bluetooth"
     //% blockGap=8
     export function enableBluetooth(enable: RXBluetooth)
     {
@@ -530,13 +530,12 @@ namespace rxlab01
     //% blockGap=8
     export function ledClear(): void
     {
-        i2cData6[0] = FIREDATA;		// Register for Pixel data
-        i2cData6[1] = (_updateMode == RXMode.Auto) ? 1: 0;		// Auto Update 1 = True
-        i2cData6[2] = NUMLEDS;		// Pixel ID or NUMLEDS for ALL
-        i2cData6[3] = 0;		// Red
-        i2cData6[4] = 0;		// Green
-        i2cData6[5] = 0;		// Blue
-        pins.i2cWriteBuffer(_addrATM, i2cData6);
+        i2cData5[0] = (_updateMode == RXMode.Auto) ? 1: 0;		// Auto Update 1 = True
+        i2cData5[1] = NUMLEDS;		// Pixel ID or NUMLEDS for ALL
+        i2cData5[2] = 0;		// Red
+        i2cData5[3] = 0;		// Green
+        i2cData5[4] = 0;		// Blue
+        pins.i2cWriteBuffer(_addrATM, i2cData5);
     }
 
     /**
@@ -552,13 +551,12 @@ namespace rxlab01
     //% blockGap=8
     export function setPixel(ledId: number, rgb: number): void
     {
-        i2cData6[0] = FIREDATA;			// Register for Pixel data
-        i2cData6[1] = (_updateMode == RXMode.Auto) ? 1: 0;			// Auto Update 1 = True
-        i2cData6[2] = ledId;			// Pixel ID or NUMLEDS for ALL
-        i2cData6[3] = rgb >> 16;		// Red
-        i2cData6[4] = (rgb >> 8) & 0xff;	// Green
-        i2cData6[5] = rgb & 0xff;		// Blue
-        pins.i2cWriteBuffer(_addrATM, i2cData6);
+        i2cData5[0] = (_updateMode == RXMode.Auto) ? 1: 0;			// Auto Update 1 = True
+        i2cData5[1] = ledId;			// Pixel ID or NUMLEDS for ALL
+        i2cData5[2] = rgb >> 16;		// Red
+        i2cData5[3] = (rgb >> 8) & 0xff;	// Green
+        i2cData5[4] = rgb & 0xff;		// Blue
+        pins.i2cWriteBuffer(_addrATM, i2cData5);
     }
 
     /**
@@ -743,7 +741,7 @@ namespace rxlab01
     {
         let reg = (sensor == RXLineSensor.Left) ? LINEL : LINER;
         pins.i2cWriteNumber(_addrATM, reg, NumberFormat.Int8LE, false);
-        return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16BE));
+        return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE));
     }
 
     /**
@@ -757,7 +755,19 @@ namespace rxlab01
     {
         let reg = (sensor == RXLightSensor.Left) ? LIGHTL : LIGHTR;
         pins.i2cWriteNumber(_addrATM, reg, NumberFormat.Int8LE, false);
-        return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16BE));
+        return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE));
+    }
+
+    /**
+      * Read Dial.
+      */
+    //% blockId="ReadDial" block="dial"
+    //% weight=60
+    //% subcategory="Inputs & Outputs"
+    export function readDial(): number
+    {
+        pins.i2cWriteNumber(_addrATM, DIAL, NumberFormat.Int8LE, false);
+        return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE));
     }
 
 
