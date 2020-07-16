@@ -301,7 +301,7 @@ namespace rxlab01
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="%enable|07 Bluetooth"
+    //% block="%enable|08 Bluetooth"
     //% blockGap=8
     export function enableBluetooth(enable: RXBluetooth)
     {
@@ -767,6 +767,18 @@ namespace rxlab01
     {
         pins.i2cWriteNumber(_addrATM, DIAL, NumberFormat.Int8LE, false);
         return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE));
+    }
+
+    /**
+      * Read Battery Voltage
+      */
+    //% blockId="Battery" block="battery (mV)"
+    //% weight=50
+    //% subcategory="Inputs & Outputs"
+    export function readDial(): number
+    {
+        pins.i2cWriteNumber(_addrATM, PSU, NumberFormat.Int8LE, false);
+        return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE) - 11) * 10;
     }
 
 
