@@ -301,7 +301,7 @@ namespace rxlab01
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="%enable|06 Bluetooth"
+    //% block="%enable|07 Bluetooth"
     //% blockGap=8
     export function enableBluetooth(enable: RXBluetooth)
     {
@@ -779,7 +779,7 @@ namespace rxlab01
     {
         if (!matrix5)
         {
-            matrix5 = fireled.newBand(DigitalPin.P15, 25);
+            matrix5 = fireled.newBand(DigitalPin.P12, 25);
             matrix5.setBrightness(40);
         }
         return matrix5;
@@ -810,7 +810,7 @@ namespace rxlab01
       * Sets all Matrix LEDs to a given color
       * @param rgb RGB color of the LED
       */
-    //% blockId="setMatrix" block="Matrix all pixels to%rgb=bb_colours"
+    //% blockId="setMatrix" block="Matrix all pixels to%rgb=RXColours"
     //% weight=90
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -831,7 +831,7 @@ namespace rxlab01
      * @param ledId linear position of the LED (0 to 24)
      * @param rgb RGB color of the LED
      */
-    //% blockId="SetMatPixel" block="Matrix LED at%ledId|to%rgb=bb_colours"
+    //% blockId="SetMatPixel" block="Matrix LED at%ledId|to%rgb=RXColours"
     //% weight=80
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -851,7 +851,7 @@ namespace rxlab01
      * @param y up/down position of the LED (0 to 4). Top is 0
      * @param rgb RGB color of the LED
      */
-    //% blockId="setArrayPixel" block="Matrix LED at x,y%x|,%y|to%rgb=bb_colours"
+    //% blockId="setArrayPixel" block="Matrix LED at x,y%x|,%y|to%rgb=RXColours"
     //% weight=70
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -892,7 +892,7 @@ namespace rxlab01
       * @param fill selct to fill in area
       */
     //% blockId="matRectangle"
-    //% block="Matrix rectangle from x,y%x1|,%y1|to x,y%x2|,%y2 in%rgb=bb_colours|fill%fill"
+    //% block="Matrix rectangle from x,y%x1|,%y1|to x,y%x2|,%y2 in%rgb=RXColours|fill%fill"
     //% subcategory=Addons
     //% group="5x5 Matrix"
     //% weight=50
@@ -924,7 +924,7 @@ namespace rxlab01
       * @param rgb colour of image
       * @param size size of pupil. Small or Large
       */
-    //% blockId="matShowEyeball" block="Matrix eyeball%pos|in%rgb=bb_colours|%size"
+    //% blockId="matShowEyeball" block="Matrix eyeball%pos|in%rgb=RXColours|%size"
     //% weight=50
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -984,7 +984,7 @@ namespace rxlab01
       * @param myImage image to show
       * @param rgb colour of image
       */
-    //% blockId="showImage" block="Matrix image%myImage|in%rgb=bb_colours"
+    //% blockId="showImage" block="Matrix image%myImage|in%rgb=RXColours"
     //% weight=40
     //% subcategory=Addons
     //% group="5x5 Matrix"
@@ -1040,7 +1040,7 @@ namespace rxlab01
     {
         if (!bitface)
         {
-            bitface = fireled.newBand(DigitalPin.P15, 17);
+            bitface = fireled.newBand(DigitalPin.P12, 17);
             bitface.setBrightness(40);
         }
         return bitface;
@@ -1065,7 +1065,7 @@ namespace rxlab01
       * @param rgb RGB color of the LED
       */
     //% blockId="setBitFace"
-    //% block="set BitFace to%rgb=bb_colours"
+    //% block="set BitFace to%rgb=RXColours"
     //% weight=100
     //% subcategory=Addons
     //% group="BitFace"
@@ -1082,7 +1082,7 @@ namespace rxlab01
       * @param rgb colour to set
       */
     //% blockId="setBitEye"
-    //% block="set BitFace%eye|eye(s) to%rgb=bb_colours"
+    //% block="set BitFace%eye|eye(s) to%rgb=RXColours"
     //% weight=90
     //% subcategory=Addons
     //% group="BitFace"
@@ -1101,7 +1101,7 @@ namespace rxlab01
       * @param rgb colour to set
       */
     //% blockId="setBitNose"
-    //% block="set BitFace nose to%rgb=bb_colours"
+    //% block="set BitFace nose to%rgb=RXColours"
     //% weight=80
     //% subcategory=Addons
     //% group="BitFace"
@@ -1118,7 +1118,7 @@ namespace rxlab01
       * @param rgb colour to set
       */
     //% blockId="setBitMouth"
-    //% block="set BitFace mouth to%mouth|with%rgb=bb_colours"
+    //% block="set BitFace mouth to%mouth|with%rgb=RXColours"
     //% weight=70
     //% subcategory=Addons
     //% group="BitFace"
