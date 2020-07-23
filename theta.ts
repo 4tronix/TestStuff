@@ -179,7 +179,7 @@ enum RXMode
 /**
   * Pre-Defined LED colours
   */
-enum BBColors
+enum RXColors
 {
     //% block=red
     Red = 0xff0000,
@@ -301,7 +301,7 @@ namespace theta
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="%enable|11 Bluetooth"
+    //% block="%enable|12 Bluetooth"
     //% blockGap=8
     export function enableBluetooth(enable: RXBluetooth)
     {
