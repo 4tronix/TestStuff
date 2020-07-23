@@ -298,8 +298,9 @@ namespace cubebit {
       * @param axis axis (xy,xz,yz) of the plane
       * @param rgb RGB colour of the pixels
       */
-    //% blockId="cbShowChar" block="show 03 %digit|on%plane|on axis%axis=CBAxis|in %rgb=FireColours"
+    //% blockId="cbShowChar" block="show 04 %digit|on%plane|on axis%axis=CBAxis|in %rgb=FireColours"
     //% weight=20
+    //% inlineInputMode=inline
     export function showChar(digit: number, plane: number, axis: CBAxis, rgb: number): void
     {
         let bufIndex = digit * 5;
@@ -316,6 +317,7 @@ namespace cubebit {
                         nCube.setPixel(pixelMap(plane,y,z), 0);
                     mask << 1;
                 }
+                bufIndex++;
             }
         }
         else if (axis == CBAxis.XZ)
@@ -330,6 +332,7 @@ namespace cubebit {
                     else
                         nCube.setPixel(pixelMap(x,plane,z), 0);
                 }
+                bufIndex++;
             }
         }
         else if (axis == CBAxis.XY)
@@ -344,6 +347,7 @@ namespace cubebit {
                     else
                         nCube.setPixel(pixelMap(x,y,plane), 0);
                 }
+                bufIndex++;
             }
         }
         updateLEDs();
