@@ -1,7 +1,7 @@
 {
-    "name": "RbxLab01",
+    "name": "RbxTheta",
     "version": "0.0.1",
-    "description": "Microsoft MakeCode package for robot",
+    "description": "Microsoft MakeCode package for RobotixLab Theta Robot",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -10,7 +10,7 @@
     },
     "files": [
         "README.md",
-        "rbxlab01.ts"
+        "rbxtheta.ts"
     ],
     "testFiles": [],
     "public": true,
