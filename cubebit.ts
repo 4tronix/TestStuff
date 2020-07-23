@@ -61,17 +61,17 @@ namespace cubebit {
     // just numbers for now 0..9, plus colon
     let font: Buffer
     font = hex`
-    0c 12 12 12 0c
-    04 0c 04 04 0e
-    1c 02 0c 10 1e
-    1e 02 04 12 0c
-    06 0a 12 1f 02
-    1f 10 1e 01 1e
-    02 04 0e 11 0e
-    1f 02 04 08 10
-    0e 11 0e 11 0e
-    0e 11 0e 04 08
-    00 08 00 08 00`;
+    0c1212120c
+    040c04040e
+    1c020c101e
+    1e0204120c
+    060a121f02
+    1f101e011e
+    02040e110e
+    1f02040810
+    0e110e110e
+    0e110e0408
+    0008000800`;
 
 
     let nCube: fireled.Band;
@@ -298,7 +298,7 @@ namespace cubebit {
       * @param axis axis (xy,xz,yz) of the plane
       * @param rgb RGB colour of the pixels
       */
-    //% blockId="cbShowChar" block="show 05 %digit|on%plane|on axis%axis=CBAxis|in %rgb=FireColours"
+    //% blockId="cbShowChar" block="show 06 %digit|on%plane|on axis%axis=CBAxis|in %rgb=FireColours"
     //% weight=20
     //% inlineInputMode=inline
     export function showChar(digit: number, plane: number, axis: CBAxis, rgb: number): void
@@ -316,7 +316,7 @@ namespace cubebit {
                         nCube.setPixel(pixelMap(plane,y,z), rgb);
                     else
                         nCube.setPixel(pixelMap(plane,y,z), 0);
-                    mask << 1;
+                    mask = mask << 1;
                 }
                 bufIndex++;
             }
@@ -332,6 +332,7 @@ namespace cubebit {
                         nCube.setPixel(pixelMap(x,plane,z), rgb);
                     else
                         nCube.setPixel(pixelMap(x,plane,z), 0);
+                    mask = mask << 1;
                 }
                 bufIndex++;
             }
@@ -347,6 +348,7 @@ namespace cubebit {
                         nCube.setPixel(pixelMap(x,y,plane), rgb);
                     else
                         nCube.setPixel(pixelMap(x,y,plane), 0);
+                    mask = mask << 1;
                 }
                 bufIndex++;
             }
