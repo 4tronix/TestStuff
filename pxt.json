@@ -1,18 +1,19 @@
 {
-    "name": "Theta",
-    "version": "0.0.1",
-    "description": "Microsoft MakeCode package for RobotixLab Theta Robot",
+    "name": "CubeBit",
+    "version": "1.1.0",
+    "description": "Microsoft MakeCode package for 4tronix CubeBit",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "fireled": "github:4tronix/FireLedsBase#0.1.4",
-        "firescreen": "github:4tronix/FireScreen#0.0.5"
+        "fireled": "github:4tronix/FireLedsBase#0.1.4"
     },
     "files": [
         "README.md",
-        "theta.ts"
+        "cubebit.ts"
     ],
-    "testFiles": [],
-    "public": true,
-    "yotta": {}
+    "testFiles": [
+        "tests.ts"
+    ],
+    "yotta": {},
+    "public": true
 }

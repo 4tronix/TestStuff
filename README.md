@@ -1,129 +1,41 @@
-# MakeCode Package for Robotixlab Theta robot
+# MakeCode Package for 4tronix Cube:Bit Magical RGB Cubes of Awesome
 
-This library provides a Microsoft Makecode package for Robotixlab Theta robot, see
-https://4tronix.co.uk/theta/
+Helper routines for using the neopixels in the Cube:Bit range of Cubes https://4tronix.co.uk/cubebit/.
 
-## Driving the robot    
-The simplest way to drive the robot is by using the `go(...)` or `goms(...)` blocks.
-With each of these blocks you specify Forward or Reverse, and a speed from 0 to 100.
-Both motors will be driven at the selected speed and direction.
+## Defining the Cube
+The first thing you should do is create a Cube object with the required dimensions per side. Use the block:
 ```blocks
-// Move forward at speed 60 forever
-theta.go(RXDirection.Forward, 60)
-
-// Move backward at speed 100 for 2000 ms
-theta.goms(RXDirection.Reverse, 100, 2000)
-```
-You can also spin/rotate the robot with the `rotate(...)` or `rotatems(...)` blocks
-```blocks
-// Rotate left at speed 70
-theta.rotate(RXRobotDirection.Left, 70)
-
-// Rotate right at speed 50 for 400ms
-theta.rotatems(RXRobotDirection.Right, 50, 400)
-```   
-
-## Stopping
-When the motor speed is set to zero then it stops. However, we can also use the motor itself to create a reverse generated current to brake much quicker.
-This helps when aiming for more accurate manoeuvres. Use the `stop(...)` command to stop with braking, or coast to a halt.
-```blocks
-theta.stop(RXStopMode.Coast) # slowly coast to a stop
-theta.stop(RXStopMode.Brake) # rapidly brake
+create cube:bit on pin0 with side <3/4/5/6/7/8>
 ```
 
-## Driving the motors individually
-
-If you want more fine grain control of individal motors, use `theta.move(...)` to drive each motor either forward or reverse.
-You can specify the direction (Forward or Reverse) and speed between 0 and 100.
-If the left motor turns slower than the right motor, the robot will turn to the left
+Then set the brightness to be used from 0 to 255. If this block is not used, then the brightness is set to 40. We strongly recommend keeping this at less than 100. All values sent to the LEDs after this command will be scaled down to fit in this maximum brightness level.
 ```blocks
-// Drive both motors forward at speed 60. Equivalent to theta.go(RXDirection.Forward, 60)
-theta.move(RXMotor.Both, RXDirection.Forward, 60)
-
-// Drive left motor in reverse at speed 30
-theta.move(RXMotor.Left, RXDirection.Reverse, 30)
-
-// Drive forward in a leftward curve
-theta.move(RXMotor.Left, RXDirection.Forward, 40)
-theta.move(RXMotor.Right, RXDirection.Forward, 70)
+set cube:bit brightness to <0..255>
 ```
 
-## Making the Robot Drive Straight
-
-The small DC motors used in the theta and many other small robots are not guaranteed to go at the same speed as each other.
-This can cause the robot to veer off the straight line, either to left or to right, even when both motors are programmed to go
-at the same speed.
-We can partially correct for this by adding a direction bias to the motor speed settings.
-If your robot is veering to the right, then set the bias to the left.
-Conversely, if your robot is turning to the left, then set the bias to the right.
-It varies with speed and battery condition etc, but an approximation is that a 10% bias will result in about 15cm (6 inches)
-change of course over about 2m (6 feet).
-
+## Using Cube:Bit Pixels
+Each pixel can be addressed by using the pixel ID which is a number from 0 to the number of pixels in the cube minus one. eg. a 3x3x3 cube has 27 pixels so the ID can be 0 to 26, 4x4x4 has 64 (ID 0 to 63) and 5x5x5 has 125 (ID 0 to 124)
 ```blocks
-// eg. robot leaves straight line to the right by about 10cm over 2m, so bias it to the left by 5%
-theta.MotorBias(RXRobotDirection.Left, 5)
-
-// eg. robot leaves straight line to left by 25cm, so bias it to the right by 15%
-theta.MotorBias(RXRobotDirection.Right, 15)
+set pixel color at ID to <colour>
+```
+The colour value is a number. There are some pre-define colours (eg. Red, Yellow, etc) or you can put in a simple number, or you can define separate Red, Green and Blue values using the map colour block
+```blocks
+convert from red, green, blue
 ```
 
-## Read sonar value
-
-If you have mounted the optional sonar sensor for the theta you can
-also use the `theta.sonar(..)` function to read the distance to obstacles.
+If you want to specify the x,y,z position of the pixel then use the mapping block to create the pixel ID
 ```blocks
-// Read sonar values
-let v1 = theta.sonar(RXPingUnit.MicroSeconds);
-let v2 = theta.sonar(RXPingUnit.Centimeters);
-let v3 = theta.sonar(RXPingUnit.Inches);
+map from x y z
 ```
 
-## FireLed Functions
-
-The Theta has 14 FireLeds fitted.
-By default, the FireLeds are automatically updated after every setting. This makes it easy to understand.
-However, it can slow down some effects so there is a block provided to switch the update mode to
-Manual or Automatic:
-
+If you have set the Manual update mode, then whenever changing the colour of pixels or clearing them, or rotating them, you will need to display the result afterwards. Use the show changes block for this. The default update mode is automatic so any changes to the LED values will immediately appear on the LEDs
 ```blocks
-// Set all FireLeds to Green (hard-coded RGB color)
-theta.setLedColor(0x00FF00)
-// Set all FireLeds to Green (built-in colour selection)
-theta.setLedColor(RXColors.Green)
-
-// Clear all leds
-theta.ledClear()
-
-// Set the FireLed at position 0 to 13 to selected colour.
-// eg. set Fireled 3 to Red
-theta.setPixelColor(3, 0xff0000)
-
-// Set all the FireLeds to Rainbow (uses the colour wheel from Red to Purple)
-theta.ledRainbow()
-
-// Shift FireLeds up one place, blanking the first FireLed
-theta.ledShift()
-
-// Rotate FireLeds by shifting up one and replace the first with the last
-theta.ledRotate()
+show Cube:Bit changes
 ```
 
-There are some more advanced blocks that allow you to select colours using separate RGB values
-and select the brightness of the FireLeds.
-The brightness is set to 40 by default, but can go as high as 255.
-You should be careful not to look directly at them when they are bright as they can damage eyes.
+You can also set a whole plane of pixels to the same colour. eg. set the top slice to blue, or the left side to green. Use the set plane block:
 ```blocks
-// Switch FireLeds Update Mode to Manual or Automatic
-theta.setUpdateMode(RXMode.Manual);
-theta.setUpdateMode(RXMode.Auto);
-
-// Select colour from separate Red, Green and Blue values
-// Each of the Red, Green and Blue values can range from 0 to 255
-// This example produces a pale blue colour
-let myColour = theta.convertRGB(50, 100, 200);
-
-// Set brightness of FireLeds to 100
-theta.ledBrightness(100);
+set plane <number> on axis <xy, xz, yz> to <colour>
 ```
 
 ## Supported targets
