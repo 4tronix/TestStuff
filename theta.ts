@@ -206,9 +206,9 @@ enum BBColors
 /**
  * Custom blocks
  */
-//% weight=50 color=#e7660b icon="\uf35b"
+//% weight=50 color=#e7660b icon="\uf139"
 //% groups='["New style blocks","Basic","Advanced","Special","Ultrasonic","Line Sensor","5x5 Matrix","BitFace","OLED 128x64","Old style blocks"]'
-namespace rbxtheta
+namespace theta
 {
     let fireBand: fireled.Band;
     let _updateMode = RXMode.Auto;
@@ -301,7 +301,7 @@ namespace rbxtheta
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="%enable|10 Bluetooth"
+    //% block="%enable|11 Bluetooth"
     //% blockGap=8
     export function enableBluetooth(enable: RXBluetooth)
     {
