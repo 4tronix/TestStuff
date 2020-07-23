@@ -298,7 +298,7 @@ namespace cubebit {
       * @param axis axis (xy,xz,yz) of the plane
       * @param rgb RGB colour of the pixels
       */
-    //% blockId="cbShowChar" block="show 02 %digit|on%plane|on axis%axis=CBAxis|in %rgb=FireColours"
+    //% blockId="cbShowChar" block="show 03 %digit|on%plane|on axis%axis=CBAxis|in %rgb=FireColours"
     //% weight=20
     export function showChar(digit: number, plane: number, axis: CBAxis, rgb: number): void
     {
@@ -310,7 +310,7 @@ namespace cubebit {
                 let mask = 0b0000001;
                 for (let z=0; z<cubeHeight; z++)
                 {
-                    if ((font[bufIndex+y] & mask) != 0)
+                    if ((font[bufIndex + y] & mask) != 0)
                         nCube.setPixel(pixelMap(plane,y,z), rgb);
                     else
                         nCube.setPixel(pixelMap(plane,y,z), 0);
@@ -325,7 +325,7 @@ namespace cubebit {
                 let mask = 0b0000001;
                 for (let z=0; z<cubeHeight; z++)
                 {
-                    if ((font[bufIndex+y] & mask) != 0)
+                    if ((font[bufIndex + x] & mask) != 0)
                         nCube.setPixel(pixelMap(x,plane,z), rgb);
                     else
                         nCube.setPixel(pixelMap(x,plane,z), 0);
@@ -339,7 +339,7 @@ namespace cubebit {
                 let mask = 0b0000001;
                 for (let y=0; y<cubeSide; y++)
                 {
-                    if ((font[bufIndex+y] & mask) != 0)
+                    if ((font[bufIndex + x] & mask) != 0)
                         nCube.setPixel(pixelMap(x,y,plane), rgb);
                     else
                         nCube.setPixel(pixelMap(x,y,plane), 0);
