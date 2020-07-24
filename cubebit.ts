@@ -361,15 +361,14 @@ namespace cubebit {
       * @param rgb RGB colour of the pixels
       * @param waitms number of ms between digits. eg: 500
       */
-    //% blockId="cbShowString" block="show 10 %txt|on plane%plane|axis%axis=CBAxis|in %rgb=FireColours|delay%delay|ms"
+    //% blockId="cbShowString" block="show 11 %txt|on plane%plane|axis%axis=CBAxis|in %rgb=FireColours|delay%delay|ms"
     //% weight=10
     //% inlineInputMode=inline
     export function showString(txt: string, waitms: number, plane: number, axis: CBAxis, rgb: number): void
     {
-        let c: number;
         for (let n = 0; n < txt.length; n++)
         {
-            c = txt.charAt(n) - 48;
+            let c = txt.charCodeAt(n) - 48;
             if (c == 16)
                 c = 10;	// set to colon
             showChar(c, plane, axis, rgb);
