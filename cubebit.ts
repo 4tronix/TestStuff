@@ -359,12 +359,12 @@ namespace cubebit {
       * @param plane number of plane from 0 to size of cube
       * @param axis axis (xy,xz,yz) of the plane
       * @param rgb RGB colour of the pixels
-      * @param delay number of ms between digits. eg: 500
+      * @param waitms number of ms between digits. eg: 500
       */
-    //% blockId="cbShowString" block="show 08 %txt|on plane%plane|axis%axis=CBAxis|in %rgb=FireColours|delay%delay|ms"
+    //% blockId="cbShowString" block="show 09 %txt|on plane%plane|axis%axis=CBAxis|in %rgb=FireColours|delay%delay|ms"
     //% weight=10
     //% inlineInputMode=inline
-    export function showString(txt: string, delay: number, plane: number, axis: CBAxis, rgb: number, delay: number): void
+    export function showString(txt: string, waitms: number, plane: number, axis: CBAxis, rgb: number): void
     {
         for (let n = 0; n < txt.length; n++)
         {
@@ -372,7 +372,7 @@ namespace cubebit {
             if (c == 16)
                 c = 10;	// set to colon
             showChar(c, plane, axis, rgb);
-            basic.pause(delay);
+            basic.pause(waitms);
         }
     }
 
