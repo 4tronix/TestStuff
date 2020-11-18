@@ -1,41 +1,89 @@
-# MakeCode Package for 4tronix Cube:Bit Magical RGB Cubes of Awesome
+# Makecode Extension for 4tronix BitCommander
 
-Helper routines for using the neopixels in the Cube:Bit range of Cubes https://4tronix.co.uk/cubebit/.
+This library provides a Microsoft Makecode extension for 4tronix Bit:Commander, see
+https://4tronix.co.uk/bitcommander/.
 
-## Defining the Cube
-The first thing you should do is create a Cube object with the required dimensions per side. Use the block:
-```blocks
-create cube:bit on pin0 with side <3/4/5/6/7/8>
+## Reading the buttons
+
+There are 5 buttons that can be checked: `Red`, `Yellow`, `Green` and `Blue` on the left and the `Joystick` on the right can be pressed as well
+If the button is pressed it will return a '1'. If it isn't pressed, then it returns a '0'
+The following code checks the Green button and does something if it is pressed
+
+```
+// Check Green button
+if (bitcommander.readButton(BCButtons.Green) == 1) {
+    ... do something ...
+}
 ```
 
-Then set the brightness to be used from 0 to 255. If this block is not used, then the brightness is set to 40. We strongly recommend keeping this at less than 100. All values sent to the LEDs after this command will be scaled down to fit in this maximum brightness level.
-```blocks
-set cube:bit brightness to <0..255>
+## Reading the position of the Dial
+
+When writing code, be aware that the Dial control input is shared with the speaker output and so the input range is limited to around 0 - 850 instead of the normal 0 - 1023. 
+Use the readDial block to get the value (0 to ~850) into a variable, or test the value directly
+
+```
+// Read the Dial value into the myDial variable
+myDial = bitcommander.readDial()
+if (myDial > 500) {
+   ... do something ...
+}
+
+or this is equivalent:
+
+if (bitcommander.readDial() > 500) {
+   ... do something ...
+}
 ```
 
-## Using Cube:Bit Pixels
-Each pixel can be addressed by using the pixel ID which is a number from 0 to the number of pixels in the cube minus one. eg. a 3x3x3 cube has 27 pixels so the ID can be 0 to 26, 4x4x4 has 64 (ID 0 to 63) and 5x5x5 has 125 (ID 0 to 124)
-```blocks
-set pixel color at ID to <colour>
+## Reading the position of the Joystick
+
+Both the X and Y axes of the joystick have a range 0 to 1023. Specify the axis as part of the function call.
+Use the readJoystick block to get the value.
+
 ```
-The colour value is a number. There are some pre-define colours (eg. Red, Yellow, etc) or you can put in a simple number, or you can define separate Red, Green and Blue values using the map colour block
-```blocks
-convert from red, green, blue
+// Read the Joystick X axis value in to the xAxis variable
+xAxis = bitcommander.readJoystick(BCJoystick.X)
 ```
 
-If you want to specify the x,y,z position of the pixel then use the mapping block to create the pixel ID
+## Playing music
+
+There is a small speaker on Bit:Commander wired to Pin 0, which is the default for playing music files. Use the standard Music blocks for this:
+
 ```blocks
-map from x y z
+// Play The Entertainer music clip
+music.beginMelody(music.builtInMelody(Melodies.Entertainer), MelodyOptions.Once)
 ```
 
-If you have set the Manual update mode, then whenever changing the colour of pixels or clearing them, or rotating them, you will need to display the result afterwards. Use the show changes block for this. The default update mode is automatic so any changes to the LED values will immediately appear on the LEDs
-```blocks
-show Cube:Bit changes
-```
 
-You can also set a whole plane of pixels to the same colour. eg. set the top slice to blue, or the left side to green. Use the set plane block:
+
+## Fireled helpers
+
+The Bit:Commander has 6 Fireleds
+The default update mode is automatic so LEDs will be updated immediately after changes
+
 ```blocks
-set plane <number> on axis <xy, xz, yz> to <colour>
+// Set all leds to Red
+bitcommander.bitcommander.setLedColor(0xff0000);
+
+// Clear all leds
+bitcommander.ledClear();
+
+// Set Fireled at position 1 to Green
+bitcommander.setPixelColor(0, 0x00ff00);
+
+// Show rainbow across all Fireleds (Red..Violet)
+bitcommander.ledRainbow();
+
+// Show led rainbow and shift
+bitcommander.ledRainbow();
+bitcommander.ledhift();
+
+// Show led rainbow and rotate
+bitcommander.ledRainbow();
+bitcommander.ledRotate();
+
+// Set brightness of leds
+bitcommander.ledBrightness(100);
 ```
 
 ## Supported targets
@@ -43,5 +91,4 @@ set plane <number> on axis <xy, xz, yz> to <colour>
 * for PXT/microbit
 
 ## License
-
 MIT

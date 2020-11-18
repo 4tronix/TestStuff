@@ -1,7 +1,7 @@
 {
-    "name": "CubeBit",
+    "name": "bitcommander",
     "version": "1.1.0",
-    "description": "Microsoft MakeCode package for 4tronix CubeBit",
+    "description": "Microsoft MakeCode package for 4tronix BitCommander",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -9,9 +9,14 @@
     },
     "files": [
         "README.md",
-        "cubebit.ts"
+        "bitcommander.ts",
+        "main.cpp",
+        "shims.d.ts",
+        "enums.d.ts"
     ],
-    "testFiles": [],
+    "testFiles": [
+        "tests.ts"
+    ],
     "yotta": {},
     "public": true
 }
