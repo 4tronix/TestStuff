@@ -19,9 +19,9 @@ enum BCPins {
  */
 enum BCEvents {
     //% block="down"
-    Down = DAL.MICROBIT_BUTTON_EVT_RISE,
+    Down = DAL.MICROBIT_BUTTON_EVT_UP,
     //% block="up"
-    Up = DAL.MICROBIT_BUTTON_EVT_FALL
+    Up = DAL.MICROBIT_BUTTON_EVT_DOWN
 }
 
 /**
