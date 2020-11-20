@@ -166,11 +166,11 @@ enum mbEvents {
  */
 enum mbPins {
     //% block="left"
-    leftLine = <number>DAL.MICROBIT_ID_IO_P0,
+    leftLine = 7,
     //% block="centre"
-    centreLine = <number>DAL.MICROBIT_ID_IO_P1,
+    centreLine = 8,
     //% block="right"
-    rightLine = <number>DAL.MICROBIT_ID_IO_P2
+    rightLine = 9
 }
 
 
@@ -856,7 +856,7 @@ namespace minibit
       * Runs when line sensor finds or loses the black line
       */
     //% weight=80
-    //% blockId=bc_event block="on %sensor| line %event"
+    //% blockId=bc_event block="on 02 %sensor|line%event"
     //% subcategory=Sensors
     //% group="Line Sensor"
     //% blockGap=8
