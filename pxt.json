@@ -1,16 +1,17 @@
 {
-    "name": "bitcommander",
-    "version": "1.1.1",
-    "description": "Microsoft MakeCode package for 4tronix BitCommander",
+    "name": "MiniBit",
+    "version": "1.1.3",
+    "description": "Microsoft MakeCode package for 4tronix MiniBit",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "fireled": "github:4tronix/FireLedsBase#0.1.4"
+        "fireled": "github:4tronix/FireLedsBase",
+        "firescreen": "github:4tronix/FireScreen#0.0.5"
     },
     "files": [
         "README.md",
-        "bitcommander.ts"
-    ],
+        "minibit.ts"
+     ],
     "testFiles": [
         "tests.ts"
     ],
