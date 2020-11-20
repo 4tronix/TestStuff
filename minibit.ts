@@ -166,11 +166,11 @@ enum mbEvents {
  */
 enum mbPins {
     //% block="left"
-    leftLine = 7,
+    leftLine = DigitalPin.P0,
     //% block="centre"
-    centreLine = 8,
+    centreLine = DigitalPin.P1,
     //% block="right"
-    rightLine = 9
+    rightLine = DigitalPin.P2
 }
 
 
@@ -252,6 +252,20 @@ namespace minibit
             pins.setEvents(DigitalPin.P2, PinEventType.Edge);
             _initEvents = false;
         }
+    }
+
+    /**
+      * Runs when line sensor finds or loses the black line
+      */
+    //% weight=80
+    //% blockId=bc_event block="on 03 %sensor|line%event"
+    //% subcategory=Sensors
+    //% group="Line Sensor"
+    //% blockGap=8
+    export function onEvent(sensor: mbPins, event: mbEvents, handler: Action)
+    {
+        initEvents();
+        control.onEvent(<number>sensor, <number>event, handler);
     }
 
 // Block to enable Bluetooth and disable FireLeds.
@@ -850,20 +864,6 @@ namespace minibit
             return pins.digitalReadPin(DigitalPin.P1)===1;
         else
             return pins.digitalReadPin(DigitalPin.P2)===1;
-    }
-
-    /**
-      * Runs when line sensor finds or loses the black line
-      */
-    //% weight=80
-    //% blockId=bc_event block="on 02 %sensor|line%event"
-    //% subcategory=Sensors
-    //% group="Line Sensor"
-    //% blockGap=8
-    export function onEvent(sensor: mbPins, event: mbEvents, handler: Action)
-    {
-        initEvents();
-        control.onEvent(<number>sensor, <number>event, handler);
     }
 
 // Addon Boards
