@@ -258,7 +258,7 @@ namespace minibit
       * Runs when line sensor finds or loses the black line
       */
     //% weight=80
-    //% blockId=bc_event block="on 03 %sensor|line%event"
+    //% blockId=bc_event block="on %sensor|line%event"
     //% subcategory=Sensors
     //% group="Line Sensor"
     //% blockGap=8

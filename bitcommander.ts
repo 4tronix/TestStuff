@@ -3,15 +3,15 @@
  */
 enum BCPins {
     //% block="red"
-    Red = DAL.MICROBIT_ID_IO_P12,
+    Red = DigitalPin.P12,
     //% block="yellow"
-    Yellow = DAL.MICROBIT_ID_IO_P16,
+    Yellow = DigitalPin.P16,
     //% block="green"
-    Green = DAL.MICROBIT_ID_IO_P14,
+    Green = DigitalPin.P14,
     //% block="blue"
-    Blue = DAL.MICROBIT_ID_IO_P15,
+    Blue = DigitalPin.P15,
     //% block="joystick"
-    Joystick = DAL.MICROBIT_ID_IO_P8
+    Joystick = DigitalPin.P8
 }
 
 /**
@@ -122,7 +122,7 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bcOnEvent block="on button%button|%event"
+    //% blockId=bcOnEvent block="on 01 button%button|%event"
     //% subcategory=Inputs
     export function onEvent(button: BCPins, event: BCEvents, handler: Action)
     {
