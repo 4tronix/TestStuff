@@ -1,6 +1,6 @@
 {
     "name": "bitcommander",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "Microsoft MakeCode package for 4tronix BitCommander",
     "license": "MIT",
     "dependencies": {
@@ -9,8 +9,11 @@
     },
     "files": [
         "README.md",
-        "bitcommander.ts"
-    ],
+        "bitcommander.ts",
+        "main.cpp",
+        "shims.d.ts",
+        "enums.d.ts"
+        ],
     "testFiles": [
         "tests.ts"
     ],
