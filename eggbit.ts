@@ -1,65 +1,65 @@
 ﻿/**
  * Pins used to generate events
  */
-enum BCPins
+enum EBPins
 {
     //% block="red"
     Red = DigitalPin.P12,
-    //% block="yellow"
-    Yellow = DigitalPin.P16,
     //% block="green"
-    Green = DigitalPin.P14,
+    Green = DigitalPin.P8,
+    //% block="yellow"
+    Yellow = DigitalPin.P14,
     //% block="blue"
-    Blue = DigitalPin.P15,
-    //% block="joystick"
-    Joystick = DigitalPin.P8
+    Blue = DigitalPin.P16
 }
 
 /**
  * Button events
  */
-enum BCEvents
+enum EBEvents
 {
     //% block="down"
-    Down = DAL.MICROBIT_BUTTON_EVT_UP,
+    Press = DAL.MICROBIT_BUTTON_EVT_UP,
     //% block="up"
-    Up = DAL.MICROBIT_BUTTON_EVT_DOWN
+    Release = DAL.MICROBIT_BUTTON_EVT_DOWN
 }
 
 /**
   * Enumeration of buttons
   */
-enum BCButtons
+enum EBButtons
 {
     //% block="red"
     Red,
-    //% block="yellow"
-    Yellow,
     //% block="green"
     Green,
+    //% block="yellow"
+    Yellow,
     //% block="blue"
-    Blue,
-    //% block="joystick"
-    Joystick
+    Blue
 }
 
+
 /**
-  * Enumeration of joystick axes
+  * Enumeration of mouth parts
   */
-enum BCJoystick
+enum EBMouth
 {
-    //% block="x"
-    X,
-    //% block="y"
-    Y
+    //% block="upper"
+    Upper,
+    //% block="middle"
+    Middle,
+    //% block="lower"
+   Lower
 }
+
 
 /**
   * Update mode for LEDs
   * setting to Manual requires show LED changes blocks
   * setting to Auto will update the LEDs everytime they change
   */
-enum BCMode
+enum EBMode
 {
     Manual,
     Auto
@@ -68,7 +68,7 @@ enum BCMode
 /**
   * Pre-Defined LED colours
   */
-enum BCColors
+enum EBColors
 {
     //% block=red
     Red = 0xff0000,
@@ -92,24 +92,37 @@ enum BCColors
     Black = 0x000000
 }
 
+/**
+ * Ping unit for Ultrasonic sensor. (Not on EggBit Ovoid)
+ */
+enum ebPingUnit
+{
+    //% block="cm"
+    Centimeters,
+    //% block="inches"
+    Inches,
+    //% block="μs"
+    MicroSeconds
+}
+
 
 /**
  * Custom blocks
  */
 //% weight=10 color=#e7660b icon="\uf11b"
-namespace bitcommander
+namespace eggbit
 {
     let band: fireled.Band;
     let ledPin = DigitalPin.P13;
-    let ledCount = 6;
-    let _updateMode = BCMode.Auto;
+    let ledCount = 9;
+    let _updateMode = EBMode.Auto;
     let btEnabled = false;
 
     let _initEvents = true;
 
-// Inputs. Buttons, Dial and Joystick
+// General. Buttons, Ultrasonic, Mouth LEDs
 
-    //% shim=bitcommander::init
+    //% shim=eggbit::init
     function init(): void
     {
         return;
@@ -119,9 +132,9 @@ namespace bitcommander
       * Registers event code
       */
     //% weight=90
-    //% blockId=bcOnEvent block="on 03 button%button|%event"
-    //% subcategory=Inputs
-    export function onEvent(button: BCPins, event: BCEvents, handler: Action)
+    //% blockId=ebOnEvent block="on 01 button%button|%event"
+    //% subcategory=General
+    export function onEvent(button: EBPins, event: EBEvents, handler: Action)
     {
         init();
         control.onEvent(<number>button, <number>event, handler); // register handler
@@ -131,48 +144,73 @@ namespace bitcommander
       * check button states
       * @param buttonID Button to check
       */
-    //% blockId="bcCheckButton" block="button %buttonID|pressed"
-    //% weight=85
-    //% subcategory=Inputs
-    export function readButton(buttonID: BCButtons): boolean
+    //% blockId="ebCheckButton" block="button %buttonID|pressed"
+    //% weight=100
+    //% subcategory=General
+    export function readButton(buttonID: EBButtons): boolean
     {
 	switch (buttonID)
 	{
-            case BCButtons.Red: return pins.digitalReadPin(DigitalPin.P12)==1; break;
-            case BCButtons.Yellow: return pins.digitalReadPin(DigitalPin.P16)==1; break;
-            case BCButtons.Green: return pins.digitalReadPin(DigitalPin.P14)==1; break;
-            case BCButtons.Blue: return pins.digitalReadPin(DigitalPin.P15)==1; break;
-            case BCButtons.Joystick: return pins.digitalReadPin(DigitalPin.P8)==1; break;
+            case EBButtons.Red: return pins.digitalReadPin(DigitalPin.P12)==1; break;
+            case EBButtons.Green: return pins.digitalReadPin(DigitalPin.P8)==1; break;
+            case EBButtons.Yellow: return pins.digitalReadPin(DigitalPin.P14)==1; break;
+            case EBButtons.Blue: return pins.digitalReadPin(DigitalPin.P16)==1; break;
 	    default: return false;
 	}
     }
 
     /**
-      * Read dial
+      * set mouth parts on/off
+      * @param mouthPart Section of mouth to turn on/off
+      * @param mode Select On or Off
       */
-    //% blockId="bcReadDial" block="dial"
-    //% weight=90
-    //% subcategory=Inputs
-    export function readDial( ): number
+    //% blockId="ebSetMouth" block="button %buttonID|pressed"
+    //% weight=100
+    //% subcategory=General
+    export function setMouth(mouthPart: EBMouth, mode: boolean)
     {
-        return pins.analogReadPin(AnalogPin.P0);
+	switch (mouthPart)
+	{
+            case EBMouth.Upper: pins.digitalWritePin(DigitalPin.P0, mode?1:0); break;
+            case EBMouth.Middle: pins.digitalWritePin(DigitalPin.P1, mode?1:0); break;
+            case EBMouth.Lower: pins.digitalWritePin(DigitalPin.P2, mode?1:0); break;
+	}
     }
 
     /**
-      * Read joystick values
-      * @param axis Axis to read
-      */
-    //% blockId="bcReadJoystick" block="joystick %axis"
-    //% weight=90
-    //% subcategory=Inputs
-    export function readJoystick(axis: BCJoystick): number
+    * Read distance from Ultrasonic (not EggBit Ovoid)
+    * @param unit desired conversion unit
+    */
+    //% blockId="ebSonar" block="read sonar as %unit"
+    //% weight=80
+    //% subcategory=General
+    export function sonar(unit: ebPingUnit): number
     {
-        if (axis == BCJoystick.X)
-            return pins.analogReadPin(AnalogPin.P1);
-        else
-            return pins.analogReadPin(AnalogPin.P2);
+        // send pulse
+        let trig = DigitalPin.P15;
+        let echo = DigitalPin.P15;
+        let maxCmDistance = 500;
+        let d=10;
+        pins.setPull(trig, PinPullMode.PullNone);
+        for (let x=0; x<10; x++)
+        {
+            pins.digitalWritePin(trig, 0);
+            control.waitMicros(2);
+            pins.digitalWritePin(trig, 1);
+            control.waitMicros(10);
+            pins.digitalWritePin(trig, 0);
+            // read pulse
+            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            if (d>0)
+                break;
+        }
+        switch (unit)
+        {
+            case mbPingUnit.Centimeters: return Math.round(d / 58);
+            case mbPingUnit.Inches: return Math.round(d / 148);
+            default: return d;
+        }
     }
-
 
 // Fireled Helper Blocks
 
@@ -237,7 +275,7 @@ namespace bitcommander
     /**
       * Shows a rainbow pattern on all LEDs.
       */
-    //% blockId="bcLedRainbow" block="set LED rainbow"
+    //% blockId="ebLedRainbow" block="set LED rainbow"
     //% subcategory=Leds
     //% weight=70
     export function ledRainbow()
@@ -276,7 +314,7 @@ namespace bitcommander
      * Set the brightness of the FireLed band
      * @param brightness a measure of LED brightness in 0-255. eg: 40
      */
-    //% blockId="bcLedBrightness" block="set LED brightness%brightness"
+    //% blockId="ebLedBrightness" block="set LED brightness%brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=100
     //% advanced=true
@@ -290,10 +328,10 @@ namespace bitcommander
       * Set LED update mode (Manual or Automatic)
       * @param updateMode setting automatic will show LED changes automatically
       */
-    //% blockId="bcSetUpdateMode" block="set %updateMode|update mode"
+    //% blockId="ebSetUpdateMode" block="set %updateMode|update mode"
     //% weight=90
     //% advanced=true
-    export function setUpdateMode(updateMode: BCMode): void
+    export function setUpdateMode(updateMode: EBMode): void
     {
         _updateMode = updateMode;
     }
@@ -301,7 +339,7 @@ namespace bitcommander
     /**
       * Show LED changes
       */
-    //% blockId="bcLedShow" block="show LED changes"
+    //% blockId="ebLedShow" block="show LED changes"
     //% weight=80
     //% advanced=true
     export function ledShow(): void
@@ -336,7 +374,7 @@ namespace bitcommander
       * @param green Green value of the LED (0 to 255)
       * @param blue Blue value of the LED (0 to 255)
       */
-    //% blockId="bcConvertRGB" block="convert from red%red|green%green|blue%blue"
+    //% blockId="ebConvertRGB" block="convert from red%red|green%green|blue%blue"
     //% weight=60
     //% advanced=true
     export function convertRGB(r: number, g: number, b: number): number

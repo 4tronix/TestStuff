@@ -1,7 +1,7 @@
 {
-    "name": "bitcommander",
-    "version": "1.1.2",
-    "description": "Microsoft MakeCode package for 4tronix BitCommander",
+    "name": "eggbit",
+    "version": "0.0.1",
+    "description": "Microsoft MakeCode package for 4tronix EggBit range of wearables",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -9,7 +9,7 @@
     },
     "files": [
         "README.md",
-        "bitcommander.ts",
+        "eggbit.ts",
         "main.cpp",
         "shims.d.ts",
         "enums.d.ts"
