@@ -132,7 +132,7 @@ namespace eggbit
       * Registers event code
       */
     //% weight=90
-    //% blockId=ebOnEvent block="on 01 button%button|%event"
+    //% blockId=ebOnEvent block="on 02 button%button|%event"
     //% subcategory=General
     export function onEvent(button: EBPins, event: EBEvents, handler: Action)
     {
@@ -206,8 +206,8 @@ namespace eggbit
         }
         switch (unit)
         {
-            case mbPingUnit.Centimeters: return Math.round(d / 58);
-            case mbPingUnit.Inches: return Math.round(d / 148);
+            case ebPingUnit.Centimeters: return Math.round(d / 58);
+            case ebPingUnit.Inches: return Math.round(d / 148);
             default: return d;
         }
     }
@@ -229,7 +229,7 @@ namespace eggbit
     // update LEDs if _updateMode set to Auto
     function updateLEDs(): void
     {
-        if (_updateMode == BCMode.Auto)
+        if (_updateMode == EBMode.Auto)
             ledShow();
     }
 
