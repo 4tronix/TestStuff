@@ -53,7 +53,6 @@ enum EBMouth
    Lower
 }
 
-
 /**
   * Update mode for LEDs
   * setting to Manual requires show LED changes blocks
@@ -105,7 +104,6 @@ enum ebPingUnit
     MicroSeconds
 }
 
-
 /**
  * Custom blocks
  */
@@ -132,7 +130,7 @@ namespace eggbit
       * Registers event code
       */
     //% weight=100
-    //% blockId=ebOnEvent block="on 03 button%button|%event"
+    //% blockId=ebOnEvent block="on 04 button%button|%event"
     //% subcategory=General
     export function onEvent(button: EBPins, event: EBEvents, handler: Action)
     {
@@ -160,13 +158,14 @@ namespace eggbit
     }
 
     /**
-      * set mouth parts on/off
+      * Set mouth parts on/off (not EggBit Ovoid)
       * @param mouthPart Section of mouth to turn on/off
       * @param mode Select On or Off
       */
-    //% blockId="ebSetMouth" block="button %buttonID|pressed"
-    //% weight=100
+    //% blockId="ebSetMouth" block="mouth%mouthPart|%mode"
+    //% weight=80
     //% subcategory=General
+    //% mode.shadow="toggleOnOff"
     export function setMouth(mouthPart: EBMouth, mode: boolean)
     {
 	switch (mouthPart)
@@ -182,7 +181,7 @@ namespace eggbit
     * @param unit desired conversion unit
     */
     //% blockId="ebSonar" block="read sonar as %unit"
-    //% weight=80
+    //% weight=70
     //% subcategory=General
     export function sonar(unit: ebPingUnit): number
     {
