@@ -325,8 +325,7 @@ namespace bitbot
     //% subcategory=BitBot_Model
     export function getModel(): BBModel
     {
-        if (versionCode == -1)	// first time requesting
-            versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f;
+        getVersionCode();
         if (_model == BBModel.Auto)
         {
             if (versionCode == 0)
@@ -364,6 +363,8 @@ namespace bitbot
     //% subcategory=BitBot_Model
     export function getVersionCode(): number
     {
+        if (versionCode == -1)	// first time requesting
+            versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f;
         return versionCode;
     }
 
@@ -379,7 +380,7 @@ namespace bitbot
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="write 06 %data|to address%address"
+    //% block="write 07 %data|to address%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     export function writeEEROM(data: number, address: number): void
