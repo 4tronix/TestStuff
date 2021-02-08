@@ -361,6 +361,7 @@ namespace bitbot
     //% block="version Code"
     //% weight=80
     //% subcategory=BitBot_Model
+    //% deprecated=true
     export function getVersionCode(): number
     {
         if (versionCode == -1)	// first time requesting
@@ -380,9 +381,10 @@ namespace bitbot
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="write 07 %data|to address%address"
+    //% block="write 08 %data|to address%address"
     //% data.min = -128 data.max = 127
     //% weight=100
+    //% deprecated=true
     export function writeEEROM(data: number, address: number): void
     {
         wrEEROM(data, address);
@@ -406,6 +408,7 @@ namespace bitbot
     //% blockId="readEEROM"
     //% block="read EEROM address%address"
     //% weight=90
+    //% deprecated=true
     export function readEEROM(address: number): number
     {
         return rdEEROM(address);
@@ -429,6 +432,7 @@ namespace bitbot
     //% blockId="loadBias"
     //% block="Load motor bias data from EEROM"
     //% weight=80
+    //% deprecated=true
     export function loadBias(): void
     {
 	for (let i=0; i<3; i++)
@@ -441,6 +445,7 @@ namespace bitbot
     //% blockId="saveBias"
     //% block="Save motor bias data to EEROM"
     //% weight=70
+    //% deprecated=true
     export function saveBias(): void
     {
 	for (let i=0; i<3; i++)
@@ -456,6 +461,7 @@ namespace bitbot
     //% blockId="checkBias"
     //% block="Check side%side bias for speed%speed"
     //% weight=60
+    //% deprecated=true
     export function checkBias(side: BBMotor, speed: number): number
     {
         let biasVal = 0;
