@@ -355,7 +355,7 @@ namespace bitbot
 // "DRIVE STRAIGHT" BLOCKS
 
     // Uses bottom 3 bytes of EEROM for motor bias data
-    // Bias values from -100 to +100. Negative values increase Left speed, Positive increase right speed
+    // Bias values from -100 to +100. Negative values decrease Left speed, Positive decrease right speed
     // Byte 0 = Bias at 30, 1 = Bias at 60, 2 = Bias at 90
 
     /**
@@ -364,7 +364,7 @@ namespace bitbot
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="write 02 %data|to address%address"
+    //% block="write 03 %data|to address%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     export function writeEEROM(data: number, address: number): void
@@ -554,7 +554,7 @@ namespace bitbot
         leftBias = 0;
         rightBias = 0;
         if (biasVal < 0)
-            leftBias = Maths.abs(biasVal);
+            leftBias = Math.abs(biasVal);
         else
             rightBias = biasVal;
     }
