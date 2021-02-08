@@ -364,7 +364,7 @@ namespace bitbot
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="write 01 %data|to address%address"
+    //% block="write 02 %data|to address%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     export function writeEEROM(data: number, address: number): void
@@ -544,6 +544,21 @@ namespace bitbot
         pins.digitalWritePin(rMotorD1, stopMode);
     }
 
+    function createBias(speed: number): void
+    {
+        let biasVal = 0;
+        if (speed < 60)
+            biasVal = bias[1] - ((60 - speed)/30) * (bias[1] - bias[0]);
+        else
+            biasVal = bias[2] - ((90 - speed)/30) * (bias[2] - bias[1]);
+        leftBias = 0;
+        rightBias = 0;
+        if (biasVal < 0)
+            leftBias = Maths.abs(biasVal);
+        else
+            rightBias = biasVal;
+    }
+
     /**
       * Move individual motors forward or reverse
       * @param motor motor to drive
@@ -559,7 +574,9 @@ namespace bitbot
     export function move(motor: BBMotor, direction: BBDirection, speed: number): void
     {
         getModel();
-        speed = clamp(speed, 0, 100) * 10.23;
+        speed = clamp(speed, 0, 100);
+	createBias(speed); // sets bias values for "DriveStraight" if available
+        speed = speed * 10.23
         setPWM(speed);
         let lSpeed = Math.round(speed * (100 - leftBias) / 100);
         let rSpeed = Math.round(speed * (100 - rightBias) / 100);
