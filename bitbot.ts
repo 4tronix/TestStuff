@@ -358,11 +358,11 @@ namespace bitbot
     /**
       * Get versionCode
       */
-    //% blockId="versionCode"
+    //% blockId="getVersionCode"
     //% block="version Code"
     //% weight=80
     //% subcategory=BitBot_Model
-    export function versionCode(): number
+    export function getVersionCode(): number
     {
         return versionCode;
     }
@@ -379,7 +379,7 @@ namespace bitbot
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="write 05 %data|to address%address"
+    //% block="write 06 %data|to address%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     export function writeEEROM(data: number, address: number): void
