@@ -245,6 +245,7 @@ namespace bitbot
     let _model = BBModel.Auto;
     let i2caddr = 28;	// i2c address of I/O Expander
     let EEROM = 0x50;	// i2c address of EEROM
+    let versionCode = -1;
     let lMotorD0: DigitalPin;
     let lMotorD1: DigitalPin;
     let lMotorA0: AnalogPin;
@@ -324,9 +325,11 @@ namespace bitbot
     //% subcategory=BitBot_Model
     export function getModel(): BBModel
     {
+        if (versionCode == -1)	// first time requesting
+            versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f;
         if (_model == BBModel.Auto)
         {
-            if ((pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) & 0xf0) == 0)
+            if (versionCode == 0)
             {
                 select_model(BBModel.Classic);
             }
@@ -352,6 +355,18 @@ namespace bitbot
         return model;
     }
 
+    /**
+      * Get versionCode
+      */
+    //% blockId="versionCode"
+    //% block="version Code"
+    //% weight=80
+    //% subcategory=BitBot_Model
+    export function versionCode(): number
+    {
+        return versionCode;
+    }
+
 // "DRIVE STRAIGHT" BLOCKS
 
     // Uses bottom 3 bytes of EEROM for motor bias data
@@ -364,7 +379,7 @@ namespace bitbot
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="write 04 %data|to address%address"
+    //% block="write 05 %data|to address%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     export function writeEEROM(data: number, address: number): void
