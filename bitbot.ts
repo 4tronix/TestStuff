@@ -364,7 +364,7 @@ namespace bitbot
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="write 03 %data|to address%address"
+    //% block="write 04 %data|to address%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     export function writeEEROM(data: number, address: number): void
@@ -431,6 +431,33 @@ namespace bitbot
             wrEEROM(bias[i],i);
     }
 
+
+    /**
+      * Check Bias Values for given speed
+      * @param speed selected speed 0 to 100. eg: 60
+      * @param side selected motor Left or Right
+      */
+    //% blockId="checkBias"
+    //% block="Check side%side bias for speed%speed"
+    //% weight=60
+    export function checkBias(side: BBMotor, speed: number): number
+    {
+        let biasVal = 0;
+        if (speed < 60)
+            biasVal = bias[1] - ((60 - speed)/30) * (bias[1] - bias[0]);
+        else
+            biasVal = bias[2] - ((90 - speed)/30) * (bias[2] - bias[1]);
+        leftBias = 0;
+        rightBias = 0;
+        if (biasVal < 0)
+            leftBias = Math.abs(biasVal);
+        else
+            rightBias = biasVal;
+        if (side == BBMotor.Left)
+            return leftBias;
+        else
+            return rightBias;
+    }
 
 // New Style Motor Blocks
     // slow PWM frequency for slower speeds to improve torque
