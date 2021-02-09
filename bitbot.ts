@@ -381,7 +381,7 @@ namespace bitbot
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="write 08 %data|to address%address"
+    //% block="write%data|to address%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     //% deprecated=true
@@ -392,13 +392,16 @@ namespace bitbot
 
     function wrEEROM(data: number, address: number): void
     {
-        let i2cData = pins.createBuffer(3);
+        if (versionCode == 5)
+        {
+            let i2cData = pins.createBuffer(3);
 
-        i2cData[0] = address >> 8;	// address MSB
-        i2cData[1] = address & 0xff;	// address LSB
-        i2cData[2] = data & 0xff;
-        pins.i2cWriteBuffer(EEROM, i2cData, false);
-        basic.pause(1);			// needs a short pause. << 1ms ok?
+            i2cData[0] = address >> 8;	// address MSB
+            i2cData[1] = address & 0xff;	// address LSB
+            i2cData[2] = data & 0xff;
+            pins.i2cWriteBuffer(EEROM, i2cData, false);
+            basic.pause(1);			// needs a short pause. << 1ms ok?
+        }
     }
 
     /**
@@ -417,13 +420,17 @@ namespace bitbot
     // Uses bottom 3 bytes of EEROM for servo offsets. No user access
     function rdEEROM(address: number): number
     {
-        let i2cRead = pins.createBuffer(2);
+        if (versionCode == 5)
+        {
+            let i2cRead = pins.createBuffer(2);
 
-        i2cRead[0] = address >> 8;	// address MSB
-        i2cRead[1] = address & 0xff;	// address LSB
-        pins.i2cWriteBuffer(EEROM, i2cRead, false);
-        basic.pause(1);
-        return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);
+            i2cRead[0] = address >> 8;	// address MSB
+            i2cRead[1] = address & 0xff;	// address LSB
+            pins.i2cWriteBuffer(EEROM, i2cRead, false);
+            basic.pause(1);
+            return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);
+        else
+            return 0;
     }
 
     /**
@@ -595,17 +602,20 @@ namespace bitbot
 
     function createBias(speed: number): void
     {
-        let biasVal = 0;
-        if (speed < 60)
-            biasVal = bias[1] - ((60 - speed)/30) * (bias[1] - bias[0]);
-        else
-            biasVal = bias[2] - ((90 - speed)/30) * (bias[2] - bias[1]);
-        leftBias = 0;
-        rightBias = 0;
-        if (biasVal < 0)
-            leftBias = Math.abs(biasVal);
-        else
-            rightBias = biasVal;
+        if (versionCode == 5)
+        {        
+            let biasVal = 0;
+            if (speed < 60)
+                biasVal = bias[1] - ((60 - speed)/30) * (bias[1] - bias[0]);
+            else
+                biasVal = bias[2] - ((90 - speed)/30) * (bias[2] - bias[1]);
+            leftBias = 0;
+            rightBias = 0;
+            if (biasVal < 0)
+                leftBias = Math.abs(biasVal);
+            else
+                rightBias = biasVal;
+        }
     }
 
     /**
@@ -624,7 +634,7 @@ namespace bitbot
     {
         getModel();
         speed = clamp(speed, 0, 100);
-	createBias(speed); // sets bias values for "DriveStraight" if available
+	createBias(speed); // sets bias values for "DriveStraight" if available (versionCode == 5 only)
         speed = speed * 10.23
         setPWM(speed);
         let lSpeed = Math.round(speed * (100 - leftBias) / 100);
