@@ -238,9 +238,12 @@ namespace bitbot
     let mouthOooh: number[] = [1,2,3,4,6,7,8,9,10,13];
     let mouthEeeh: number[] = [0,1,2,3,4,5,6,7,8,9];
     let oled: firescreen.Screen;
+
     let leftBias = 0;
     let rightBias = 0;
-    let bias: number[] = [0, 0, 0];
+    let calibration: number[] = [0, 0, 0];
+    let leftCalib = 0;
+    let rightCalib = 0;
 
     let _model = BBModel.Auto;
     let i2caddr = 28;	// i2c address of I/O Expander
@@ -392,7 +395,7 @@ namespace bitbot
 
     function wrEEROM(data: number, address: number): void
     {
-        if (versionCode == 5)
+        if (getVersionCode() == 5)
         {
             let i2cData = pins.createBuffer(3);
 
@@ -420,7 +423,7 @@ namespace bitbot
     // Uses bottom 3 bytes of EEROM for servo offsets. No user access
     function rdEEROM(address: number): number
     {
-        if (versionCode == 5)
+        if (getVersionCode() == 5)
         {
             let i2cRead = pins.createBuffer(2);
 
@@ -429,63 +432,63 @@ namespace bitbot
             pins.i2cWriteBuffer(EEROM, i2cRead, false);
             basic.pause(1);
             return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);
+        }
         else
             return 0;
     }
 
     /**
-      * Load Bias data from EEROM
+      * Load Calibration data from EEROM
       */
-    //% blockId="loadBias"
-    //% block="Load motor bias data from EEROM"
+    //% blockId="loadCalibration"
+    //% block="Load calibration from EEROM"
     //% weight=80
     //% deprecated=true
-    export function loadBias(): void
+    export function loadCalibration(): void
     {
 	for (let i=0; i<3; i++)
-            bias[i] = rdEEROM(i);
+            calibration[i] = rdEEROM(i);
     }
 
     /**
-      * Save Bias data to EEROM
+      * Save Calibration data to EEROM
       */
-    //% blockId="saveBias"
-    //% block="Save motor bias data to EEROM"
+    //% blockId="saveCalibration"
+    //% block="Save calibration to EEROM"
     //% weight=70
     //% deprecated=true
-    export function saveBias(): void
+    export function saveCalibration(): void
     {
 	for (let i=0; i<3; i++)
-            wrEEROM(bias[i],i);
+            wrEEROM(calibration[i],i);
     }
 
-
     /**
-      * Check Bias Values for given speed
+      * Check Calibration Values for given speed
       * @param speed selected speed 0 to 100. eg: 60
       * @param side selected motor Left or Right
       */
-    //% blockId="checkBias"
+    //% blockId="checkCalibration"
     //% block="Check side%side bias for speed%speed"
     //% weight=60
     //% deprecated=true
-    export function checkBias(side: BBMotor, speed: number): number
+    export function checkCalibration(side: BBMotor, speed: number): number
     {
-        let biasVal = 0;
+        let calibVal = 0;
+        leftCalib = 0;
+        rightCalib = 0;
         if (speed < 60)
-            biasVal = bias[1] - ((60 - speed)/30) * (bias[1] - bias[0]);
+            calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0]);
         else
-            biasVal = bias[2] - ((90 - speed)/30) * (bias[2] - bias[1]);
-        leftBias = 0;
-        rightBias = 0;
-        if (biasVal < 0)
-            leftBias = Math.abs(biasVal);
+            calibVal = calibration[2] - ((90 - speed)/30) * (calibration[2] - calibration[1]);
+        if (calibVal < 0)
+            leftCalib = Math.abs(calibVal);
         else
-            rightBias = biasVal;
+            rightCalib = calibVal;
         if (side == BBMotor.Left)
-            return leftBias;
+            return leftCalib;
         else
-            return rightBias;
+            return rightCalib;
     }
 
 // New Style Motor Blocks
@@ -600,21 +603,21 @@ namespace bitbot
         pins.digitalWritePin(rMotorD1, stopMode);
     }
 
-    function createBias(speed: number): void
+    function createCalib(speed: number): void
     {
-        if (versionCode == 5)
+        if (getVersionCode() == 5)
         {        
-            let biasVal = 0;
+            let calibVal = 0;
             if (speed < 60)
-                biasVal = bias[1] - ((60 - speed)/30) * (bias[1] - bias[0]);
+                calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0]);
             else
-                biasVal = bias[2] - ((90 - speed)/30) * (bias[2] - bias[1]);
-            leftBias = 0;
-            rightBias = 0;
-            if (biasVal < 0)
-                leftBias = Math.abs(biasVal);
+                calibVal = calibration[2] - ((90 - speed)/30) * (calibration[2] - calibration[1]);
+            leftCalib = 0;
+            rightCalib = 0;
+            if (calibVal < 0)
+                leftCalib = Math.abs(calibVal);
             else
-                rightBias = biasVal;
+                rightCalib = calibVal;
         }
     }
 
@@ -632,13 +635,23 @@ namespace bitbot
     //% blockGap=8
     export function move(motor: BBMotor, direction: BBDirection, speed: number): void
     {
+        let lSpeed = 0;
+        let rSpeed = 0;
         getModel();
         speed = clamp(speed, 0, 100);
 	createBias(speed); // sets bias values for "DriveStraight" if available (versionCode == 5 only)
         speed = speed * 10.23
         setPWM(speed);
-        let lSpeed = Math.round(speed * (100 - leftBias) / 100);
-        let rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        if (getVersionCode() == 5 && leftBias == 0 && rightBias == 0)
+        {
+            lSpeed = Math.round(speed * (100 - leftCalib) / 100);
+            rSpeed = Math.round(speed * (100 - rightCalib) / 100);
+        }
+        else
+        {
+            lSpeed = Math.round(speed * (100 - leftBias) / 100);
+            rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        }
         if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
         {
             if (direction == BBDirection.Forward)
