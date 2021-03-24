@@ -639,7 +639,7 @@ namespace bitbot
         let rSpeed = 0;
         getModel();
         speed = clamp(speed, 0, 100);
-	createBias(speed); // sets bias values for "DriveStraight" if available (versionCode == 5 only)
+	createCalib(speed); // sets bias values for "DriveStraight" if available (versionCode == 5 only)
         speed = speed * 10.23
         setPWM(speed);
         if (getVersionCode() == 5 && leftBias == 0 && rightBias == 0)
