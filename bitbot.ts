@@ -512,7 +512,6 @@ namespace bitbot
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory=Motors
-    //% blockGap=8
     export function go(direction: BBDirection, speed: number): void
     {
         move(BBMotor.Both, direction, speed);
@@ -528,7 +527,6 @@ namespace bitbot
     //% speed.min=0 speed.max=100
     //% weight=90
     //% subcategory=Motors
-    //% blockGap=8
     export function goms(direction: BBDirection, speed: number, milliseconds: number): void
     {
         go(direction, speed);
@@ -545,7 +543,6 @@ namespace bitbot
     //% speed.min=0 speed.max=100
     //% weight=80
     //% subcategory=Motors
-    //% blockGap=8
     export function rotate(direction: BBRobotDirection, speed: number): void
     {
         if (direction == BBRobotDirection.Left)
@@ -570,7 +567,6 @@ namespace bitbot
     //% speed.min=0 speed.max=100
     //% weight=70
     //% subcategory=Motors
-    //% blockGap=8
     export function rotatems(direction: BBRobotDirection, speed: number, milliseconds: number): void
     {
         rotate(direction, speed);
@@ -585,7 +581,6 @@ namespace bitbot
     //% blockId="BBstop" block="stop with%mode"
     //% weight=60
     //% subcategory=Motors
-    //% blockGap=8
     export function stop(mode: BBStopMode): void
     {
         getModel();
@@ -626,7 +621,6 @@ namespace bitbot
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
-    //% blockGap=8
     export function move(motor: BBMotor, direction: BBDirection, speed: number): void
     {
         let lSpeed = 0;
@@ -683,7 +677,6 @@ namespace bitbot
     //% bias.min=0 bias.max=80
     //% weight=40
     //% subcategory=Motors
-    //% blockGap=8
     export function BBBias(direction: BBRobotDirection, bias: number): void
     {
         bias = clamp(bias, 0, 80);
