@@ -767,12 +767,12 @@ namespace theta
     * @param pin select 0 to 3
     * @param mode Can be one of Digital In, Digital Out or PWM Out
     */
-    //% blockId="SetIOMode" block="set 01 IO mode of pin%pin|to %mode"
+    //% blockId="SetIOMode" block="set 02 IO mode of pin%pin|to %mode"
     //% weight=40
     //% pin.minimum=0
     //% pin.maximum=3
     //% subcategory="Inputs & Outputs"
-    export function setIOMode(pin: number, mode: RXIOMode): number
+    export function setIOMode(pin: number, mode: RXIOMode): void
     {
         pin = clamp(pin, 0, 3);
 /*        i2cData5[0] = (_updateMode == RXMode.Auto) ? 1: 0;			// Auto Update 1 = True
