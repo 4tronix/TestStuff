@@ -783,7 +783,7 @@ namespace theta
     * @param pin select 0 to 3
     * @param mode Can be one of Digital In, Digital Out, Servo or PWM Out
     */
-    //% blockId="SetIOMode" block="set 07 IO mode of pin%pin|to %mode"
+    //% blockId="SetIOMode" block="set 08 IO mode of pin%pin|to %mode"
     //% weight=40
     //% pin.minimum=0
     //% pin.maximum=3
@@ -833,15 +833,15 @@ namespace theta
 
     /**
     * Write ATMega IO Pin
-    * @param data data to write to output pin
+    * @param value data to write to output pin
     * @param pin select 0 to 3
     */
-    //% blockId="WriteIOPin" block="write %data|to pin%pin"
+    //% blockId="WriteIOPin" block="write %value|to pin%pin"
     //% weight=20
     //% pin.minimum=0
     //% pin.maximum=3
     //% subcategory="Inputs & Outputs"
-    export function writeIOPin(pin: number, data: number): void
+    export function writeIOPin(value: number, pin: number): void
     {
         let cmd = 0;
         switch(pin)
@@ -853,8 +853,8 @@ namespace theta
         }
         if (cmd != 0)
         {
-            i2cData2[0] = cmd;	// I2C register to set
-            i2cData2[1] = data;	// Value
+            i2cData2[0] = cmd;		// I2C register to set
+            i2cData2[1] = value;	// Value
             pins.i2cWriteBuffer(_addrATM, i2cData2);
         }
     }
