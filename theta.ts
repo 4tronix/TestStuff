@@ -783,7 +783,7 @@ namespace theta
     * @param pin select 0 to 3
     * @param mode Can be one of Digital In, Digital Out, Servo or PWM Out
     */
-    //% blockId="SetIOMode" block="set 06 IO mode of pin%pin|to %mode"
+    //% blockId="SetIOMode" block="set 07 IO mode of pin%pin|to %mode"
     //% weight=40
     //% pin.minimum=0
     //% pin.maximum=3
@@ -833,8 +833,8 @@ namespace theta
 
     /**
     * Write ATMega IO Pin
-    * @param pin select 0 to 3
     * @param data data to write to output pin
+    * @param pin select 0 to 3
     */
     //% blockId="WriteIOPin" block="write %data|to pin%pin"
     //% weight=20
@@ -847,9 +847,9 @@ namespace theta
         switch(pin)
         {
             case 0: cmd = IO_0_DATA; break;
-            case 1: cmd = IO_0_DATA; break;
-            case 2: cmd = IO_0_DATA; break;
-            case 3: cmd = IO_0_DATA; break;
+            case 1: cmd = IO_1_DATA; break;
+            case 2: cmd = IO_2_DATA; break;
+            case 3: cmd = IO_3_DATA; break;
         }
         if (cmd != 0)
         {
