@@ -783,7 +783,7 @@ namespace theta
     * @param pin select 0 to 3
     * @param mode Can be one of Digital In, Digital Out, Servo or PWM Out
     */
-    //% blockId="SetIOMode" block="set 05 IO mode of pin%pin|to %mode"
+    //% blockId="SetIOMode" block="set 06 IO mode of pin%pin|to %mode"
     //% weight=40
     //% pin.minimum=0
     //% pin.maximum=3
@@ -846,10 +846,10 @@ namespace theta
         let cmd = 0;
         switch(pin)
         {
-            case 0: cmd = INP0; break;
-            case 1: cmd = INP1; break;
-            case 2: cmd = INP2; break;
-            case 3: cmd = INP3; break;
+            case 0: cmd = IO_0_DATA; break;
+            case 1: cmd = IO_0_DATA; break;
+            case 2: cmd = IO_0_DATA; break;
+            case 3: cmd = IO_0_DATA; break;
         }
         if (cmd != 0)
         {
