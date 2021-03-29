@@ -783,7 +783,7 @@ namespace theta
     * @param pin select 0 to 3
     * @param mode Can be one of Digital In, Digital Out, Servo or PWM Out
     */
-    //% blockId="SetIOMode" block="set 04 IO mode of pin%pin|to %mode"
+    //% blockId="SetIOMode" block="set 05 IO mode of pin%pin|to %mode"
     //% weight=40
     //% pin.minimum=0
     //% pin.maximum=3
@@ -841,7 +841,7 @@ namespace theta
     //% pin.minimum=0
     //% pin.maximum=3
     //% subcategory="Inputs & Outputs"
-    export function readIOPin(pin: number): void
+    export function writeIOPin(pin: number, data: number): void
     {
         let cmd = 0;
         switch(pin)
