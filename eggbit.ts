@@ -151,7 +151,7 @@ namespace eggbit
       * Registers event code
       */
     //% weight=100
-    //% blockId=ebOnEvent block="on 03 button%button|%event"
+    //% blockId=ebOnEvent block="on 04 button%button|%event"
     //% subcategory=General
     export function onEvent(button: EBPins, event: EBEvents, handler: Action)
     {
@@ -201,16 +201,8 @@ namespace eggbit
     //% weight=80
     //% subcategory="Input/Output"
     //% mode.shadow="toggleOnOff"
-    export function setMouth(shape: EBExpression)
+    export function setExpression(shape: EBExpression)
     {
-    Neutral,
-    Smile,
-    OpenSmile,
-    Sad,
-    OpenSad,
-    Surprise,
-    AllOff,
-    AllOn
 	switch (shape)
         {
             case EBExpression.Neutral: setLower(0); setMiddle(1); setUpper(0); break;
