@@ -120,7 +120,7 @@ namespace eggbit
 
 // General. Buttons, Ultrasonic, Mouth LEDs
 
-    function init(): void
+    function initEvents(): void
     {
         if (_initEvents)
         {
@@ -136,7 +136,7 @@ namespace eggbit
       * Registers event code
       */
     //% weight=100
-    //% blockId=ebOnEvent block="on 01 button%button|%event"
+    //% blockId=ebOnEvent block="on 02 button%button|%event"
     //% subcategory=General
     export function onEvent(button: EBPins, event: EBEvents, handler: Action)
     {
