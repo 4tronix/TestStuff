@@ -41,6 +41,21 @@ enum EBButtons
 
 
 /**
+  * Mouth shapes
+  */
+enum EBExpression
+{
+    Neutral,
+    Smile,
+    OpenSmile,
+    Sad,
+    OpenSad,
+    Surprise,
+    AllOff,
+    AllOn
+}
+
+/**
   * Enumeration of mouth parts
   */
 enum EBMouth
@@ -127,7 +142,7 @@ namespace eggbit
             pins.setEvents(DigitalPin.P12, PinEventType.Edge);
             pins.setEvents(DigitalPin.P8, PinEventType.Edge);
             pins.setEvents(DigitalPin.P14, PinEventType.Edge);
-            pins.setEvents(DigitalPin.P6, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P16, PinEventType.Edge);
             _initEvents = false;
         }
     }
@@ -136,7 +151,7 @@ namespace eggbit
       * Registers event code
       */
     //% weight=100
-    //% blockId=ebOnEvent block="on 02 button%button|%event"
+    //% blockId=ebOnEvent block="on 03 button%button|%event"
     //% subcategory=General
     export function onEvent(button: EBPins, event: EBEvents, handler: Action)
     {
@@ -150,7 +165,7 @@ namespace eggbit
       */
     //% blockId="ebCheckButton" block="button %buttonID|pressed"
     //% weight=90
-    //% subcategory=General
+    //% subcategory="Input/Output"
     export function readButton(buttonID: EBButtons): boolean
     {
 	switch (buttonID)
@@ -163,22 +178,68 @@ namespace eggbit
 	}
     }
 
+    function setUpper(mode: number): void
+    {
+        pins.digitalWritePin(DigitalPin.P0, mode);
+    }
+
+    function setMiddle(mode: number): void
+    {
+        pins.digitalWritePin(DigitalPin.P1, mode);
+    }
+
+    function setLower(mode: number): void
+    {
+        pins.digitalWritePin(DigitalPin.P2, mode);
+    }
+
+    /**
+      * Set expression (not EggBit Ovoid)
+      * @param shape Expression to select
+      */
+    //% blockId="ebSetExpression" block="expression%shape"
+    //% weight=80
+    //% subcategory="Input/Output"
+    //% mode.shadow="toggleOnOff"
+    export function setMouth(shape: EBExpression)
+    {
+    Neutral,
+    Smile,
+    OpenSmile,
+    Sad,
+    OpenSad,
+    Surprise,
+    AllOff,
+    AllOn
+	switch (shape)
+        {
+            case EBExpression.Neutral: setLower(0); setMiddle(1); setUpper(0); break;
+            case EBExpression.Smile: setLower(1); setMiddle(0); setUpper(0); break;
+            case EBExpression.OpenSmile: setLower(1); setMiddle(1); setUpper(0); break;
+            case EBExpression.Sad: setLower(0); setMiddle(0); setUpper(1); break;
+            case EBExpression.OpenSad: setLower(0); setMiddle(1); setUpper(1); break;
+            case EBExpression.Surprise: setLower(1); setMiddle(0); setUpper(1); break;
+            case EBExpression.AllOff: setLower(0); setMiddle(0); setUpper(0); break;
+            case EBExpression.AllOn: setLower(1); setMiddle(1); setUpper(1); break;
+        }
+    }
+
     /**
       * Set mouth parts on/off (not EggBit Ovoid)
       * @param mouthPart Section of mouth to turn on/off
       * @param mode Select On or Off
       */
     //% blockId="ebSetMouth" block="mouth%mouthPart|%mode"
-    //% weight=80
-    //% subcategory=General
+    //% weight=70
+    //% subcategory="Input/Output"
     //% mode.shadow="toggleOnOff"
     export function setMouth(mouthPart: EBMouth, mode: boolean)
     {
 	switch (mouthPart)
 	{
-            case EBMouth.Upper: pins.digitalWritePin(DigitalPin.P0, mode?1:0); break;
-            case EBMouth.Middle: pins.digitalWritePin(DigitalPin.P1, mode?1:0); break;
-            case EBMouth.Lower: pins.digitalWritePin(DigitalPin.P2, mode?1:0); break;
+            case EBMouth.Upper: setUpper(mode?1:0); break;
+            case EBMouth.Middle: setMiddle(mode?1:0); break;
+            case EBMouth.Lower: setLower(mode?1:0); break;
 	}
     }
 
@@ -187,8 +248,8 @@ namespace eggbit
     * @param unit desired conversion unit
     */
     //% blockId="ebSonar" block="read sonar as %unit"
-    //% weight=70
-    //% subcategory=General
+    //% weight=60
+    //% subcategory="Input/Output"
     export function sonar(unit: ebPingUnit): number
     {
         // send pulse
@@ -242,8 +303,8 @@ namespace eggbit
       * Sets all LEDs to a given color (range 0-255 for r, g, b).
       * @param rgb RGB color of the LED
       */
-    //% blockId="bcSetLedColor" block="set all LEDs to%rgb=FireColours"
-    //% subcategory=Leds
+    //% blockId="bcSetLedColor" block="set all FireLEDs to%rgb=FireColours"
+    //% subcategory=FireLeds
     //% weight=100
     export function setLedColor(rgb: number)
     {
@@ -254,8 +315,8 @@ namespace eggbit
     /**
       * Clear all leds.
       */
-    //% blockId="bcLedClear" block="clear all LEDs"
-    //% subcategory=Leds
+    //% blockId="bcLedClear" block="clear all FireLEDs"
+    //% subcategory=FireLeds
     //% weight=90
     export function ledClear()
     {
@@ -268,8 +329,8 @@ namespace eggbit
      * @param ledId position of the LED (0 to 5)
      * @param rgb RGB color of the LED
      */
-    //% blockId="bcSetPixelColor" block="set LED at%ledId|to%rgb=FireColours"
-    //% subcategory=Leds
+    //% blockId="bcSetPixelColor" block="set FireLED at%ledId|to%rgb=FireColours"
+    //% subcategory=FireLeds
     //% weight=80
     export function setPixelColor(ledId: number, rgb: number)
     {
@@ -280,8 +341,8 @@ namespace eggbit
     /**
       * Shows a rainbow pattern on all LEDs.
       */
-    //% blockId="ebLedRainbow" block="set LED rainbow"
-    //% subcategory=Leds
+    //% blockId="ebLedRainbow" block="set FireLED rainbow"
+    //% subcategory=FireLeds
     //% weight=70
     export function ledRainbow()
     {
@@ -304,8 +365,8 @@ namespace eggbit
     /**
      * Rotate LEDs forward.
      */
-    //% blockId="bcLedRotate" block="rotate LEDs"
-    //% subcategory=Leds
+    //% blockId="bcLedRotate" block="rotate FireLEDs"
+    //% subcategory=FireLeds
     //% weight=50
     export function ledRotate()
     {
@@ -319,7 +380,7 @@ namespace eggbit
      * Set the brightness of the FireLed band
      * @param brightness a measure of LED brightness in 0-255. eg: 40
      */
-    //% blockId="ebLedBrightness" block="set LED brightness%brightness"
+    //% blockId="ebLedBrightness" block="set FireLED brightness%brightness"
     //% brightness.min=0 brightness.max=255
     //% weight=100
     //% advanced=true
@@ -331,7 +392,7 @@ namespace eggbit
 
     /**
       * Set LED update mode (Manual or Automatic)
-      * @param updateMode setting automatic will show LED changes automatically
+      * @param updateMode setting automatic will show FireLED changes automatically
       */
     //% blockId="ebSetUpdateMode" block="set %updateMode|update mode"
     //% weight=90
@@ -344,7 +405,7 @@ namespace eggbit
     /**
       * Show LED changes
       */
-    //% blockId="ebLedShow" block="show LED changes"
+    //% blockId="ebLedShow" block="show FireLED changes"
     //% weight=80
     //% advanced=true
     export function ledShow(): void
