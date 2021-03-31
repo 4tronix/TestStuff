@@ -19,9 +19,9 @@ enum EBPins
 enum EBEvents
 {
     //% block="down"
-    Press = DAL.MICROBIT_BUTTON_EVT_UP,
+    Press = DAL.MICROBIT_PIN_EVT_RISE,
     //% block="up"
-    Release = DAL.MICROBIT_BUTTON_EVT_DOWN
+    Release = DAL.MICROBIT_PIN_EVT_FALL
 }
 
 /**
@@ -120,21 +120,27 @@ namespace eggbit
 
 // General. Buttons, Ultrasonic, Mouth LEDs
 
-    //% shim=eggbit::init
     function init(): void
     {
-        return;
+        if (_initEvents)
+        {
+            pins.setEvents(DigitalPin.P12, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P8, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P14, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P6, PinEventType.Edge);
+            _initEvents = false;
+        }
     }
 
     /**
       * Registers event code
       */
     //% weight=100
-    //% blockId=ebOnEvent block="on 05 button%button|%event"
+    //% blockId=ebOnEvent block="on 01 button%button|%event"
     //% subcategory=General
     export function onEvent(button: EBPins, event: EBEvents, handler: Action)
     {
-        init();
+        initEvents();
         control.onEvent(<number>button, <number>event, handler); // register handler
     }
 
