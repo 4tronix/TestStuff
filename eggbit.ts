@@ -151,8 +151,8 @@ namespace eggbit
       * Registers event code
       */
     //% weight=100
-    //% blockId=ebOnEvent block="on 04 button%button|%event"
-    //% subcategory=General
+    //% blockId=ebOnEvent block="on 05 button%button|%event"
+    //% subcategory="Input/Output"
     export function onEvent(button: EBPins, event: EBEvents, handler: Action)
     {
         initEvents();
@@ -163,7 +163,7 @@ namespace eggbit
       * check button states
       * @param buttonID Button to check
       */
-    //% blockId="ebCheckButton" block="button %buttonID|pressed"
+    //% blockId="ebCheckButton" block="button%buttonID|pressed"
     //% weight=90
     //% subcategory="Input/Output"
     export function readButton(buttonID: EBButtons): boolean
