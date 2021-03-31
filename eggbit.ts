@@ -139,10 +139,10 @@ namespace eggbit
     {
         if (_initEvents)
         {
+            pins.setEvents(DigitalPin.P16, PinEventType.Edge);
+            pins.setEvents(DigitalPin.P14, PinEventType.Edge);
             pins.setEvents(DigitalPin.P12, PinEventType.Edge);
             pins.setEvents(DigitalPin.P8, PinEventType.Edge);
-            pins.setEvents(DigitalPin.P14, PinEventType.Edge);
-            pins.setEvents(DigitalPin.P16, PinEventType.Edge);
             _initEvents = false;
         }
     }
@@ -151,7 +151,7 @@ namespace eggbit
       * Registers event code
       */
     //% weight=100
-    //% blockId=ebOnEvent block="on 05 button%button|%event"
+    //% blockId=ebOnEvent block="on 06 button%button|%event"
     //% subcategory="Input/Output"
     export function onEvent(button: EBPins, event: EBEvents, handler: Action)
     {
