@@ -130,8 +130,15 @@ namespace eggbit
     let ledCount = 9;
     let _updateMode = EBMode.Auto;
     let btEnabled = false;
-
     let _initEvents = true;
+
+    let larsson: number;
+    let scandir: number;
+    let _scanning = false;
+    let scanColor1 = 0xff0000;
+    let scanColor2 = 0x0f0000;
+    let scanColor3 = 0x030000;
+
 
 // General. Buttons, Ultrasonic, Mouth LEDs
 
@@ -151,7 +158,7 @@ namespace eggbit
       * Registers event code
       */
     //% weight=100
-    //% blockId=ebOnEvent block="on 06 button%button|%event"
+    //% blockId=ebOnEvent block="on button%button|%event"
     //% subcategory="Input/Output"
     export function onEvent(button: EBPins, event: EBEvents, handler: Action)
     {
@@ -438,6 +445,92 @@ namespace eggbit
     export function convertRGB(r: number, g: number, b: number): number
     {
         return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+    }
+
+    /**
+      * Start Scanner
+      * @param colour the colour to use for scanning
+      * @param delay time in ms between scan steps, eg: 100,50,200,500
+      */
+    //% blockId="StartScanner" block="start 07 scan%colour=FireColours|with%delay|ms"
+    //% subcategory=FireLeds
+    //% delay.min=1 delay.max=10000
+    //% weight=40
+    //% blockGap=8
+    export function startScanner(colour: number, delay: number): void
+    {
+        scanColour1 = coluor;
+        scanColour2 = reduce(scanColour1, 8);
+        scanColour3 = reduce(scanColour2, 4);
+        if(_scanning == false)
+        {
+            _scanning = true;
+            control.inBackground(() =>
+            {
+                while (_scanning)
+                {                                
+                    ledScan();
+                    ledShow();
+                    basic.pause(delay);
+                }
+            })
+        }
+    }
+
+    /**
+      * Reduce colour RGB separately by divisor
+      */
+    function reduce(colour: number, reducer: number): number
+    {
+        let red = ((colour & 0xff0000) / reducer) & 0xff0000;
+        let green = ((colour & 0x00ff00) / reducer) & 0x00ff00;
+        let blue = ((colour & 0x0000ff) / reducer) & 0x0000ff;
+        return red + green + blue;
+    }
+
+    /**
+      * Stop Scanner
+      */
+    //% blockId="StopScanner" block="stop scanner"
+    //% subcategory=FireLeds
+    //% weight=30
+    //% blockGap=8
+    export function stopScanner(): void
+    {
+        _scanning = false;
+    }
+
+    /**
+     * Use all LEDs as Larsson Scanner. Each call moves the scan by one pixel
+     */
+    //% subcategory=FireLeds
+    //% blockId="LedScan" block="scan all FireLeds"
+    //% weight=20
+    //% blockGap=8
+    //% deprecated=true
+    export function ledScan(): void
+    {
+        if (!larsson)
+        {
+            larsson = 1;
+            scandir = 1;
+        }
+        larsson += scandir;
+        if (larsson >= (ledCount - 1))
+            scandir = -1;
+        else if (larsson <= 0)
+            scandir = 1;
+        for (let x = 1; x < (ledCount-1); x++)
+        {
+            if ((x == (larsson - 2)) || (x == (larsson + 2)))
+                setPixelColor(x, scanColor3);
+            else if ((x == (larsson - 1)) || (x == (larsson + 1)))
+                setPixelColor(x, scanColor2);
+            else if (x == larsson)
+                setPixelColor(x, scanColor1);
+            else
+                setPixelColor(x, 0);
+        }
     }
 
 
