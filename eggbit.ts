@@ -359,7 +359,7 @@ namespace eggbit
      * Shift LEDs forward and clear with zeros.
      */
     //% blockId="bcLedShift" block="shift LEDs"
-    //% subcategory=Leds
+    //% subcategory=FireLeds
     //% weight=60
     export function ledShift()
     {
@@ -543,7 +543,7 @@ namespace eggbit
       * @param colour1 the colour for lowest value
       * @param colour2 the colour for highest value
       */
-    //% blockId="SetBargraph" block="graph%lowest|to%highest|from%colour1=FireColours|to%colour2=FireColours"
+    //% blockId="SetBargraph" block="set graph%lowest|to%highest|from%colour1=FireColours|to%colour2=FireColours"
     //% subcategory=FireLeds
     //% weight=30
     export function setBargraph(lowest: number, highest: number, colour1: number, colour2: number): void
@@ -558,18 +558,28 @@ namespace eggbit
       * Draw bargraph using value and previosuly set parameters
       * @param value value to draw in graph
       */
-    //% blockId="DrawBargraph" block="draw bar graph with%value"
+    //% blockId="DrawBargraph" block="draw 12 bar graph with%value"
     //% subcategory=FireLeds
     //% weight=20
     export function drawBargraph(value: number): void
     {
         let deltaVal = (graphHigh - graphLow) / ledCount;
+        let deltaRed = (((graphCol2-graphCol1) & 0xff0000) / ledCount) & 0xff0000;
+        let deltaGreen = (((graphCol2-graphCol1) & 0x00ff00) / ledCount) & 0x00ff00;
+        let deltaBlue = (((graphCol2-graphCol1) & 0x0000ff) / ledCount) & 0x0000ff;
+        let pRed = graphCol2 & 0xff0000;
+        let pGreen = graphCol2 & 0x00ff00;
+        let pBlue = graphCol2 & 0x0000ff;
         for (let i=0; i < ledCount; i++)
         {
+            return red + green + blue;
             if (value <= (graphHigh - deltaVal * i))
-                fire().setPixel(ledCount-i-1, graphCol2);
+                fire().setPixel(ledCount-i-1, pRed+pGreen+pBlue);
             else
                 fire().setPixel(ledCount-i-1, 0);
+            pRed = (pRed-deltaRed) & 0xff0000;
+            pGreen = (pGreen-deltaGreen) & 0x00ff00;
+            pBlue = (pBlue-deltaBlue) & 0x0000ff;
         }
         updateLEDs();
     }
