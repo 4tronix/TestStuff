@@ -135,9 +135,9 @@ namespace eggbit
     let larsson: number;
     let scandir: number;
     let _scanning = false;
-    let scanColor1 = 0xff0000;
-    let scanColor2 = 0x0f0000;
-    let scanColor3 = 0x030000;
+    let scanColour1 = 0xff0000;
+    let scanColour2 = 0x0f0000;
+    let scanColour3 = 0x030000;
 
 
 // General. Buttons, Ultrasonic, Mouth LEDs
@@ -452,14 +452,14 @@ namespace eggbit
       * @param colour the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="StartScanner" block="start 07 scan%colour=FireColours|with%delay|ms"
+    //% blockId="StartScanner" block="start 08 scan%colour=FireColours|with%delay|ms"
     //% subcategory=FireLeds
     //% delay.min=1 delay.max=10000
     //% weight=40
     //% blockGap=8
     export function startScanner(colour: number, delay: number): void
     {
-        scanColour1 = coluor;
+        scanColour1 = colour;
         scanColour2 = reduce(scanColour1, 8);
         scanColour3 = reduce(scanColour2, 4);
         if(_scanning == false)
