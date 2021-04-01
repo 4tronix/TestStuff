@@ -452,7 +452,7 @@ namespace eggbit
       * @param colour the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="StartScanner" block="start 08 scan%colour=FireColours|with%delay|ms"
+    //% blockId="StartScanner" block="start 09 scan%colour=FireColours|with%delay|ms"
     //% subcategory=FireLeds
     //% delay.min=1 delay.max=10000
     //% weight=40
@@ -523,11 +523,11 @@ namespace eggbit
         for (let x = 1; x < (ledCount-1); x++)
         {
             if ((x == (larsson - 2)) || (x == (larsson + 2)))
-                setPixelColor(x, scanColor3);
+                setPixelColor(x, scanColour3);
             else if ((x == (larsson - 1)) || (x == (larsson + 1)))
-                setPixelColor(x, scanColor2);
+                setPixelColor(x, scanColour2);
             else if (x == larsson)
-                setPixelColor(x, scanColor1);
+                setPixelColor(x, scanColour1);
             else
                 setPixelColor(x, 0);
         }
