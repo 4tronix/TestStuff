@@ -452,11 +452,10 @@ namespace eggbit
       * @param colour the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="StartScanner" block="start 09 scan%colour=FireColours|with%delay|ms"
+    //% blockId="StartScanner" block="start 10 scan%colour=FireColours|with%delay|ms"
     //% subcategory=FireLeds
     //% delay.min=1 delay.max=10000
     //% weight=40
-    //% blockGap=8
     export function startScanner(colour: number, delay: number): void
     {
         scanColour1 = colour;
@@ -494,7 +493,6 @@ namespace eggbit
     //% blockId="StopScanner" block="stop scanner"
     //% subcategory=FireLeds
     //% weight=30
-    //% blockGap=8
     export function stopScanner(): void
     {
         _scanning = false;
@@ -520,7 +518,7 @@ namespace eggbit
             scandir = -1;
         else if (larsson <= 0)
             scandir = 1;
-        for (let x = 1; x < (ledCount-1); x++)
+        for (let x = 0; x < ledCount; x++)
         {
             if ((x == (larsson - 2)) || (x == (larsson + 2)))
                 setPixelColor(x, scanColour3);
