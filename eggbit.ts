@@ -458,8 +458,9 @@ namespace eggbit
       * @param colour the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="StartScanner" block="start scan%colour=FireColours|with%delay|ms"
+    //% blockId="StartScanner" block="start scan%colour=FireColours|with delay%delay|ms"
     //% subcategory=FireLeds
+    //% delay.shadow=timePicker
     //% delay.min=1 delay.max=10000
     //% weight=50
     export function startScanner(colour: number, delay: number): void
@@ -544,6 +545,7 @@ namespace eggbit
       * @param colour2 the colour for highest value
       */
     //% blockId="SetBargraph" block="set graph%lowest|to%highest|from%colour1=FireColours|to%colour2=FireColours"
+    //% inlineInputMode=inline
     //% subcategory=FireLeds
     //% weight=30
     export function setBargraph(lowest: number, highest: number, colour1: number, colour2: number): void
@@ -558,7 +560,7 @@ namespace eggbit
       * Draw bargraph using value and previosuly set parameters
       * @param value value to draw in graph
       */
-    //% blockId="DrawBargraph" block="draw 12 bar graph with%value"
+    //% blockId="DrawBargraph" block="draw 13 bar graph with%value"
     //% subcategory=FireLeds
     //% weight=20
     export function drawBargraph(value: number): void
@@ -572,7 +574,6 @@ namespace eggbit
         let pBlue = graphCol2 & 0x0000ff;
         for (let i=0; i < ledCount; i++)
         {
-            return red + green + blue;
             if (value <= (graphHigh - deltaVal * i))
                 fire().setPixel(ledCount-i-1, pRed+pGreen+pBlue);
             else
