@@ -139,6 +139,12 @@ namespace eggbit
     let scanColour2 = 0x0f0000;
     let scanColour3 = 0x030000;
 
+    // bar graph paarameters. Default range 0-100 in Red
+    let graphLow = 0;
+    let graphHigh = 100;
+    let graphCol1 = 0xff0000;
+    let graphCol2 = 0xff0000;
+
 
 // General. Buttons, Ultrasonic, Mouth LEDs
 
@@ -452,10 +458,10 @@ namespace eggbit
       * @param colour the colour to use for scanning
       * @param delay time in ms between scan steps, eg: 100,50,200,500
       */
-    //% blockId="StartScanner" block="start 10 scan%colour=FireColours|with%delay|ms"
+    //% blockId="StartScanner" block="start scan%colour=FireColours|with%delay|ms"
     //% subcategory=FireLeds
     //% delay.min=1 delay.max=10000
-    //% weight=40
+    //% weight=50
     export function startScanner(colour: number, delay: number): void
     {
         scanColour1 = colour;
@@ -492,7 +498,7 @@ namespace eggbit
       */
     //% blockId="StopScanner" block="stop scanner"
     //% subcategory=FireLeds
-    //% weight=30
+    //% weight=40
     export function stopScanner(): void
     {
         _scanning = false;
@@ -503,8 +509,7 @@ namespace eggbit
      */
     //% subcategory=FireLeds
     //% blockId="LedScan" block="scan all FireLeds"
-    //% weight=20
-    //% blockGap=8
+    //% weight=35
     //% deprecated=true
     export function ledScan(): void
     {
@@ -531,5 +536,42 @@ namespace eggbit
         }
     }
 
+    /**
+      * Set Bargraph Parameters
+      * @param lowest Lowest value to graph (single LED at colour1)
+      * @param highest highest value to graph (all LEDs lit, highest at colour2)
+      * @param colour1 the colour for lowest value
+      * @param colour2 the colour for highest value
+      */
+    //% blockId="SetBargraph" block="graph%lowest|to%highest|from%colour1=FireColours|to%colour2=FireColours"
+    //% subcategory=FireLeds
+    //% weight=30
+    export function setBargraph(lowest: number, highest: number, colour1: number, colour2: number): void
+    {
+        graphLow = lowest;
+        graphHigh = highest;
+        graphCol1 = colour1;
+        graphCol2 = colour2;
+    }
+
+    /**
+      * Draw bargraph using value and previosuly set parameters
+      * @param value value to draw in graph
+      */
+    //% blockId="DrawBargraph" block="draw bar graph with%value"
+    //% subcategory=FireLeds
+    //% weight=20
+    export function drawBargraph(value: number): void
+    {
+        let deltaVal = (graphHigh - graphLow) / ledCount;
+        for (let i=0; i < ledCount; i++)
+        {
+            if (value <= (graphHigh - deltaVal * i))
+                fire().setPixel(ledCount-i-1, graphCol2);
+            else
+                fire().setPixel(ledCount-i-1, 0);
+        }
+        updateLEDs();
+    }
 
 }
