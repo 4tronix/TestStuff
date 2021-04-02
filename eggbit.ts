@@ -568,14 +568,14 @@ namespace eggbit
       * Draw bargraph using value and previosuly set parameters
       * @param value value to draw in graph
       */
-    //% blockId="DrawBargraph" block="draw 19 bar graph with%value"
+    //% blockId="DrawBargraph" block="draw 20 bar graph with%value"
     //% subcategory=FireLeds
     //% weight=20
     export function drawBargraph(value: number): void
     {
-        let deltaRed = ((gRed2 - gRed1) & 0xff) >> 3;
-        let deltaGreen = ((gGreen2 - gGreen1) & 0xff) >> 3;
-        let deltaBlue = ((gBlue2 - gBlue1) & 0xff) >> 3;
+        let deltaRed = (gRed2 - gRed1) / (ledCount-1);
+        let deltaGreen = (gGreen2 - gGreen1) / (ledCount-1);
+        let deltaBlue = (gBlue2 - gBlue1) / (ledCount-1);
         let pRed = gRed1;
         let pGreen = gGreen1;
         let pBlue = gBlue1;
