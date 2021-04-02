@@ -568,7 +568,7 @@ namespace eggbit
       * Draw bargraph using value and previosuly set parameters
       * @param value value to draw in graph
       */
-    //% blockId="DrawBargraph" block="draw 16 bar graph with%value"
+    //% blockId="DrawBargraph" block="draw 17 bar graph with%value"
     //% subcategory=FireLeds
     //% weight=20
     export function drawBargraph(value: number): void
@@ -583,7 +583,7 @@ namespace eggbit
         for (let i=0; i < ledCount; i++)
         {
             if (value >= (graphHigh - deltaVal * (i+1)))
-                fire().setPixel(ledCount-i-1, (pRed << 16) | (pGreen << 8) | (pBlue);
+                fire().setPixel(ledCount-i-1, (pRed << 16) | (pGreen << 8) | (pBlue));
             else
                 fire().setPixel(ledCount-i-1, 0);
             pRed = (pRed-deltaRed) & 0xff;
