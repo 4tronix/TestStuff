@@ -246,6 +246,7 @@ namespace theta
     let oled: firescreen.Screen;
     let leftBias = 0;
     let rightBias = 0;
+    let startFlash = 25;
 
     const lMotorD0 = DigitalPin.P14;
     const lMotorD1 = DigitalPin.P13;
@@ -788,6 +789,7 @@ namespace theta
     //% pin.minimum=0
     //% pin.maximum=3
     //% subcategory="Inputs & Outputs"
+    //% group="IO Pins"
     export function setIOMode(pin: number, mode: RXIOMode): void
     {
         let cmd = 0;
@@ -812,6 +814,7 @@ namespace theta
     //% pin.minimum=0
     //% pin.maximum=3
     //% subcategory="Inputs & Outputs"
+    //% group="IO Pins"
     export function readIOPin(pin: number): number
     {
         let cmd = 0;
@@ -841,6 +844,7 @@ namespace theta
     //% pin.minimum=0
     //% pin.maximum=3
     //% subcategory="Inputs & Outputs"
+    //% group="IO Pins"
     export function writeIOPin(value: number, pin: number): void
     {
         let cmd = 0;
@@ -868,6 +872,7 @@ namespace theta
     //% flag.shadow="toggleOnOff"
     //% weight=100
     //% subcategory="Inputs & Outputs"
+    //% group=Sensors
     export function buzz(flag: boolean): void
     {
         let buzz = flag ? 1 : 0;
@@ -881,6 +886,7 @@ namespace theta
     //% blockId="ReadSonar" block="read sonar as%unit"
     //% weight=90
     //% subcategory="Inputs & Outputs"
+    //% group=Sensors
     export function readSonar(unit: RXPingUnit): number
     {
         // send pulse
@@ -916,6 +922,7 @@ namespace theta
     //% blockId="ReadLine" block="%sensor|line sensor"
     //% weight=80
     //% subcategory="Inputs & Outputs"
+    //% group=Sensors
     export function readLine(sensor: RXLineSensor): number
     {
         let reg = (sensor == RXLineSensor.Left) ? LINEL : LINER;
@@ -930,6 +937,7 @@ namespace theta
     //% blockId="ReadLight" block="%sensor|light sensor"
     //% weight=70
     //% subcategory="Inputs & Outputs"
+    //% group=Sensors
     export function readLight(sensor: RXLightSensor): number
     {
         let reg = (sensor == RXLightSensor.Left) ? LIGHTL : LIGHTR;
@@ -943,6 +951,7 @@ namespace theta
     //% blockId="ReadDial" block="dial"
     //% weight=60
     //% subcategory="Inputs & Outputs"
+    //% group=Sensors
     export function readDial(): number
     {
         pins.i2cWriteNumber(_addrATM, DIAL, NumberFormat.Int8LE, false);
@@ -955,11 +964,56 @@ namespace theta
     //% blockId="ReadBattery" block="battery (mV)"
     //% weight=50
     //% subcategory="Inputs & Outputs"
+    //% group=Sensors
     export function readBattery(): number
     {
         pins.i2cWriteNumber(_addrATM, PSU, NumberFormat.Int8LE, false);
         return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE) - 11) * 10;
     }
+
+// EEROM Functions
+    /**
+      * Read EEROM
+      * @param location address in Flash to read
+      */
+    //% blockId="ReadEEROM"
+    //% block="01 EEROM address%location"
+    //% weight=15
+    //% subcategory="Inputs & Outputs"
+    //% group=EEROM
+    export function readEEROM(location: number): number
+    {
+	if ((location + startFlash) < 255)
+        {
+            pins.i2cWriteNumber(_addrATM, location + startFlash, NumberFormat.Int8LE, false);
+            return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE));
+        }
+        else
+            return 0;
+    }
+
+    /**
+    * Write EEROM
+    * @param value data to write (0 to 255)
+    * @param location address in Flash to write
+    */
+    //% blockId="WriteEEROM"
+    //%block="write%value|to EEROM%location"
+    //% weight=10
+    //% subcategory="Inputs & Outputs"
+    //% group=EEROM
+    export function writeEEROM(value: number, location: number): void
+    {
+        let cmd = location + startFlash;
+        if (cmd < 255)
+        {
+            i2cData2[0] = cmd;		// I2C register to set
+            i2cData2[1] = value;	// Value
+            pins.i2cWriteBuffer(_addrATM, i2cData2);
+        }
+    }
+
+
 
 
 // Addon Boards

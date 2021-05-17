@@ -1,19 +1,18 @@
 {
-    "name": "EggBit",
-    "version": "0.0.2",
-    "description": "Microsoft MakeCode package for 4tronix EggBit range of wearables",
+    "name": "Theta",
+    "version": "0.0.1",
+    "description": "Microsoft MakeCode package for RobotixLab Theta Robot",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "fireled": "github:4tronix/FireLedsBase#0.1.4"
+        "fireled": "github:4tronix/FireLedsBase#0.1.4",
+        "firescreen": "github:4tronix/FireScreen#0.0.5"
     },
     "files": [
         "README.md",
-        "eggbit.ts"
-        ],
-    "testFiles": [
-        "tests.ts"
+        "theta.ts"
     ],
-    "yotta": {},
-    "public": true
+    "testFiles": [],
+    "public": true,
+    "yotta": {}
 }
