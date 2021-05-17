@@ -264,15 +264,17 @@ namespace minibit
     {
         if (miniModel == -1)
         {
-            miniModel = 10;
+            miniModel = 12;
             // Check we can write/read EEROM 3 with 0x5A and 0xA5. Don't use this address for calibration values!
             wrEEROM(3, 0x5a);
             if (rdEEROM(3) == 0x5A)
             {
                 wrEEROM(3, 0xA5);
-                if (rdEEROM(3) == 0xA5)
-                    miniModel = 12;
+                if (rdEEROM(3) != 0xA5)
+                    miniModel = 10;
             }
+            else
+                miniModel = 10;
         }
         return miniModel;
     }
@@ -902,7 +904,7 @@ namespace minibit
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="03 write%data|to EEROM%address"
+    //% block="04 write%data|to EEROM%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     //% subcategory="Sensors"
