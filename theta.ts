@@ -246,7 +246,11 @@ namespace theta
     let oled: firescreen.Screen;
     let leftBias = 0;
     let rightBias = 0;
+
     let startFlash = 25;
+    let calibration: number[] = [0, 0, 0];
+    let leftCalib = 0;
+    let rightCalib = 0;
 
     const lMotorD0 = DigitalPin.P14;
     const lMotorD1 = DigitalPin.P13;
@@ -977,11 +981,23 @@ namespace theta
       * @param location address in Flash to read
       */
     //% blockId="ReadEEROM"
-    //% block="02 EEROM address%location"
+    //% block="03 EEROM address%location"
     //% weight=15
     //% subcategory="Inputs & Outputs"
     //% group=EEROM
     export function readEEROM(location: number): number
+    {
+        return rdEEROM(location + 16); // first 16 bytes reserved for DriveStraight
+    }
+
+    /**
+      * Raw Read EEROM
+      * @param location address in Flash to read
+      */
+    //% blockId="RawReadEEROM"
+    //% block="raw EEROM address%location"
+    //% deprecated=true
+    export function rdEEROM (add: number): number
     {
 	if ((location + startFlash) < 255)
         {
@@ -1004,6 +1020,19 @@ namespace theta
     //% group=EEROM
     export function writeEEROM(value: number, location: number): void
     {
+        wrEEROM(value, location + 16); // first 16 bytes reserved for DriveStraight
+    }
+
+    /**
+    * Raw Write EEROM
+    * @param value data to write (0 to 255)
+    * @param location address in Flash to write
+    */
+    //% blockId="RawWriteEEROM"
+    //% block="raw write%value|to EEROM%location"
+    //% deprecated=true
+    export function wrEEROM(value: number, location: number): void
+    {
         let cmd = location + startFlash;
         if (cmd < 255)
         {
@@ -1011,6 +1040,32 @@ namespace theta
             i2cData2[1] = value;	// Value
             pins.i2cWriteBuffer(_addrATM, i2cData2);
         }
+    }
+
+    /**
+      * Load Calibration data from EEROM
+      */
+    //% blockId="loadCalibration"
+    //% block="Load calibration from EEROM"
+    //% weight=80
+    //% deprecated=true
+    export function loadCalibration(): void
+    {
+	for (let i=0; i<3; i++)
+            calibration[i] = rdEEROM(i);
+    }
+
+    /**
+      * Save Calibration data to EEROM
+      */
+    //% blockId="saveCalibration"
+    //% block="Save calibration to EEROM"
+    //% weight=70
+    //% deprecated=true
+    export function saveCalibration(): void
+    {
+	for (let i=0; i<3; i++)
+            wrEEROM(calibration[i],i);
     }
 
 
