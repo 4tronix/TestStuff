@@ -251,6 +251,7 @@ namespace theta
     let calibration: number[] = [0, 0, 0];
     let leftCalib = 0;
     let rightCalib = 0;
+    let initCalib = false;
 
     const lMotorD0 = DigitalPin.P14;
     const lMotorD1 = DigitalPin.P13;
@@ -473,6 +474,26 @@ namespace theta
         pins.digitalWritePin(rMotorD1, stopMode);
     }
 
+    function createCalib(speed: number): void
+    {
+        if (! initCalib)
+        {
+            loadCalibration();
+            initCalib = true;
+        }
+        let calibVal = 0;
+        if (speed < 60)
+            calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0]);
+        else
+            calibVal = calibration[2] - ((90 - speed)/30) * (calibration[2] - calibration[1]);
+        leftCalib = 0;
+        rightCalib = 0;
+        if (calibVal < 0)
+            leftCalib = Math.abs(calibVal);
+        else
+            rightCalib = calibVal;
+    }
+
     /**
       * Move individual motors forward or reverse
       * @param motor motor to drive
@@ -486,10 +507,23 @@ namespace theta
     //% blockGap=8
     export function motorMove(motor: RXMotor, direction: RXDirection, speed: number): void
     {
-        speed = clamp(speed, 0, 100) * 10.23;
+        let lSpeed = 0;
+        let rSpeed = 0;
+        speed = clamp(speed, 0, 100);
+	createCalib(speed); // sets bias values for "DriveStraight"
+        speed = speed * 10.23
         setPWM(speed);
-        let lSpeed = Math.round(speed * (100 - leftBias) / 100);
-        let rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        if (leftBias == 0 && rightBias == 0)
+        {
+            lSpeed = Math.round(speed * (100 - leftCalib) / 100);
+            rSpeed = Math.round(speed * (100 - rightCalib) / 100);
+        }
+        else
+        {
+            lSpeed = Math.round(speed * (100 - leftBias) / 100);
+            rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        }
+
         if ((motor == RXMotor.Left) || (motor == RXMotor.Both))
         {
             if (direction == RXDirection.Forward)
@@ -551,6 +585,7 @@ namespace theta
     //% weight=40
     //% subcategory=Motors
     //% blockGap=8
+    //% deprecated=true
     export function motorBias(direction: RXRobotDirection, bias: number): void
     {
         bias = clamp(bias, 0, 80);
@@ -981,7 +1016,7 @@ namespace theta
       * @param location address in Flash to read
       */
     //% blockId="ReadEEROM"
-    //% block="03 EEROM address%location"
+    //% block="04 EEROM address%location"
     //% weight=15
     //% subcategory="Inputs & Outputs"
     //% group=EEROM
@@ -997,7 +1032,7 @@ namespace theta
     //% blockId="RawReadEEROM"
     //% block="raw EEROM address%location"
     //% deprecated=true
-    export function rdEEROM (add: number): number
+    export function rdEEROM (location: number): number
     {
 	if ((location + startFlash) < 255)
         {
