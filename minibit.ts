@@ -236,6 +236,8 @@ namespace minibit
     let oled: firescreen.Screen;
     let leftBias = 0;
     let rightBias = 0;
+
+    let EEROM = 0x50;	// i2c address of EEROM
     let calibration: number[] = [0, 0, 0];
     let leftCalib = 0;
     let rightCalib = 0;
@@ -295,7 +297,7 @@ namespace minibit
       * Get version of MiniBit (1.0 or 1.2) 1.1 is not distinguishable
     */
     //% blockId="mbGetVersion"
-    //% block="01 MiniBit version"
+    //% block="02 MiniBit version"
     export function mbGetVersion(): number
     {
         return getModel();
