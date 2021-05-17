@@ -271,10 +271,10 @@ namespace minibit
             {
                 wrEEROM(3, 0xA5);
                 if (rdEEROM(3) != 0xA5)
-                    miniModel = 10;
+                    miniModel = 12;
             }
             else
-                miniModel = 10;
+                miniModel = 12;
         }
         return miniModel;
     }
@@ -904,7 +904,7 @@ namespace minibit
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="04 write%data|to EEROM%address"
+    //% block="05 write%data|to EEROM%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     //% subcategory="Sensors"
@@ -924,7 +924,7 @@ namespace minibit
     //% data.min = -128 data.max = 127
     //% weight=100
     //% group="EEROM"
-    //% deprecated=true
+    //% deprecated=false
     export function wrEEROM(data: number, address: number): void
     {
         if (getModel() == 12)
@@ -961,7 +961,7 @@ namespace minibit
     //% blockId="rawReadEEROM"
     //% block="raw read EEROMs%address"
     //% weight=90
-    //% deprecated=true
+    //% deprecated=false
     function rdEEROM(address: number): number
     {
         if (getModel() == 12)
