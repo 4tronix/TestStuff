@@ -904,7 +904,7 @@ namespace minibit
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="05 write%data|to EEROM%address"
+    //% block="06 write%data|to EEROM%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     //% subcategory="Sensors"
@@ -944,7 +944,7 @@ namespace minibit
       * @param address Location in EEROM to read from
       */
     //% blockId="readEEROM"
-    //% block="read EEROM address%address"
+    //% block="read EEROM%address"
     //% weight=90
     //% subcategory="Sensors"
     //% group="EEROM"
@@ -961,8 +961,10 @@ namespace minibit
     //% blockId="rawReadEEROM"
     //% block="raw read EEROMs%address"
     //% weight=90
+    //% subcategory="Sensors"
+    //% group="EEROM"
     //% deprecated=false
-    function rdEEROM(address: number): number
+    export function rdEEROM(address: number): number
     {
         if (getModel() == 12)
         {
