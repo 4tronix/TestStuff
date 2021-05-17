@@ -915,7 +915,7 @@ namespace minibit
     }
 
     /**
-      * Write a byte of data to EEROM at selected address
+      * Write a byte of data to EEROM at selected address 
       * @param address Location in EEROM to write to
       * @param data Byte of data to write
       */
