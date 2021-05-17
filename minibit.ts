@@ -297,7 +297,7 @@ namespace minibit
       * Get version of MiniBit (1.0 or 1.2) 1.1 is not distinguishable
     */
     //% blockId="mbGetVersion"
-    //% block="02 MiniBit version"
+    //% block="MiniBit version"
     export function mbGetVersion(): number
     {
         return getModel();
@@ -902,9 +902,10 @@ namespace minibit
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="write%data|to EEROM%address"
+    //% block="03 write%data|to EEROM%address"
     //% data.min = -128 data.max = 127
     //% weight=100
+    //% subcategory="Sensors"
     //% group="EEROM"
     export function writeEEROM(data: number, address: number): void
     {
@@ -943,7 +944,8 @@ namespace minibit
     //% blockId="readEEROM"
     //% block="read EEROM address%address"
     //% weight=90
-    //% deprecated=true
+    //% subcategory="Sensors"
+    //% group="EEROM"
     export function readEEROM(address: number): number
     {
         return rdEEROM(address + 16);
