@@ -271,10 +271,10 @@ namespace minibit
             {
                 wrEEROM(0xA5, 3);
                 if (rdEEROM(3) != -91) // 0xa5 is -91
-                    miniModel = 10;
+                    miniModel = rdEEROM(3);
             }
             else
-                miniModel = 10;
+                miniModel = rdEEROM(3);
         }
         return miniModel;
     }
@@ -935,7 +935,7 @@ namespace minibit
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="08 write%data|to EEROM%address"
+    //% block="09 write%data|to EEROM%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     //% subcategory="Sensors"
