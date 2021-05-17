@@ -264,17 +264,17 @@ namespace minibit
     {
         if (miniModel == -1)
         {
-            miniModel = 3;
-            // Check we can write/read EEROM 3 with 0x5A and 0xA5. Don't use this address for calibration values!
+            miniModel = 13;
+            // Check we can write/read EEROM address 3 with 0x5A and 0xA5. Don't use this address for calibration values!
             wrEEROM(0x5a, 3);
             if (rdEEROM(3) == 0x5A)
             {
                 wrEEROM(0xA5, 3);
                 if (rdEEROM(3) != -91) // 0xa5 is -91
-                    miniModel = 1;
+                    miniModel = 10;
             }
             else
-                miniModel = 2;
+                miniModel = 10;
         }
         return miniModel;
     }
@@ -294,7 +294,7 @@ namespace minibit
             btDisabled = true;
     }
 
-// Check model of MiniBit. v1.2 has Flash memory, 1.0 and 1.1 are indistinguishable in software
+// Check model of MiniBit. v1.3 has Flash memory, 1.0, 1.1 and 1.2 are indistinguishable in software
     /**
       * Get version of MiniBit (1.0 or 1.2) 1.1 is not distinguishable
     */
@@ -408,6 +408,24 @@ namespace minibit
         pins.digitalWritePin(DigitalPin.P12, stopMode);
     }
 
+    function createCalib(speed: number): void
+    {
+        if (getModel() >= 13) // Flash not supported until version 1.3
+        {        
+            let calibVal = 0;
+            if (speed < 60)
+                calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0]);
+            else
+                calibVal = calibration[2] - ((90 - speed)/30) * (calibration[2] - calibration[1]);
+            leftCalib = 0;
+            rightCalib = 0;
+            if (calibVal < 0)
+                leftCalib = Math.abs(calibVal);
+            else
+                rightCalib = calibVal;
+        }
+    }
+
     /**
       * Move individual motors forward or reverse
       * @param motor motor to drive
@@ -420,10 +438,23 @@ namespace minibit
     //% subcategory=Motors
     export function move(motor: mbMotor, direction: mbDirection, speed: number): void
     {
-        speed = clamp(speed, 0, 100) * 10.23;
+        let lSpeed = 0;
+        let rSpeed = 0;
+        getModel();
+        speed = clamp(speed, 0, 100);
+	createCalib(speed); // sets bias values for "DriveStraight" if available (version 1.3 onwards)
+        speed = speed * 10.23
         setPWM(speed);
-        let lSpeed = Math.round(speed * (100 - leftBias) / 100);
-        let rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        if (getModel() >= 13 && leftBias == 0 && rightBias == 0)
+        {
+            lSpeed = Math.round(speed * (100 - leftCalib) / 100);
+            rSpeed = Math.round(speed * (100 - rightCalib) / 100);
+        }
+        else
+        {
+            lSpeed = Math.round(speed * (100 - leftBias) / 100);
+            rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        }
         if ((motor == mbMotor.Left) || (motor == mbMotor.Both))
         {
             if (direction == mbDirection.Forward)
@@ -453,7 +484,7 @@ namespace minibit
     }
 
     /**
-      * Set left/right bias to match motors
+      * Set left/right bias to match motors. Don't use for v1.3 and later
       * @param direction direction to turn more (if robot goes right, set this to left)
       * @param bias percentage of speed to bias with eg: 10
       */
@@ -904,7 +935,7 @@ namespace minibit
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="07 write%data|to EEROM%address"
+    //% block="08 write%data|to EEROM%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     //% subcategory="Sensors"
@@ -915,7 +946,7 @@ namespace minibit
     }
 
     /**
-      * Write a byte of data to EEROM at selected address 
+      * Write a byte of data to EEROM at selected address
       * @param address Location in EEROM to write to
       * @param data Byte of data to write
       */
