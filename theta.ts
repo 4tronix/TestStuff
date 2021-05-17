@@ -977,7 +977,7 @@ namespace theta
       * @param location address in Flash to read
       */
     //% blockId="ReadEEROM"
-    //% block="01 EEROM address%location"
+    //% block="02 EEROM address%location"
     //% weight=15
     //% subcategory="Inputs & Outputs"
     //% group=EEROM
@@ -985,8 +985,8 @@ namespace theta
     {
 	if ((location + startFlash) < 255)
         {
-            pins.i2cWriteNumber(_addrATM, location + startFlash, NumberFormat.Int8LE, false);
-            return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE));
+            pins.i2cWriteNumber(_addrATM, location + startFlash, NumberFormat.UInt8LE, false);
+            return (pins.i2cReadNumber(_addrATM, NumberFormat.Int16LE));
         }
         else
             return 0;
