@@ -264,17 +264,17 @@ namespace minibit
     {
         if (miniModel == -1)
         {
-            miniModel = 12;
+            miniModel = 3;
             // Check we can write/read EEROM 3 with 0x5A and 0xA5. Don't use this address for calibration values!
-            wrEEROM(3, 0x5a);
+            wrEEROM(0x5a, 3);
             if (rdEEROM(3) == 0x5A)
             {
-                wrEEROM(3, 0xA5);
-                if (rdEEROM(3) != 0xA5)
-                    miniModel = 12;
+                wrEEROM(0xA5, 3);
+                if (rdEEROM(3) != -91) // 0xa5 is -91
+                    miniModel = 1;
             }
             else
-                miniModel = 12;
+                miniModel = 2;
         }
         return miniModel;
     }
@@ -904,7 +904,7 @@ namespace minibit
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="06 write%data|to EEROM%address"
+    //% block="07 write%data|to EEROM%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     //% subcategory="Sensors"
@@ -924,10 +924,10 @@ namespace minibit
     //% data.min = -128 data.max = 127
     //% weight=100
     //% group="EEROM"
-    //% deprecated=false
+    //% deprecated=true
     export function wrEEROM(data: number, address: number): void
     {
-        if (getModel() == 12)
+        if (getModel() == 3)
         {
             let i2cData = pins.createBuffer(3);
 
@@ -963,10 +963,10 @@ namespace minibit
     //% weight=90
     //% subcategory="Sensors"
     //% group="EEROM"
-    //% deprecated=false
+    //% deprecated=true
     export function rdEEROM(address: number): number
     {
-        if (getModel() == 12)
+        if (getModel() == 3)
         {
             let i2cRead = pins.createBuffer(2);
 
