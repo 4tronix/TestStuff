@@ -1,18 +1,20 @@
 {
-    "name": "Theta",
-    "version": "0.0.1",
-    "description": "Microsoft MakeCode package for RobotixLab Theta Robot",
+    "name": "MiniBit",
+    "version": "1.1.4",
+    "description": "Microsoft MakeCode package for 4tronix MiniBit",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "fireled": "github:4tronix/FireLedsBase#0.1.4",
+        "fireled": "github:4tronix/FireLedsBase",
         "firescreen": "github:4tronix/FireScreen#0.0.5"
     },
     "files": [
         "README.md",
-        "theta.ts"
+        "minibit.ts"
+     ],
+    "testFiles": [
+        "tests.ts"
     ],
-    "testFiles": [],
-    "public": true,
-    "yotta": {}
+    "yotta": {},
+    "public": true
 }
