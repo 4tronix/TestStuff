@@ -823,7 +823,7 @@ namespace theta
     * @param pin select 0 to 3
     * @param mode Can be one of Digital In, Digital Out, Servo or PWM Out
     */
-    //% blockId="SetIOMode" block="set 08 IO mode of pin%pin|to %mode"
+    //% blockId="SetIOMode" block="set IO mode of pin%pin|to%mode"
     //% weight=40
     //% pin.minimum=0
     //% pin.maximum=3
@@ -958,13 +958,21 @@ namespace theta
       * Read line sensor.
       * @param sensor Line sensor to read.
       */
-    //% blockId="ReadLine" block="%sensor|line sensor"
+    //% blockId="ReadLine" block="01 %sensor|line sensor"
     //% weight=80
     //% subcategory="Inputs & Outputs"
     //% group=Sensors
     export function readLine(sensor: RXLineSensor): number
     {
         let reg = (sensor == RXLineSensor.Left) ? LINEL : LINER;
+        let rval = rLine(reg);
+        if (rval == 0)
+            rval = rLine(reg);
+        return rval;
+    }
+
+    function rLine(reg: number): number
+    {
         pins.i2cWriteNumber(_addrATM, reg, NumberFormat.Int8LE, false);
         return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE));
     }
@@ -1016,7 +1024,7 @@ namespace theta
       * @param location address in Flash to read
       */
     //% blockId="ReadEEROM"
-    //% block="04 EEROM address%location"
+    //% block="read EEROM%location"
     //% weight=15
     //% subcategory="Inputs & Outputs"
     //% group=EEROM
@@ -1030,7 +1038,7 @@ namespace theta
       * @param location address in Flash to read
       */
     //% blockId="RawReadEEROM"
-    //% block="raw EEROM address%location"
+    //% block="raw read EEROM%location"
     //% deprecated=true
     export function rdEEROM (location: number): number
     {
