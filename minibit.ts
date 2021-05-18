@@ -935,7 +935,7 @@ namespace minibit
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="12 write%data|to EEROM%address"
+    //% block="13 write%data|to EEROM%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     //% subcategory="Sensors"
@@ -951,7 +951,7 @@ namespace minibit
       * @param data Byte of data to write
       */
     //% blockId="rawWriteEEROM"
-    //% block="12 raw write%data|to EEROM%address"
+    //% block="13a raw write%data|to EEROM%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     //% group="EEROM"
@@ -966,7 +966,7 @@ namespace minibit
             i2cData[1] = address & 0xff;	// address LSB
             i2cData[2] = data & 0xff;
             pins.i2cWriteBuffer(EEROM, i2cData, false);
-            basic.pause(1);			// needs a short pause. << 1ms ok?
+            basic.pause(3);			// needs a short pause. 3ms ok?
         }
     }
 
