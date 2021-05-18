@@ -271,10 +271,10 @@ namespace minibit
             {
                 wrEEROM(0xA5, 3);
                 if (rdEEROM(3) != -91) // 0xa5 is -91
-                    miniModel = rdEEROM(3);
+                    miniModel = 12;
             }
             else
-                miniModel = rdEEROM(3);
+                miniModel = 12;
         }
         return miniModel;
     }
@@ -935,7 +935,7 @@ namespace minibit
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="09 write%data|to EEROM%address"
+    //% block="10 write%data|to EEROM%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     //% subcategory="Sensors"
@@ -958,7 +958,7 @@ namespace minibit
     //% deprecated=true
     export function wrEEROM(data: number, address: number): void
     {
-        if (getModel() == 3)
+        if (getModel() == 13)
         {
             let i2cData = pins.createBuffer(3);
 
@@ -997,7 +997,7 @@ namespace minibit
     //% deprecated=true
     export function rdEEROM(address: number): number
     {
-        if (getModel() == 3)
+        if (getModel() == 13)
         {
             let i2cRead = pins.createBuffer(2);
 
