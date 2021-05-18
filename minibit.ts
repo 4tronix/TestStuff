@@ -935,7 +935,7 @@ namespace minibit
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="10 write%data|to EEROM%address"
+    //% block="11 write%data|to EEROM%address"
     //% data.min = -128 data.max = 127
     //% weight=100
     //% subcategory="Sensors"
@@ -1035,6 +1035,19 @@ namespace minibit
     {
 	for (let i=0; i<3; i++)
             wrEEROM(calibration[i], i);
+    }
+
+    /**
+      * Get Calibration Value
+      * @param id calibration value address (0 to 2)
+      */
+    //% blockId="getCalibration"
+    //% block="calibration value%id"
+    //% weight=70
+    //% deprecated=true
+    export function getCalibration(id: number): void
+    {
+	return calibration[id];
     }
 
 
