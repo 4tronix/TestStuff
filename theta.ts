@@ -509,7 +509,7 @@ namespace theta
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="MotorMove" block="move 04 %motor|motor(s)%direction|at speed%speed|\\%"
+    //% blockId="MotorMove" block="move 05 %motor|motor(s)%direction|at speed%speed|\\%"
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
@@ -549,7 +549,7 @@ namespace theta
         if (doPause)
         {
             robotStop(RXStopMode.Brake);
-            basicPause(500);
+            basic.pause(500);
         }
 
         if ((motor == RXMotor.Left) || (motor == RXMotor.Both))
