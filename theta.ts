@@ -253,6 +253,10 @@ namespace theta
     let rightCalib = 0;
     let initCalib = false;
 
+    // variables to hold last moved direction for each motor. -1 = reverse, 0 = Stopped, 1 = forward. Delay before changing direction
+    let leftMotorDir = 0;
+    let rightMotorDir = 0;
+
     const lMotorD0 = DigitalPin.P14;
     const lMotorD1 = DigitalPin.P13;
     const lMotorA0 = AnalogPin.P14;
@@ -357,7 +361,7 @@ namespace theta
             btDisabled = true;
     }
 
-// Setup Analog Data (line and Light sensors, etc, using ATMega)
+// Setup Analog Data (line and Light sensors, etc, using ATMega. Also initialises Music pin)
     function initATM()
     {
         if (setupATM)
@@ -365,16 +369,16 @@ namespace theta
         setupATM = true;
 
         pins.i2cWriteNumber(_addrATM, ATMRESET, NumberFormat.Int8LE, false);
-
+        pins.setAudioPin(AnalogPin.P8);
     }
 
 // Motor Blocks
     // slow PWM frequency for slower speeds to improve torque
     function setPWM(speed: number): void
     {
-        if (speed < 200)
+        if (speed < 250)
             pins.analogSetPeriod(AnalogPin.P0, 60000);
-        else if (speed < 300)
+        else if (speed < 350)
             pins.analogSetPeriod(AnalogPin.P0, 40000);
         else
             pins.analogSetPeriod(AnalogPin.P0, 30000);
@@ -472,6 +476,8 @@ namespace theta
         pins.digitalWritePin(lMotorD1, stopMode);
         pins.digitalWritePin(rMotorD0, stopMode);
         pins.digitalWritePin(rMotorD1, stopMode);
+        leftMotorDir = 0;
+        rightMotorDir = 0;
     }
 
     function createCalib(speed: number): void
@@ -492,6 +498,9 @@ namespace theta
             leftCalib = Math.abs(calibVal);
         else
             rightCalib = calibVal;
+        // replace calibration values with bias values for now 22-Jul-21
+        leftCalib = leftBias;
+        rightCalib = rightBias;
     }
 
     /**
@@ -528,26 +537,38 @@ namespace theta
         {
             if (direction == RXDirection.Forward)
             {
+                if (leftMotorDir == -1)
+                    basic.pause(50);
                 pins.analogWritePin(lMotorA0, lSpeed);
                 pins.analogWritePin(lMotorA1, 0);
+                leftMotorDir = 1;
             }
             else
             {
+                if (leftMotorDir == 1)
+                    basic.pause(50);
                 pins.analogWritePin(lMotorA0, 0);
                 pins.analogWritePin(lMotorA1, lSpeed);
+                leftMotorDir = -1;
             }
         }
         if ((motor == RXMotor.Right) || (motor == RXMotor.Both))
         {
             if (direction == RXDirection.Forward)
             {
+                if (rightMotorDir == -1)
+                    basic.pause(50);
                 pins.analogWritePin(rMotorA0, rSpeed);
                 pins.analogWritePin(rMotorA1, 0);
+                rightMotorDir = 1;
             }
             else
             {
+                if (rightMotorDir == 1)
+                    basic.pause(50);
                 pins.analogWritePin(rMotorA0, 0);
                 pins.analogWritePin(rMotorA1, rSpeed);
+                rightMotorDir = -1;
             }
         }
     }
@@ -585,7 +606,6 @@ namespace theta
     //% weight=40
     //% subcategory=Motors
     //% blockGap=8
-    //% deprecated=true
     export function motorBias(direction: RXRobotDirection, bias: number): void
     {
         bias = clamp(bias, 0, 80);

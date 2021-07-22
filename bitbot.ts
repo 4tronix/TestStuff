@@ -323,7 +323,7 @@ namespace bitbot
     /**
       * get Model of BitBot (Classic or XL)
       */
-    //% blockId="bb_model" block="01 BitBot model"
+    //% blockId="bb_model" block="BitBot model"
     //% weight=90
     //% subcategory=BitBot_Model
     export function getModel(): BBModel
