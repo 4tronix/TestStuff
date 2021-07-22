@@ -509,7 +509,7 @@ namespace theta
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="MotorMove" block="move%motor|motor(s)%direction|at speed%speed|\\%"
+    //% blockId="MotorMove" block="move 02 %motor|motor(s)%direction|at speed%speed|\\%"
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
@@ -538,7 +538,7 @@ namespace theta
             if (direction == RXDirection.Forward)
             {
                 if (leftMotorDir == -1)
-                    basic.pause(50);
+                    basic.pause(500);
                 pins.analogWritePin(lMotorA0, lSpeed);
                 pins.analogWritePin(lMotorA1, 0);
                 leftMotorDir = 1;
@@ -546,7 +546,7 @@ namespace theta
             else
             {
                 if (leftMotorDir == 1)
-                    basic.pause(50);
+                    basic.pause(500);
                 pins.analogWritePin(lMotorA0, 0);
                 pins.analogWritePin(lMotorA1, lSpeed);
                 leftMotorDir = -1;
@@ -557,7 +557,7 @@ namespace theta
             if (direction == RXDirection.Forward)
             {
                 if (rightMotorDir == -1)
-                    basic.pause(50);
+                    basic.pause(500);
                 pins.analogWritePin(rMotorA0, rSpeed);
                 pins.analogWritePin(rMotorA1, 0);
                 rightMotorDir = 1;
@@ -565,7 +565,7 @@ namespace theta
             else
             {
                 if (rightMotorDir == 1)
-                    basic.pause(50);
+                    basic.pause(500);
                 pins.analogWritePin(rMotorA0, 0);
                 pins.analogWritePin(rMotorA1, rSpeed);
                 rightMotorDir = -1;
