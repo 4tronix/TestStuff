@@ -509,7 +509,7 @@ namespace theta
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="MotorMove" block="move 05 %motor|motor(s)%direction|at speed%speed|\\%"
+    //% blockId="MotorMove" block="move 06 %motor|motor(s)%direction|at speed%speed|\\%"
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
@@ -538,12 +538,12 @@ namespace theta
         // pause if either motor changing direction (no pause if previously stopped)
         if ((motor == RXMotor.Left) || (motor == RXMotor.Both))
         {
-            if (((direction == RXDirection.Forward) && (leftMotorDir == 1)) || ((direction == RXDirection.Reverse) && (leftMotorDir == -1)))
+            if (((direction == RXDirection.Forward) && (leftMotorDir == -1)) || ((direction == RXDirection.Reverse) && (leftMotorDir == 1)))
                 doPause = true;
         }
         if ((motor == RXMotor.Right) || (motor == RXMotor.Both))
         {
-            if (((direction == RXDirection.Forward) && (rightMotorDir == 1)) || ((direction == RXDirection.Reverse) && (rightMotorDir == -1)))
+            if (((direction == RXDirection.Forward) && (rightMotorDir == -1)) || ((direction == RXDirection.Reverse) && (rightMotorDir == 1)))
                 doPause = true;
         }
         if (doPause)
