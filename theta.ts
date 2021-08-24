@@ -431,13 +431,13 @@ namespace theta
     {
         if (direction == RXRobotDirection.Left)
         {
-            motorMove(RXMotor.Left, RXDirection.Reverse, speed);
-            motorMove(RXMotor.Right, RXDirection.Forward, speed);
+            myMove(RXMotor.Left, RXDirection.Reverse, speed, true);
+            //motorMove(RXMotor.Right, RXDirection.Forward, speed);
         }
         else if (direction == RXRobotDirection.Right)
         {
-            motorMove(RXMotor.Left, RXDirection.Forward, speed);
-            motorMove(RXMotor.Right, RXDirection.Reverse, speed);
+            myMove(RXMotor.Left, RXDirection.Forward, speed, true);
+            //motorMove(RXMotor.Right, RXDirection.Reverse, speed);
         }
     }
 
@@ -515,16 +515,26 @@ namespace theta
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="MotorMove" block="move 08 %motor|motor(s)%direction|at speed%speed|\\%"
+    //% blockId="MotorMove" block="move 09 %motor|motor(s)%direction|at speed%speed|\\%"
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
     //% blockGap=8
     export function motorMove(motor: RXMotor, direction: RXDirection, speed: number): void
     {
+        myMove(motor, direction, speed, false);
+    }
+
+    function myMove(motor: RXMotor, direction: RXDirection, speed: number, spin: boolean): void
+    {
         let lSpeed = 0;
         let rSpeed = 0;
         let doPause = false;
+        let leftDir = direction;
+        let rightDir = direction;
+
+        if(spin)
+            rightDir = (leftDir == RXDirectionForward) ? RXDirectionForward : RXDirection.Reverse;
 
         speed = clamp(speed, 0, 100);
 	createCalib(speed); // sets bias values for "DriveStraight"
@@ -545,30 +555,22 @@ namespace theta
         if ((motor == RXMotor.Left) || (motor == RXMotor.Both))
         {
             if (((direction == RXDirection.Forward) && (leftMotorDir == -1)) || ((direction == RXDirection.Reverse) && (leftMotorDir == 1)))
-            {
-                pins.digitalWritePin(lMotorD0, 1);
-                pins.digitalWritePin(lMotorD1, 1);
                 doPause = true;
-            }
         }
         if ((motor == RXMotor.Right) || (motor == RXMotor.Both))
         {
             if (((direction == RXDirection.Forward) && (rightMotorDir == -1)) || ((direction == RXDirection.Reverse) && (rightMotorDir == 1)))
-            {
-                pins.digitalWritePin(rMotorD0, 1);
-                pins.digitalWritePin(rMotorD1, 1);
                 doPause = true;
-            }
         }
         if (doPause)
         {
-            //robotStop(RXStopMode.Brake); // shouldn't stop both motors if only one motor changing... oh that's not right either. argh!
+            robotStop(RXStopMode.Brake);
             basic.pause(100);
         }
 
         if ((motor == RXMotor.Left) || (motor == RXMotor.Both))
         {
-            if (direction == RXDirection.Forward)
+            if (leftDir == RXDirection.Forward)
             {
                 pins.analogWritePin(lMotorA0, lSpeed);
                 pins.analogWritePin(lMotorA1, 0);
@@ -583,7 +585,7 @@ namespace theta
         }
         if ((motor == RXMotor.Right) || (motor == RXMotor.Both))
         {
-            if (direction == RXDirection.Forward)
+            if (rightDir == RXDirection.Forward)
             {
                 pins.analogWritePin(rMotorA0, rSpeed);
                 pins.analogWritePin(rMotorA1, 0);
