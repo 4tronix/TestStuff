@@ -431,12 +431,12 @@ namespace theta
     {
         if (direction == RXRobotDirection.Left)
         {
-            myMove(RXMotor.Left, RXDirection.Reverse, speed, true);
+            myMove(RXMotor.Both, RXDirection.Reverse, speed, true);
             //motorMove(RXMotor.Right, RXDirection.Forward, speed);
         }
         else if (direction == RXRobotDirection.Right)
         {
-            myMove(RXMotor.Left, RXDirection.Forward, speed, true);
+            myMove(RXMotor.Both, RXDirection.Forward, speed, true);
             //motorMove(RXMotor.Right, RXDirection.Reverse, speed);
         }
     }
@@ -515,7 +515,7 @@ namespace theta
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="MotorMove" block="move 10 %motor|motor(s)%direction|at speed%speed|\\%"
+    //% blockId="MotorMove" block="move 11 %motor|motor(s)%direction|at speed%speed|\\%"
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
