@@ -482,6 +482,12 @@ namespace theta
 
     function createCalib(speed: number): void
     {
+        if(leftBias != 0 || rightBias != 0) // don't use EEROM calibration if Bias block has been used
+        {
+            leftCalib = 0;
+            rightCalib = 0;
+            return;
+        }
         if (! initCalib)
         {
             loadCalibration();
@@ -499,8 +505,8 @@ namespace theta
         else
             rightCalib = calibVal;
         // replace calibration values with bias values for now 22-Jul-21
-        leftCalib = leftBias;
-        rightCalib = rightBias;
+        // leftCalib = leftBias;
+        // rightCalib = rightBias;
     }
 
     /**
@@ -509,7 +515,7 @@ namespace theta
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="MotorMove" block="move 07 %motor|motor(s)%direction|at speed%speed|\\%"
+    //% blockId="MotorMove" block="move 08 %motor|motor(s)%direction|at speed%speed|\\%"
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
@@ -524,7 +530,7 @@ namespace theta
 	createCalib(speed); // sets bias values for "DriveStraight"
         speed = speed * 10.23
         setPWM(speed);
-        if (leftBias == 0 && rightBias == 0)
+        if (leftBias == 0 && rightBias == 0) // only use EEROM calibration if Bias values have not been set
         {
             lSpeed = Math.round(speed * (100 - leftCalib) / 100);
             rSpeed = Math.round(speed * (100 - rightCalib) / 100);
@@ -539,16 +545,24 @@ namespace theta
         if ((motor == RXMotor.Left) || (motor == RXMotor.Both))
         {
             if (((direction == RXDirection.Forward) && (leftMotorDir == -1)) || ((direction == RXDirection.Reverse) && (leftMotorDir == 1)))
+            {
+                pins.digitalWritePin(lMotorD0, 1);
+                pins.digitalWritePin(lMotorD1, 1);
                 doPause = true;
+            }
         }
         if ((motor == RXMotor.Right) || (motor == RXMotor.Both))
         {
             if (((direction == RXDirection.Forward) && (rightMotorDir == -1)) || ((direction == RXDirection.Reverse) && (rightMotorDir == 1)))
+            {
+                pins.digitalWritePin(rMotorD0, 1);
+                pins.digitalWritePin(rMotorD1, 1);
                 doPause = true;
+            }
         }
         if (doPause)
         {
-            robotStop(RXStopMode.Brake);
+            //robotStop(RXStopMode.Brake); // shouldn't stop both motors if only one motor changing... oh that's not right either. argh!
             basic.pause(100);
         }
 
@@ -608,7 +622,7 @@ namespace theta
 
 
     /**
-      * Set left/right bias to match motors
+      * Set left/right bias to match motors. Overides EEROM calibration values
       * @param direction direction to turn more (if robot goes right, set this to left)
       * @param bias percentage of speed to bias with eg: 10
       */
