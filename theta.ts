@@ -515,7 +515,7 @@ namespace theta
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="MotorMove" block="move 09 %motor|motor(s)%direction|at speed%speed|\\%"
+    //% blockId="MotorMove" block="move 10 %motor|motor(s)%direction|at speed%speed|\\%"
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
@@ -534,7 +534,7 @@ namespace theta
         let rightDir = direction;
 
         if(spin)
-            rightDir = (leftDir == RXDirectionForward) ? RXDirectionForward : RXDirection.Reverse;
+            rightDir = (leftDir == RXDirection.Forward) ? RXDirection.Forward : RXDirection.Reverse;
 
         speed = clamp(speed, 0, 100);
 	createCalib(speed); // sets bias values for "DriveStraight"
