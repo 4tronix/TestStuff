@@ -951,8 +951,8 @@ namespace theta
         }
         switch (unit)
         {
-            case RXPingUnit.Centimeters: return Math.round(d / 37);
-            case RXPingUnit.Inches: return Math.round(d / 94);
+            case RXPingUnit.Centimeters: return Math.round(d / 59);
+            case RXPingUnit.Inches: return Math.round(d / 149);
             default: return d;
         }
     }
