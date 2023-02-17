@@ -248,14 +248,11 @@ namespace theta
     let rightBias = 0;
 
     let startFlash = 25;
+    /* Calibration function removed for v1.1
     let calibration: number[] = [0, 0, 0];
     let leftCalib = 0;
     let rightCalib = 0;
-    let initCalib = false;
-
-    // variables to hold last moved direction for each motor. -1 = reverse, 0 = Stopped, 1 = forward. Delay before changing direction
-    let leftMotorDir = 0;
-    let rightMotorDir = 0;
+    let initCalib = false;*/
 
     const lMotorD0 = DigitalPin.P14;
     const lMotorD1 = DigitalPin.P13;
@@ -376,9 +373,9 @@ namespace theta
     // slow PWM frequency for slower speeds to improve torque
     function setPWM(speed: number): void
     {
-        if (speed < 250)
+        if (speed < 200)
             pins.analogSetPeriod(AnalogPin.P0, 60000);
-        else if (speed < 350)
+        else if (speed < 300)
             pins.analogSetPeriod(AnalogPin.P0, 40000);
         else
             pins.analogSetPeriod(AnalogPin.P0, 30000);
@@ -431,13 +428,13 @@ namespace theta
     {
         if (direction == RXRobotDirection.Left)
         {
-            myMove(RXMotor.Both, RXDirection.Reverse, speed, true);
-            //motorMove(RXMotor.Right, RXDirection.Forward, speed);
+            motorMove(RXMotor.Left, RXDirection.Reverse, speed);
+            motorMove(RXMotor.Right, RXDirection.Forward, speed);
         }
         else if (direction == RXRobotDirection.Right)
         {
-            myMove(RXMotor.Both, RXDirection.Forward, speed, true);
-            //motorMove(RXMotor.Right, RXDirection.Reverse, speed);
+            motorMove(RXMotor.Left, RXDirection.Forward, speed);
+            motorMove(RXMotor.Right, RXDirection.Reverse, speed);
         }
     }
 
@@ -476,18 +473,11 @@ namespace theta
         pins.digitalWritePin(lMotorD1, stopMode);
         pins.digitalWritePin(rMotorD0, stopMode);
         pins.digitalWritePin(rMotorD1, stopMode);
-        leftMotorDir = 0;
-        rightMotorDir = 0;
     }
 
+/* Removed for v1.1
     function createCalib(speed: number): void
     {
-        if(leftBias != 0 || rightBias != 0) // don't use EEROM calibration if Bias block has been used
-        {
-            leftCalib = 0;
-            rightCalib = 0;
-            return;
-        }
         if (! initCalib)
         {
             loadCalibration();
@@ -504,10 +494,8 @@ namespace theta
             leftCalib = Math.abs(calibVal);
         else
             rightCalib = calibVal;
-        // replace calibration values with bias values for now 22-Jul-21
-        // leftCalib = leftBias;
-        // rightCalib = rightBias;
     }
+*/
 
     /**
       * Move individual motors forward or reverse
@@ -515,87 +503,55 @@ namespace theta
       * @param direction select forwards or reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       */
-    //% blockId="MotorMove" block="move 12 %motor|motor(s)%direction|at speed%speed|\\%"
+    //% blockId="MotorMove" block="move%motor|motor(s)%direction|at speed%speed|\\%"
     //% weight=50
     //% speed.min=0 speed.max=100
     //% subcategory=Motors
     //% blockGap=8
     export function motorMove(motor: RXMotor, direction: RXDirection, speed: number): void
     {
-        myMove(motor, direction, speed, false);
-    }
-
-    function myMove(motor: RXMotor, direction: RXDirection, speed: number, spin: boolean): void
-    {
         let lSpeed = 0;
         let rSpeed = 0;
-        let doPause = false;
-        let leftDir = direction;
-        let rightDir = direction;
-
-        if(spin)
-            rightDir = (leftDir == RXDirection.Forward) ? RXDirection.Reverse : RXDirection.Forward;
-
         speed = clamp(speed, 0, 100);
-	createCalib(speed); // sets bias values for "DriveStraight"
+	// Removed v1.1: createCalib(speed); // sets bias values for "DriveStraight"
         speed = speed * 10.23
         setPWM(speed);
-        if (leftBias == 0 && rightBias == 0) // only use EEROM calibration if Bias values have not been set
+	/* Removed v1.1
+        if (leftBias == 0 && rightBias == 0)
         {
             lSpeed = Math.round(speed * (100 - leftCalib) / 100);
             rSpeed = Math.round(speed * (100 - rightCalib) / 100);
         }
-        else
+        else*/
         {
             lSpeed = Math.round(speed * (100 - leftBias) / 100);
             rSpeed = Math.round(speed * (100 - rightBias) / 100);
         }
 
-        // pause if either motor changing direction (no pause if previously stopped)
         if ((motor == RXMotor.Left) || (motor == RXMotor.Both))
         {
-            if (((direction == RXDirection.Forward) && (leftMotorDir == -1)) || ((direction == RXDirection.Reverse) && (leftMotorDir == 1)))
-                doPause = true;
-        }
-        if ((motor == RXMotor.Right) || (motor == RXMotor.Both))
-        {
-            if (((direction == RXDirection.Forward) && (rightMotorDir == -1)) || ((direction == RXDirection.Reverse) && (rightMotorDir == 1)))
-                doPause = true;
-        }
-        if (doPause)
-        {
-            robotStop(RXStopMode.Brake);
-            basic.pause(100);
-        }
-
-        if ((motor == RXMotor.Left) || (motor == RXMotor.Both))
-        {
-            if (leftDir == RXDirection.Forward)
+            if (direction == RXDirection.Forward)
             {
                 pins.analogWritePin(lMotorA0, lSpeed);
                 pins.analogWritePin(lMotorA1, 0);
-                leftMotorDir = 1;
             }
             else
             {
                 pins.analogWritePin(lMotorA0, 0);
                 pins.analogWritePin(lMotorA1, lSpeed);
-                leftMotorDir = -1;
             }
         }
         if ((motor == RXMotor.Right) || (motor == RXMotor.Both))
         {
-            if (rightDir == RXDirection.Forward)
+            if (direction == RXDirection.Forward)
             {
                 pins.analogWritePin(rMotorA0, rSpeed);
                 pins.analogWritePin(rMotorA1, 0);
-                rightMotorDir = 1;
             }
             else
             {
                 pins.analogWritePin(rMotorA0, 0);
                 pins.analogWritePin(rMotorA1, rSpeed);
-                rightMotorDir = -1;
             }
         }
     }
@@ -624,7 +580,7 @@ namespace theta
 
 
     /**
-      * Set left/right bias to match motors. Overides EEROM calibration values
+      * Set left/right bias to match motors
       * @param direction direction to turn more (if robot goes right, set this to left)
       * @param bias percentage of speed to bias with eg: 10
       */
@@ -1005,7 +961,7 @@ namespace theta
       * Read line sensor.
       * @param sensor Line sensor to read.
       */
-    //% blockId="ReadLine" block="02 %sensor|line sensor"
+    //% blockId="ReadLine" block="%sensor|line sensor"
     //% weight=80
     //% subcategory="Inputs & Outputs"
     //% group=Sensors
@@ -1079,7 +1035,8 @@ namespace theta
     //% group=EEROM
     export function readEEROM(location: number): number
     {
-        return rdEEROM(location + 16); // first 16 bytes reserved for DriveStraight
+        //return rdEEROM(location + 16); // first 16 bytes reserved for DriveStraight
+        return rdEEROM(location); // DriveStraight removed v1.1
     }
 
     /**
@@ -1111,7 +1068,8 @@ namespace theta
     //% group=EEROM
     export function writeEEROM(value: number, location: number): void
     {
-        wrEEROM(value, location + 16); // first 16 bytes reserved for DriveStraight
+        //wrEEROM(value, location + 16); // first 16 bytes reserved for DriveStraight
+        wrEEROM(value, location + 16); // DriveStraight removed v1.1
     }
 
     /**
@@ -1132,33 +1090,6 @@ namespace theta
             pins.i2cWriteBuffer(_addrATM, i2cData2);
         }
     }
-
-    /**
-      * Load Calibration data from EEROM
-      */
-    //% blockId="loadCalibration"
-    //% block="Load calibration from EEROM"
-    //% weight=80
-    //% deprecated=true
-    export function loadCalibration(): void
-    {
-	for (let i=0; i<3; i++)
-            calibration[i] = rdEEROM(i);
-    }
-
-    /**
-      * Save Calibration data to EEROM
-      */
-    //% blockId="saveCalibration"
-    //% block="Save calibration to EEROM"
-    //% weight=70
-    //% deprecated=true
-    export function saveCalibration(): void
-    {
-	for (let i=0; i<3; i++)
-            wrEEROM(calibration[i],i);
-    }
-
 
 
 

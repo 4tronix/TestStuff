@@ -1,7 +1,7 @@
 {
-    "name": "BitBot",
-    "version": "1.5.3",
-    "description": "Microsoft MakeCode package for 4tronix BitBot robot",
+    "name": "Theta",
+    "version": "0.1.0",
+    "description": "Microsoft MakeCode package for 4tronix/RobotixLab Theta Robot",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -10,15 +10,7 @@
     },
     "files": [
         "README.md",
-        "bitbot.ts",
-        "_locales/no/BitBot-strings.json",
-        "_locales/no/BitBot-jsdoc-strings.json",
-        "_locales/nb/BitBot-strings.json",
-        "_locales/nb/BitBot-jsdoc-strings.json",
-        "_locales/nn/BitBot-strings.json",
-        "_locales/nn/BitBot-jsdoc-strings.json",
-        "_locales/fr/BitBot-strings.json",
-        "_locales/fr/BitBot-jsdoc-strings.json"
+        "theta.ts"
     ],
     "testFiles": [
         "tests.ts"
