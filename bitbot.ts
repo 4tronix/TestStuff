@@ -290,7 +290,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp10 Bluetooth"
+    //% block="%enable|bbp11 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -982,7 +982,7 @@ namespace bitbot
 	if(getModel() == BBModel.Pro)
 	{
             i2cData2[0] = RAINBOW;	// Select Rainbow
-            i2cData2[1] = dir?1:0;	// Direction
+            i2cData2[1] = 0;		// Direction
             pins.i2cWriteBuffer(i2cATMega, i2cData2);
 	}
 	else
@@ -1005,7 +1005,7 @@ namespace bitbot
 	if(getModel() == BBModel.Pro)
 	{
             i2cData2[0] = SHIFT_LEDS;	// Select Shift
-            i2cData2[1] = dir?1:0;	// Direction
+            i2cData2[1] = 0;		// Direction
             pins.i2cWriteBuffer(i2cATMega, i2cData2);
 	}
 	else
@@ -1028,7 +1028,7 @@ namespace bitbot
 	if(getModel() == BBModel.Pro)
 	{
             i2cData2[0] = ROTATE_LEDS;	// Select Rotate
-            i2cData2[1] = dir?1:0;	// Direction
+            i2cData2[1] = 0;		// Direction
             pins.i2cWriteBuffer(i2cATMega, i2cData2);
 	}
 	else
