@@ -280,7 +280,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp08 Bluetooth"
+    //% block="%enable|bbp09 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -943,8 +943,20 @@ namespace bitbot
     //% blockGap=8
     export function setPixelColor(ledId: number, rgb: number): void
     {
-        fire().setPixel(ledId, rgb);
-        updateLEDs();
+	if(getModel() == BBModel.Pro)
+	{
+            i2cData5[0] = (_updateMode == BBMode.Auto) ? 1: 0;			// Auto Update 1 = True
+            i2cData5[1] = ledId;			// Pixel ID or NUMLEDS for ALL
+            i2cData5[2] = rgb >> 16;		// Red
+            i2cData5[3] = (rgb >> 8) & 0xff;	// Green
+            i2cData5[4] = rgb & 0xff;		// Blue
+            pins.i2cWriteBuffer(i2cATMega, i2cData5);	  
+	}
+	else
+	{
+            fire().setPixel(ledId, rgb);
+            updateLEDs();
+	}
     }
 
     /**
@@ -957,8 +969,17 @@ namespace bitbot
     //% blockGap=8
     export function ledRainbow(): void
     {
-        fire().setRainbow();
-        updateLEDs()
+	if(getModel() == BBModel.Pro)
+	{
+            i2cData2[0] = RAINBOW;	// Select Rainbow
+            i2cData2[1] = dir?1:0;	// Direction
+            pins.i2cWriteBuffer(i2cATMega, i2cData2);
+	}
+	else
+	{
+            fire().setRainbow();
+            updateLEDs();
+	}
     }
 
     /**
@@ -971,8 +992,17 @@ namespace bitbot
     //% blockGap=8
     export function ledShift(): void
     {
-        fire().shiftBand();
-        updateLEDs()
+	if(getModel() == BBModel.Pro)
+	{
+            i2cData2[0] = SHIFT_LEDS;	// Select Shift
+            i2cData2[1] = dir?1:0;	// Direction
+            pins.i2cWriteBuffer(i2cATMega, i2cData2);
+	}
+	else
+	{
+            fire().shiftBand();
+            updateLEDs();
+	}
     }
 
     /**
@@ -985,8 +1015,17 @@ namespace bitbot
     //% blockGap=8
     export function ledRotate(): void
     {
-        fire().rotateBand();
-        updateLEDs()
+	if(getModel() == BBModel.Pro)
+	{
+            i2cData2[0] = ROTATE_LEDS;	// Select Rotate
+            i2cData2[1] = dir?1:0;	// Direction
+            pins.i2cWriteBuffer(i2cATMega, i2cData2);
+	}
+	else
+	{
+            fire().rotateBand();
+            updateLEDs();
+	}
     }
 
     // Advanced blocks
@@ -1003,8 +1042,17 @@ namespace bitbot
     //% blockGap=8
     export function ledBrightness(brightness: number): void
     {
-        fire().setBrightness(brightness);
-        updateLEDs();
+	if(getModel() == BBModel.Pro)
+	{
+            i2cData2[0] = FIREBRT;	// Register for Pixel brightness
+            i2cData2[1] = brightness;	// Brightness: 0 to 255
+            pins.i2cWriteBuffer(i2cATMega, i2cData2);
+	}
+	else
+	{
+            fire().setBrightness(brightness);
+            updateLEDs();
+	}
     }
 
     /**
@@ -1019,6 +1067,12 @@ namespace bitbot
     export function setUpdateMode(updateMode: BBMode): void
     {
         _updateMode = updateMode;
+	if(getModel() == BBModel.Pro)
+	{
+            i2cData2[0] = UPDATEMODE;	// Register for Update Mode command
+            i2cData2[1] = updateMode;	// Update Mode 0 or 1
+            pins.i2cWriteBuffer(i2cATMega, i2cData2);
+	}
     }
 
     /**
@@ -1031,7 +1085,13 @@ namespace bitbot
     //% blockGap=8
     export function ledShow(): void
     {
-        if (btDisabled)
+	if(getModel() == BBModel.Pro)
+	{
+            i2cData2[0] = FIREUPDT;		// Select Immediate LED Update
+            i2cData2[1] = 0;		// dummy
+            pins.i2cWriteBuffer(i2cATMega, i2cData2);
+	}
+	else if (btDisabled)
             fire().updateBand();
     }
 

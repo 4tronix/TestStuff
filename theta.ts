@@ -761,7 +761,7 @@ namespace theta
     //% blockGap=8
     export function ledShow(): void
     {
-        i2cData2[0] = FIREUPDT;		// Seect Immediate LED Update
+        i2cData2[0] = FIREUPDT;		// Select Immediate LED Update
         i2cData2[1] = 0;		// dummy
         pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
