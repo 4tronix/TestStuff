@@ -249,7 +249,7 @@ namespace bitbot
 
     let _model = BBModel.Auto;
     let i2caddr = 28;	// i2c address of I/O Expander
-    let i2cAtMega = 22; // i2c address of ATMega on BitBot Pro
+    let i2cAtMega = 0x22; // i2c address of ATMega on BitBot Pro
     let EEROM = 0x50;	// i2c address of EEROM
     let versionCode = -1;
     let lMotorD0: DigitalPin;
@@ -275,7 +275,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp03 Bluetooth"
+    //% block="%enable|bbp04 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
