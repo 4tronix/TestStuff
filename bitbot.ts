@@ -228,7 +228,7 @@ namespace bitbot
 {
     let fireBand: fireled.Band;
     let _updateMode = BBMode.Auto;
-    const NUMLEDS = 14;
+    const NUMLEDS = 12;
     let btDisabled = true;
     let matrix5: fireled.Band;
     let bitface: fireled.Band;
@@ -280,7 +280,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp07 Bluetooth"
+    //% block="%enable|bbp08 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
