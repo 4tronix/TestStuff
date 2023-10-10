@@ -275,7 +275,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|Bluetooth"
+    //% block="%enable|bbp03 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -293,7 +293,7 @@ namespace bitbot
       * Force Model of BitBot (Determines Pins used)
       * @param model Model of BitBot; Classic, XL or Pro
       */
-    //% blockId="bitbot_model" block="bbp02 select BitBot model%model"
+    //% blockId="bitbot_model" block="select BitBot model%model"
     //% weight=100
     //% subcategory=BitBot_Model
     export function select_model(model: BBModel): void
@@ -370,13 +370,13 @@ namespace bitbot
     //% block="version Code"
     //% weight=80
     //% subcategory=BitBot_Model
-    //% deprecated=true
+    //% deprecated=false
     export function getVersionCode(): number
     {
 	// 0 = Classic, 1-15 = XL, 16+ = Pro
         if (versionCode == -1)	// first time requesting
 	{
-	    versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) & 0xff;
+	    versionCode = pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) & 0xff;
 	    if(versionCode == 0) // not BitBot Pro
             	versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f;
 	}
