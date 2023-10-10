@@ -182,12 +182,13 @@ enum BBMode
 
 /**
   * Model Types of BitBot
-  * Classic or XL
+  * Classic, XL or Pro
   */
 enum BBModel
 {
     Classic,
     XL,
+    Pro,
     Auto
 }
 
@@ -248,6 +249,7 @@ namespace bitbot
 
     let _model = BBModel.Auto;
     let i2caddr = 28;	// i2c address of I/O Expander
+    let i2cAtMega = 22; // i2c address of ATMega on BitBot Pro
     let EEROM = 0x50;	// i2c address of EEROM
     let versionCode = -1;
     let lMotorD0: DigitalPin;
@@ -269,7 +271,7 @@ namespace bitbot
 
 // Block to enable Bluetooth and disable FireLeds.
     /**
-      * Enable/Disable Bluetooth support by disabling/enabling FireLeds
+      * Enable/Disable Bluetooth support by disabling/enabling FireLeds. Not required on BitBot Pro
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
@@ -277,23 +279,26 @@ namespace bitbot
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
-        if (enable == BBBluetooth.btEnable)
-            btDisabled = false;
-        else
-            btDisabled = true;
+	if(getModel() != BBModel.Pro)
+	{
+            if (enable == BBBluetooth.btEnable)
+                btDisabled = false;
+            else
+                btDisabled = true;
+	}
     }
 
 // Blocks for selecting BitBot Model
     /**
       * Force Model of BitBot (Determines Pins used)
-      * @param model Model of BitBot; Classic or XL
+      * @param model Model of BitBot; Classic, XL or Pro
       */
-    //% blockId="bitbot_model" block="select BitBot model%model"
+    //% blockId="bitbot_model" block="bbp02 select BitBot model%model"
     //% weight=100
     //% subcategory=BitBot_Model
     export function select_model(model: BBModel): void
     {
-        if((model==BBModel.Classic) || (model==BBModel.XL) || (model==BBModel.Auto))
+        if((model==BBModel.Classic) || (model==BBModel.XL) || (model==BBModel.Pro))
         {
             _model = model;
             if (_model == BBModel.Classic)
@@ -307,7 +312,7 @@ namespace bitbot
                 rMotorA0 = AnalogPin.P1;
                 rMotorA1 = AnalogPin.P12;
             }
-            else
+            else if (_model == BBModel.XL)
             {
                 lMotorD0 = DigitalPin.P16;
                 lMotorD1 = DigitalPin.P8;
@@ -368,8 +373,13 @@ namespace bitbot
     //% deprecated=true
     export function getVersionCode(): number
     {
+	// 0 = Classic, 1-15 = XL, 16+ = Pro
         if (versionCode == -1)	// first time requesting
-            versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f;
+	{
+	    versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) & 0xff;
+	    if(versionCode == 0) // not BitBot Pro
+            	versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f;
+	}
         return versionCode;
     }
 
