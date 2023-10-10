@@ -249,7 +249,7 @@ namespace bitbot
 
     let _model = BBModel.Auto;
     let i2caddr = 28;	// i2c address of I/O Expander
-    let i2cAtMega = 0x22; // i2c address of ATMega on BitBot Pro
+    let i2cATMega = 0x22; // i2c address of ATMega on BitBot Pro
     let EEROM = 0x50;	// i2c address of EEROM
     let versionCode = -1;
     let lMotorD0: DigitalPin;
@@ -275,7 +275,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp04 Bluetooth"
+    //% block="%enable|bbp05 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -341,11 +341,13 @@ namespace bitbot
             {
                 select_model(BBModel.Classic);
             }
-            else
+            else if (versionCode < 16)
             {
                 select_model(BBModel.XL);
                 pins.digitalWritePin(DigitalPin.P0, 0);
             }
+	    else
+		select_model(BBModel.Pro);
         }
         return _model;
     }
@@ -376,7 +378,7 @@ namespace bitbot
 	// 0 = Classic, 1-15 = XL, 16+ = Pro
         if (versionCode == -1)	// first time requesting
 	{
-	    versionCode = pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) & 0xff;
+	    versionCode = pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff;
 	    if(versionCode == 0) // not BitBot Pro
             	versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f;
 	}
@@ -848,12 +850,12 @@ namespace bitbot
     }
 
 
-// Inbuilt FireLed Blocks
+// Inbuilt FireLed Blocks - Controlled via ATMega
 
     // create a FireLed band if not got one already. Default to brightness 40
     function fire(): fireled.Band
     {
-        if (!fireBand)
+        if ((!fireBand) && (getModel()!==BBModel.Pro))
         {
             fireBand = fireled.newBand(DigitalPin.P13, 12);
             fireBand.setBrightness(40);
@@ -864,7 +866,7 @@ namespace bitbot
     // update FireLeds if _updateMode set to Auto
     function updateLEDs(): void
     {
-        if (_updateMode == BBMode.Auto)
+        if ((_updateMode == BBMode.Auto) && (getModel()!==BBModel.Pro))
             ledShow();
     }
 
@@ -879,8 +881,20 @@ namespace bitbot
     //% blockGap=8
     export function setLedColor(rgb: number)
     {
-        fire().setBand(rgb);
-        updateLEDs();
+	if(getModel() == BBModel.Pro)
+	{
+            i2cData5[0] = (_updateMode == RXMode.Auto) ? 1: 0;			// Auto Update 1 = True
+            i2cData5[1] = NUMLEDS;			// Pixel ID or NUMLEDS for ALL
+            i2cData5[2] = rgb >> 16;		// Red
+            i2cData5[3] = (rgb >> 8) & 0xff;	// Green
+            i2cData5[4] = rgb & 0xff;		// Blue
+            pins.i2cWriteBuffer(i2cATMega, i2cData5);
+	}
+	else
+	{
+            fire().setBand(rgb);
+            updateLEDs();
+	}
     }
 
     /**
@@ -893,8 +907,20 @@ namespace bitbot
     //% blockGap=8
     export function ledClear(): void
     {
-        fire().clearBand();
-        updateLEDs();
+	if(getModel() == BBModel.Pro)
+	{
+            i2cData5[0] = (_updateMode == RXMode.Auto) ? 1: 0;		// Auto Update 1 = True
+            i2cData5[1] = NUMLEDS;		// Pixel ID or NUMLEDS for ALL
+            i2cData5[2] = 0;		// Red
+            i2cData5[3] = 0;		// Green
+            i2cData5[4] = 0;		// Blue
+            pins.i2cWriteBuffer(i2cATMega, i2cData5);
+	}
+	else
+	{
+            fire().clearBand();
+            updateLEDs();
+	}
     }
 
     /**
