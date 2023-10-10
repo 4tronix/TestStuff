@@ -228,7 +228,20 @@ namespace bitbot
 {
     let fireBand: fireled.Band;
     let _updateMode = BBMode.Auto;
+
+    const i2caddr = 0x1C;	// i2c address of I/O Expander
+    const i2cATMega = 0x22;	// i2c address of ATMega on BitBot Pro
+    const EEROM = 0x50;		// i2c address of EEROM
     const NUMLEDS = 12;
+    const ATMRESET = 20;
+    const FIREDATA = 0;
+    const FIREBRT  = 1;
+    const FIREUPDT = 2;
+    const UPDATEMODE  = 9;
+    const SHIFT_LEDS  = 10;
+    const ROTATE_LEDS = 11;
+    const RAINBOW     = 12;
+
     let btDisabled = true;
     let matrix5: fireled.Band;
     let bitface: fireled.Band;
@@ -249,9 +262,6 @@ namespace bitbot
     let calibLoaded = false;
 
     let _model = BBModel.Auto;
-    let i2caddr = 28;	// i2c address of I/O Expander
-    let i2cATMega = 0x22; // i2c address of ATMega on BitBot Pro
-    let EEROM = 0x50;	// i2c address of EEROM
     let versionCode = -1;
     let lMotorD0: DigitalPin;
     let lMotorD1: DigitalPin;
@@ -280,7 +290,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp09 Bluetooth"
+    //% block="%enable|bbp10 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
