@@ -934,7 +934,7 @@ namespace theta
         // send pulse
         let trig = DigitalPin.P12;
         let echo = DigitalPin.P12;
-        let maxDistance = 2000*37; // 2m
+        let maxDistance = 2000*59; // 2m in microseconds
         let d=10;
         pins.setPull(trig, PinPullMode.PullNone);
         for (let x=0; x<10; x++)
