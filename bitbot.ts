@@ -228,6 +228,7 @@ namespace bitbot
 {
     let fireBand: fireled.Band;
     let _updateMode = BBMode.Auto;
+    const NUMLEDS = 14;
     let btDisabled = true;
     let matrix5: fireled.Band;
     let bitface: fireled.Band;
@@ -264,6 +265,10 @@ namespace bitbot
     let _p1Trim = 0;
     let _p2Trim = 0;
 
+    let i2cData2 = pins.createBuffer(2);
+    let i2cData3 = pins.createBuffer(3);
+    let i2cData5 = pins.createBuffer(5); // used for Fireled pixel data
+
     function clamp(value: number, min: number, max: number): number
     {
         return Math.max(Math.min(max, value), min);
@@ -275,7 +280,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp05 Bluetooth"
+    //% block="%enable|bbp06 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -857,7 +862,7 @@ namespace bitbot
     {
         if ((!fireBand) && (getModel()!==BBModel.Pro))
         {
-            fireBand = fireled.newBand(DigitalPin.P13, 12);
+            fireBand = fireled.newBand(DigitalPin.P13, NUMLEDS);
             fireBand.setBrightness(40);
         }
         return fireBand;
@@ -883,7 +888,7 @@ namespace bitbot
     {
 	if(getModel() == BBModel.Pro)
 	{
-            i2cData5[0] = (_updateMode == RXMode.Auto) ? 1: 0;			// Auto Update 1 = True
+            i2cData5[0] = (_updateMode == BBMode.Auto) ? 1: 0;			// Auto Update 1 = True
             i2cData5[1] = NUMLEDS;			// Pixel ID or NUMLEDS for ALL
             i2cData5[2] = rgb >> 16;		// Red
             i2cData5[3] = (rgb >> 8) & 0xff;	// Green
@@ -909,7 +914,7 @@ namespace bitbot
     {
 	if(getModel() == BBModel.Pro)
 	{
-            i2cData5[0] = (_updateMode == RXMode.Auto) ? 1: 0;		// Auto Update 1 = True
+            i2cData5[0] = (_updateMode == BBMode.Auto) ? 1: 0;		// Auto Update 1 = True
             i2cData5[1] = NUMLEDS;		// Pixel ID or NUMLEDS for ALL
             i2cData5[2] = 0;		// Red
             i2cData5[3] = 0;		// Green
