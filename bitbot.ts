@@ -241,6 +241,12 @@ namespace bitbot
     const SHIFT_LEDS  = 10;
     const ROTATE_LEDS = 11;
     const RAINBOW     = 12;
+// BitBot Pro New Commands
+    const STOP	    = 21;
+    const DRIVE     = 22; // Speed +/- 100%
+    const SPIN      = 23; // Speed +/- 100%
+    const DRIVEDIST = 24; // Speed, Distance (cm)
+    const SPINANGLE = 25; // Speed, Angle (degrees)
 
     let btDisabled = true;
     let matrix5: fireled.Band;
@@ -290,11 +296,11 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp11 Bluetooth"
+    //% block="%enable|bbp12 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
-	if(getModel() != BBModel.Pro)
+	if(!isPro())
 	{
             if (enable == BBBluetooth.btEnable)
                 btDisabled = false;
@@ -402,6 +408,12 @@ namespace bitbot
         return versionCode;
     }
 
+    // Helper function for BitBot Pro checks
+    function isPro(): boolean
+    {
+	return getModel() == BBModel.Pro;
+    }
+
 // "DRIVE STRAIGHT" BLOCKS
 
     // Uses bottom 3 bytes of EEROM for motor bias data
@@ -476,8 +488,11 @@ namespace bitbot
     //% deprecated=true
     export function loadCalibration(): void
     {
-	for (let i=0; i<3; i++)
-            calibration[i] = rdEEROM(i);
+        if (getVersionCode() == 5)
+        {
+	    for (let i=0; i<3; i++)
+                calibration[i] = rdEEROM(i);
+	}
         calibLoaded = true;
     }
 
@@ -490,8 +505,11 @@ namespace bitbot
     //% deprecated=true
     export function saveCalibration(): void
     {
-	for (let i=0; i<3; i++)
-            wrEEROM(calibration[i],i);
+        if (getVersionCode() == 5)
+        {
+	    for (let i=0; i<3; i++)
+                wrEEROM(calibration[i],i);
+	}
     }
 
     /**
@@ -508,14 +526,17 @@ namespace bitbot
         let calibVal = 0;
         leftCalib = 0;
         rightCalib = 0;
-        if (speed < 60)
-            calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0]);
-        else
-            calibVal = calibration[2] - ((90 - speed)/30) * (calibration[2] - calibration[1]);
-        if (calibVal < 0)
-            leftCalib = Math.abs(calibVal);
-        else
-            rightCalib = calibVal;
+        if (getVersionCode() == 5)
+        {
+            if (speed < 60)
+                calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0]);
+            else
+                calibVal = calibration[2] - ((90 - speed)/30) * (calibration[2] - calibration[1]);
+            if (calibVal < 0)
+                leftCalib = Math.abs(calibVal);
+            else
+                rightCalib = calibVal;
+	}
         if (side == BBMotor.Left)
             return leftCalib;
         else
@@ -526,12 +547,15 @@ namespace bitbot
     // slow PWM frequency for slower speeds to improve torque
     function setPWM(speed: number): void
     {
-        if (speed < 200)
-            pins.analogSetPeriod(AnalogPin.P0, 60000);
-        else if (speed < 300)
-            pins.analogSetPeriod(AnalogPin.P0, 40000);
-        else
-            pins.analogSetPeriod(AnalogPin.P0, 30000);
+	if(!isPro())
+	{
+            if (speed < 200)
+                pins.analogSetPeriod(AnalogPin.P0, 60000);
+            else if (speed < 300)
+                pins.analogSetPeriod(AnalogPin.P0, 40000);
+            else
+                pins.analogSetPeriod(AnalogPin.P0, 30000);
+	}
     }
 
     /**
@@ -545,7 +569,16 @@ namespace bitbot
     //% subcategory=Motors
     export function go(direction: BBDirection, speed: number): void
     {
-        move(BBMotor.Both, direction, speed);
+	if(isPro())
+	{
+	    i2cData2[0] = DRIVE;
+	    if(direction == BBDirection.Reverse)
+		speed = -speed;
+            i2cData2[1] = speed;
+            pins.i2cWriteBuffer(i2cATMega, i2cData2);
+	}
+	else
+            move(BBMotor.Both, direction, speed);
     }
 
     /**
@@ -614,14 +647,23 @@ namespace bitbot
     //% subcategory=Motors
     export function stop(mode: BBStopMode): void
     {
-        getModel();
+        //getModel();
         let stopMode = 0;
         if (mode == BBStopMode.Brake)
             stopMode = 1;
-        pins.digitalWritePin(lMotorD0, stopMode);
-        pins.digitalWritePin(lMotorD1, stopMode);
-        pins.digitalWritePin(rMotorD0, stopMode);
-        pins.digitalWritePin(rMotorD1, stopMode);
+	if(isPro())
+	{
+	    i2cData2[0] = STOP;
+            i2cData2[1] = stopMode;
+            pins.i2cWriteBuffer(i2cATMega, i2cData2);
+	}
+	else
+	{
+            pins.digitalWritePin(lMotorD0, stopMode);
+            pins.digitalWritePin(lMotorD1, stopMode);
+            pins.digitalWritePin(rMotorD0, stopMode);
+            pins.digitalWritePin(rMotorD1, stopMode);
+	}
     }
 
     function createCalib(speed: number): void
@@ -867,12 +909,12 @@ namespace bitbot
     }
 
 
-// Inbuilt FireLed Blocks - Controlled via ATMega
+// Inbuilt FireLed Blocks - Controlled via ATMega on BitBot Pro
 
     // create a FireLed band if not got one already. Default to brightness 40
     function fire(): fireled.Band
     {
-        if ((!fireBand) && (getModel()!==BBModel.Pro))
+        if ((!fireBand) && !isPro())
         {
             fireBand = fireled.newBand(DigitalPin.P13, NUMLEDS);
             fireBand.setBrightness(40);
@@ -883,7 +925,7 @@ namespace bitbot
     // update FireLeds if _updateMode set to Auto
     function updateLEDs(): void
     {
-        if ((_updateMode == BBMode.Auto) && (getModel()!==BBModel.Pro))
+        if ((_updateMode == BBMode.Auto) && !isPro())
             ledShow();
     }
 
@@ -898,7 +940,7 @@ namespace bitbot
     //% blockGap=8
     export function setLedColor(rgb: number)
     {
-	if(getModel() == BBModel.Pro)
+	if(isPro())
 	{
             i2cData5[0] = (_updateMode == BBMode.Auto) ? 1: 0;			// Auto Update 1 = True
             i2cData5[1] = NUMLEDS;			// Pixel ID or NUMLEDS for ALL
@@ -924,7 +966,7 @@ namespace bitbot
     //% blockGap=8
     export function ledClear(): void
     {
-	if(getModel() == BBModel.Pro)
+	if(isPro())
 	{
             i2cData5[0] = (_updateMode == BBMode.Auto) ? 1: 0;		// Auto Update 1 = True
             i2cData5[1] = NUMLEDS;		// Pixel ID or NUMLEDS for ALL
@@ -953,7 +995,7 @@ namespace bitbot
     //% blockGap=8
     export function setPixelColor(ledId: number, rgb: number): void
     {
-	if(getModel() == BBModel.Pro)
+	if(isPro())
 	{
             i2cData5[0] = (_updateMode == BBMode.Auto) ? 1: 0;			// Auto Update 1 = True
             i2cData5[1] = ledId;			// Pixel ID or NUMLEDS for ALL
@@ -979,7 +1021,7 @@ namespace bitbot
     //% blockGap=8
     export function ledRainbow(): void
     {
-	if(getModel() == BBModel.Pro)
+	if(isPro())
 	{
             i2cData2[0] = RAINBOW;	// Select Rainbow
             i2cData2[1] = 0;		// Direction
@@ -1002,7 +1044,7 @@ namespace bitbot
     //% blockGap=8
     export function ledShift(): void
     {
-	if(getModel() == BBModel.Pro)
+	if(isPro())
 	{
             i2cData2[0] = SHIFT_LEDS;	// Select Shift
             i2cData2[1] = 0;		// Direction
@@ -1025,7 +1067,7 @@ namespace bitbot
     //% blockGap=8
     export function ledRotate(): void
     {
-	if(getModel() == BBModel.Pro)
+	if(isPro())
 	{
             i2cData2[0] = ROTATE_LEDS;	// Select Rotate
             i2cData2[1] = 0;		// Direction
@@ -1052,7 +1094,7 @@ namespace bitbot
     //% blockGap=8
     export function ledBrightness(brightness: number): void
     {
-	if(getModel() == BBModel.Pro)
+	if(isPro())
 	{
             i2cData2[0] = FIREBRT;	// Register for Pixel brightness
             i2cData2[1] = brightness;	// Brightness: 0 to 255
@@ -1077,7 +1119,7 @@ namespace bitbot
     export function setUpdateMode(updateMode: BBMode): void
     {
         _updateMode = updateMode;
-	if(getModel() == BBModel.Pro)
+	if(isPro())
 	{
             i2cData2[0] = UPDATEMODE;	// Register for Update Mode command
             i2cData2[1] = updateMode;	// Update Mode 0 or 1
@@ -1095,7 +1137,7 @@ namespace bitbot
     //% blockGap=8
     export function ledShow(): void
     {
-	if(getModel() == BBModel.Pro)
+	if(isPro())
 	{
             i2cData2[0] = FIREUPDT;		// Select Immediate LED Update
             i2cData2[1] = 0;		// dummy
