@@ -300,7 +300,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp17 Bluetooth"
+    //% block="%enable|bbp18 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -780,6 +780,107 @@ namespace bitbot
             leftBias = 0;
             rightBias = bias;
         }
+    }
+
+
+// Functions Only Applicable to BitBot Pro
+
+    /**
+      * Move robot at selected speed for selected distance in cm
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param distance to travel in cm. eg: 50
+      */
+    //% blockId="BBGocm" block="go%direction|at speed%speed|for%distance|cm\\%"
+    //% speed.min=0 speed.max=100
+    //% weight=100
+    //% subcategory=BitBot Pro
+    export function gocm(direction: BBDirection, speed: number, distance: number): void
+    {
+	if(isPro())
+	{
+	    i2cData4[0] = DRIVEDIST;
+	    if(direction == BBDirection.Reverse)
+		speed = -speed;
+            i2cData4[1] = speed;
+	    i2cData4[2] = distance & 0xff;
+	    i2cData4[3] = distance >> 8;
+            pins.i2cWriteBuffer(i2cATMega, i2cData4);
+	}
+    }
+
+    /**
+      * Spin robot at selected speed for a selected angle and in selected direction
+      * @param direction direction to turn
+      * @param speed speed of motors (0 to 100). eg: 60
+      * @param angle degrees to spin eg: 90
+      */
+    //% blockId="BBSpinDeg" block="spin%direction|at speed%speed|for%angle|degrees\\%"
+    //% speed.min=0 speed.max=100
+    //% weight=90
+    //% subcategory=BitBot Pro
+    export function spinDeg(direction: BBRobotDirection, speed: number, angle: number): void
+    {
+	if(isPro())
+	{
+	    i2cData4[0] = SPINANGLE;
+	    if(direction == BBRobotDirection.Right)
+		speed = -speed;
+            i2cData4[1] = speed;
+	    i2cData4[2] = angle & 0xff;
+	    i2cData4[3] = angle >> 8;
+            pins.i2cWriteBuffer(i2cATMega, i2cData4);
+	}
+    }
+
+    /**
+      * Move robot in an arc with selected direction, speed and radius
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param radius of arc in cm. eg: 50
+      */
+    //% blockId="BBArc" block="move in an arc%direction|at speed%speed|with%radius|cm\\%"
+    //% speed.min=0 speed.max=100
+    //% weight=80
+    //% subcategory=BitBot Pro
+    export function arc(direction: BBDirection, speed: number, radius: number): void
+    {
+	if(isPro())
+	{
+	    i2cData4[0] = ARC;
+	    if(direction == BBDirection.Reverse)
+		speed = -speed;
+            i2cData4[1] = speed;
+	    i2cData4[2] = radius & 0xff;
+	    i2cData4[3] = radius >> 8;
+            pins.i2cWriteBuffer(i2cATMega, i2cData4);
+	}
+    }
+
+    /**
+      * Move robot in an arc with selected direction, speed and radius - for a defined angle
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param radius of arc in cm. eg: 50
+      */
+    //% blockId="BBArcDeg" block="move in an arc%direction|at speed%speed|with%radius|cm for%angle|degrees\\%"
+    //% speed.min=0 speed.max=100
+    //% weight=70
+    //% subcategory=BitBot Pro
+    export function arcdeg(direction: BBDirection, speed: number, radius: number, angle: number): void
+    {
+	if(isPro())
+	{
+	    i2cData6[0] = ARC;
+	    if(direction == BBDirection.Reverse)
+		speed = -speed;
+            i2cData6[1] = speed;
+	    i2cData6[2] = radius & 0xff;
+	    i2cData6[3] = radius >> 8;
+	    i2cData6[2] = angle & 0xff;
+	    i2cData6[3] = angle >> 8;
+            pins.i2cWriteBuffer(i2cATMega, i2cData6);
+	}
     }
 
 // Old Motor Blocks - kept for compatibility
