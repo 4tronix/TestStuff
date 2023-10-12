@@ -300,7 +300,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp19 Bluetooth"
+    //% block="%enable|bbp20 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -794,7 +794,7 @@ namespace bitbot
     //% blockId="BBGocm" block="go%direction|at speed%speed|for%distance|cm\\%"
     //% speed.min=0 speed.max=100
     //% weight=100
-    //% subcategory=BitBot Pro
+    //% subcategory="BitBot Pro"
     export function gocm(direction: BBDirection, speed: number, distance: number): void
     {
 	if(isPro())
