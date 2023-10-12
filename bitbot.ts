@@ -300,7 +300,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp20 Bluetooth"
+    //% block="%enable|bbp21 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -791,7 +791,7 @@ namespace bitbot
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param distance to travel in cm. eg: 50
       */
-    //% blockId="BBGocm" block="go%direction|at speed%speed|for%distance|cm\\%"
+    //% blockId="BBGocm" block="go%direction|at speed%speed|\\% for%distance|cm"
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory="BitBot Pro"
@@ -815,7 +815,7 @@ namespace bitbot
       * @param speed speed of motors (0 to 100). eg: 60
       * @param angle degrees to spin eg: 90
       */
-    //% blockId="BBSpinDeg" block="spin%direction|at speed%speed|for%angle|degrees\\%"
+    //% blockId="BBSpinDeg" block="spin%direction|at speed%speed|\\% for%angle|degrees"
     //% speed.min=0 speed.max=100
     //% weight=90
     //% subcategory="BitBot Pro"
@@ -839,7 +839,7 @@ namespace bitbot
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param radius of arc in cm. eg: 50
       */
-    //% blockId="BBArc" block="move in an arc%direction|at speed%speed|with%radius|cm\\%"
+    //% blockId="BBArc" block="move in an arc%direction|at speed%speed|\\% radius%radius|cm"
     //% speed.min=0 speed.max=100
     //% weight=80
     //% subcategory="BitBot Pro"
@@ -863,7 +863,7 @@ namespace bitbot
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param radius of arc in cm. eg: 50
       */
-    //% blockId="BBArcDeg" block="move in an arc%direction|at speed%speed|with%radius|cm for%angle|degrees\\%"
+    //% blockId="BBArcDeg" block="move in an arc%direction|at speed%speed|\\% radius%radius|cm for%angle|degrees"
     //% speed.min=0 speed.max=100
     //% weight=70
     //% inlineInputMode=inline
