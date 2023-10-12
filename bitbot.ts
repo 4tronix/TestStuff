@@ -300,7 +300,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp16 Bluetooth"
+    //% block="%enable|bbp17 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -616,7 +616,7 @@ namespace bitbot
 	if(isPro())
 	{
 	    i2cData2[0] = SPIN;
-	    if(direction == BBDirection.Right)
+	    if(direction == BBRobotDirection.Right)
 		speed = -speed;
             i2cData2[1] = speed;
             pins.i2cWriteBuffer(i2cATMega, i2cData2);
