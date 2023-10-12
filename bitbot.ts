@@ -300,7 +300,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp22 Bluetooth"
+    //% block="%enable|bbp23 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -879,8 +879,8 @@ namespace bitbot
             i2cData6[1] = speed;
 	    i2cData6[2] = radius & 0xff;
 	    i2cData6[3] = radius >> 8;
-	    i2cData6[2] = angle & 0xff;
-	    i2cData6[3] = angle >> 8;
+	    i2cData6[4] = angle & 0xff;
+	    i2cData6[5] = angle >> 8;
             pins.i2cWriteBuffer(i2cATMega, i2cData6);
 	}
     }
