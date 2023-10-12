@@ -300,7 +300,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp18 Bluetooth"
+    //% block="%enable|bbp19 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -818,7 +818,7 @@ namespace bitbot
     //% blockId="BBSpinDeg" block="spin%direction|at speed%speed|for%angle|degrees\\%"
     //% speed.min=0 speed.max=100
     //% weight=90
-    //% subcategory=BitBot Pro
+    //% subcategory="BitBot Pro"
     export function spinDeg(direction: BBRobotDirection, speed: number, angle: number): void
     {
 	if(isPro())
@@ -842,7 +842,7 @@ namespace bitbot
     //% blockId="BBArc" block="move in an arc%direction|at speed%speed|with%radius|cm\\%"
     //% speed.min=0 speed.max=100
     //% weight=80
-    //% subcategory=BitBot Pro
+    //% subcategory="BitBot Pro"
     export function arc(direction: BBDirection, speed: number, radius: number): void
     {
 	if(isPro())
@@ -866,7 +866,8 @@ namespace bitbot
     //% blockId="BBArcDeg" block="move in an arc%direction|at speed%speed|with%radius|cm for%angle|degrees\\%"
     //% speed.min=0 speed.max=100
     //% weight=70
-    //% subcategory=BitBot Pro
+    //% inlineInputMode=inline
+    //% subcategory="BitBot Pro"
     export function arcdeg(direction: BBDirection, speed: number, radius: number, angle: number): void
     {
 	if(isPro())
