@@ -300,7 +300,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp21 Bluetooth"
+    //% block="%enable|bbp22 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -862,6 +862,7 @@ namespace bitbot
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param radius of arc in cm. eg: 50
+      * @param angle of turn eg: 90
       */
     //% blockId="BBArcDeg" block="move in an arc%direction|at speed%speed|\\% radius%radius|cm for%angle|degrees"
     //% speed.min=0 speed.max=100
