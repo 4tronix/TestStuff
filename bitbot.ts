@@ -300,7 +300,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp14 Bluetooth"
+    //% block="%enable|bbp15 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -613,16 +613,27 @@ namespace bitbot
     //% subcategory=Motors
     export function rotate(direction: BBRobotDirection, speed: number): void
     {
-        if (direction == BBRobotDirection.Left)
-        {
-            move(BBMotor.Left, BBDirection.Reverse, speed);
-            move(BBMotor.Right, BBDirection.Forward, speed);
-        }
-        else if (direction == BBRobotDirection.Right)
-        {
-            move(BBMotor.Left, BBDirection.Forward, speed);
-            move(BBMotor.Right, BBDirection.Reverse, speed);
-        }
+	if(isPro())
+	{
+	    i2cData2[0] = SPIN;
+	    if(direction == BBDirection.Reverse)
+		speed = -speed;
+            i2cData2[1] = speed;
+            pins.i2cWriteBuffer(i2cATMega, i2cData2);
+	}
+	else
+	{
+            if (direction == BBRobotDirection.Left)
+            {
+                move(BBMotor.Left, BBDirection.Reverse, speed);
+                move(BBMotor.Right, BBDirection.Forward, speed);
+            }
+            else if (direction == BBRobotDirection.Right)
+            {
+                move(BBMotor.Left, BBDirection.Forward, speed);
+                move(BBMotor.Right, BBDirection.Reverse, speed);
+            }
+	}
     }
 
     /**
