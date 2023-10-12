@@ -283,7 +283,9 @@ namespace bitbot
 
     let i2cData2 = pins.createBuffer(2);
     let i2cData3 = pins.createBuffer(3);
-    let i2cData5 = pins.createBuffer(5); // used for Fireled pixel data
+    let i2cData4 = pins.createBuffer(4);
+    let i2cData5 = pins.createBuffer(5);
+    let i2cData6 = pins.createBuffer(6);
 
     function clamp(value: number, min: number, max: number): number
     {
@@ -296,7 +298,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp12 Bluetooth"
+    //% block="%enable|bbp13 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -942,12 +944,13 @@ namespace bitbot
     {
 	if(isPro())
 	{
-            i2cData5[0] = (_updateMode == BBMode.Auto) ? 1: 0;			// Auto Update 1 = True
-            i2cData5[1] = NUMLEDS;			// Pixel ID or NUMLEDS for ALL
-            i2cData5[2] = rgb >> 16;		// Red
-            i2cData5[3] = (rgb >> 8) & 0xff;	// Green
-            i2cData5[4] = rgb & 0xff;		// Blue
-            pins.i2cWriteBuffer(i2cATMega, i2cData5);
+            i2cData6[0] = SETPIXEL;
+            i2cData6[1] = (_updateMode == BBMode.Auto) ? 1: 0;			// Auto Update 1 = True
+            i2cData6[2] = NUMLEDS;			// Pixel ID or NUMLEDS for ALL
+            i2cData6[3] = rgb >> 16;		// Red
+            i2cData6[4] = (rgb >> 8) & 0xff;	// Green
+            i2cData6[5] = rgb & 0xff;		// Blue
+            pins.i2cWriteBuffer(i2cATMega, i2cData6);
 	}
 	else
 	{
@@ -968,12 +971,13 @@ namespace bitbot
     {
 	if(isPro())
 	{
-            i2cData5[0] = (_updateMode == BBMode.Auto) ? 1: 0;		// Auto Update 1 = True
-            i2cData5[1] = NUMLEDS;		// Pixel ID or NUMLEDS for ALL
-            i2cData5[2] = 0;		// Red
-            i2cData5[3] = 0;		// Green
-            i2cData5[4] = 0;		// Blue
-            pins.i2cWriteBuffer(i2cATMega, i2cData5);
+            i2cData6[0] = SETPIXEL;
+            i2cData6[1] = (_updateMode == BBMode.Auto) ? 1: 0;		// Auto Update 1 = True
+            i2cData6[2] = NUMLEDS;		// Pixel ID or NUMLEDS for ALL
+            i2cData6[3] = 0;		// Red
+            i2cData6[4] = 0;		// Green
+            i2cData6[5] = 0;		// Blue
+            pins.i2cWriteBuffer(i2cATMega, i2cData6);
 	}
 	else
 	{
@@ -997,12 +1001,13 @@ namespace bitbot
     {
 	if(isPro())
 	{
-            i2cData5[0] = (_updateMode == BBMode.Auto) ? 1: 0;			// Auto Update 1 = True
-            i2cData5[1] = ledId;			// Pixel ID or NUMLEDS for ALL
-            i2cData5[2] = rgb >> 16;		// Red
-            i2cData5[3] = (rgb >> 8) & 0xff;	// Green
-            i2cData5[4] = rgb & 0xff;		// Blue
-            pins.i2cWriteBuffer(i2cATMega, i2cData5);	  
+            i2cData6[0] = SETPIXEL;
+            i2cData6[1] = (_updateMode == BBMode.Auto) ? 1: 0;	// Auto Update 1 = True
+            i2cData6[2] = ledId;		// Pixel ID or NUMLEDS for ALL
+            i2cData6[3] = rgb >> 16;		// Red
+            i2cData6[4] = (rgb >> 8) & 0xff;	// Green
+            i2cData6[5] = rgb & 0xff;		// Blue
+            pins.i2cWriteBuffer(i2cATMega, i2cData6);	  
 	}
 	else
 	{
