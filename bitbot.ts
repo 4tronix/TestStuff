@@ -241,12 +241,14 @@ namespace bitbot
     const SHIFT_LEDS  = 10;
     const ROTATE_LEDS = 11;
     const RAINBOW     = 12;
+    const SETPIXEL    = 13;
 // BitBot Pro New Commands
     const STOP	    = 21;
     const DRIVE     = 22; // Speed +/- 100%
     const SPIN      = 23; // Speed +/- 100%
     const DRIVEDIST = 24; // Speed, Distance (cm)
     const SPINANGLE = 25; // Speed, Angle (degrees)
+    const ARC       = 26; // Speed, Angle, 
 
     let btDisabled = true;
     let matrix5: fireled.Band;
@@ -298,7 +300,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp13 Bluetooth"
+    //% block="%enable|bbp14 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
