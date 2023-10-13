@@ -302,7 +302,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp27 Bluetooth"
+    //% block="%enable|bbp28 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -791,7 +791,7 @@ namespace bitbot
       * Move robot at selected speed for selected distance in cm
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
-      * @param distance to travel in cm. eg: 50
+      * @param distance to travel in cm. eg: 15
       */
     //% blockId="BBGocm" block="go%direction|at speed%speed|\\% for%distance|cm"
     //% speed.min=0 speed.max=100
@@ -810,7 +810,7 @@ namespace bitbot
             pins.i2cWriteBuffer(i2cATMega, i2cData4);
 	    // wait for function complete
 	    while ((pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff) != i2cACK);
-		basic.pause(1);
+		basic.pause(20);
 	}
     }
 
@@ -837,7 +837,7 @@ namespace bitbot
             pins.i2cWriteBuffer(i2cATMega, i2cData4);
 	    // wait for function complete
 	    while ((pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff) != i2cACK);
-		basic.pause(1);
+		basic.pause(20);
 	}
     }
 
@@ -845,7 +845,7 @@ namespace bitbot
       * Move robot in an arc with selected direction, speed and radius
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
-      * @param radius of arc in cm. eg: 50
+      * @param radius of arc in cm. eg: 25
       */
     //% blockId="BBArc" block="move in an arc%direction|at speed%speed|\\% radius%radius|cm"
     //% speed.min=0 speed.max=100
@@ -869,7 +869,7 @@ namespace bitbot
       * Move robot in an arc with selected direction, speed and radius - for a defined angle
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
-      * @param radius of arc in cm. eg: 50
+      * @param radius of arc in cm. eg: 25
       * @param angle of turn eg: 90
       */
     //% blockId="BBArcDeg" block="move in an arc%direction|at speed%speed|\\% radius%radius|cm for%angle|degrees"
@@ -892,7 +892,7 @@ namespace bitbot
             pins.i2cWriteBuffer(i2cATMega, i2cData6);
 	    // wait for function complete
 	    while ((pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff) != i2cACK);
-		basic.pause(1);
+		basic.pause(20);
 	}
     }
 
