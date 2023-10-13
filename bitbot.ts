@@ -249,7 +249,8 @@ namespace bitbot
     const SPIN      = 23; // Speed +/- 100%
     const DRIVEDIST = 24; // Speed, Distance (cm)
     const SPINANGLE = 25; // Speed, Angle (degrees)
-    const ARC       = 26; // Speed, Angle, 
+    const ARC       = 26; // Speed, Radius
+    const ARCANGLE  = 27; // Speed, Radius, Angle
 
     let btDisabled = true;
     let matrix5: fireled.Band;
@@ -301,7 +302,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp26 Bluetooth"
+    //% block="%enable|bbp27 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -834,6 +835,9 @@ namespace bitbot
 	    i2cData4[2] = angle & 0xff;
 	    i2cData4[3] = angle >> 8;
             pins.i2cWriteBuffer(i2cATMega, i2cData4);
+	    // wait for function complete
+	    while ((pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff) != i2cACK);
+		basic.pause(1);
 	}
     }
 
@@ -851,15 +855,13 @@ namespace bitbot
     {
 	if(isPro())
 	{
-	    i2cData6[0] = ARC;
+	    i2cData4[0] = ARC;
 	    if(direction == BBDirection.Reverse)
 		speed = -speed;
-            i2cData6[1] = speed;
-	    i2cData6[2] = radius & 0xff;
-	    i2cData6[3] = radius >> 8;
-	    i2cData6[4] = 0;
-	    i2cData6[5] = 0;
-            pins.i2cWriteBuffer(i2cATMega, i2cData6);
+            i2cData4[1] = speed;
+	    i2cData4[2] = radius & 0xff;
+	    i2cData4[3] = radius >> 8;
+            pins.i2cWriteBuffer(i2cATMega, i2cData4);
 	}
     }
 
@@ -879,7 +881,7 @@ namespace bitbot
     {
 	if(isPro())
 	{
-	    i2cData6[0] = ARC;
+	    i2cData6[0] = ARCANGLE;
 	    if(direction == BBDirection.Reverse)
 		speed = -speed;
             i2cData6[1] = speed;
@@ -888,6 +890,9 @@ namespace bitbot
 	    i2cData6[4] = angle & 0xff;
 	    i2cData6[5] = angle >> 8;
             pins.i2cWriteBuffer(i2cATMega, i2cData6);
+	    // wait for function complete
+	    while ((pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff) != i2cACK);
+		basic.pause(1);
 	}
     }
 
