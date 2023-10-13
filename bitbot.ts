@@ -301,7 +301,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp25 Bluetooth"
+    //% block="%enable|bbp26 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -808,7 +808,7 @@ namespace bitbot
 	    i2cData4[3] = distance >> 8;
             pins.i2cWriteBuffer(i2cATMega, i2cData4);
 	    // wait for function complete
-	    while (pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) != i2cACK);
+	    while ((pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff) != i2cACK);
 		basic.pause(1);
 	}
     }
