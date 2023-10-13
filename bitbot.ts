@@ -232,6 +232,7 @@ namespace bitbot
     const i2caddr = 0x1C;	// i2c address of I/O Expander
     const i2cATMega = 0x22;	// i2c address of ATMega on BitBot Pro
     const EEROM = 0x50;		// i2c address of EEROM
+    const i2cACK = 0x55;	// i2c acknowledge character for terminating motor commands
     const NUMLEDS = 12;
     const ATMRESET = 20;
     const FIREDATA = 0;
@@ -300,7 +301,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp24 Bluetooth"
+    //% block="%enable|bbp25 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -806,6 +807,9 @@ namespace bitbot
 	    i2cData4[2] = distance & 0xff;
 	    i2cData4[3] = distance >> 8;
             pins.i2cWriteBuffer(i2cATMega, i2cData4);
+	    // wait for function complete
+	    while (pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) != i2cACK);
+		basic.pause(1);
 	}
     }
 
