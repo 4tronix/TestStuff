@@ -303,7 +303,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp36 Bluetooth"
+    //% block="%enable|bbp37 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1352,7 +1352,7 @@ namespace bitbot
     export function readLine(sensor: BBLineSensor): number
     {
 	if(isPro())
-	    return(readSensor(sensor));	// Line sensors are 0 (Left) and 1 (Right)
+	    return(readSensor(sensor + 1));	// Line sensors are 1 (Left) and 2 (Right)
         else if (getModel() == BBModel.Classic)
         {
             if (sensor == BBLineSensor.Left)
@@ -1380,7 +1380,7 @@ namespace bitbot
     export function readLight(sensor: BBLightSensor): number
     {
 	if(isPro())
-	    return(readSensor(sensor + 2));	// Light sensors are 2 (Left) and 3 (Right)
+	    return(readSensor(sensor + 3));	// Light sensors are 3 (Left) and 4 (Right)
         else if (getModel() == BBModel.Classic)
         {
             if (sensor == BBLightSensor.Left)
