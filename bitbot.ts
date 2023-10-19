@@ -302,7 +302,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp32 Bluetooth"
+    //% block="%enable|bbp33 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -703,7 +703,7 @@ namespace bitbot
         if (mode == BBStopMode.Brake)
             stopMode = 1;
 	if(isPro())
-	    sendCommnd2(STOP, stopMode);
+	    sendCommand2(STOP, stopMode);
 	else
 	{
             pins.digitalWritePin(lMotorD0, stopMode);
