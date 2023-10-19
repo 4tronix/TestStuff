@@ -303,7 +303,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp34 Bluetooth"
+    //% block="%enable|bbp35 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -751,13 +751,13 @@ namespace bitbot
         getModel();
         speed = clamp(speed, 0, 100);
 	createCalib(speed); // sets bias values for "DriveStraight" if available (versionCode == 5 only)
-        speed = speed * 10.23
 	if(isPro())
 	{
-	    sendCommand3(DIRECTMODE, (direction == BBDirection.Reverse) ? -speed : speed, motor);
+	    sendCommand4(DIRECTMODE, speed, direction, motor);
 	}
 	else
 	{
+            speed = speed * 10.23;  // Microbit analog write is 0 to 1023
             setPWM(speed);
             if (getVersionCode() == 5 && leftBias == 0 && rightBias == 0)
             {
