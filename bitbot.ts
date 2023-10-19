@@ -302,7 +302,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp29 Bluetooth"
+    //% block="%enable|bbp30 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -439,7 +439,7 @@ namespace bitbot
     function sendCommand4(command: number, para0: number, para1: number, para2: number): void
     {
 	i2cData4[0] = command;
-        i2cData4]1] = para0;
+        i2cData4[1] = para0;
         i2cData4[2] = para1;
         i2cData4[3] = para2;
         pins.i2cWriteBuffer(i2cATMega, i2cData4);
