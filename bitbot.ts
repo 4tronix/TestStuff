@@ -302,7 +302,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp28 Bluetooth"
+    //% block="%enable|bbp29 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -418,6 +418,52 @@ namespace bitbot
     function isPro(): boolean
     {
 	return getModel() == BBModel.Pro;
+    }
+
+    // Commands via I2C on ATMega
+    function sendCommand2(command: number, para0: number): void
+    {
+	i2cData2[0] = command;
+        i2cData2[1] = para0;
+        pins.i2cWriteBuffer(i2cATMega, i2cData2);
+    }
+
+    function sendCommand3(command: number, para0: number, para1: number): void
+    {
+	i2cData3[0] = command;
+        i2cData3[1] = para0;
+        i2cData3[2] = para1;
+        pins.i2cWriteBuffer(i2cATMega, i2cData3);
+    }
+
+    function sendCommand4(command: number, para0: number, para1: number, para2: number): void
+    {
+	i2cData4[0] = command;
+        i2cData4]1] = para0;
+        i2cData4[2] = para1;
+        i2cData4[3] = para2;
+        pins.i2cWriteBuffer(i2cATMega, i2cData4);
+    }
+
+    function sendCommand5(command: number, para0: number, para1: number, para2: number, para3: number): void
+    {
+	i2cData5[0] = command;
+        i2cData5[1] = para0;
+        i2cData5[2] = para1;
+        i2cData5[3] = para2;
+        i2cData5[4] = para3;
+        pins.i2cWriteBuffer(i2cATMega, i2cData5);
+    }
+
+    function sendCommand6(command: number, para0: number, para1: number, para2: number, para3: number, para4: number): void
+    {
+	i2cData6[0] = command;
+        i2cData6[1] = para0;
+        i2cData6[2] = para1;
+        i2cData6[3] = para2;
+        i2cData6[4] = para3;
+        i2cData6[5] = para4;
+        pins.i2cWriteBuffer(i2cATMega, i2cData6);
     }
 
 // "DRIVE STRAIGHT" BLOCKS
@@ -577,11 +623,12 @@ namespace bitbot
     {
 	if(isPro())
 	{
-	    i2cData2[0] = DRIVE;
+	    sendCommand2(DRIVE, (direction == BBDirection.Reverse) ? -speed : speed);
+	    /*i2cData2[0] = DRIVE;
 	    if(direction == BBDirection.Reverse)
 		speed = -speed;
             i2cData2[1] = speed;
-            pins.i2cWriteBuffer(i2cATMega, i2cData2);
+            pins.i2cWriteBuffer(i2cATMega, i2cData2);*/
 	}
 	else
             move(BBMotor.Both, direction, speed);
@@ -617,11 +664,12 @@ namespace bitbot
     {
 	if(isPro())
 	{
-	    i2cData2[0] = SPIN;
+	    sendCommand2(SPIN, (direction == BBRobotDirection.Right) ? -speed : speed);
+	    /*i2cData2[0] = SPIN;
 	    if(direction == BBRobotDirection.Right)
 		speed = -speed;
             i2cData2[1] = speed;
-            pins.i2cWriteBuffer(i2cATMega, i2cData2);
+            pins.i2cWriteBuffer(i2cATMega, i2cData2);*/
 	}
 	else
 	{
@@ -721,43 +769,49 @@ namespace bitbot
         speed = clamp(speed, 0, 100);
 	createCalib(speed); // sets bias values for "DriveStraight" if available (versionCode == 5 only)
         speed = speed * 10.23
-        setPWM(speed);
-        if (getVersionCode() == 5 && leftBias == 0 && rightBias == 0)
-        {
-            lSpeed = Math.round(speed * (100 - leftCalib) / 100);
-            rSpeed = Math.round(speed * (100 - rightCalib) / 100);
-        }
-        else
-        {
-            lSpeed = Math.round(speed * (100 - leftBias) / 100);
-            rSpeed = Math.round(speed * (100 - rightBias) / 100);
-        }
-        if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
-        {
-            if (direction == BBDirection.Forward)
+	if(isPro())
+	{
+	}
+	else
+	{
+            setPWM(speed);
+            if (getVersionCode() == 5 && leftBias == 0 && rightBias == 0)
             {
-                pins.analogWritePin(lMotorA0, lSpeed);
-                pins.analogWritePin(lMotorA1, 0);
+                lSpeed = Math.round(speed * (100 - leftCalib) / 100);
+                rSpeed = Math.round(speed * (100 - rightCalib) / 100);
             }
             else
             {
-                pins.analogWritePin(lMotorA0, 0);
-                pins.analogWritePin(lMotorA1, lSpeed);
+                lSpeed = Math.round(speed * (100 - leftBias) / 100);
+                rSpeed = Math.round(speed * (100 - rightBias) / 100);
             }
-        }
-        if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
-        {
-            if (direction == BBDirection.Forward)
+            if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
             {
-                pins.analogWritePin(rMotorA0, rSpeed);
-                pins.analogWritePin(rMotorA1, 0);
+                if (direction == BBDirection.Forward)
+                {
+                    pins.analogWritePin(lMotorA0, lSpeed);
+                    pins.analogWritePin(lMotorA1, 0);
+                }
+                else
+                {
+                    pins.analogWritePin(lMotorA0, 0);
+                    pins.analogWritePin(lMotorA1, lSpeed);
+                }
             }
-            else
+            if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
             {
-                pins.analogWritePin(rMotorA0, 0);
-                pins.analogWritePin(rMotorA1, rSpeed);
+                if (direction == BBDirection.Forward)
+                {
+                    pins.analogWritePin(rMotorA0, rSpeed);
+                    pins.analogWritePin(rMotorA1, 0);
+                }
+                else
+                {
+                    pins.analogWritePin(rMotorA0, 0);
+                    pins.analogWritePin(rMotorA1, rSpeed);
+                }
             }
-        }
+	}
     }
 
     /**
