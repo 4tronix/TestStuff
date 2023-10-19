@@ -303,7 +303,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp35 Bluetooth"
+    //% block="%enable|bbp36 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -465,6 +465,12 @@ namespace bitbot
         i2cData6[4] = para3;
         i2cData6[5] = para4;
         pins.i2cWriteBuffer(i2cATMega, i2cData6);
+    }
+
+    function readSensor(sensor: number): number
+    {
+        pins.i2cWriteNumber(i2cATMega, sensor, NumberFormat.Int8LE, false);
+        return (pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE));
     }
 
 // "DRIVE STRAIGHT" BLOCKS
@@ -753,7 +759,7 @@ namespace bitbot
 	createCalib(speed); // sets bias values for "DriveStraight" if available (versionCode == 5 only)
 	if(isPro())
 	{
-	    sendCommand4(DIRECTMODE, speed, direction, motor);
+	    sendCommand4(DIRECTMODE, speed, direction, motor); // for compatabilty only, no PIDC control
 	}
 	else
 	{
@@ -1083,15 +1089,7 @@ namespace bitbot
     export function setLedColor(rgb: number)
     {
 	if(isPro())
-	{
-            i2cData6[0] = SETPIXEL;
-            i2cData6[1] = (_updateMode == BBMode.Auto) ? 1: 0;			// Auto Update 1 = True
-            i2cData6[2] = NUMLEDS;			// Pixel ID or NUMLEDS for ALL
-            i2cData6[3] = rgb >> 16;		// Red
-            i2cData6[4] = (rgb >> 8) & 0xff;	// Green
-            i2cData6[5] = rgb & 0xff;		// Blue
-            pins.i2cWriteBuffer(i2cATMega, i2cData6);
-	}
+	    sendCommand6(SETPIXEL, (_updateMode == BBMode.Auto) ? 1: 0, NUMLEDS, rgb >> 16, (rgb >> 8) & 0xff, rgb & 0xff);
 	else
 	{
             fire().setBand(rgb);
@@ -1110,15 +1108,7 @@ namespace bitbot
     export function ledClear(): void
     {
 	if(isPro())
-	{
-            i2cData6[0] = SETPIXEL;
-            i2cData6[1] = (_updateMode == BBMode.Auto) ? 1: 0;		// Auto Update 1 = True
-            i2cData6[2] = NUMLEDS;		// Pixel ID or NUMLEDS for ALL
-            i2cData6[3] = 0;		// Red
-            i2cData6[4] = 0;		// Green
-            i2cData6[5] = 0;		// Blue
-            pins.i2cWriteBuffer(i2cATMega, i2cData6);
-	}
+	    sendCommand6(SETPIXEL, (_updateMode == BBMode.Auto) ? 1: 0, NUMLEDS, 0, 0, 0);
 	else
 	{
             fire().clearBand();
@@ -1140,15 +1130,7 @@ namespace bitbot
     export function setPixelColor(ledId: number, rgb: number): void
     {
 	if(isPro())
-	{
-            i2cData6[0] = SETPIXEL;
-            i2cData6[1] = (_updateMode == BBMode.Auto) ? 1: 0;	// Auto Update 1 = True
-            i2cData6[2] = ledId;		// Pixel ID or NUMLEDS for ALL
-            i2cData6[3] = rgb >> 16;		// Red
-            i2cData6[4] = (rgb >> 8) & 0xff;	// Green
-            i2cData6[5] = rgb & 0xff;		// Blue
-            pins.i2cWriteBuffer(i2cATMega, i2cData6);	  
-	}
+	    sendCommand6(SETPIXEL, (_updateMode == BBMode.Auto) ? 1: 0, ledId, rgb >> 16, (rgb >> 8) & 0xff, rgb & 0xff);
 	else
 	{
             fire().setPixel(ledId, rgb);
@@ -1167,11 +1149,7 @@ namespace bitbot
     export function ledRainbow(): void
     {
 	if(isPro())
-	{
-            i2cData2[0] = RAINBOW;	// Select Rainbow
-            i2cData2[1] = 0;		// Direction
-            pins.i2cWriteBuffer(i2cATMega, i2cData2);
-	}
+	    sendCommand2(RAINBOW, 0);
 	else
 	{
             fire().setRainbow();
@@ -1190,11 +1168,7 @@ namespace bitbot
     export function ledShift(): void
     {
 	if(isPro())
-	{
-            i2cData2[0] = SHIFT_LEDS;	// Select Shift
-            i2cData2[1] = 0;		// Direction
-            pins.i2cWriteBuffer(i2cATMega, i2cData2);
-	}
+	    sendCommand2(SHIFT_LEDS, 0);
 	else
 	{
             fire().shiftBand();
@@ -1213,11 +1187,7 @@ namespace bitbot
     export function ledRotate(): void
     {
 	if(isPro())
-	{
-            i2cData2[0] = ROTATE_LEDS;	// Select Rotate
-            i2cData2[1] = 0;		// Direction
-            pins.i2cWriteBuffer(i2cATMega, i2cData2);
-	}
+	    sendCommand2(ROTATE_LEDS, 0);
 	else
 	{
             fire().rotateBand();
@@ -1240,11 +1210,7 @@ namespace bitbot
     export function ledBrightness(brightness: number): void
     {
 	if(isPro())
-	{
-            i2cData2[0] = FIREBRT;	// Register for Pixel brightness
-            i2cData2[1] = brightness;	// Brightness: 0 to 255
-            pins.i2cWriteBuffer(i2cATMega, i2cData2);
-	}
+	    sendCommand2(FIREBRT, brightness);
 	else
 	{
             fire().setBrightness(brightness);
@@ -1265,11 +1231,7 @@ namespace bitbot
     {
         _updateMode = updateMode;
 	if(isPro())
-	{
-            i2cData2[0] = UPDATEMODE;	// Register for Update Mode command
-            i2cData2[1] = updateMode;	// Update Mode 0 or 1
-            pins.i2cWriteBuffer(i2cATMega, i2cData2);
-	}
+	    sendCommand2(UPDATEMODE, updateMode);
     }
 
     /**
@@ -1283,11 +1245,7 @@ namespace bitbot
     export function ledShow(): void
     {
 	if(isPro())
-	{
-            i2cData2[0] = FIREUPDT;		// Select Immediate LED Update
-            i2cData2[1] = 0;		// dummy
-            pins.i2cWriteBuffer(i2cATMega, i2cData2);
-	}
+	    sendCommand2(FIREUPDT, 0);
 	else if (btDisabled)
             fire().updateBand();
     }
@@ -1393,7 +1351,9 @@ namespace bitbot
     //% subcategory="Inputs & Outputs"
     export function readLine(sensor: BBLineSensor): number
     {
-        if (getModel() == BBModel.Classic)
+	if(isPro())
+	    return(readSensor(sensor));	// Line sensors are 0 (Left) and 1 (Right)
+        else if (getModel() == BBModel.Classic)
         {
             if (sensor == BBLineSensor.Left)
                 return pins.digitalReadPin(DigitalPin.P11);
@@ -1419,7 +1379,9 @@ namespace bitbot
     //% subcategory="Inputs & Outputs"
     export function readLight(sensor: BBLightSensor): number
     {
-        if (getModel() == BBModel.Classic)
+	if(isPro())
+	    return(readSensor(sensor + 2));	// Light sensors are 2 (Left) and 3 (Right)
+        else if (getModel() == BBModel.Classic)
         {
             if (sensor == BBLightSensor.Left)
             {
