@@ -244,13 +244,14 @@ namespace bitbot
     const RAINBOW     = 12;
     const SETPIXEL    = 13;
 // BitBot Pro New Commands
-    const STOP	    = 21;
-    const DRIVE     = 22; // Speed +/- 100%
-    const SPIN      = 23; // Speed +/- 100%
-    const DRIVEDIST = 24; // Speed, Distance (cm)
-    const SPINANGLE = 25; // Speed, Angle (degrees)
-    const ARC       = 26; // Speed, Radius
-    const ARCANGLE  = 27; // Speed, Radius, Angle
+    const STOP	     = 21;
+    const DRIVE      = 22; // Speed +/- 100%
+    const SPIN       = 23; // Speed +/- 100%
+    const DRIVEDIST  = 24; // Speed, Distance (cm)
+    const SPINANGLE  = 25; // Speed, Angle (degrees)
+    const ARC        = 26; // Speed, Radius
+    const ARCANGLE   = 27; // Speed, Radius, Angle
+    const DIRECTMODE = 28; // Speed, Motor. For compatability with older independent motor settings
 
     let btDisabled = true;
     let matrix5: fireled.Band;
@@ -302,7 +303,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp33 Bluetooth"
+    //% block="%enable|bbp34 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -753,6 +754,7 @@ namespace bitbot
         speed = speed * 10.23
 	if(isPro())
 	{
+	    sendCommand3(DIRECTMODE, (direction == BBDirection.Reverse) ? -speed : speed, motor);
 	}
 	else
 	{
