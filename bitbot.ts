@@ -302,7 +302,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp30 Bluetooth"
+    //% block="%enable|bbp31 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -841,6 +841,12 @@ namespace bitbot
 
 // Functions Only Applicable to BitBot Pro
 
+    function waitForAck(): void
+    {
+	while ((pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff) != i2cACK);
+	    basic.pause(20);
+    }
+
     /**
       * Move robot at selected speed for selected distance in cm
       * @param direction Move Forward or Reverse
@@ -863,8 +869,7 @@ namespace bitbot
 	    i2cData4[3] = distance >> 8;
             pins.i2cWriteBuffer(i2cATMega, i2cData4);
 	    // wait for function complete
-	    while ((pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff) != i2cACK);
-		basic.pause(20);
+	    waitForAck();
 	}
     }
 
@@ -882,16 +887,16 @@ namespace bitbot
     {
 	if(isPro())
 	{
-	    i2cData4[0] = SPINANGLE;
+	    sendCommand4(SPINANGLE, (direction == BBRobotDirection.Right) ? -speed : speed, angle & 0xff, angle >> 8);
+	    /*i2cData4[0] = SPINANGLE;
 	    if(direction == BBRobotDirection.Right)
 		speed = -speed;
             i2cData4[1] = speed;
 	    i2cData4[2] = angle & 0xff;
 	    i2cData4[3] = angle >> 8;
-            pins.i2cWriteBuffer(i2cATMega, i2cData4);
+            pins.i2cWriteBuffer(i2cATMega, i2cData4);*/
 	    // wait for function complete
-	    while ((pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff) != i2cACK);
-		basic.pause(20);
+	    waitForAck();
 	}
     }
 
@@ -909,13 +914,14 @@ namespace bitbot
     {
 	if(isPro())
 	{
-	    i2cData4[0] = ARC;
+	    sendCommand4(ARC, (direction == BBDirection.Reverse) ? -speed : speed, radius & 0xff, radius >> 8);
+	    /*i2cData4[0] = ARC;
 	    if(direction == BBDirection.Reverse)
 		speed = -speed;
             i2cData4[1] = speed;
 	    i2cData4[2] = radius & 0xff;
 	    i2cData4[3] = radius >> 8;
-            pins.i2cWriteBuffer(i2cATMega, i2cData4);
+            pins.i2cWriteBuffer(i2cATMega, i2cData4);*/
 	}
     }
 
@@ -935,7 +941,8 @@ namespace bitbot
     {
 	if(isPro())
 	{
-	    i2cData6[0] = ARCANGLE;
+	    sendCommand6(ARCANGLE, (direction == BBDirection.Reverse) ? -speed : speed, radius & 0xff, radius >> 8, angle & 0xff, angle >>8);
+	    /*i2cData6[0] = ARCANGLE;
 	    if(direction == BBDirection.Reverse)
 		speed = -speed;
             i2cData6[1] = speed;
@@ -943,10 +950,9 @@ namespace bitbot
 	    i2cData6[3] = radius >> 8;
 	    i2cData6[4] = angle & 0xff;
 	    i2cData6[5] = angle >> 8;
-            pins.i2cWriteBuffer(i2cATMega, i2cData6);
+            pins.i2cWriteBuffer(i2cATMega, i2cData6);*/
 	    // wait for function complete
-	    while ((pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff) != i2cACK);
-		basic.pause(20);
+	    waitForAck();
 	}
     }
 
