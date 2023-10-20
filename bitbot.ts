@@ -305,7 +305,7 @@ namespace bitbot
 
     // BitBot XL Pro line sensors analog to digital conversion parameters
     let indicatorMode = LIMode.Auto;
-    let lineThreshold = 180;
+    let lineThreshold = 120;
     let lineHysteresis = 10;
     let lineLeft = 0;
     let lineRight = 0;
@@ -321,7 +321,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp39 Bluetooth"
+    //% block="%enable|bbp40 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
