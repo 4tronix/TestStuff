@@ -303,13 +303,6 @@ namespace bitbot
     let i2cData5 = pins.createBuffer(5);
     let i2cData6 = pins.createBuffer(6);
 
-    // BitBot XL Pro line sensors analog to digital conversion parameters
-    let indicatorMode = LIMode.Auto;
-    let lineThreshold = 120;
-    let lineHysteresis = 10;
-    let lineLeft = 0;
-    let lineRight = 0;
-
     function clamp(value: number, min: number, max: number): number
     {
         return Math.max(Math.min(max, value), min);
@@ -321,7 +314,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp40 Bluetooth"
+    //% block="%enable|bbp41 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1370,23 +1363,7 @@ namespace bitbot
     export function readLine(sensor: BBLineSensor): number
     {
 	if(isPro())
-	{
-	    let sVal = (readSensor(sensor + 1));	// Line sensors are 1 (Left) and 2 (Right)
-	    if(sensor == BBLineSensor.Left)
-	    {
-		lineLeft = checkThresh(lineLeft, sVal);
-		if(indicatorMode == LIMode.Auto)
-		    sendCommand3(INDICATOR, sensor, lineLeft);
-		return lineLeft;
-	    }
-	    else
-	    {
-		lineRight = checkThresh(lineRight, sVal);
-		if(indicatorMode == LIMode.Auto)
-		    sendCommand3(INDICATOR, sensor, lineRight);
-		return lineRight;
-	    }
-	}
+	    return = (readSensor(sensor + 1));	// Digital Line sensors are 1 (Left) and 2 (Right)
         else if (getModel() == BBModel.Classic)
         {
             if (sensor == BBLineSensor.Left)
@@ -1404,15 +1381,6 @@ namespace bitbot
         }
     }
 
-    function checkThresh(val: number, sense: number): number
-    {
-	if(sense < (lineThreshold - lineHysteresis))
-	   val = 1;
-	else if(sense > (lineThreshold + lineHysteresis))
-	   val = 0;
-	return val;
-    }
-
     /**
       * Read light sensor.
       * @param sensor Light sensor to read.
@@ -1423,7 +1391,7 @@ namespace bitbot
     export function readLight(sensor: BBLightSensor): number
     {
 	if(isPro())
-	    return(readSensor(sensor + 3));	// Light sensors are 3 (Left) and 4 (Right)
+	    return(readSensor(sensor + 5));	// Light sensors are 5 (Left) and 6 (Right)
         else if (getModel() == BBModel.Classic)
         {
             if (sensor == BBLightSensor.Left)
