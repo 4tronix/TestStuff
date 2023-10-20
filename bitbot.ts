@@ -220,6 +220,16 @@ enum BBColors
 }
 
 /**
+  * BitBot Pro Line Sensor Indicator modes
+  */
+enum LIMode
+{
+  Off,
+  On,
+  Auto
+}
+
+/**
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
@@ -252,6 +262,7 @@ namespace bitbot
     const ARC        = 26; // Speed, Radius
     const ARCANGLE   = 27; // Speed, Radius, Angle
     const DIRECTMODE = 28; // Speed, Motor. For compatability with older independent motor settings
+    const INDICATOR  = 29; // Indicator (L/R), Value
 
     let btDisabled = true;
     let matrix5: fireled.Band;
@@ -292,6 +303,13 @@ namespace bitbot
     let i2cData5 = pins.createBuffer(5);
     let i2cData6 = pins.createBuffer(6);
 
+    // BitBot XL Pro line sensors analog to digital conversion parameters
+    let indicatorMode = LIMode.Auto;
+    let lineThreshold = 180;
+    let lineHysteresis = 10;
+    let lineLeft = false;
+    let lineRight = false;
+
     function clamp(value: number, min: number, max: number): number
     {
         return Math.max(Math.min(max, value), min);
@@ -303,7 +321,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp37 Bluetooth"
+    //% block="%enable|bbp38 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1352,7 +1370,23 @@ namespace bitbot
     export function readLine(sensor: BBLineSensor): number
     {
 	if(isPro())
-	    return(readSensor(sensor + 1));	// Line sensors are 1 (Left) and 2 (Right)
+	{
+	    let sVal = (readSensor(sensor + 1));	// Line sensors are 1 (Left) and 2 (Right)
+	    if(sensor == BBLineSensor.Left)
+	    {
+		lineLeft = checkThresh(lineLeft, sVal);
+		if(indicatorMode == LIMode.Auto)
+		    sendCommand3(INDICATOR, sensor, lineLeft);
+		return lineLeft;
+	    }
+	    else
+	    {
+		lineRight = checkThresh(lineRight, sVal);
+		if(indicatorMode == LIMode.Auto)
+		    sendCommand3(INDICATOR, sensor, lineRight);
+		return lineRight;
+	    }
+	}
         else if (getModel() == BBModel.Classic)
         {
             if (sensor == BBLineSensor.Left)
@@ -1368,6 +1402,15 @@ namespace bitbot
             else
                 return (value & 0x02) >> 1;
         }
+    }
+
+    function checkThresh(val: bool, sense: number): bool
+    {
+	if(sense < (lineThreshold - lineHysteresis))
+	   val = true;
+	else if(sense > (lineThreshold + lineHysteresis))
+	   val = false;
+	return val;
     }
 
     /**
