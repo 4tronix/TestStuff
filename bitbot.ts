@@ -307,8 +307,8 @@ namespace bitbot
     let indicatorMode = LIMode.Auto;
     let lineThreshold = 180;
     let lineHysteresis = 10;
-    let lineLeft = false;
-    let lineRight = false;
+    let lineLeft = 0;
+    let lineRight = 0;
 
     function clamp(value: number, min: number, max: number): number
     {
@@ -321,7 +321,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp38 Bluetooth"
+    //% block="%enable|bbp39 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1404,12 +1404,12 @@ namespace bitbot
         }
     }
 
-    function checkThresh(val: bool, sense: number): bool
+    function checkThresh(val: number, sense: number): number
     {
 	if(sense < (lineThreshold - lineHysteresis))
-	   val = true;
+	   val = 1;
 	else if(sense > (lineThreshold + lineHysteresis))
-	   val = false;
+	   val = 0;
 	return val;
     }
 
