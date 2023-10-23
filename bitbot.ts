@@ -317,7 +317,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp45 Bluetooth"
+    //% block="%enable|bbp46 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -936,7 +936,7 @@ namespace bitbot
       * Enable or Disable the PID motor control. Turn Off when line following etc.
       * @param enable state of control (On or Off)
       */
-    //% blockId="BBPidEnable" block=PID control"%enable"
+    //% blockId="BBPidEnable" block="PID control%enable"
     //% enable.shadow="toggleOnOff"
     //% weight=50
     //% subcategory="BitBot Pro"
