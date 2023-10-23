@@ -229,6 +229,7 @@ enum LIMode
   Auto
 }
 
+
 /**
  * Custom blocks
  */
@@ -263,6 +264,8 @@ namespace bitbot
     const ARCANGLE   = 27; // Speed, Radius, Angle
     const DIRECTMODE = 28; // Speed, Motor. For compatability with older independent motor settings
     const INDICATOR  = 29; // Indicator (L/R), Value
+    const SETTHRESH  = 30; // Theshold, hysteresis
+    const PIDENABLE  = 31; // false/true, 0/1
 
     let btDisabled = true;
     let matrix5: fireled.Band;
@@ -314,7 +317,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp43 Bluetooth"
+    //% block="%enable|bbp44 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -419,7 +422,10 @@ namespace bitbot
 	{
 	    versionCode = pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff;
 	    if(versionCode > 0) // BitBot Pro
+	    {
+		sendCommand2(PIDENABLE, 1);  // first access to BitBot Pro, so ensure PID loop is enabled
 		versionCode += 16;
+	    }
 	    else
             	versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f;
 	}
@@ -924,6 +930,21 @@ namespace bitbot
 	    // wait for function complete
 	    waitForAck();
 	}
+    }
+
+    /**
+      * Enable or Disable the PID motor control. Turn Off when line following etc.
+      * @param enable state of control (On or Off)
+      */
+    //% blockId="BBPidEnable" block=PID control"%enable"
+    //% enable.shadow="toggleOnOff"
+    //% weight=50
+    //% subcategory="BitBot Pro"
+    export function enablePID(enable: boolean): void
+    {
+        let enPid = enable ? 1 : 0;
+	if(isPro())
+	    command2(ENABLEPID, enPid);
     }
 
 // Old Motor Blocks - kept for compatibility
