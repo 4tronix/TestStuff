@@ -317,7 +317,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp47 Bluetooth"
+    //% block="%enable|bbp48 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -964,6 +964,8 @@ namespace bitbot
     {
 	if(isPro())
 	    return readSensor(sensor + 3);	// Analog Line sensors are 3 (Left) and 4 (Right)
+	else
+	    return 0;
     }
 
     /**
