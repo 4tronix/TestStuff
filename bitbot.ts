@@ -317,7 +317,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp44 Bluetooth"
+    //% block="%enable|bbp45 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -944,7 +944,7 @@ namespace bitbot
     {
         let enPid = enable ? 1 : 0;
 	if(isPro())
-	    command2(ENABLEPID, enPid);
+	    sendCommand2(PIDENABLE, enPid);
     }
 
 // Old Motor Blocks - kept for compatibility
