@@ -267,6 +267,17 @@ namespace bitbot
     const SETTHRESH  = 30; // Theshold, hysteresis
     const PIDENABLE  = 31; // false/true, 0/1
 
+// Input Channels - BitBot Pro only
+    const VERREV = 0;
+    const DLINEL = 1;
+    const DLINER = 2;
+    const ALINEL = 3;
+    const ALINER = 4;
+    const LIGHTL = 5;
+    const LIGHTR = 6;
+    const PSU    = 7;
+    const ACKNAK = 20;
+
     let btDisabled = true;
     let matrix5: fireled.Band;
     let bitface: fireled.Band;
@@ -317,7 +328,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp48 Bluetooth"
+    //% block="%enable|bbp49 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -850,7 +861,7 @@ namespace bitbot
 
     function waitForAck(): void
     {
-	while ((pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff) != i2cACK);
+	while (readSensor(ACKNAK) != i2cACK);
 	    basic.pause(20);
     }
 
@@ -963,7 +974,7 @@ namespace bitbot
     export function readLineAnalog(sensor: BBLineSensor): number
     {
 	if(isPro())
-	    return readSensor(sensor + 3);	// Analog Line sensors are 3 (Left) and 4 (Right)
+	    return readSensor(sensor + ALINEL);	// Analog Line sensors are 3 (Left) and 4 (Right)
 	else
 	    return 0;
     }
@@ -973,7 +984,7 @@ namespace bitbot
       * @param threshold mid point between black and white. eg: 100
       * @param hysteresis deadband either side of mid point. eg. 10
       */
-    //% blockId="BBSetThreshold" block="line sensor threshold%threshold|, hysteresis%hysteresis"
+    //% blockId="BBSetThreshold" block="line sensor threshold%threshold| hysteresis%hysteresis"
     //% weight=90
     //% subcategory="BitBot Pro"
     //% group="Line sensor"
@@ -1422,7 +1433,7 @@ namespace bitbot
     export function readLine(sensor: BBLineSensor): number
     {
 	if(isPro())
-	    return readSensor(sensor + 1);	// Digital Line sensors are 1 (Left) and 2 (Right)
+	    return readSensor(sensor + DLINEL);	// Digital Line sensors are 1 (Left) and 2 (Right)
         else if (getModel() == BBModel.Classic)
         {
             if (sensor == BBLineSensor.Left)
@@ -1450,7 +1461,7 @@ namespace bitbot
     export function readLight(sensor: BBLightSensor): number
     {
 	if(isPro())
-	    return readSensor(sensor + 5);	// Light sensors are 5 (Left) and 6 (Right)
+	    return readSensor(sensor + LIGHTL);	// Light sensors are 5 (Left) and 6 (Right)
         else if (getModel() == BBModel.Classic)
         {
             if (sensor == BBLightSensor.Left)
