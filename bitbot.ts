@@ -234,7 +234,7 @@ enum LIMode
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf1b9"
-//% groups='["Basic","Advanced","Special","Ultrasonic","Line Sensor","5x5 Matrix","BitFace","OLED 128x64"]'
+//% groups='["Basic","Motors","Advanced","Special","Ultrasonic","Line Sensor","5x5 Matrix","BitFace","OLED 128x64"]'
 namespace bitbot
 {
     let fireBand: fireled.Band;
@@ -317,7 +317,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp46 Bluetooth"
+    //% block="%enable|bbp47 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -864,6 +864,7 @@ namespace bitbot
     //% speed.min=0 speed.max=100
     //% weight=100
     //% subcategory="BitBot Pro"
+    //% group=Motors
     export function gocm(direction: BBDirection, speed: number, distance: number): void
     {
 	if(isPro())
@@ -884,6 +885,7 @@ namespace bitbot
     //% speed.min=0 speed.max=100
     //% weight=90
     //% subcategory="BitBot Pro"
+    //% group=Motors
     export function spinDeg(direction: BBRobotDirection, speed: number, angle: number): void
     {
 	if(isPro())
@@ -904,6 +906,7 @@ namespace bitbot
     //% speed.min=0 speed.max=100
     //% weight=80
     //% subcategory="BitBot Pro"
+    //% group=Motors
     export function arc(direction: BBDirection, speed: number, radius: number): void
     {
 	if(isPro())
@@ -922,6 +925,7 @@ namespace bitbot
     //% weight=70
     //% inlineInputMode=inline
     //% subcategory="BitBot Pro"
+    //% group=Motors
     export function arcdeg(direction: BBDirection, speed: number, radius: number, angle: number): void
     {
 	if(isPro())
@@ -938,14 +942,46 @@ namespace bitbot
       */
     //% blockId="BBPidEnable" block="PID control%enable"
     //% enable.shadow="toggleOnOff"
-    //% weight=50
+    //% weight=60
     //% subcategory="BitBot Pro"
+    //% group=Motors
     export function enablePID(enable: boolean): void
     {
         let enPid = enable ? 1 : 0;
 	if(isPro())
 	    sendCommand2(PIDENABLE, enPid);
     }
+
+    /**
+      * Read the line sensors in analog mode. Values 0 to 1023
+      * @param sensor left or right line sensors
+      */
+    //% blockId="BBAnalogLine" block="%sensor|line sensor"
+    //% weight=100
+    //% subcategory="BitBot Pro"
+    //% group="Line sensor"
+    export function readLineAnalog(sensor: BBLineSensor): number
+    {
+	if(isPro())
+	    return readSensor(sensor + 3);	// Analog Line sensors are 3 (Left) and 4 (Right)
+    }
+
+    /**
+      * Set threshold and hysteresis for line sensors
+      * @param threshold mid point between black and white. eg: 100
+      * @param hysteresis deadband either side of mid point. eg. 10
+      */
+    //% blockId="BBSetThreshold" block="line sensor threshold%threshold|, hysteresis%hysteresis"
+    //% weight=90
+    //% subcategory="BitBot Pro"
+    //% group="Line sensor"
+    export function setThreshold(threshold: number, hysteresis: number): void
+    {
+	if(isPro())
+	    sendCommand5(SETTHRESH, threshold & 0xff, threshold >> 8, hysteresis & 0xff, hysteresis >> 8);
+    }
+
+
 
 // Old Motor Blocks - kept for compatibility
     /**
