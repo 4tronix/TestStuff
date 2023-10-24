@@ -328,7 +328,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp50 Bluetooth"
+    //% block="%enable|bbp51 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -861,8 +861,10 @@ namespace bitbot
 
     function waitForAck(): void
     {
-	while (readSensor(ACKNAK) != i2cACK)
-	    basic.pause(20);
+	basic.pause(10);
+	while(pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE) != i2cACK)	// read register is always ACKNAK when waiting is required
+	//while (readSensor(ACKNAK) != i2cACK)
+	    basic.pause(10);
     }
 
     /**
