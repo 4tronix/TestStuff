@@ -328,7 +328,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp52 Bluetooth"
+    //% block="%enable|bbp53 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -977,6 +977,22 @@ namespace bitbot
     {
 	if(isPro())
 	    return readSensor(sensor + ALINEL);	// Analog Line sensors are 3 (Left) and 4 (Right)
+	else
+	    return 0;
+    }
+
+    /**
+      * Read the line sensors in digital mode. Returns True (black line detected) or False
+      * @param sensor left or right line sensors
+      */
+    //% blockId="BBDigitalLine" block="%sensor|line sensor"
+    //% weight=95
+    //% subcategory="BitBot Pro"
+    //% group="Line sensor"
+    export function readLineDigital(sensor: BBLineSensor): boolean
+    {
+	if(isPro())
+	    return readSensor(sensor + DLINEL);	// Digital Line sensors are 1 (Left) and 2 (Right)
 	else
 	    return 0;
     }
