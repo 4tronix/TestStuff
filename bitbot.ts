@@ -328,7 +328,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp51 Bluetooth"
+    //% block="%enable|bbp52 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -984,7 +984,7 @@ namespace bitbot
     /**
       * Set threshold and hysteresis for line sensors
       * @param threshold mid point between black and white. eg: 100
-      * @param hysteresis deadband either side of mid point. eg. 10
+      * @param hysteresis deadband either side of mid point. eg: 10
       */
     //% blockId="BBSetThreshold" block="line sensor threshold%threshold| hysteresis%hysteresis"
     //% weight=90
