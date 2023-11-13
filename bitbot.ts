@@ -240,20 +240,21 @@ namespace bitbot
     let fireBand: fireled.Band;
     let _updateMode = BBMode.Auto;
 
-    const i2caddr = 0x1C;	// i2c address of I/O Expander
+    const i2caddr  = 0x1C;	// i2c address of I/O Expander
     const i2cATMega = 0x22;	// i2c address of ATMega on BitBot Pro
-    const EEROM = 0x50;		// i2c address of EEROM
-    const i2cACK = 0x55;	// i2c acknowledge character for terminating motor commands
-    const NUMLEDS = 12;
-    const ATMRESET = 20;
-    const FIREDATA = 0;
-    const FIREBRT  = 1;
-    const FIREUPDT = 2;
+    const EEROM    = 0x50;	// i2c address of EEROM
+    const i2cACK =   0x55;	// i2c acknowledge character for terminating motor commands
+    const NUMLEDS    = 12;
+    const ATMRESET   = 20;
+    const FIREDATA    = 0;
+    const FIREBRT     = 1;
+    const FIREUPDT    = 2;
     const UPDATEMODE  = 9;
-    const SHIFT_LEDS  = 10;
-    const ROTATE_LEDS = 11;
-    const RAINBOW     = 12;
-    const SETPIXEL    = 13;
+    const SHIFTLEDS  = 10;
+    const ROTATELEDS = 11;
+    const RAINBOW    = 12;
+    const SETPIXEL   = 13;
+
 // BitBot Pro New Commands
     const STOP	     = 21;
     const DRIVE      = 22; // Speed +/- 100%
@@ -322,23 +323,78 @@ namespace bitbot
         return Math.max(Math.min(max, value), min);
     }
 
+    // Helper function for BitBot Pro checks
+    function isPro(): boolean
+    {
+	return getModel() == BBModel.Pro;
+    }
+
+    // Commands via I2C on ATMega
+    function sendCommand2(command: number, para0: number): void
+    {
+	i2cData2[0] = command;
+        i2cData2[1] = para0;
+        pins.i2cWriteBuffer(i2cATMega, i2cData2);
+    }
+
+    function sendCommand3(command: number, para0: number, para1: number): void
+    {
+	i2cData3[0] = command;
+        i2cData3[1] = para0;
+        i2cData3[2] = para1;
+        pins.i2cWriteBuffer(i2cATMega, i2cData3);
+    }
+
+    function sendCommand4(command: number, para0: number, para1: number, para2: number): void
+    {
+	i2cData4[0] = command;
+        i2cData4[1] = para0;
+        i2cData4[2] = para1;
+        i2cData4[3] = para2;
+        pins.i2cWriteBuffer(i2cATMega, i2cData4);
+    }
+
+    function sendCommand5(command: number, para0: number, para1: number, para2: number, para3: number): void
+    {
+	i2cData5[0] = command;
+        i2cData5[1] = para0;
+        i2cData5[2] = para1;
+        i2cData5[3] = para2;
+        i2cData5[4] = para3;
+        pins.i2cWriteBuffer(i2cATMega, i2cData5);
+    }
+
+    function sendCommand6(command: number, para0: number, para1: number, para2: number, para3: number, para4: number): void
+    {
+	i2cData6[0] = command;
+        i2cData6[1] = para0;
+        i2cData6[2] = para1;
+        i2cData6[3] = para2;
+        i2cData6[4] = para3;
+        i2cData6[5] = para4;
+        pins.i2cWriteBuffer(i2cATMega, i2cData6);
+    }
+
+    function readSensor(sensor: number): number
+    {
+        pins.i2cWriteNumber(i2cATMega, sensor, NumberFormat.Int8LE, false);
+        return (pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE));
+    }
+
 // Block to enable Bluetooth and disable FireLeds.
     /**
-      * Enable/Disable Bluetooth support by disabling/enabling FireLeds. Not required on BitBot Pro
+      * Enable/Disable Bluetooth support by disabling/enabling FireLeds. Not required for built in FireLeds on BitBot Pro
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp54 Bluetooth"
+    //% block="%enable|bbp55 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
-	if(!isPro())
-	{
-            if (enable == BBBluetooth.btEnable)
-                btDisabled = false;
-            else
-                btDisabled = true;
-	}
+        if (enable == BBBluetooth.btEnable)
+            btDisabled = false;
+        else
+            btDisabled = true;
     }
 
 // Blocks for selecting BitBot Model
@@ -441,64 +497,6 @@ namespace bitbot
             	versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f;
 	}
         return versionCode;
-    }
-
-    // Helper function for BitBot Pro checks
-    function isPro(): boolean
-    {
-	return getModel() == BBModel.Pro;
-    }
-
-    // Commands via I2C on ATMega
-    function sendCommand2(command: number, para0: number): void
-    {
-	i2cData2[0] = command;
-        i2cData2[1] = para0;
-        pins.i2cWriteBuffer(i2cATMega, i2cData2);
-    }
-
-    function sendCommand3(command: number, para0: number, para1: number): void
-    {
-	i2cData3[0] = command;
-        i2cData3[1] = para0;
-        i2cData3[2] = para1;
-        pins.i2cWriteBuffer(i2cATMega, i2cData3);
-    }
-
-    function sendCommand4(command: number, para0: number, para1: number, para2: number): void
-    {
-	i2cData4[0] = command;
-        i2cData4[1] = para0;
-        i2cData4[2] = para1;
-        i2cData4[3] = para2;
-        pins.i2cWriteBuffer(i2cATMega, i2cData4);
-    }
-
-    function sendCommand5(command: number, para0: number, para1: number, para2: number, para3: number): void
-    {
-	i2cData5[0] = command;
-        i2cData5[1] = para0;
-        i2cData5[2] = para1;
-        i2cData5[3] = para2;
-        i2cData5[4] = para3;
-        pins.i2cWriteBuffer(i2cATMega, i2cData5);
-    }
-
-    function sendCommand6(command: number, para0: number, para1: number, para2: number, para3: number, para4: number): void
-    {
-	i2cData6[0] = command;
-        i2cData6[1] = para0;
-        i2cData6[2] = para1;
-        i2cData6[3] = para2;
-        i2cData6[4] = para3;
-        i2cData6[5] = para4;
-        pins.i2cWriteBuffer(i2cATMega, i2cData6);
-    }
-
-    function readSensor(sensor: number): number
-    {
-        pins.i2cWriteNumber(i2cATMega, sensor, NumberFormat.Int8LE, false);
-        return (pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE));
     }
 
 // "DRIVE STRAIGHT" BLOCKS
@@ -1267,7 +1265,7 @@ namespace bitbot
     export function ledShift(): void
     {
 	if(isPro())
-	    sendCommand2(SHIFT_LEDS, 0);
+	    sendCommand2(SHIFTLEDS, 0);
 	else
 	{
             fire().shiftBand();
@@ -1286,7 +1284,7 @@ namespace bitbot
     export function ledRotate(): void
     {
 	if(isPro())
-	    sendCommand2(ROTATE_LEDS, 0);
+	    sendCommand2(ROTATELEDS, 0);
 	else
 	{
             fire().rotateBand();
