@@ -434,7 +434,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp65 Bluetooth"
+    //% block="%enable|bbp66 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1056,6 +1056,9 @@ namespace bitbot
 	if(isPro())
 	    sendCommand5(SETTHRESH, threshold & 0xff, threshold >> 8, hysteresis & 0xff, hysteresis >> 8);
     }
+
+// Infrared Receiver Bloacks
+
     /**
       * Action on IR message received
       */
@@ -1067,7 +1070,7 @@ namespace bitbot
     export function onIREvent(event: BBirKeys, handler: Action)
     {
         irCore.initEvents(irPin)
-        control.onEvent(irPin, <number>event, handler)
+        control.onEvent(irEvent, <number>event, handler)
     }
 
     /**
