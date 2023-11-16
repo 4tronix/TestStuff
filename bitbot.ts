@@ -434,7 +434,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp62 Bluetooth"
+    //% block="%enable|bbp63 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1066,7 +1066,7 @@ namespace bitbot
     //% group=IR
     export function onIREvent(event: BBirKeys, handler: Action)
     {
-        irCore.initEvents(pin)
+        irCore.initEvents(irPin)
         control.onEvent(irPin, <number>event, handler)
     }
 
