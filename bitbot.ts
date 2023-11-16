@@ -229,6 +229,49 @@ enum LIMode
   Auto
 }
 
+/**
+  * IR Key code translations
+  */
+enum BBirKeys
+{
+    //% block="any"
+    Any=0,
+    //% block="0"
+    Zero=152,
+    //% block="1"
+    One=162,
+    //% block="2"
+    Two=98,
+    //% block="3"
+    Three=226,
+    //% block="4"
+    Four=34,
+    //% block="5"
+    Five=2,
+    //% block="6"
+    Six=194,
+    //% block="7"
+    Seven=224,
+    //% block="8"
+    Eight=168,
+    //% block="9"
+    Nine=144,
+    //% block="star"
+    Star=104,
+    //% block="hash"
+    Hash=176,
+    //% block="up"
+    Up=24,
+    //% block="down"
+    Down=74,
+    //% block="left"
+    Left=16,
+    //% block="right"
+    Right=90,
+    //% block="ok"
+    Ok=56
+}
+
 
 /**
  * Custom blocks
@@ -267,6 +310,10 @@ namespace bitbot
     const INDICATOR  = 29; // Indicator (L/R), Value
     const SETTHRESH  = 30; // Theshold, hysteresis
     const PIDENABLE  = 31; // false/true, 0/1
+
+// BitBot Pro IR constants
+    const irPin = DigitalPin.P14
+    const irEvent = 1995
 
 // Input Channels - BitBot Pro only
     const VERREV = 0;
@@ -387,7 +434,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp61 Bluetooth"
+    //% block="%enable|bbp62 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1009,6 +1056,46 @@ namespace bitbot
 	if(isPro())
 	    sendCommand5(SETTHRESH, threshold & 0xff, threshold >> 8, hysteresis & 0xff, hysteresis >> 8);
     }
+    /**
+      * Action on IR message received
+      */
+    //% weight=100
+    //% blockId=onIrEvent
+    //% block="on IR key%key"
+    //% subcategory="BitBot Pro"
+    //% group=IR
+    export function onIREvent(event: BBirKeys, handler: Action)
+    {
+        irCore.initEvents(pin)
+        control.onEvent(irPin, <number>event, handler)
+    }
+
+    /**
+     * Check if IR key pressed
+     */
+    //% weight=90
+    //% blockId=IRKey
+    //% block="IR key%key|was pressed"
+    //% subcategory="BitBot Pro"
+    //% group=IR
+    export function irKey(key: BBirKeys): boolean
+    {
+        return (irCore.LastCode() == key)
+    }
+
+    /**
+      * Last IR Code received
+      */
+    //% weight=80
+    //% blockId=IRCode
+    //% block="IR code"
+    //% subcategory="BitBot Pro"
+    //% group=IR
+    export function irCode(): number
+    {
+	return irCore.LastCode()
+    }
+
 
 
 

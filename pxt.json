@@ -11,6 +11,7 @@
     "files": [
         "README.md",
         "bitbot.ts",
+	"ircore.ts",
         "_locales/no/BitBot-strings.json",
         "_locales/no/BitBot-jsdoc-strings.json",
         "_locales/nb/BitBot-strings.json",
