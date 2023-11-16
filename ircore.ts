@@ -64,9 +64,9 @@ namespace irCore
 	        if (++pulseCount >= 32)	// 32 bits per packet, so we've done
 	        {
 	            state = 0
-	            if(rxData[2] + rxData[3] == 255)
+	            /*if(rxData[2] + rxData[3] == 255)
 		        lastCode = rxData[2]
-	            else
+	            else*/
 		        lastCode = 0
 	            control.raiseEvent(irEvent, lastCode)
 	        }
