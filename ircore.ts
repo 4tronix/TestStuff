@@ -67,7 +67,7 @@ namespace irCore
 	            /*if(rxData[2] + rxData[3] == 255)
 		        lastCode = rxData[2]
 	            else*/
-		        lastCode = 0
+		        lastCode = rxData[2]
 	            control.raiseEvent(irEvent, lastCode)
 	        }
 	    })
