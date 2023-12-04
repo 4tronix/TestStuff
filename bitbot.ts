@@ -434,7 +434,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp66 Bluetooth"
+    //% block="%enable|bbp67 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1087,16 +1087,29 @@ namespace bitbot
     }
 
     /**
-      * Last IR Code received
+      * Last IR Code received as number
       */
     //% weight=80
-    //% blockId=IRCode
+    //% blockId=lastIRCode
     //% block="IR code"
     //% subcategory="BitBot Pro"
     //% group=IR
-    export function irCode(): number
+    export function lastIRCode(): number
     {
 	return irCore.LastCode()
+    }
+
+    /**
+      * IR Key Codes as number
+      */
+    //% weight=80
+    //% blockId=IRKeyCode
+    //% block="IR Key%key"
+    //% subcategory="BitBot Pro"
+    //% group=IR
+    export function irKeyCode(key: BBirKeys): number
+    {
+	return key
     }
 
 
