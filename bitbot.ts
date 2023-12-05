@@ -490,7 +490,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp68 Bluetooth"
+    //% block="%enable|bbp69 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1068,7 +1068,7 @@ namespace bitbot
 
     /**
       * Read the line sensors in analog mode. Values 0 to 1023
-      * @param sensor left or right line sensors
+      * @param sensor left, right or centre line sensor
       */
     //% blockId="BBAnalogLine" block="%sensor|line sensor"
     //% weight=100
@@ -1084,18 +1084,46 @@ namespace bitbot
 
     /**
       * Read the line sensors in digital mode. Returns True (black line detected) or False
-      * @param sensor left or right line sensors
+      * @param sensor left, right or centre line sensor
       */
     //% blockId="BBDigitalLine" block="%sensor|line sensor"
-    //% weight=95
+    //% weight=90
     //% subcategory="BitBot Pro"
     //% group="Line sensor"
     export function readLineDigital(sensor: BBPLineSensor): boolean
     {
 	if(isPro())
-	    return (readSensor(sensor + DLINEL)==0);	// Digital Line sensors are 1, 2 and 3 (Left, Right, Centre)
+	    return (readSensor(sensor + DLINEL)==0)	// Digital Line sensors are 1, 2 and 3 (Left, Right, Centre)
 	else
-	    return false;
+	    return false
+    }
+
+    /**
+      * Line position merge. -100 full left, 0 centre, +100 full right
+      */
+    //% blockId="BBMergeLine" block="line position"
+    //% weight=80
+    //% subcategory="BitBot Pro"
+    //% group="Line sensor"
+    export function mergeLinePosition(): number
+    {
+	if(isPro())
+	{
+	    let left = 1023 - readSensor(ALINEL)
+	    let right = 1023 - readSensor(ALINER)
+	    let centre = 1023 - readSensor(ALINEC)
+	    let lineMax = Math.max(left, Math.max(right, centre))
+	    left = (left * 100) / lineMax
+	    right = (right * 100) / lineMax
+	    centre = (centre * 100) / lineMax
+	    let lineMin = Math.min(left, Math.min(right, centre))
+	    left = left - lineMin
+	    right = right - lineMin
+	    centre = centre - lineMin
+	    return ((right * right) / (right + centre)) - ((left * left) / (left + centre))
+	}
+	else
+	    return 0
     }
 
     /**
@@ -1104,7 +1132,7 @@ namespace bitbot
       * @param hysteresis deadband either side of mid point. eg: 10
       */
     //% blockId="BBSetThreshold" block="line sensor threshold%threshold| hysteresis%hysteresis"
-    //% weight=90
+    //% weight=70
     //% subcategory="BitBot Pro"
     //% group="Line sensor"
     export function setThreshold(threshold: number, hysteresis: number): void
