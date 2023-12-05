@@ -140,6 +140,19 @@ enum BBLineSensor
 }
 
 /**
+  * BitBot Pro line sensors.
+  */
+enum BBPLineSensor
+{
+    //% block="left"
+    Left,
+    //% block="right"
+    Right,
+    //% block="centre"
+    Centre
+}
+
+/**
   * Enumeration of light sensors.
   */
 enum BBLightSensor
@@ -272,6 +285,47 @@ enum BBirKeys
     Ok=56
 }
 
+/**
+  * IR Key code translations without the Any code
+  */
+enum BBirNoAny
+{
+    //% block="0"
+    Zero=152,
+    //% block="1"
+    One=162,
+    //% block="2"
+    Two=98,
+    //% block="3"
+    Three=226,
+    //% block="4"
+    Four=34,
+    //% block="5"
+    Five=2,
+    //% block="6"
+    Six=194,
+    //% block="7"
+    Seven=224,
+    //% block="8"
+    Eight=168,
+    //% block="9"
+    Nine=144,
+    //% block="star"
+    Star=104,
+    //% block="hash"
+    Hash=176,
+    //% block="up"
+    Up=24,
+    //% block="down"
+    Down=74,
+    //% block="left"
+    Left=16,
+    //% block="right"
+    Right=90,
+    //% block="ok"
+    Ok=56
+}
+
 
 /**
  * Custom blocks
@@ -316,15 +370,17 @@ namespace bitbot
     const irEvent = 1995
 
 // Input Channels - BitBot Pro only
-    const VERREV = 0;
-    const DLINEL = 1;
-    const DLINER = 2;
-    const ALINEL = 3;
-    const ALINER = 4;
-    const LIGHTL = 5;
-    const LIGHTR = 6;
-    const PSU    = 7;
-    const ACKNAK = 20;
+    const VERREV = 0
+    const DLINEL = 1
+    const DLINER = 2
+    const DLINEC = 3
+    const ALINEL = 4
+    const ALINER = 5
+    const ALINEC = 6
+    const LIGHTL = 7
+    const LIGHTR = 8
+    const PSU    = 9
+    const ACKNAK = 20
 
     let btDisabled = true;
     let matrix5: fireled.Band;
@@ -434,7 +490,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp67 Bluetooth"
+    //% block="%enable|bbp68 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1018,10 +1074,10 @@ namespace bitbot
     //% weight=100
     //% subcategory="BitBot Pro"
     //% group="Line sensor"
-    export function readLineAnalog(sensor: BBLineSensor): number
+    export function readLineAnalog(sensor: BBPLineSensor): number
     {
 	if(isPro())
-	    return readSensor(sensor + ALINEL);	// Analog Line sensors are 3 (Left) and 4 (Right)
+	    return readSensor(sensor + ALINEL);	// Analog Line sensors are 4, 5 and 6 (Left, Right, Centre)
 	else
 	    return 0;
     }
@@ -1034,10 +1090,10 @@ namespace bitbot
     //% weight=95
     //% subcategory="BitBot Pro"
     //% group="Line sensor"
-    export function readLineDigital(sensor: BBLineSensor): boolean
+    export function readLineDigital(sensor: BBPLineSensor): boolean
     {
 	if(isPro())
-	    return (readSensor(sensor + DLINEL)==0);	// Digital Line sensors are 1 (Left) and 2 (Right)
+	    return (readSensor(sensor + DLINEL)==0);	// Digital Line sensors are 1, 2 and 3 (Left, Right, Centre)
 	else
 	    return false;
     }
@@ -1107,7 +1163,7 @@ namespace bitbot
     //% block="IR Key%key"
     //% subcategory="BitBot Pro"
     //% group=IR
-    export function irKeyCode(key: BBirKeys): number
+    export function irKeyCode(key: BBirNoAny): number
     {
 	return key
     }
