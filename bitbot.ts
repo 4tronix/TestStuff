@@ -490,7 +490,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp72 Bluetooth"
+    //% block="%enable|bbp73 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1078,32 +1078,32 @@ namespace bitbot
       * Enable or Disable the PID motor control. Turn Off when line following etc.
       * @param enable state of control (On or Off)
       */
-    //% blockId="BBPidEnable" block="PID control%enable"
+    //% blockId="BBPidEnable" block="set PID control%enable"
     //% enable.shadow="toggleOnOff"
     //% weight=50
     //% subcategory="BitBot Pro"
     //% group=Motors
     export function enablePID(enable: boolean): void
     {
-        let enPid = enable ? 1 : 0;
+        let enPid = enable ? 1 : 0
 	if(isPro())
-	    sendCommand2(PIDENABLE, enPid);
+	    sendCommand2(PIDENABLE, enPid)
     }
 
     /**
-      * Read the line sensors in analog mode. Values 0 to 1023
+      * Read the line sensors in analog mode. Values 0 (Black) to 1023 (White)
       * @param sensor left, right or centre line sensor
       */
     //% blockId="BBAnalogLine" block="%sensor|line sensor"
     //% weight=100
     //% subcategory="BitBot Pro"
-    //% group="Line sensor"
+    //% group="Line sensors"
     export function readLineAnalog(sensor: BBPLineSensor): number
     {
 	if(isPro())
 	    return readSensor(sensor + ALINEL);	// Analog Line sensors are 4, 5 and 6 (Left, Right, Centre)
 	else
-	    return 0;
+	    return 0
     }
 
     /**
@@ -1113,7 +1113,7 @@ namespace bitbot
     //% blockId="BBDigitalLine" block="%sensor|line sensor"
     //% weight=90
     //% subcategory="BitBot Pro"
-    //% group="Line sensor"
+    //% group="Line sensors"
     export function readLineDigital(sensor: BBPLineSensor): boolean
     {
 	if(isPro())
@@ -1128,7 +1128,7 @@ namespace bitbot
     //% blockId="BBMergeLine" block="line position"
     //% weight=80
     //% subcategory="BitBot Pro"
-    //% group="Line sensor"
+    //% group="Line sensors"
     export function mergeLinePosition(): number
     {
 	if(isPro())
@@ -1161,17 +1161,34 @@ namespace bitbot
       * @param threshold mid point between black and white. eg: 100
       * @param hysteresis deadband either side of mid point. eg: 10
       */
-    //% blockId="BBSetThreshold" block="line sensor threshold%threshold| hysteresis%hysteresis"
+    //% blockId="BBSetThreshold" block="set line sensor threshold%threshold| hysteresis%hysteresis"
     //% weight=70
     //% subcategory="BitBot Pro"
-    //% group="Line sensor"
+    //% group="Line sensors"
     export function setThreshold(threshold: number, hysteresis: number): void
     {
 	if(isPro())
-	    sendCommand5(SETTHRESH, threshold & 0xff, threshold >> 8, hysteresis & 0xff, hysteresis >> 8);
+	    sendCommand5(SETTHRESH, threshold & 0xff, threshold >> 8, hysteresis & 0xff, hysteresis >> 8)
     }
 
-// Infrared Receiver Bloacks
+// Power Management Block
+    /**
+      * Read the battery voltage
+      */
+    //% blockId="BBBattery" block="battery voltage"
+    //% weight=100
+    //% subcategory="BitBot Pro"
+    //% group="Power"
+    export function batteryVoltage(): number
+    {
+	if(isPro())
+	    return readSensor(PSU)
+	else
+	    return 0
+    }
+
+
+// Infrared Receiver Blocks
 
     /**
       * Action on IR message received
@@ -1180,7 +1197,7 @@ namespace bitbot
     //% blockId=onIrEvent
     //% block="on IR key%key"
     //% subcategory="BitBot Pro"
-    //% group=IR
+    //% group=InfraRed
     export function onIREvent(event: BBirKeys, handler: Action)
     {
         irCore.initEvents(irPin)
@@ -1194,7 +1211,7 @@ namespace bitbot
     //% blockId=IRKey
     //% block="IR key%key|was pressed"
     //% subcategory="BitBot Pro"
-    //% group=IR
+    //% group=InfraRed
     export function irKey(key: BBirKeys): boolean
     {
         return (irCore.LastCode() == key)
@@ -1207,7 +1224,7 @@ namespace bitbot
     //% blockId=lastIRCode
     //% block="IR code"
     //% subcategory="BitBot Pro"
-    //% group=IR
+    //% group=InfraRed
     export function lastIRCode(): number
     {
 	return irCore.LastCode()
@@ -1220,7 +1237,7 @@ namespace bitbot
     //% blockId=IRKeyCode
     //% block="IR Key%key"
     //% subcategory="BitBot Pro"
-    //% group=IR
+    //% group=InfraRed
     export function irKeyCode(key: BBirNoAny): number
     {
 	return key
