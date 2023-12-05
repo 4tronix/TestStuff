@@ -490,7 +490,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp69 Bluetooth"
+    //% block="%enable|bbp70 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1120,7 +1120,7 @@ namespace bitbot
 	    left = left - lineMin
 	    right = right - lineMin
 	    centre = centre - lineMin
-	    return ((right * right) / (right + centre)) - ((left * left) / (left + centre))
+	    return Math.floor(((right * right) / (right + centre)) - ((left * left) / (left + centre)))
 	}
 	else
 	    return 0
