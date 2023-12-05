@@ -490,7 +490,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp70 Bluetooth"
+    //% block="%enable|bbp71 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1109,18 +1109,24 @@ namespace bitbot
     {
 	if(isPro())
 	{
+	    // Read all analog sensors
 	    let left = 1023 - readSensor(ALINEL)
 	    let right = 1023 - readSensor(ALINER)
 	    let centre = 1023 - readSensor(ALINEC)
-	    let lineMax = Math.max(left, Math.max(right, centre))
-	    left = (left * 100) / lineMax
-	    right = (right * 100) / lineMax
-	    centre = (centre * 100) / lineMax
+	    // subtract minimum value
 	    let lineMin = Math.min(left, Math.min(right, centre))
 	    left = left - lineMin
 	    right = right - lineMin
 	    centre = centre - lineMin
-	    return Math.floor(((right * right) / (right + centre)) - ((left * left) / (left + centre)))
+	    // scale all values so max = 100
+	    let lineMax = Math.max(left, Math.max(right, centre))
+	    left = (left * 100) / lineMax
+	    right = (right * 100) / lineMax
+	    centre = (centre * 100) / lineMax
+	    // return the difference between left and right averages
+	    let posL = (left == 0) ? 0 : (left * left) / (left + centre)
+	    let posR = (right == 0) ? 0 : (right * right) / (right + centre)
+	    return Math.floor(posR - posL)
 	}
 	else
 	    return 0
