@@ -490,7 +490,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp71 Bluetooth"
+    //% block="%enable|bbp72 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1051,12 +1051,36 @@ namespace bitbot
     }
 
     /**
+      * Drive robot left or right depending on direction parameter. 
+      * @param direction from -100 for full left, through 0 for straight ahead, to +100 for full right
+      * @param speed speed of motor between 0 and 100. eg: 60
+      */
+    //% blockId="BBSteer" block="drive in direction%direction|at speed%speed"
+    //% speed.min=0 speed.max=100
+    //% direction.min=-100 direction.max=100
+    //% weight=60
+    //% subcategory="BitBot Pro"
+    //% group=Motors
+    export function steer(direction: number, speed: number): void
+    {
+	if(isPro())
+	{
+	    direction = clamp(direction, -100, 100)
+	    speed = clamp(speed, 0, 100)
+	    let speedL = (direction > 0) ? speed : ((100 + direction) * speed) / 100
+	    let speedR = (direction < 0) ? speed : ((100 - direction) * speed) / 100
+	    sendCommand4(DIRECTMODE, speedL, 0, 0)
+	    sendCommand4(DIRECTMODE, speedR, 0, 1)
+	}
+    }
+
+    /**
       * Enable or Disable the PID motor control. Turn Off when line following etc.
       * @param enable state of control (On or Off)
       */
     //% blockId="BBPidEnable" block="PID control%enable"
     //% enable.shadow="toggleOnOff"
-    //% weight=60
+    //% weight=50
     //% subcategory="BitBot Pro"
     //% group=Motors
     export function enablePID(enable: boolean): void
