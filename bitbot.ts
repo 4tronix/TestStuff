@@ -490,7 +490,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp73 Bluetooth"
+    //% block="%enable|bbp74 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1182,7 +1182,10 @@ namespace bitbot
     export function batteryVoltage(): number
     {
 	if(isPro())
-	    return readSensor(PSU)
+	{
+	    let v = readSensor(PSU)	// value in 1/10 V
+	    return v/10
+	}
 	else
 	    return 0
     }
