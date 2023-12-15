@@ -269,19 +269,19 @@ enum BBirKeys
     Eight=168,
     //% block="9"
     Nine=144,
-    //% block="star"
+    //% block="*"
     Star=104,
-    //% block="hash"
+    //% block="#"
     Hash=176,
-    //% block="up"
+    //% block="↑"
     Up=24,
-    //% block="down"
+    //% block="↓"
     Down=74,
-    //% block="left"
+    //% block="←"
     Left=16,
-    //% block="right"
+    //% block="→"
     Right=90,
-    //% block="ok"
+    //% block="OK"
     Ok=56
 }
 
@@ -310,19 +310,19 @@ enum BBirNoAny
     Eight=168,
     //% block="9"
     Nine=144,
-    //% block="star"
+    //% block="*"
     Star=104,
-    //% block="hash"
+    //% block="#"
     Hash=176,
-    //% block="up"
+    //% block="↑"
     Up=24,
-    //% block="down"
+    //% block="↓"
     Down=74,
-    //% block="left"
+    //% block="←"
     Left=16,
-    //% block="right"
+    //% block="→"
     Right=90,
-    //% block="ok"
+    //% block="OK"
     Ok=56
 }
 
@@ -490,7 +490,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp75 Bluetooth"
+    //% block="%enable|bbp76 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1236,7 +1236,7 @@ namespace bitbot
     /**
       * IR Key Codes as number
       */
-    //% weight=80
+    //% weight=70
     //% blockId=IRKeyCode
     //% block="IR Key%key"
     //% subcategory="BitBot Pro"
