@@ -490,7 +490,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp76 Bluetooth"
+    //% block="%enable|bbp78 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1474,16 +1474,18 @@ namespace bitbot
 
     /**
       * Shows a rainbow pattern on all LEDs.
+      * @param dir direction. Up is Red at 0 to Purple at 11
       */
     //% blockId="bitbot_rainbow" block="set LED rainbow"
     //% weight=70
+    //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
-    export function ledRainbow(): void
+    export function ledRainbow(dir: boolean): void
     {
 	if(isPro())
-	    sendCommand2(RAINBOW, 0);
+	    sendCommand2(RAINBOW, dir?1:0);
 	else
 	{
             fire().setRainbow();
@@ -1492,36 +1494,40 @@ namespace bitbot
     }
 
     /**
-     * Shift LEDs forward and clear with zeros.
+     * Shift LEDs and clear with zeros.
+     * @param dir direction of shift. Up is 0 to 1
      */
-    //% blockId="bitbot_led_shift" block="shift LEDs"
+    //% blockId="bitbot_led_shift" block="shift LEDs%dir"
     //% weight=60
+    //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
-    export function ledShift(): void
+    export function ledShift(dir: boolean): void
     {
 	if(isPro())
-	    sendCommand2(SHIFTLEDS, 0);
+	    sendCommand2(SHIFTLEDS, dir?1:0)
 	else
 	{
-            fire().shiftBand();
-            updateLEDs();
+            fire().shiftBand()
+            updateLEDs()
 	}
     }
 
     /**
-     * Rotate LEDs forward.
+     * Rotate LEDs
+     * @param dir direction of rotation. Up is 0 to 1
      */
-    //% blockId="bitbot_led_rotate" block="rotate LEDs"
+    //% blockId="bitbot_led_rotate" block="rotate LEDs%dir"
     //% weight=50
+    //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
-    export function ledRotate(): void
+    export function ledRotate(dir: boolean): void
     {
 	if(isPro())
-	    sendCommand2(ROTATELEDS, 0);
+	    sendCommand2(ROTATELEDS, dir?1:0);
 	else
 	{
             fire().rotateBand();
@@ -1714,7 +1720,7 @@ namespace bitbot
     export function readLight(sensor: BBLightSensor): number
     {
 	if(isPro())
-	    return readSensor(sensor + LIGHTL);	// Light sensors are 5 (Left) and 6 (Right)
+	    return readSensor(sensor + LIGHTL);	// Light sensors are 7 (Left) and 8 (Right)
         else if (getModel() == BBModel.Classic)
         {
             if (sensor == BBLightSensor.Left)
