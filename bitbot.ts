@@ -490,7 +490,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp78 Bluetooth"
+    //% block="%enable|bbp79 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -972,7 +972,7 @@ namespace bitbot
       * Move robot at selected speed for selected distance in cm
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
-      * @param distance to travel in cm. eg: 15
+      * @param distance to travel in cm. eg: 30
       */
     //% blockId="BBGocm" block="go%direction|at speed%speed|\\% for%distance|cm"
     //% speed.min=0 speed.max=100
@@ -1474,9 +1474,9 @@ namespace bitbot
 
     /**
       * Shows a rainbow pattern on all LEDs.
-      * @param dir direction. Up is Red at 0 to Purple at 11
+      * @param dir direction. Up is Red at 0 to Purple at 11 eg:1
       */
-    //% blockId="bitbot_rainbow" block="set LED rainbow"
+    //% blockId="bitbot_rainbow" block="set LED rainbow%dir"
     //% weight=70
     //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
