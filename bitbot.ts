@@ -164,6 +164,17 @@ enum BBLightSensor
 }
 
 /**
+  * Enumeration of pulse sensors.
+  */
+enum BBPulseSensor
+{
+    //% block="left"
+    Left,
+    //% block="right"
+    Right
+}
+
+/**
  * Ping unit for sensor.
  */
 enum BBPingUnit
@@ -511,7 +522,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp80 Bluetooth"
+    //% block="%enable|bbp81 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -640,7 +651,7 @@ namespace bitbot
     export function writeEEROM(data: number, address: number): void
     {
 	if(isPro())
-	    wrEEROM(address + reservedBytes)
+	    wrEEROM(address + reservedBytes, address)
 	else
             wrEEROM(data, address)
     }
@@ -696,9 +707,9 @@ namespace bitbot
     //% deprecated=true
     export function rdEEROM(address: number): number
     {
-	if (((location + startFlash) <= 255) && isPro())
+	if (((address + startFlash) <= 255) && isPro())
         {
-            return readSensor(location + startFlash) & 0xff
+            return readSensor(address + startFlash) & 0xff
         }
         else if (getVersionCode() == 5)
         {
@@ -1291,7 +1302,7 @@ namespace bitbot
     {
 	if(isPro())
 	{
-	    sendCommand2(CALIBLINE, 0)
+	    sendCommand2(LINECALIB, 0)
 	    waitForAck()
 	}
     }
