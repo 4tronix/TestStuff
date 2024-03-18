@@ -176,6 +176,19 @@ enum BBPingUnit
     MicroSeconds
 }
 
+/**
+ * Distance unit for wheel sensors
+ */
+enum BBSensorUnit
+{
+    //% block="mmm"
+    Millimeters,
+    //% block="inches"
+    Inches,
+    //% block="pulses"
+    Pulses
+}
+
 enum BBServos
 {
     P1,
@@ -340,6 +353,8 @@ namespace bitbot
     const i2caddr  = 0x1C;	// i2c address of I/O Expander
     const i2cATMega = 0x22;	// i2c address of ATMega on BitBot Pro
     const EEROM    = 0x50;	// i2c address of EEROM
+    const reservedBytes = 50	// EEROM addresses reserved for system use
+    const startFlash    = 50	// Commands all below 50. Values startFlash and above is EEROM address (+ startFlash)
     const i2cACK =   0x55;	// i2c acknowledge character for terminating motor commands
     const NUMLEDS    = 12;
     const ATMRESET   = 20;
@@ -364,6 +379,8 @@ namespace bitbot
     const INDICATOR  = 29; // Indicator (L/R), Value
     const SETTHRESH  = 30; // Theshold, hysteresis
     const PIDENABLE  = 31; // false/true, 0/1
+    const LINECALIB  = 32  // Start calibration. No parameter
+    const RESETWHEEL = 33  // Left, Right, Both
 
 // BitBot Pro IR constants
     const irPin = DigitalPin.P14
@@ -381,6 +398,10 @@ namespace bitbot
     const LIGHTR = 8
     const PSU    = 9
     const ACKNAK = 20
+    const LPULSEL     = 21  // left pulse count low word
+    const LPULSEH     = 22  // left pulse count high word
+    const RPULSEL     = 23
+    const RPULSEH     = 24
 
     let btDisabled = true;
     let matrix5: fireled.Band;
@@ -490,7 +511,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp79 Bluetooth"
+    //% block="%enable|bbp80 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -602,58 +623,84 @@ namespace bitbot
         return versionCode;
     }
 
-// "DRIVE STRAIGHT" BLOCKS
+// "DRIVE STRAIGHT" and EEROM BLOCKS
 
-    // Uses bottom 3 bytes of EEROM for motor bias data
+    // Uses bottom 3 bytes of EEROM for motor bias data on "version 5" only
     // Bias values from -100 to +100. Negative values decrease Left speed, Positive decrease right speed
     // Byte 0 = Bias at 30, 1 = Bias at 60, 2 = Bias at 90
 
     /**
-      * Write a byte of data to EEROM at selected address
+      * Write a byte of data to EEROM at selected User address
       * @param address Location in EEROM to write to
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
     //% block="write%data|to address%address"
-    //% data.min = -128 data.max = 127
     //% weight=100
-    //% deprecated=true
     export function writeEEROM(data: number, address: number): void
     {
-        wrEEROM(data, address);
-    }
-
-    function wrEEROM(data: number, address: number): void
-    {
-        if (getVersionCode() == 5)
-        {
-            let i2cData = pins.createBuffer(3);
-
-            i2cData[0] = address >> 8;	// address MSB
-            i2cData[1] = address & 0xff;	// address LSB
-            i2cData[2] = data & 0xff;
-            pins.i2cWriteBuffer(EEROM, i2cData, false);
-            basic.pause(3);			// needs a short pause. 3ms ok?
-        }
+	if(isPro())
+	    wrEEROM(address + reservedBytes)
+	else
+            wrEEROM(data, address)
     }
 
     /**
-      * Read a byte of data from EEROM at selected address
+      * Write a byte of data to EEROM at selected Raw address
+      * @param address Location in EEROM to write to
+      * @param data Byte of data to write
+      */
+    //% blockId="rawWriteEEROM"
+    //% block="write%data|to address%address"
+    //% weight=95
+    //% deprecated=true
+    export function wrEEROM(data: number, address: number): void
+    {
+	if(isPro() && ((address + startFlash) <= 255))
+	    sendCommand2(address + startFlash, data)
+        else if (getVersionCode() == 5)
+        {
+            let i2cData = pins.createBuffer(3);
+
+            i2cData[0] = address >> 8	// address MSB
+            i2cData[1] = address & 0xff	// address LSB
+            i2cData[2] = data & 0xff
+            pins.i2cWriteBuffer(EEROM, i2cData, false);
+            basic.pause(3)		// needs a short pause. 3ms ok?
+        }
+	// else do nothing
+    }
+
+    /**
+      * Read a byte of data from EEROM at selected User address
       * @param address Location in EEROM to read from
       */
     //% blockId="readEEROM"
     //% block="read EEROM address%address"
     //% weight=90
-    //% deprecated=true
     export function readEEROM(address: number): number
     {
-        return rdEEROM(address);
+	if(isPro())
+	    return rdEEROM(address + reservedBytes)
+	else
+            return rdEEROM(address)
     }
 
-    // Uses bottom 3 bytes of EEROM for motor calibration. No user access
-    function rdEEROM(address: number): number
+    /**
+      * Read a byte of data from EEROM at selected raw address
+      * @param address Location in EEROM to read from
+      */
+    //% blockId="rawReadEEROM"
+    //% block="read EEROM address%address"
+    //% weight=80
+    //% deprecated=true
+    export function rdEEROM(address: number): number
     {
-        if (getVersionCode() == 5)
+	if (((location + startFlash) <= 255) && isPro())
+        {
+            return readSensor(location + startFlash) & 0xff
+        }
+        else if (getVersionCode() == 5)
         {
             let i2cRead = pins.createBuffer(2);
 
@@ -672,7 +719,7 @@ namespace bitbot
       */
     //% blockId="loadCalibration"
     //% block="Load calibration from EEROM"
-    //% weight=80
+    //% weight=70
     //% deprecated=true
     export function loadCalibration(): void
     {
@@ -689,7 +736,7 @@ namespace bitbot
       */
     //% blockId="saveCalibration"
     //% block="Save calibration to EEROM"
-    //% weight=70
+    //% weight=60
     //% deprecated=true
     export function saveCalibration(): void
     {
@@ -1090,6 +1137,67 @@ namespace bitbot
 	    sendCommand2(PIDENABLE, enPid)
     }
 
+    function readPulses(sensor: number): number
+    {
+	let loVal=0
+	let hiVal=0
+	let longVal=0
+	loVal = readSensor(sensor)
+	hiVal = readSensor(sensor+1)
+	return loVal + (hiVal << 16)
+    }
+
+    /**
+      * Read the value of selected wheel sensor
+      * @param sensor left or right wheel sensor
+      * @param unit parameter conversion (mm, inch, pulses)
+      */
+    //% blockId="BBWheelSensor" block="%sensor|wheel sensor%unit"
+    //% weight=50
+    //% subcategory="BitBot Pro"
+    //% group=Motors
+    export function wheelSensor(sensor: BBPulseSensor, unit: BBSensorUnit): number
+    {
+	let longVal=0
+	if(sensor == BBPulseSensor.Left)
+	    longVal = readPulses(LPULSEL)
+	else
+	    longVal = readPulses(RPULSEL)
+	switch(unit)
+	{
+	    case BBSensorUnit.Millimeters: return Math.round(longVal / 10.05); break
+	    case BBSensorUnit.Inches: return Math.round(longVal / 255.27); break
+	    default: return longVal; break
+	}
+    }
+
+    /**
+      * Estimate angle turned
+      */
+    //% blockId="BBTurnAngle" block="angle turned"
+    //% weight=40
+    //% subcategory="BitBot Pro"
+    //% group=Motors
+    export function turnAngle(): number
+    {
+	let lVal = readPulses(LPULSEL)
+	let rVal = readPulses(RPULSEL)
+	return Math.round((rVal - lVal) / 19.5)
+    }
+
+    /**
+      * Reset the selected wheel sensors
+      * @param sensor left, right or both wheel sensors
+      */
+    //% blockId="BBResetWheelSensors" block="reset %sensor|wheel sensors"
+    //% weight=30
+    //% subcategory="BitBot Pro"
+    //% group=Motors
+    export function resetWheelSensors(sensor: BBMotor): void
+    {
+	sendCommand2(RESETWHEEL, sensor)
+    }
+
     /**
       * Read the line sensors in analog mode. Values 0 (Black) to 1023 (White)
       * @param sensor left, right or centre line sensor
@@ -1169,6 +1277,23 @@ namespace bitbot
     {
 	if(isPro())
 	    sendCommand5(SETTHRESH, threshold & 0xff, threshold >> 8, hysteresis & 0xff, hysteresis >> 8)
+    }
+
+    /**
+      * Automatically calibrate threshold and hysteresis for line sensors
+      */
+    //% blockId="BBCalibrateLine"
+    //% block="calibrate line sensors"
+    //% weight=60
+    //% subcategory="BitBot Pro"
+    //% group="Line sensors"
+    export function calibrateLine(): void
+    {
+	if(isPro())
+	{
+	    sendCommand2(CALIBLINE, 0)
+	    waitForAck()
+	}
     }
 
 // Power Management Block
@@ -1643,8 +1768,15 @@ namespace bitbot
         let buzz = flag ? 1 : 0;
         if (getModel() == BBModel.Classic)
             pins.digitalWritePin(DigitalPin.P14, buzz);
-        else
+        else if(! isPro())
             pins.digitalWritePin(DigitalPin.P0, buzz);
+	else
+	{
+	    if(flag)
+		music.ringTone(262)
+	    else
+		music.stopAllSounds()
+	}
     }
 
     /**
