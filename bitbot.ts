@@ -522,7 +522,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp81 Bluetooth"
+    //% block="%enable|bbp82 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1176,8 +1176,8 @@ namespace bitbot
 	    longVal = readPulses(RPULSEL)
 	switch(unit)
 	{
-	    case BBSensorUnit.Millimeters: return Math.round(longVal / 10.05); break
-	    case BBSensorUnit.Inches: return Math.round(longVal / 255.27); break
+	    case BBSensorUnit.Millimeters: return Math.round(longVal / 10.36); break
+	    case BBSensorUnit.Inches: return Math.round(longVal / 263.14); break
 	    default: return longVal; break
 	}
     }
@@ -1193,7 +1193,7 @@ namespace bitbot
     {
 	let lVal = readPulses(LPULSEL)
 	let rVal = readPulses(RPULSEL)
-	return Math.round((rVal - lVal) / 19.5)
+	return Math.round((rVal - lVal) / 19.1)	// pulses per degree * 2
     }
 
     /**
