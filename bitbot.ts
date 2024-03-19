@@ -522,7 +522,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp82 Bluetooth"
+    //% block="%enable|bbp83 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -647,11 +647,13 @@ namespace bitbot
       */
     //% blockId="writeEEROM"
     //% block="write%data|to address%address"
+    //% subcategory="BitBot Pro"
+    //% group=EEROM
     //% weight=100
     export function writeEEROM(data: number, address: number): void
     {
 	if(isPro())
-	    wrEEROM(address + reservedBytes, address)
+	    wrEEROM(data, address + reservedBytes)
 	else
             wrEEROM(data, address)
     }
@@ -688,6 +690,8 @@ namespace bitbot
       */
     //% blockId="readEEROM"
     //% block="read EEROM address%address"
+    //% subcategory="BitBot Pro"
+    //% group=EEROM
     //% weight=90
     export function readEEROM(address: number): number
     {
