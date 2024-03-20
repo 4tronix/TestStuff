@@ -273,8 +273,6 @@ enum BBirKeys
 {
     //% block="any"
     Any=0,
-    //% block="0"
-    Zero=152,
     //% block="1"
     One=162,
     //% block="2"
@@ -287,16 +285,18 @@ enum BBirKeys
     Five=2,
     //% block="6"
     Six=194,
-    //% block="7"
-    Seven=224,
-    //% block="8"
-    Eight=168,
-    //% block="9"
-    Nine=144,
-    //% block="*"
-    Star=104,
-    //% block="#"
-    Hash=176,
+    //% block="save"
+    Save=224,
+    //% block="■"
+    Stop=168,
+    //% block="load"
+    Load=144,
+    //% block="X"
+    Cross=104,
+    //% block="║"
+    Pause=152,
+    //% block="/"
+    Tick=176,
     //% block="↑"
     Up=24,
     //% block="↓"
@@ -305,8 +305,8 @@ enum BBirKeys
     Left=16,
     //% block="→"
     Right=90,
-    //% block="OK"
-    Ok=56
+    //% block="►"
+    Go=56
 }
 
 /**
@@ -314,8 +314,6 @@ enum BBirKeys
   */
 enum BBirNoAny
 {
-    //% block="0"
-    Zero=152,
     //% block="1"
     One=162,
     //% block="2"
@@ -328,16 +326,18 @@ enum BBirNoAny
     Five=2,
     //% block="6"
     Six=194,
-    //% block="7"
-    Seven=224,
-    //% block="8"
-    Eight=168,
-    //% block="9"
-    Nine=144,
-    //% block="*"
-    Star=104,
-    //% block="#"
-    Hash=176,
+    //% block="save"
+    Save=224,
+    //% block="■"
+    Stop=168,
+    //% block="load"
+    Load=144,
+    //% block="X"
+    Cross=104,
+    //% block="║"
+    Pause=152,
+    //% block="/"
+    Tick=176,
     //% block="↑"
     Up=24,
     //% block="↓"
@@ -346,8 +346,8 @@ enum BBirNoAny
     Left=16,
     //% block="→"
     Right=90,
-    //% block="OK"
-    Ok=56
+    //% block="►"
+    Go=56
 }
 
 
@@ -522,7 +522,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp83 Bluetooth"
+    //% block="%enable|bbp84 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -646,7 +646,7 @@ namespace bitbot
       * @param data Byte of data to write
       */
     //% blockId="writeEEROM"
-    //% block="write%data|to address%address"
+    //% block="write%data|to EEROM address%address"
     //% subcategory="BitBot Pro"
     //% group=EEROM
     //% weight=100
@@ -664,7 +664,7 @@ namespace bitbot
       * @param data Byte of data to write
       */
     //% blockId="rawWriteEEROM"
-    //% block="write%data|to address%address"
+    //% block="write%data|to EEROM raw address%address"
     //% weight=95
     //% deprecated=true
     export function wrEEROM(data: number, address: number): void
@@ -689,7 +689,7 @@ namespace bitbot
       * @param address Location in EEROM to read from
       */
     //% blockId="readEEROM"
-    //% block="read EEROM address%address"
+    //% block="EEROM at address%address"
     //% subcategory="BitBot Pro"
     //% group=EEROM
     //% weight=90
@@ -706,7 +706,7 @@ namespace bitbot
       * @param address Location in EEROM to read from
       */
     //% blockId="rawReadEEROM"
-    //% block="read EEROM address%address"
+    //% block="EEROM at raw address%address"
     //% weight=80
     //% deprecated=true
     export function rdEEROM(address: number): number
