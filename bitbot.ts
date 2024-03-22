@@ -522,7 +522,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp84 Bluetooth"
+    //% block="%enable|bbp85 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1045,6 +1045,11 @@ namespace bitbot
     {
 	if(isPro())
 	{
+	    if(distance < 0)
+	    {
+		distance = -distance;
+		speed = -speed;
+	    }
 	    sendCommand4(DRIVEDIST, (direction == BBDirection.Reverse) ? -speed : speed, distance & 0xff, distance >> 8);
 	    // wait for function complete
 	    waitForAck();
