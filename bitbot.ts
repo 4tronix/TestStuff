@@ -522,7 +522,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp85 Bluetooth"
+    //% block="%enable|bbp86 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1037,7 +1037,7 @@ namespace bitbot
       * @param distance to travel in cm. eg: 30
       */
     //% blockId="BBGocm" block="go%direction|at speed%speed|\\% for%distance|cm"
-    //% speed.min=0 speed.max=100
+    //% speed.min=-100 speed.max=100
     //% weight=100
     //% subcategory="BitBot Pro"
     //% group=Motors
@@ -1063,7 +1063,7 @@ namespace bitbot
       * @param angle degrees to spin eg: 90
       */
     //% blockId="BBSpinDeg" block="spin%direction|at speed%speed|\\% for%angle|degrees"
-    //% speed.min=0 speed.max=100
+    //% speed.min=-100 speed.max=100
     //% weight=90
     //% subcategory="BitBot Pro"
     //% group=Motors
@@ -1071,6 +1071,11 @@ namespace bitbot
     {
 	if(isPro())
 	{
+	    if(angle < 0)
+	    {
+		angle = -angle;
+		speed = -speed;
+	    }
 	    sendCommand4(SPINANGLE, (direction == BBRobotDirection.Right) ? -speed : speed, angle & 0xff, angle >> 8);
 	    // wait for function complete
 	    waitForAck();
@@ -1084,7 +1089,7 @@ namespace bitbot
       * @param radius of arc in cm. eg: 25
       */
     //% blockId="BBArc" block="move in an arc%direction|at speed%speed|\\% radius%radius|cm"
-    //% speed.min=0 speed.max=100
+    //% speed.min=-100 speed.max=100
     //% weight=80
     //% subcategory="BitBot Pro"
     //% group=Motors
