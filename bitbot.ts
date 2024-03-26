@@ -533,7 +533,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp89 Bluetooth"
+    //% block="%enable|bbp90 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -724,7 +724,8 @@ namespace bitbot
     {
 	if (((address + startFlash) <= 255) && isPro())
         {
-            return readSensor(address + startFlash) // & 0xff
+            let rval = readSensor(address + startFlash) & 0xff
+	    return (rval > 127) ? 256-rval : rval
         }
         else if (getVersionCode() == 5)
         {
