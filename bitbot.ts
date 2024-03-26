@@ -533,7 +533,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp88 Bluetooth"
+    //% block="%enable|bbp89 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -724,7 +724,7 @@ namespace bitbot
     {
 	if (((address + startFlash) <= 255) && isPro())
         {
-            return readSensor(address + startFlash) & 0xff
+            return readSensor(address + startFlash) // & 0xff
         }
         else if (getVersionCode() == 5)
         {
@@ -1223,25 +1223,6 @@ namespace bitbot
     }
 
     /**
-      * Set wheel dimension trims
-      * @param trimDistance adjustment for distance travelled (+/- 100). eg: 0
-      * @param trimAngle adjustment for angle turned (+/- 100). eg: 0
-      */
-    //% blockId="BBMotorTrim"
-    //% block="trim distance%trimDistance|angle%ytrimAngle"
-    //% weight=30
-    //% trimDistance.min=-100 trimDistance.max=100
-    //% trimAngle.min=-100 trimAngle.max=100
-    //% subcategory="BitBot Pro"
-    //% group=Motors
-    export function motorTrim(trimDistance: number, trimAngle: number): void
-    {
-	let dTrim = clamp(trimDistance, -100, 100)
-	let aTrim = clamp(trimAngle, -100, 100)
-	sendCommand3(SETTRIMS, dTrim, aTrim)
-    }
-
-    /**
       * Reset the selected wheel sensors
       * @param sensor left, right or both wheel sensors
       */
@@ -1252,6 +1233,25 @@ namespace bitbot
     export function resetWheelSensors(sensor: BBMotor): void
     {
 	sendCommand2(RESETWHEEL, sensor)
+    }
+
+    /**
+      * Set wheel dimension trims
+      * @param trimDistance adjustment for distance travelled (+/- 100). eg: 0
+      * @param trimAngle adjustment for angle turned (+/- 100). eg: 0
+      */
+    //% blockId="BBMotorTrim"
+    //% block="trim distance%trimDistance|angle%ytrimAngle"
+    //% weight=20
+    //% trimDistance.min=-100 trimDistance.max=100
+    //% trimAngle.min=-100 trimAngle.max=100
+    //% subcategory="BitBot Pro"
+    //% group=Motors
+    export function motorTrim(trimDistance: number, trimAngle: number): void
+    {
+	let dTrim = clamp(trimDistance, -100, 100)
+	let aTrim = clamp(trimAngle, -100, 100)
+	sendCommand3(SETTRIMS, dTrim, aTrim)
     }
 
     /**
