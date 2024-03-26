@@ -376,32 +376,33 @@ namespace bitbot
     const EEROM    = 0x50;	// i2c address of EEROM
     const reservedBytes = 50	// EEROM addresses reserved for system use
     const startFlash    = 50	// Commands all below 50. Values startFlash and above is EEROM address (+ startFlash)
-    const i2cACK =   0x55;	// i2c acknowledge character for terminating motor commands
-    const NUMLEDS    = 12;
-    const ATMRESET   = 20;
-    const FIREDATA    = 0;
-    const FIREBRT     = 1;
-    const FIREUPDT    = 2;
-    const UPDATEMODE  = 9;
-    const SHIFTLEDS  = 10;
-    const ROTATELEDS = 11;
-    const RAINBOW    = 12;
-    const SETPIXEL   = 13;
+    const i2cACK =   0x55	// i2c acknowledge character for terminating motor commands
+    const NUMLEDS    = 12
+    const ATMRESET   = 20
+    const FIREDATA    = 0
+    const FIREBRT     = 1
+    const FIREUPDT    = 2
+    const UPDATEMODE  = 9
+    const SHIFTLEDS  = 10
+    const ROTATELEDS = 11
+    const RAINBOW    = 12
+    const SETPIXEL   = 13
 
 // BitBot Pro New Commands
-    const STOP	     = 21;
-    const DRIVE      = 22; // Speed +/- 100%
-    const SPIN       = 23; // Speed +/- 100%
-    const DRIVEDIST  = 24; // Speed, Distance (cm)
-    const SPINANGLE  = 25; // Speed, Angle (degrees)
-    const ARC        = 26; // Speed, Radius
-    const ARCANGLE   = 27; // Speed, Radius, Angle
-    const DIRECTMODE = 28; // Speed, Motor. For compatability with older independent motor settings
-    const INDICATOR  = 29; // Indicator (L/R), Value
-    const SETTHRESH  = 30; // Theshold, hysteresis
-    const PIDENABLE  = 31; // false/true, 0/1
-    const LINECALIB  = 32  // Start calibration. No parameter
-    const RESETWHEEL = 33  // Left, Right, Both
+    const STOP	     = 21
+    const DRIVE      = 22 // Speed +/- 100%
+    const SPIN       = 23 // Speed +/- 100%
+    const DRIVEDIST  = 24 // Speed, Distance (cm)
+    const SPINANGLE  = 25 // Speed, Angle (degrees)
+    const ARC        = 26 // Speed, Radius
+    const ARCANGLE   = 27 // Speed, Radius, Angle
+    const DIRECTMODE = 28 // Speed, Motor. For compatability with older independent motor settings
+    const INDICATOR  = 29 // Indicator (L/R), Value
+    const SETTHRESH  = 30 // Theshold, hysteresis
+    const PIDENABLE  = 31 // false/true, 0/1
+    const LINECALIB  = 32 // Start calibration. No parameter
+    const RESETWHEEL = 33 // Left, Right, Both
+    const SETTRIMS   = 34 // trimDistance and trimAngle. Both -100 to +100
 
 // BitBot Pro IR constants
     const irPin = DigitalPin.P14
@@ -532,7 +533,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp87 Bluetooth"
+    //% block="%enable|bbp88 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1655,7 +1656,7 @@ namespace bitbot
     /**
       * Shows a rainbow pattern on all LEDs.
       * @param dir direction. Up is Red at 0 to Purple at 11 eg:1
-     * @param arm which arm to use. eg: Both
+      * @param arm which arm to use. eg: Both
       */
     //% blockId="bitbot_rainbow" block="set LED rainbow%dir on%arm|arm(s)"
     //% weight=70
@@ -1663,7 +1664,7 @@ namespace bitbot
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
-    export function ledRainbow(dir: boolean): void
+    export function ledRainbow(dir: boolean, arm: BBArms): void
     {
 	if(isPro())
 	    sendCommand3(RAINBOW, dir?1:0, arm)
