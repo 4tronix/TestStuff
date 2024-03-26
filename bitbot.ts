@@ -73,6 +73,16 @@ enum BBMotor
     Both
 }
 
+enum BBArms
+{
+    //% block="both"
+    Both,
+    //% block="left"
+    Left,
+    //% block="right"
+    Right
+}
+
 /**
   * Enumeration of forward/reverse directions
   */
@@ -522,7 +532,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp86 Bluetooth"
+    //% block="%enable|bbp87 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1199,7 +1209,8 @@ namespace bitbot
     /**
       * Estimate angle turned
       */
-    //% blockId="BBTurnAngle" block="angle turned"
+    //% blockId="BBTurnAngle"
+    //% block="angle turned"
     //% weight=40
     //% subcategory="BitBot Pro"
     //% group=Motors
@@ -1208,6 +1219,25 @@ namespace bitbot
 	let lVal = readPulses(LPULSEL)
 	let rVal = readPulses(RPULSEL)
 	return Math.round((rVal - lVal) / 19.1)	// pulses per degree * 2
+    }
+
+    /**
+      * Set wheel dimension trims
+      * @param trimDistance adjustment for distance travelled (+/- 100). eg: 0
+      * @param trimAngle adjustment for angle turned (+/- 100). eg: 0
+      */
+    //% blockId="BBMotorTrim"
+    //% block="trim distance%trimDistance|angle%ytrimAngle"
+    //% weight=30
+    //% trimDistance.min=-100 trimDistance.max=100
+    //% trimAngle.min=-100 trimAngle.max=100
+    //% subcategory="BitBot Pro"
+    //% group=Motors
+    export function motorTrim(trimDistance: number, trimAngle: number): void
+    {
+	let dTrim = clamp(trimDistance, -100, 100)
+	let aTrim = clamp(trimAngle, -100, 100)
+	sendCommand3(SETTRIMS, dTrim, aTrim)
     }
 
     /**
@@ -1625,8 +1655,9 @@ namespace bitbot
     /**
       * Shows a rainbow pattern on all LEDs.
       * @param dir direction. Up is Red at 0 to Purple at 11 eg:1
+     * @param arm which arm to use. eg: Both
       */
-    //% blockId="bitbot_rainbow" block="set LED rainbow%dir"
+    //% blockId="bitbot_rainbow" block="set LED rainbow%dir on%arm|arm(s)"
     //% weight=70
     //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
@@ -1635,28 +1666,29 @@ namespace bitbot
     export function ledRainbow(dir: boolean): void
     {
 	if(isPro())
-	    sendCommand2(RAINBOW, dir?1:0);
+	    sendCommand3(RAINBOW, dir?1:0, arm)
 	else
 	{
-            fire().setRainbow();
-            updateLEDs();
+            fire().setRainbow()
+            updateLEDs()
 	}
     }
 
     /**
      * Shift LEDs and clear with zeros.
      * @param dir direction of shift. Up is 0 to 1
+     * @param arm which arm to use. eg: Both
      */
-    //% blockId="bitbot_led_shift" block="shift LEDs%dir"
+    //% blockId="bitbot_led_shift" block="shift LEDs%dir on%arm|arm(s)"
     //% weight=60
     //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
-    export function ledShift(dir: boolean): void
+    export function ledShift(dir: boolean, arm: BBArms): void
     {
 	if(isPro())
-	    sendCommand2(SHIFTLEDS, dir?1:0)
+	    sendCommand3(SHIFTLEDS, dir?1:0, arm)
 	else
 	{
             fire().shiftBand()
@@ -1667,21 +1699,22 @@ namespace bitbot
     /**
      * Rotate LEDs
      * @param dir direction of rotation. Up is 0 to 1
+     * @param arm which arm to use. eg: Both
      */
-    //% blockId="bitbot_led_rotate" block="rotate LEDs%dir"
+    //% blockId="bitbot_led_rotate" block="rotate LEDs%dir on%arm|arm(s)"
     //% weight=50
     //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
-    export function ledRotate(dir: boolean): void
+    export function ledRotate(dir: boolean, arm: BBArms): void
     {
 	if(isPro())
-	    sendCommand2(ROTATELEDS, dir?1:0);
+	    sendCommand3(ROTATELEDS, dir?1:0, arm)
 	else
 	{
-            fire().rotateBand();
-            updateLEDs();
+            fire().rotateBand()
+            updateLEDs()
 	}
     }
 
