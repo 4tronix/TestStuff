@@ -202,8 +202,10 @@ enum BBPingUnit
  */
 enum BBSensorUnit
 {
-    //% block="mmm"
+    //% block="mm"
     Millimeters,
+    //% block="cm"
+    Centimeters,
     //% block="inches"
     Inches,
     //% block="pulses"
@@ -533,7 +535,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp91 Bluetooth"
+    //% block="%enable|bbp92 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1187,7 +1189,7 @@ namespace bitbot
     /**
       * Read the value of selected wheel sensor
       * @param sensor left or right wheel sensor
-      * @param unit parameter conversion (mm, inch, pulses)
+      * @param unit parameter conversion (mm, cm, inch, pulses)
       */
     //% blockId="BBWheelSensor" block="%sensor|wheel sensor%unit"
     //% weight=50
@@ -1203,6 +1205,7 @@ namespace bitbot
 	switch(unit)
 	{
 	    case BBSensorUnit.Millimeters: return Math.round(longVal / 10.36); break
+	    case BBSensorUnit.Centimeters: return Math.round(longVal / 103.6); break
 	    case BBSensorUnit.Inches: return Math.round(longVal / 263.14); break
 	    default: return longVal; break
 	}
@@ -1282,7 +1285,7 @@ namespace bitbot
     export function readLineDigital(sensor: BBPLineSensor): boolean
     {
 	if(isPro())
-	    return (readSensor(sensor + DLINEL)==0)	// Digital Line sensors are 1, 2 and 3 (Left, Right, Centre)
+	    return (readSensor(sensor + DLINEL)!=0)	// True if line found. Digital Line sensors are 1, 2 and 3 (Left, Right, Centre)
 	else
 	    return false
     }
