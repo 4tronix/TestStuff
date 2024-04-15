@@ -535,7 +535,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp92 Bluetooth"
+    //% block="%enable|bbp93 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1376,7 +1376,7 @@ namespace bitbot
     }
 
 
-// Infrared Receiver Blocks
+// Built-in Infrared Receiver Blocks - BitBot PRO Only
 
     /**
       * Action on IR message received
@@ -1388,8 +1388,11 @@ namespace bitbot
     //% group=InfraRed
     export function onIREvent(event: BBirKeys, handler: Action)
     {
-        irCore.initEvents(irPin)
-        control.onEvent(irEvent, <number>event, handler)
+	if(isPro())
+	{
+            irCore.initEvents(irPin)
+            control.onEvent(irEvent, <number>event, handler)
+	}
     }
 
     /**
@@ -1402,7 +1405,10 @@ namespace bitbot
     //% group=InfraRed
     export function irKey(key: BBirKeys): boolean
     {
-        return (irCore.LastCode() == key)
+	if(isPro())
+            return (irCore.LastCode() == key)
+	else
+	    return 0
     }
 
     /**
@@ -1415,7 +1421,10 @@ namespace bitbot
     //% group=InfraRed
     export function lastIRCode(): number
     {
-	return irCore.LastCode()
+	if(isPro())
+	    return irCore.LastCode()
+	else
+	    return 0
     }
 
     /**
@@ -1428,7 +1437,10 @@ namespace bitbot
     //% group=InfraRed
     export function irKeyCode(key: BBirNoAny): number
     {
-	return key
+	if(isPro())
+	    return key
+	else
+	    return 0
     }
 
 
@@ -2066,6 +2078,62 @@ namespace bitbot
     }
 
 // Addon Boards
+
+// Add-on Infrared Receiver Blocks
+
+    /**
+      * Action on IR message received
+      */
+    //% weight=100
+    //% blockId=onIrEventAddon
+    //% block="on add-on IR key%key"
+    //% subcategory=Addons
+    //% group=InfraRed
+    export function onIREventAddon(event: BBirKeys, handler: Action)
+    {
+        irCore.initEvents(DigitalPin.P15)
+        control.onEvent(irEvent, <number>event, handler)
+    }
+
+    /**
+     * Check if IR key pressed
+     */
+    //% weight=90
+    //% blockId=IRKeyAddon
+    //% block="add-on IR key%key|was pressed"
+    //% subcategory=Addons
+    //% group=InfraRed
+    export function irKeyAddon(key: BBirKeys): boolean
+    {
+	return (irCore.LastCode() == key)
+    }
+
+    /**
+      * Last IR Code received as number
+      */
+    //% weight=80
+    //% blockId=lastIRCodeAddon
+    //% block="add-on IR code"
+    //% subcategory=Addons
+    //% group=InfraRed
+    export function lastIRCode(): number
+    {
+	return irCore.LastCode()
+    }
+
+    /**
+      * IR Key Codes as number
+      */
+    //% weight=70
+    //% blockId=IRKeyCodeAddon
+    //% block="add-on IR Key%key"
+    //% subcategory=Addons
+    //% group=InfraRed
+    export function irKeyCode(key: BBirNoAny): number
+    {
+	return key
+    }
+
 
 // 5x5 FireLed Matrix 
 
