@@ -427,6 +427,10 @@ namespace bitbot
     const RPULSEL     = 23
     const RPULSEH     = 24
 
+    const cGO	= 1
+    const cSTOP	= 2
+    const cSPIN = 3
+
     let btDisabled = true;
     let matrix5: fireled.Band;
     let bitface: fireled.Band;
@@ -461,6 +465,10 @@ namespace bitbot
     let _p2Trim = 0;
     let pidEnable = true
     let pidActive = false
+    let lastCommand = cSTOP
+    let lastDirection = BBDirection.Forward
+    let lastSpeed = 0
+
 
     let i2cData2 = pins.createBuffer(2);
     let i2cData3 = pins.createBuffer(3);
@@ -537,7 +545,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp98 Bluetooth"
+    //% block="%enable|bbp99 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -837,8 +845,12 @@ namespace bitbot
     {
 	if(isPro() && pidEnable)
 	{
-	    pidactive = true
-	    sendCommand2(DRIVE, (direction == BBDirection.Reverse) ? -speed : speed);
+	    pidActive = true
+	    if(lastCommand!=cGO || lastDirection!=direction || lastSpeed!=speed)
+		sendCommand2(DRIVE, (direction == BBDirection.Reverse) ? -speed : speed);
+	    lastCommand = cGO
+	    lastDirection = direction
+	    lastSpeed = speed
 	}
 	else
             move(BBMotor.Both, direction, speed);
@@ -875,7 +887,11 @@ namespace bitbot
 	if(isPro() && pidEnable)
 	{
 	    pidActive = true
-	    sendCommand2(SPIN, (direction == BBRobotDirection.Right) ? -speed : speed)
+	    if(lastCommand!=cSPIN || lastDirection!=direction || lastSpeed!=speed)
+		sendCommand2(SPIN, (direction == BBRobotDirection.Right) ? -speed : speed)
+	    lastCommand = cSPIN
+	    lastDirection = direction
+	    lastSpeed = speed
 	}
 	else
 	{
@@ -918,16 +934,17 @@ namespace bitbot
     //% subcategory=Motors
     export function stop(mode: BBStopMode): void
     {
-        //getModel();
-        let stopMode = 0;
+        //getModel()
+        let stopMode = 0
         if (mode == BBStopMode.Brake)
-            stopMode = 1;
+            stopMode = 1
 	if(isPro())
 	{
 	    sendCommand2(STOP, 0)
 	    if((getVersionCode() == 26)	&& pidActive)	// First firmware release has bug in stop function that misses next command
 		gocm(BBDirection.Forward, 100, 1)	// this command is ignored
 	    pidActive = false
+	    lastCommand = cSTOP
 	}
 	else
 	{
