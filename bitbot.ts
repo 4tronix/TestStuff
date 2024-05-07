@@ -447,7 +447,7 @@ namespace bitbot
     let calibLoaded = false;
 
     let _model = BBModel.Auto;
-    let versionCode = -1;
+    let versionCode = -1
     let lMotorD0: DigitalPin;
     let lMotorD1: DigitalPin;
     let lMotorA0: AnalogPin;
@@ -459,6 +459,7 @@ namespace bitbot
     let _deadband = 2;
     let _p1Trim = 0;
     let _p2Trim = 0;
+    let pidEnable = true
 
     let i2cData2 = pins.createBuffer(2);
     let i2cData3 = pins.createBuffer(3);
@@ -535,7 +536,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp94 Bluetooth"
+    //% block="%enable|bbp95 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -635,13 +636,13 @@ namespace bitbot
 	// 0 = Classic, 1-15 = XL, 16+ = Pro
         if (versionCode == -1)	// first time requesting
 	{
-	    versionCode = pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff;
-	    if(versionCode > 0) // BitBot Pro
+	    versionCode = pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff	// i2cATMega only valid for BitBot PRO
+	    if(versionCode > 0) // BitBot PRO
 	    {
-		sendCommand2(PIDENABLE, 1);  // first access to BitBot Pro, so ensure PID loop is enabled
-		versionCode += 16;
+		sendCommand2(PIDENABLE, 1)  // first access to BitBot PRO, so ensure PID loop is enabled
+		versionCode = 16 + pins.i2cReadNumber(i2cATMega, NumberFormat.Int16LE, false) >> 8	// use 16+ firmware version (so 26 or higher) for BitBot PRO versionCode
 	    }
-	    else
+	    else // so must be XL or Classic. Classic returns zero from below
             	versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f;
 	}
         return versionCode;
@@ -833,7 +834,7 @@ namespace bitbot
     //% subcategory=Motors
     export function go(direction: BBDirection, speed: number): void
     {
-	if(isPro())
+	if(isPro() && pidEnable)
 	    sendCommand2(DRIVE, (direction == BBDirection.Reverse) ? -speed : speed);
 	else
             move(BBMotor.Both, direction, speed);
@@ -843,7 +844,7 @@ namespace bitbot
       * Move robot forward (or backward) at speed for milliseconds
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
-      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 1000
       */
     //% blockId="BBGoms" block="go%direction|at speed%speed|\\% for%milliseconds|ms"
     //% speed.min=0 speed.max=100
@@ -867,7 +868,7 @@ namespace bitbot
     //% subcategory=Motors
     export function rotate(direction: BBRobotDirection, speed: number): void
     {
-	if(isPro())
+	if(isPro() && pidEnable)
 	    sendCommand2(SPIN, (direction == BBRobotDirection.Right) ? -speed : speed);
 	else
 	{
@@ -888,7 +889,7 @@ namespace bitbot
       * Rotate robot in direction at speed for milliseconds.
       * @param direction direction to spin
       * @param speed speed of motor between 0 and 100. eg: 60
-      * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
+      * @param milliseconds duration in milliseconds to spin for, then stop. eg: 1000
       */
     //% blockId="BBRotatems" block="spin%direction|at speed%speed|\\% for%milliseconds|ms"
     //% speed.min=0 speed.max=100
@@ -915,7 +916,11 @@ namespace bitbot
         if (mode == BBStopMode.Brake)
             stopMode = 1;
 	if(isPro())
-	    sendCommand2(STOP, stopMode);
+	{
+	    sendCommand2(STOP, 0)
+	    if(getVersionCode() == 26)	// First firmware release has bug in stop function that misses next command
+		gocm(BBDirection.Forward, 100, 1)	// this command is ignored
+	}
 	else
 	{
             pins.digitalWritePin(lMotorD0, stopMode);
@@ -1034,7 +1039,7 @@ namespace bitbot
     }
 
 
-// Functions Only Applicable to BitBot Pro
+// Functions Only Applicable to BitBot PRO
 
     function waitForAck(): void
     {
@@ -1173,7 +1178,8 @@ namespace bitbot
     {
         let enPid = enable ? 1 : 0
 	if(isPro())
-	    sendCommand2(PIDENABLE, enPid)
+	    pidEnable = true
+	    // sendCommand2(PIDENABLE, enPid)
     }
 
     function readPulses(sensor: number): number
@@ -1523,7 +1529,7 @@ namespace bitbot
     /**
       * Drive robot forward (or backward) at speed for milliseconds.
       * @param speed speed of motor between -1023 and 1023. eg: 600
-      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 1000
       */
     //% blockId="bitbot_motor_forward_milliseconds" block="drive at speed%speed| for%milliseconds|ms"
     //% speed.min=-1023 speed.max=1023
@@ -1571,7 +1577,7 @@ namespace bitbot
       * Spin robot in direction at speed for milliseconds.
       * @param direction direction to turn.
       * @param speed speed of motor between 0 and 1023. eg: 600
-      * @param milliseconds duration in milliseconds to turn for, then stop. eg: 400
+      * @param milliseconds duration in milliseconds to turn for, then stop. eg: 1000
       */
     //% blockId="bitbot_turn_milliseconds" block="spin%direction|at speed%speed| fo %milliseconds|ms"
     //% speed.min=0 speed.max=1023
