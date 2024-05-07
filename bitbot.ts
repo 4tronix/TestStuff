@@ -536,7 +536,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp95 Bluetooth"
+    //% block="%enable|bbp96 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -640,7 +640,7 @@ namespace bitbot
 	    if(versionCode > 0) // BitBot PRO
 	    {
 		sendCommand2(PIDENABLE, 1)  // first access to BitBot PRO, so ensure PID loop is enabled
-		versionCode = 16 + pins.i2cReadNumber(i2cATMega, NumberFormat.Int16LE, false) >> 8	// use 16+ firmware version (so 26 or higher) for BitBot PRO versionCode
+		versionCode = 16 + (pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE, false) >> 8) & 0xff	// use 16+ firmware version (so 26 or higher) for BitBot PRO versionCode
 	    }
 	    else // so must be XL or Classic. Classic returns zero from below
             	versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f;
