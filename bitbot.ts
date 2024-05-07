@@ -460,6 +460,7 @@ namespace bitbot
     let _p1Trim = 0;
     let _p2Trim = 0;
     let pidEnable = true
+    let pidActive = false
 
     let i2cData2 = pins.createBuffer(2);
     let i2cData3 = pins.createBuffer(3);
@@ -536,7 +537,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp96 Bluetooth"
+    //% block="%enable|bbp97 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -835,7 +836,10 @@ namespace bitbot
     export function go(direction: BBDirection, speed: number): void
     {
 	if(isPro() && pidEnable)
+	{
+	    poidactive = true
 	    sendCommand2(DRIVE, (direction == BBDirection.Reverse) ? -speed : speed);
+	}
 	else
             move(BBMotor.Both, direction, speed);
     }
@@ -869,7 +873,10 @@ namespace bitbot
     export function rotate(direction: BBRobotDirection, speed: number): void
     {
 	if(isPro() && pidEnable)
-	    sendCommand2(SPIN, (direction == BBRobotDirection.Right) ? -speed : speed);
+	{
+	    pidActive = true
+	    sendCommand2(SPIN, (direction == BBRobotDirection.Right) ? -speed : speed)
+	}
 	else
 	{
             if (direction == BBRobotDirection.Left)
@@ -918,8 +925,9 @@ namespace bitbot
 	if(isPro())
 	{
 	    sendCommand2(STOP, 0)
-	    if(getVersionCode() == 26)	// First firmware release has bug in stop function that misses next command
+	    if((getVersionCode() == 26)	&& pidActive)	// First firmware release has bug in stop function that misses next command
 		gocm(BBDirection.Forward, 100, 1)	// this command is ignored
+	    pidActive = false
 	}
 	else
 	{
