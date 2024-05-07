@@ -467,6 +467,7 @@ namespace bitbot
     let pidActive = false
     let lastCommand = cSTOP
     let lastDirection = BBDirection.Forward
+    let lastSDirection = BBRobotDirection.Right
     let lastSpeed = 0
 
 
@@ -545,7 +546,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp99 Bluetooth"
+    //% block="%enable|bbp100 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -887,10 +888,10 @@ namespace bitbot
 	if(isPro() && pidEnable)
 	{
 	    pidActive = true
-	    if(lastCommand!=cSPIN || lastDirection!=direction || lastSpeed!=speed)
+	    if(lastCommand!=cSPIN || lastSDirection!=direction || lastSpeed!=speed)
 		sendCommand2(SPIN, (direction == BBRobotDirection.Right) ? -speed : speed)
 	    lastCommand = cSPIN
-	    lastDirection = direction
+	    lastSDirection = direction
 	    lastSpeed = speed
 	}
 	else
