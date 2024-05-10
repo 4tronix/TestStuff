@@ -546,7 +546,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp100 Bluetooth"
+    //% block="%enable|bbp101 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -671,7 +671,7 @@ namespace bitbot
       */
     //% blockId="writeEEROM"
     //% block="write%data|to EEROM address%address"
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=EEROM
     //% weight=100
     export function writeEEROM(data: number, address: number): void
@@ -714,7 +714,7 @@ namespace bitbot
       */
     //% blockId="readEEROM"
     //% block="EEROM at address%address"
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=EEROM
     //% weight=90
     export function readEEROM(address: number): number
@@ -1084,7 +1084,7 @@ namespace bitbot
     //% blockId="BBGocm" block="go%direction|at speed%speed|\\% for%distance|cm"
     //% speed.min=-100 speed.max=100
     //% weight=100
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=Motors
     export function gocm(direction: BBDirection, speed: number, distance: number): void
     {
@@ -1110,7 +1110,7 @@ namespace bitbot
     //% blockId="BBSpinDeg" block="spin%direction|at speed%speed|\\% for%angle|degrees"
     //% speed.min=-100 speed.max=100
     //% weight=90
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=Motors
     export function spinDeg(direction: BBRobotDirection, speed: number, angle: number): void
     {
@@ -1136,7 +1136,7 @@ namespace bitbot
     //% blockId="BBArc" block="move in an arc%direction|at speed%speed|\\% radius%radius|cm"
     //% speed.min=-100 speed.max=100
     //% weight=80
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=Motors
     export function arc(direction: BBDirection, speed: number, radius: number): void
     {
@@ -1155,7 +1155,7 @@ namespace bitbot
     //% speed.min=0 speed.max=100
     //% weight=70
     //% inlineInputMode=inline
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=Motors
     export function arcdeg(direction: BBDirection, speed: number, radius: number, angle: number): void
     {
@@ -1176,7 +1176,7 @@ namespace bitbot
     //% speed.min=0 speed.max=100
     //% direction.min=-100 direction.max=100
     //% weight=60
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=Motors
     export function steer(direction: number, speed: number): void
     {
@@ -1198,7 +1198,7 @@ namespace bitbot
     //% blockId="BBPidEnable" block="set PID control%enable"
     //% enable.shadow="toggleOnOff"
     //% weight=50
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=Motors
     export function enablePID(enable: boolean): void
     {
@@ -1225,7 +1225,7 @@ namespace bitbot
       */
     //% blockId="BBWheelSensor" block="%sensor|wheel sensor%unit"
     //% weight=50
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=Motors
     export function wheelSensor(sensor: BBPulseSensor, unit: BBSensorUnit): number
     {
@@ -1249,7 +1249,7 @@ namespace bitbot
     //% blockId="BBTurnAngle"
     //% block="angle turned"
     //% weight=40
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=Motors
     export function turnAngle(): number
     {
@@ -1264,7 +1264,7 @@ namespace bitbot
       */
     //% blockId="BBResetWheelSensors" block="reset %sensor|wheel sensors"
     //% weight=30
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=Motors
     export function resetWheelSensors(sensor: BBMotor): void
     {
@@ -1281,7 +1281,7 @@ namespace bitbot
     //% weight=20
     //% trimDistance.min=-100 trimDistance.max=100
     //% trimAngle.min=-100 trimAngle.max=100
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=Motors
     export function motorTrim(trimDistance: number, trimAngle: number): void
     {
@@ -1296,7 +1296,7 @@ namespace bitbot
       */
     //% blockId="BBAnalogLine" block="%sensor|line sensor"
     //% weight=100
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group="Line sensors"
     export function readLineAnalog(sensor: BBPLineSensor): number
     {
@@ -1312,7 +1312,7 @@ namespace bitbot
       */
     //% blockId="BBDigitalLine" block="%sensor|line sensor"
     //% weight=90
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group="Line sensors"
     export function readLineDigital(sensor: BBPLineSensor): boolean
     {
@@ -1327,7 +1327,7 @@ namespace bitbot
       */
     //% blockId="BBMergeLine" block="line position"
     //% weight=80
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group="Line sensors"
     export function mergeLinePosition(): number
     {
@@ -1363,7 +1363,7 @@ namespace bitbot
       */
     //% blockId="BBSetThreshold" block="set line sensor threshold%threshold| hysteresis%hysteresis"
     //% weight=70
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group="Line sensors"
     export function setThreshold(threshold: number, hysteresis: number): void
     {
@@ -1377,7 +1377,7 @@ namespace bitbot
     //% blockId="BBCalibrateLine"
     //% block="calibrate line sensors"
     //% weight=60
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group="Line sensors"
     export function calibrateLine(): void
     {
@@ -1394,7 +1394,7 @@ namespace bitbot
       */
     //% blockId="BBBattery" block="battery voltage"
     //% weight=100
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group="Power"
     export function batteryVoltage(): number
     {
@@ -1416,7 +1416,7 @@ namespace bitbot
     //% weight=100
     //% blockId=onIrEvent
     //% block="on IR key%key"
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=InfraRed
     export function onIREvent(event: BBirKeys, handler: Action)
     {
@@ -1433,7 +1433,7 @@ namespace bitbot
     //% weight=90
     //% blockId=IRKey
     //% block="IR key%key|was pressed"
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=InfraRed
     export function irKey(key: BBirKeys): boolean
     {
@@ -1449,7 +1449,7 @@ namespace bitbot
     //% weight=80
     //% blockId=lastIRCode
     //% block="IR code"
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=InfraRed
     export function lastIRCode(): number
     {
@@ -1465,7 +1465,7 @@ namespace bitbot
     //% weight=70
     //% blockId=IRKeyCode
     //% block="IR Key%key"
-    //% subcategory="BitBot Pro"
+    //% subcategory="BitBot PRO"
     //% group=InfraRed
     export function irKeyCode(key: BBirNoAny): number
     {
