@@ -237,7 +237,7 @@ enum BBModel
 {
     Classic,
     XL,
-    Pro,
+    PRO,
     Auto
 }
 
@@ -483,9 +483,9 @@ namespace bitbot
     }
 
     // Helper function for BitBot Pro checks
-    function isPro(): boolean
+    function isPRO(): boolean
     {
-	return getModel() == BBModel.Pro;
+	return getModel() == BBModel.PRO;
     }
 
     // Commands via I2C on ATMega
@@ -546,7 +546,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp101 Bluetooth"
+    //% block="%enable|bbp102 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -559,14 +559,14 @@ namespace bitbot
 // Blocks for selecting BitBot Model
     /**
       * Force Model of BitBot (Determines Pins used)
-      * @param model Model of BitBot; Classic, XL or Pro
+      * @param model Model of BitBot; Classic, XL or PRO
       */
     //% blockId="bitbot_model" block="select BitBot model%model"
     //% weight=100
     //% subcategory=BitBot_Model
     export function select_model(model: BBModel): void
     {
-        if((model==BBModel.Classic) || (model==BBModel.XL) || (model==BBModel.Pro))
+        if((model==BBModel.Classic) || (model==BBModel.XL) || (model==BBModel.PRO) || (model==BBModel.Auto))
         {
             _model = model;
             if (_model == BBModel.Classic)
@@ -615,7 +615,7 @@ namespace bitbot
                 pins.digitalWritePin(DigitalPin.P0, 0);
             }
 	    else
-		select_model(BBModel.Pro);
+		select_model(BBModel.PRO);
         }
         return _model;
     }
@@ -676,7 +676,7 @@ namespace bitbot
     //% weight=100
     export function writeEEROM(data: number, address: number): void
     {
-	if(isPro())
+	if(isPRO())
 	    wrEEROM(data, address + reservedBytes)
 	else
             wrEEROM(data, address)
@@ -693,7 +693,7 @@ namespace bitbot
     //% deprecated=true
     export function wrEEROM(data: number, address: number): void
     {
-	if(isPro() && ((address + startFlash) <= 255))
+	if(isPRO() && ((address + startFlash) <= 255))
 	    sendCommand2(address + startFlash, data)
         else if (getVersionCode() == 5)
         {
@@ -719,7 +719,7 @@ namespace bitbot
     //% weight=90
     export function readEEROM(address: number): number
     {
-	if(isPro())
+	if(isPRO())
 	    return rdEEROM(address + reservedBytes)
 	else
             return rdEEROM(address)
@@ -735,7 +735,7 @@ namespace bitbot
     //% deprecated=true
     export function rdEEROM(address: number): number
     {
-	if (((address + startFlash) <= 255) && isPro())
+	if (((address + startFlash) <= 255) && isPRO())
         {
             let rval = readSensor(address + startFlash) & 0xff
 	    return (rval > 127) ? rval-256 : rval
@@ -822,7 +822,7 @@ namespace bitbot
     // slow PWM frequency for slower speeds to improve torque
     function setPWM(speed: number): void
     {
-	if(!isPro())
+	if(!isPRO())
 	{
             if (speed < 200)
                 pins.analogSetPeriod(AnalogPin.P0, 60000);
@@ -844,7 +844,7 @@ namespace bitbot
     //% subcategory=Motors
     export function go(direction: BBDirection, speed: number): void
     {
-	if(isPro() && pidEnable)
+	if(isPRO() && pidEnable)
 	{
 	    pidActive = true
 	    if(lastCommand!=cGO || lastDirection!=direction || lastSpeed!=speed)
@@ -885,7 +885,7 @@ namespace bitbot
     //% subcategory=Motors
     export function rotate(direction: BBRobotDirection, speed: number): void
     {
-	if(isPro() && pidEnable)
+	if(isPRO() && pidEnable)
 	{
 	    pidActive = true
 	    if(lastCommand!=cSPIN || lastSDirection!=direction || lastSpeed!=speed)
@@ -939,7 +939,7 @@ namespace bitbot
         let stopMode = 0
         if (mode == BBStopMode.Brake)
             stopMode = 1
-	if(isPro())
+	if(isPRO())
 	{
 	    sendCommand2(STOP, 0)
 	    if((getVersionCode() == 26)	&& pidActive)	// First firmware release has bug in stop function that misses next command
@@ -993,7 +993,7 @@ namespace bitbot
         getModel();
         speed = clamp(speed, 0, 100);
 	createCalib(speed); // sets bias values for "DriveStraight" if available (versionCode == 5 only)
-	if(isPro())
+	if(isPRO())
 	{
 	    sendCommand4(DIRECTMODE, speed, direction, motor); // for compatabilty only, no PIDC control
 	}
@@ -1088,7 +1088,7 @@ namespace bitbot
     //% group=Motors
     export function gocm(direction: BBDirection, speed: number, distance: number): void
     {
-	if(isPro())
+	if(isPRO())
 	{
 	    if(distance < 0)
 	    {
@@ -1114,7 +1114,7 @@ namespace bitbot
     //% group=Motors
     export function spinDeg(direction: BBRobotDirection, speed: number, angle: number): void
     {
-	if(isPro())
+	if(isPRO())
 	{
 	    if(angle < 0)
 	    {
@@ -1140,7 +1140,7 @@ namespace bitbot
     //% group=Motors
     export function arc(direction: BBDirection, speed: number, radius: number): void
     {
-	if(isPro())
+	if(isPRO())
 	    sendCommand4(ARC, (direction == BBDirection.Reverse) ? -speed : speed, radius & 0xff, radius >> 8);
     }
 
@@ -1159,7 +1159,7 @@ namespace bitbot
     //% group=Motors
     export function arcdeg(direction: BBDirection, speed: number, radius: number, angle: number): void
     {
-	if(isPro())
+	if(isPRO())
 	{
 	    sendCommand6(ARCANGLE, (direction == BBDirection.Reverse) ? -speed : speed, radius & 0xff, radius >> 8, angle & 0xff, angle >>8);
 	    // wait for function complete
@@ -1180,7 +1180,7 @@ namespace bitbot
     //% group=Motors
     export function steer(direction: number, speed: number): void
     {
-	if(isPro())
+	if(isPRO())
 	{
 	    direction = clamp(direction, -100, 100)
 	    speed = clamp(speed, 0, 100)
@@ -1203,7 +1203,7 @@ namespace bitbot
     export function enablePID(enable: boolean): void
     {
         let enPid = enable ? 1 : 0
-	if(isPro())
+	if(isPRO())
 	    pidEnable = true
 	    // sendCommand2(PIDENABLE, enPid)
     }
@@ -1300,7 +1300,7 @@ namespace bitbot
     //% group="Line sensors"
     export function readLineAnalog(sensor: BBPLineSensor): number
     {
-	if(isPro())
+	if(isPRO())
 	    return readSensor(sensor + ALINEL);	// Analog Line sensors are 4, 5 and 6 (Left, Right, Centre)
 	else
 	    return 0
@@ -1316,7 +1316,7 @@ namespace bitbot
     //% group="Line sensors"
     export function readLineDigital(sensor: BBPLineSensor): boolean
     {
-	if(isPro())
+	if(isPRO())
 	    return (readSensor(sensor + DLINEL)!=0)	// True if line found. Digital Line sensors are 1, 2 and 3 (Left, Right, Centre)
 	else
 	    return false
@@ -1331,7 +1331,7 @@ namespace bitbot
     //% group="Line sensors"
     export function mergeLinePosition(): number
     {
-	if(isPro())
+	if(isPRO())
 	{
 	    // Read all analog sensors
 	    let left = 1023 - readSensor(ALINEL)
@@ -1367,7 +1367,7 @@ namespace bitbot
     //% group="Line sensors"
     export function setThreshold(threshold: number, hysteresis: number): void
     {
-	if(isPro())
+	if(isPRO())
 	    sendCommand5(SETTHRESH, threshold & 0xff, threshold >> 8, hysteresis & 0xff, hysteresis >> 8)
     }
 
@@ -1381,7 +1381,7 @@ namespace bitbot
     //% group="Line sensors"
     export function calibrateLine(): void
     {
-	if(isPro())
+	if(isPRO())
 	{
 	    sendCommand2(LINECALIB, 0)
 	    waitForAck()
@@ -1398,7 +1398,7 @@ namespace bitbot
     //% group="Power"
     export function batteryVoltage(): number
     {
-	if(isPro())
+	if(isPRO())
 	{
 	    let v = readSensor(PSU)	// value in 1/100 V
 	    return v/100
@@ -1420,7 +1420,7 @@ namespace bitbot
     //% group=InfraRed
     export function onIREvent(event: BBirKeys, handler: Action)
     {
-	if(isPro())
+	if(isPRO())
 	{
             irCore.initEvents(irPin)
             control.onEvent(irEvent, <number>event, handler)
@@ -1437,7 +1437,7 @@ namespace bitbot
     //% group=InfraRed
     export function irKey(key: BBirKeys): boolean
     {
-	if(isPro())
+	if(isPRO())
             return (irCore.LastCode() == key)
 	else
 	    return false
@@ -1453,7 +1453,7 @@ namespace bitbot
     //% group=InfraRed
     export function lastIRCode(): number
     {
-	if(isPro())
+	if(isPRO())
 	    return irCore.LastCode()
 	else
 	    return 0
@@ -1469,7 +1469,7 @@ namespace bitbot
     //% group=InfraRed
     export function irKeyCode(key: BBirNoAny): number
     {
-	if(isPro())
+	if(isPRO())
 	    return key
 	else
 	    return 0
@@ -1625,7 +1625,7 @@ namespace bitbot
     // create a FireLed band if not got one already. Default to brightness 40
     function fire(): fireled.Band
     {
-        if ((!fireBand) && !isPro())
+        if ((!fireBand) && !isPRO())
         {
             fireBand = fireled.newBand(DigitalPin.P13, NUMLEDS);
             fireBand.setBrightness(40);
@@ -1636,7 +1636,7 @@ namespace bitbot
     // update FireLeds if _updateMode set to Auto
     function updateLEDs(): void
     {
-        if ((_updateMode == BBMode.Auto) && !isPro())
+        if ((_updateMode == BBMode.Auto) && !isPRO())
             ledShow();
     }
 
@@ -1651,7 +1651,7 @@ namespace bitbot
     //% blockGap=8
     export function setLedColor(rgb: number)
     {
-	if(isPro())
+	if(isPRO())
 	    sendCommand6(SETPIXEL, (_updateMode == BBMode.Auto) ? 1: 0, NUMLEDS, rgb >> 16, (rgb >> 8) & 0xff, rgb & 0xff);
 	else
 	{
@@ -1670,7 +1670,7 @@ namespace bitbot
     //% blockGap=8
     export function ledClear(): void
     {
-	if(isPro())
+	if(isPRO())
 	    sendCommand6(SETPIXEL, (_updateMode == BBMode.Auto) ? 1: 0, NUMLEDS, 0, 0, 0);
 	else
 	{
@@ -1692,7 +1692,7 @@ namespace bitbot
     //% blockGap=8
     export function setPixelColor(ledId: number, rgb: number): void
     {
-	if(isPro())
+	if(isPRO())
 	    sendCommand6(SETPIXEL, (_updateMode == BBMode.Auto) ? 1: 0, ledId, rgb >> 16, (rgb >> 8) & 0xff, rgb & 0xff);
 	else
 	{
@@ -1714,7 +1714,7 @@ namespace bitbot
     //% blockGap=8
     export function ledRainbow(dir: boolean, arm: BBArms): void
     {
-	if(isPro())
+	if(isPRO())
 	    sendCommand3(RAINBOW, dir?1:0, arm)
 	else
 	{
@@ -1736,7 +1736,7 @@ namespace bitbot
     //% blockGap=8
     export function ledShift(dir: boolean, arm: BBArms): void
     {
-	if(isPro())
+	if(isPRO())
 	    sendCommand3(SHIFTLEDS, dir?1:0, arm)
 	else
 	{
@@ -1758,7 +1758,7 @@ namespace bitbot
     //% blockGap=8
     export function ledRotate(dir: boolean, arm: BBArms): void
     {
-	if(isPro())
+	if(isPRO())
 	    sendCommand3(ROTATELEDS, dir?1:0, arm)
 	else
 	{
@@ -1781,7 +1781,7 @@ namespace bitbot
     //% blockGap=8
     export function ledBrightness(brightness: number): void
     {
-	if(isPro())
+	if(isPRO())
 	    sendCommand2(FIREBRT, brightness);
 	else
 	{
@@ -1802,7 +1802,7 @@ namespace bitbot
     export function setUpdateMode(updateMode: BBMode): void
     {
         _updateMode = updateMode;
-	if(isPro())
+	if(isPRO())
 	    sendCommand2(UPDATEMODE, updateMode);
     }
 
@@ -1816,7 +1816,7 @@ namespace bitbot
     //% blockGap=8
     export function ledShow(): void
     {
-	if(isPro())
+	if(isPRO())
 	    sendCommand2(FIREUPDT, 0);
 	else if (btDisabled)
             fire().updateBand();
@@ -1875,7 +1875,7 @@ namespace bitbot
         let buzz = flag ? 1 : 0;
         if (getModel() == BBModel.Classic)
             pins.digitalWritePin(DigitalPin.P14, buzz);
-        else if(! isPro())
+        else if(! isPRO())
             pins.digitalWritePin(DigitalPin.P0, buzz);
 	else
 	{
@@ -1930,7 +1930,7 @@ namespace bitbot
     //% subcategory="Inputs & Outputs"
     export function readLine(sensor: BBLineSensor): number
     {
-	if(isPro())
+	if(isPRO())
 	    return readSensor(sensor + DLINEL);	// Digital Line sensors are 1 (Left) and 2 (Right)
         else if (getModel() == BBModel.Classic)
         {
@@ -1958,7 +1958,7 @@ namespace bitbot
     //% subcategory="Inputs & Outputs"
     export function readLight(sensor: BBLightSensor): number
     {
-	if(isPro())
+	if(isPRO())
 	    return readSensor(sensor + LIGHTL);	// Light sensors are 7 (Left) and 8 (Right)
         else if (getModel() == BBModel.Classic)
         {
