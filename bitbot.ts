@@ -556,7 +556,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp105 Bluetooth"
+    //% block="%enable|bbp106 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1430,7 +1430,7 @@ namespace bitbot
 	if(isPRO())
 	{
 	    music.setVolume(volume)
-	    if(control.hardwareVersion()==1)
+	    if(control.hardwareVersion() == '1')
 		music.stopAllSounds()
 	}
     }
