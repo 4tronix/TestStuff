@@ -556,7 +556,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp103 Bluetooth"
+    //% block="%enable|bbp104 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1917,7 +1917,7 @@ namespace bitbot
     //% blockId="bitbot_sound" block="sound buzzer for%duration|ms"
     //% weight=95
     //% subcategory="Inputs & Outputs"
-    export function buzz(duration: number): void
+    export function buzzTime(duration: number): void
     {
         buzz(true)
 	basic.pause(duration)
