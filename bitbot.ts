@@ -452,6 +452,7 @@ namespace bitbot
     let lastDirection = BBDirection.Forward
     let lastSDirection = BBRobotDirection.Right
     let lastSpeed = 0
+    let lastRadius = 0
 /////
 
     let btDisabled = true;
@@ -565,7 +566,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp107 Bluetooth"
+    //% block="%enable|bbp108 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1173,13 +1174,16 @@ namespace bitbot
     {
 	if(isPRO())
 	{
-	    if(lastCommand!=cARC || lastSDirection!=direction || lastSpeed!=speed)
+	    if(lastCommand!=cARC || lastDirection!=direction || lastSpeed!=speed || lastRadius!=radius)
 	    {
 	        if((getVersionCode() == 26) && pidActive)
 		    stop(BBStopMode.Coast)
 	        sendCommand4(ARC, (direction == BBDirection.Reverse) ? -speed : speed, radius & 0xff, radius >> 8)
 	    }
 	}
+	lastDirection = direction
+	lastSpeed = speed
+	lastRadius = radius
         lastCommand = cARC
         pidActive = true
     }
