@@ -466,6 +466,7 @@ namespace bitbot
     let lastCommand = cSTOP
     let lastDirection = BBDirection.Forward
     let lastSDirection = BBRobotDirection.Right
+    let lastADirection = BBArcDirection.ForwardLeft
     let lastSpeed = 0
     let lastRadius = 0
 /////
@@ -581,7 +582,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp109 Bluetooth"
+    //% block="%enable|bbp110 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
