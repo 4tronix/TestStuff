@@ -576,13 +576,26 @@ namespace bitbot
         return (pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE));
     }
 
+    // Bump up speeds for PID functions only to get better top speed
+    function fudge(speed: number): number
+    {
+	speed = clamp (speed, -100, 100)
+	if(speed > 0)
+	    speed = speed + 27
+	else if(speed < 0)
+	    speed = speed - 27
+	return speed
+    }
+
+
+
 // Block to enable Bluetooth and disable FireLeds.
     /**
       * Enable/Disable Bluetooth support by disabling/enabling FireLeds. Not required for built in FireLeds on BitBot Pro
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp110 Bluetooth"
+    //% block="%enable|bbp111 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -882,6 +895,7 @@ namespace bitbot
     {
 	if(isPRO() && pidEnable)
 	{
+	    speed = fudge(speed)	// only when PID active
 	    if(lastCommand!=cGO || lastDirection!=direction || lastSpeed!=speed)
 	    {
 		if((getVersionCode() == 26) && pidActive)
@@ -927,6 +941,7 @@ namespace bitbot
     {
 	if(isPRO() && pidEnable)
 	{
+	    speed = fudge(speed)	// only when PID active
 	    if(lastCommand!=cSPIN || lastSDirection!=direction || lastSpeed!=speed)
 	    {
 		if((getVersionCode() == 26) && pidActive)
@@ -1141,6 +1156,7 @@ namespace bitbot
 		distance = -distance;
 		speed = -speed;
 	    }
+	    speed = fudge(speed)	// GOCM always PID active
 	    sendCommand4(DRIVEDIST, (direction == BBDirection.Reverse) ? -speed : speed, distance & 0xff, distance >> 8);
 	    // wait for function complete
 	    waitForAck();
@@ -1168,6 +1184,7 @@ namespace bitbot
 		angle = -angle;
 		speed = -speed;
 	    }
+	    speed = fudge(speed)	// SPINDEG always PID active
 	    sendCommand4(SPINANGLE, (direction == BBRobotDirection.Right) ? -speed : speed, angle & 0xff, angle >> 8);
 	    // wait for function complete
 	    waitForAck();
@@ -1190,6 +1207,7 @@ namespace bitbot
     {
 	if(isPRO())
 	{
+	    speed = fudge(speed)	// arcs are always PID active
 	    if(lastCommand!=cARC || lastADirection!=direction || lastSpeed!=speed || lastRadius!=radius)
 	    {
 	        if((getVersionCode() == 26) && pidActive)
@@ -1229,13 +1247,14 @@ namespace bitbot
     {
 	if(isPRO())
 	{
+	    speed = fudge(speed)	// arcs are always PID active
 	    let aSpeed = ((direction == BBArcDirection.ReverseLeft) || (direction == BBArcDirection.ReverseRight)) ? -speed : speed
 	    let aAngle = ((direction == BBArcDirection.ForwardRight) || (direction == BBArcDirection.ReverseRight)) ? -angle : angle
 	    sendCommand6(ARCANGLE, aSpeed, radius & 0xff, radius >> 8, aAngle & 0xff, aAngle >>8)
 	    // wait for function complete
+	    lastCommand = cARCDEG
 	    waitForAck()
 	}
-        lastCommand = cARCDEG
     }
 
     /**
