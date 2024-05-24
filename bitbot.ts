@@ -583,7 +583,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp117 Bluetooth"
+    //% block="%enable|bbp118 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1202,7 +1202,12 @@ namespace bitbot
 		    stop(BBStopMode.Coast)
 		let aSpeed = ((direction == BBArcDirection.ReverseLeft) || (direction == BBArcDirection.ReverseRight)) ? -speed : speed
 		if((direction == BBArcDirection.ForwardRight) || (direction == BBArcDirection.ReverseRight))
-	    	    sendCommand4(ARC, aSpeed, radius & 0xff, radius >> 8)
+	    	    // sendCommand4(ARC, aSpeed, radius & 0xff, radius >> 8)
+		{
+		    let aAngle = 32768
+		    sendCommand6(ARCANGLE, aSpeed, radius & 0xff, radius >> 8, aAngle & 0xff, aAngle >>8)
+		    // NB. do not wait for Ack
+		}
 		else  // now fudge the unterminated Arc command with a very long terminated arc
 		{
 		    let aAngle = 32767
