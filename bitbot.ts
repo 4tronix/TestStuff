@@ -583,7 +583,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp113 Bluetooth"
+    //% block="%enable|bbp114 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1141,7 +1141,7 @@ namespace bitbot
 		distance = -distance
 		speed = -speed
 	    }
-	    sendCommand4(DRIVEDIST, (direction == BBDirection.Reverse) ? -speed : speed, distance & 0xff, distance >> 8);
+	    sendCommand4(DRIVEDIST, (direction == BBDirection.Reverse) ? -speed : speed, distance & 0xff, distance >> 8)
 	    // wait for function complete
 	    pidActive = true
             lastCommand = cGOCM
@@ -1163,18 +1163,20 @@ namespace bitbot
     //% group=Motors
     export function spinDeg(direction: BBRobotDirection, speed: number, angle: number): void
     {
-	if(isPRO())
+	if(isPRO() && !pidActive)
 	{
 	    if(angle < 0)
 	    {
-		angle = -angle;
-		speed = -speed;
+		angle = -angle
+		speed = -speed
 	    }
-	    sendCommand4(SPINANGLE, (direction == BBRobotDirection.Right) ? -speed : speed, angle & 0xff, angle >> 8);
+	    sendCommand4(SPINANGLE, (direction == BBRobotDirection.Right) ? -speed : speed, angle & 0xff, angle >> 8)
 	    // wait for function complete
-	    waitForAck();
+	    pidActive = true
+            lastCommand = cSPINDEG
+	    waitForAck()
+	    pidActive = false
 	}
-        lastCommand = cSPINDEG
     }
 
     /**
@@ -1190,7 +1192,7 @@ namespace bitbot
     //% group=Motors
     export function arc(direction: BBArcDirection, speed: number, radius: number): void
     {
-	if(isPRO())
+	if(isPRO() && !pidActive)
 	{
 	    if(lastCommand!=cARC || lastADirection!=direction || lastSpeed!=speed || lastRadius!=radius)
 	    {
@@ -1206,12 +1208,12 @@ namespace bitbot
 		    // NB. do not wait for Ack
 		}
 	    }
+	    lastADirection = direction
+	    lastSpeed = speed
+	    lastRadius = radius
+            lastCommand = cARC
+            pidActive = true
 	}
-	lastADirection = direction
-	lastSpeed = speed
-	lastRadius = radius
-        lastCommand = cARC
-        pidActive = true
     }
 
     /**
@@ -1229,14 +1231,16 @@ namespace bitbot
     //% group=Motors
     export function arcdeg(direction: BBArcDirection, speed: number, radius: number, angle: number): void
     {
-	if(isPRO())
+	if(isPRO() && !pidActive)
 	{
 	    let aSpeed = ((direction == BBArcDirection.ReverseLeft) || (direction == BBArcDirection.ReverseRight)) ? -speed : speed
 	    let aAngle = ((direction == BBArcDirection.ForwardRight) || (direction == BBArcDirection.ReverseRight)) ? -angle : angle
 	    sendCommand6(ARCANGLE, aSpeed, radius & 0xff, radius >> 8, aAngle & 0xff, aAngle >>8)
 	    // wait for function complete
+	    pidActive = true
 	    lastCommand = cARCDEG
 	    waitForAck()
+	    pidActive = false
 	}
     }
 
