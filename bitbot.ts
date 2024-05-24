@@ -579,11 +579,11 @@ namespace bitbot
     // Bump up speeds for PID functions only to get better top speed
     function fudge(speed: number): number
     {
-	speed = clamp (speed, -100, 100)
+	/*speed = clamp (speed, -100, 100)
 	if(speed > 0)
 	    speed = speed + 27
 	else if(speed < 0)
-	    speed = speed - 27
+	    speed = speed - 27*/
 	return speed
     }
 
@@ -595,7 +595,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp111 Bluetooth"
+    //% block="%enable|bbp112 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
