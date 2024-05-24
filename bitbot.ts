@@ -583,7 +583,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp116 Bluetooth"
+    //% block="%enable|bbp117 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -981,16 +981,15 @@ namespace bitbot
     export function stop(mode: BBStopMode): void
     {
         //getModel()
-        let stopMode = 0
-        if (mode == BBStopMode.Brake)
-            stopMode = 1
+        let stopMode = (mode == BBStopMode.Brake) ? 1 : 0
 	if(isPRO())
 	{
 	    sendCommand2(STOP, 0)
 	    if((getVersionCode() == 26)	&& pidActive)	// First firmware release has bug in stop function that misses next command
 	    {
 		pidActive = false
-		gocm(BBDirection.Forward, 100, 1)	// this command is ignored
+		sendCommand4(DRIVEDIST, 100, 1, 0)	// this command is ignored in the firmware
+		//gocm(BBDirection.Forward, 100, 1)	// this command is ignored in the firmware
 	    }
 	}
 	else
