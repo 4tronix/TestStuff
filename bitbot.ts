@@ -398,9 +398,9 @@ namespace bitbot
     let fireBand: fireled.Band;
     let _updateMode = BBMode.Auto;
 
-    const i2caddr  = 0x1C;	// i2c address of I/O Expander
-    const i2cATMega = 0x22;	// i2c address of ATMega on BitBot Pro
-    const EEROM    = 0x50;	// i2c address of EEROM
+    const i2caddr   = 0x1C	// i2c address of I/O Expander
+    const i2cATMega = 0x22	// i2c address of ATMega on BitBot Pro
+    const EEROM     = 0x50	// i2c address of EEROM
     const reservedBytes = 50	// EEROM addresses reserved for system use
     const startFlash    = 50	// Commands all below 50. Values startFlash and above is EEROM address (+ startFlash)
     const i2cACK =   0x55	// i2c acknowledge character for terminating motor commands
@@ -471,109 +471,109 @@ namespace bitbot
     let lastRadius = 0
 /////
 
-    let btDisabled = true;
-    let matrix5: fireled.Band;
-    let bitface: fireled.Band;
-    let mouthSmile: number[] = [0,1,2,3,4,5];
-    let mouthGrin: number[] = [0,1,2,3,4,5,10,11,12,13];
-    let mouthSad: number[] = [0,5,6,7,8,9];
-    let mouthFrown: number[] = [0,5,6,7,8,9,10,11,12,13];
-    let mouthStraight: number[] = [0,5,10,11,12,13];
-    let mouthOooh: number[] = [1,2,3,4,6,7,8,9,10,13];
-    let mouthEeeh: number[] = [0,1,2,3,4,5,6,7,8,9];
-    let oled: firescreen.Screen;
+    let btDisabled = true
+    let matrix5: fireled.Band
+    let bitface: fireled.Band
+    let mouthSmile: number[] = [0,1,2,3,4,5]
+    let mouthGrin: number[] = [0,1,2,3,4,5,10,11,12,13]
+    let mouthSad: number[] = [0,5,6,7,8,9]
+    let mouthFrown: number[] = [0,5,6,7,8,9,10,11,12,13]
+    let mouthStraight: number[] = [0,5,10,11,12,13]
+    let mouthOooh: number[] = [1,2,3,4,6,7,8,9,10,13]
+    let mouthEeeh: number[] = [0,1,2,3,4,5,6,7,8,9]
+    let oled: firescreen.Screen
 
-    let leftBias = 0;
-    let rightBias = 0;
-    let calibration: number[] = [0, 0, 0];
-    let leftCalib = 0;
-    let rightCalib = 0;
-    let calibLoaded = false;
+    let leftBias = 0
+    let rightBias = 0
+    let calibration: number[] = [0, 0, 0]
+    let leftCalib = 0
+    let rightCalib = 0
+    let calibLoaded = false
 
-    let _model = BBModel.Auto;
+    let _model = BBModel.Auto
     let versionCode = -1
-    let lMotorD0: DigitalPin;
-    let lMotorD1: DigitalPin;
-    let lMotorA0: AnalogPin;
-    let lMotorA1: AnalogPin;
-    let rMotorD0: DigitalPin;
-    let rMotorD1: DigitalPin;
-    let rMotorA0: AnalogPin;
-    let rMotorA1: AnalogPin;
-    let _deadband = 2;
-    let _p1Trim = 0;
-    let _p2Trim = 0;
+    let lMotorD0: DigitalPin
+    let lMotorD1: DigitalPin
+    let lMotorA0: AnalogPin
+    let lMotorA1: AnalogPin
+    let rMotorD0: DigitalPin
+    let rMotorD1: DigitalPin
+    let rMotorA0: AnalogPin
+    let rMotorA1: AnalogPin
+    let _deadband = 2
+    let _p1Trim = 0
+    let _p2Trim = 0
     let pidEnable = true
     let pidActive = false
 
 
-    let i2cData2 = pins.createBuffer(2);
-    let i2cData3 = pins.createBuffer(3);
-    let i2cData4 = pins.createBuffer(4);
-    let i2cData5 = pins.createBuffer(5);
-    let i2cData6 = pins.createBuffer(6);
+    let i2cData2 = pins.createBuffer(2)
+    let i2cData3 = pins.createBuffer(3)
+    let i2cData4 = pins.createBuffer(4)
+    let i2cData5 = pins.createBuffer(5)
+    let i2cData6 = pins.createBuffer(6)
 
     function clamp(value: number, min: number, max: number): number
     {
-        return Math.max(Math.min(max, value), min);
+        return Math.max(Math.min(max, value), min)
     }
 
     // Helper function for BitBot Pro checks
     function isPRO(): boolean
     {
-	return getModel() == BBModel.PRO;
+	return getModel() == BBModel.PRO
     }
 
     // Commands via I2C on ATMega
     function sendCommand2(command: number, para0: number): void
     {
-	i2cData2[0] = command;
-        i2cData2[1] = para0;
-        pins.i2cWriteBuffer(i2cATMega, i2cData2);
+	i2cData2[0] = command
+        i2cData2[1] = para0
+        pins.i2cWriteBuffer(i2cATMega, i2cData2)
     }
 
     function sendCommand3(command: number, para0: number, para1: number): void
     {
-	i2cData3[0] = command;
-        i2cData3[1] = para0;
-        i2cData3[2] = para1;
-        pins.i2cWriteBuffer(i2cATMega, i2cData3);
+	i2cData3[0] = command
+        i2cData3[1] = para0
+        i2cData3[2] = para1
+        pins.i2cWriteBuffer(i2cATMega, i2cData3)
     }
 
     function sendCommand4(command: number, para0: number, para1: number, para2: number): void
     {
-	i2cData4[0] = command;
-        i2cData4[1] = para0;
-        i2cData4[2] = para1;
-        i2cData4[3] = para2;
-        pins.i2cWriteBuffer(i2cATMega, i2cData4);
+	i2cData4[0] = command
+        i2cData4[1] = para0
+        i2cData4[2] = para1
+        i2cData4[3] = para2
+        pins.i2cWriteBuffer(i2cATMega, i2cData4)
     }
 
     function sendCommand5(command: number, para0: number, para1: number, para2: number, para3: number): void
     {
-	i2cData5[0] = command;
-        i2cData5[1] = para0;
-        i2cData5[2] = para1;
-        i2cData5[3] = para2;
-        i2cData5[4] = para3;
-        pins.i2cWriteBuffer(i2cATMega, i2cData5);
+	i2cData5[0] = command
+        i2cData5[1] = para0
+        i2cData5[2] = para1
+        i2cData5[3] = para2
+        i2cData5[4] = para3
+        pins.i2cWriteBuffer(i2cATMega, i2cData5)
     }
 
     function sendCommand6(command: number, para0: number, para1: number, para2: number, para3: number, para4: number): void
     {
-	i2cData6[0] = command;
-        i2cData6[1] = para0;
-        i2cData6[2] = para1;
-        i2cData6[3] = para2;
-        i2cData6[4] = para3;
-        i2cData6[5] = para4;
-        pins.i2cWriteBuffer(i2cATMega, i2cData6);
+	i2cData6[0] = command
+        i2cData6[1] = para0
+        i2cData6[2] = para1
+        i2cData6[3] = para2
+        i2cData6[4] = para3
+        i2cData6[5] = para4
+        pins.i2cWriteBuffer(i2cATMega, i2cData6)
     }
 
     function readSensor(sensor: number): number
     {
-        pins.i2cWriteNumber(i2cATMega, sensor, NumberFormat.Int8LE, false);
-        return (pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE));
+        pins.i2cWriteNumber(i2cATMega, sensor, NumberFormat.Int8LE, false)
+        return (pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE))
     }
 
 
@@ -583,14 +583,14 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp114 Bluetooth"
+    //% block="%enable|bbp115 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
         if (enable == BBBluetooth.btEnable)
-            btDisabled = false;
+            btDisabled = false
         else
-            btDisabled = true;
+            btDisabled = true
     }
 
 // Blocks for selecting BitBot Model
@@ -608,25 +608,25 @@ namespace bitbot
             _model = model;
             if (_model == BBModel.Classic)
             {
-                lMotorD0 = DigitalPin.P0;
-                lMotorD1 = DigitalPin.P8;
-                lMotorA0 = AnalogPin.P0;
-                lMotorA1 = AnalogPin.P8;
-                rMotorD0 = DigitalPin.P1;
-                rMotorD1 = DigitalPin.P12;
-                rMotorA0 = AnalogPin.P1;
-                rMotorA1 = AnalogPin.P12;
+                lMotorD0 = DigitalPin.P0
+                lMotorD1 = DigitalPin.P8
+                lMotorA0 = AnalogPin.P0
+                lMotorA1 = AnalogPin.P8
+                rMotorD0 = DigitalPin.P1
+                rMotorD1 = DigitalPin.P12
+                rMotorA0 = AnalogPin.P1
+                rMotorA1 = AnalogPin.P12
             }
             else if (_model == BBModel.XL)
             {
-                lMotorD0 = DigitalPin.P16;
-                lMotorD1 = DigitalPin.P8;
-                lMotorA0 = AnalogPin.P16;
-                lMotorA1 = AnalogPin.P8;
-                rMotorD0 = DigitalPin.P14;
-                rMotorD1 = DigitalPin.P12;
-                rMotorA0 = AnalogPin.P14;
-                rMotorA1 = AnalogPin.P12;
+                lMotorD0 = DigitalPin.P16
+                lMotorD1 = DigitalPin.P8
+                lMotorA0 = AnalogPin.P16
+                lMotorA1 = AnalogPin.P8
+                rMotorD0 = DigitalPin.P14
+                rMotorD1 = DigitalPin.P12
+                rMotorA0 = AnalogPin.P14
+                rMotorA1 = AnalogPin.P12
             }
         }
     }
@@ -644,17 +644,17 @@ namespace bitbot
         {
             if (versionCode == 0)
             {
-                select_model(BBModel.Classic);
+                select_model(BBModel.Classic)
             }
             else if (versionCode < 16)
             {
                 select_model(BBModel.XL);
-                pins.digitalWritePin(DigitalPin.P0, 0);
+                pins.digitalWritePin(DigitalPin.P0, 0)
             }
 	    else
-		select_model(BBModel.PRO);
+		select_model(BBModel.PRO)
         }
-        return _model;
+        return _model
     }
 
     /**
@@ -667,7 +667,7 @@ namespace bitbot
     //% subcategory=BitBot_Model
     export function BBModels(model: BBModel): number
     {
-        return model;
+        return model
     }
 
     /**
@@ -690,9 +690,9 @@ namespace bitbot
 		versionCode = 16 + (pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE, false) >> 8) & 0xff	// use 16+ firmware version (so 26 or higher) for BitBot PRO versionCode
 	    }
 	    else // so must be XL or Classic. Classic returns zero from below
-            	versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f;
+            	versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f
 	}
-        return versionCode;
+        return versionCode
     }
 
 // "DRIVE STRAIGHT" and EEROM BLOCKS
@@ -739,7 +739,7 @@ namespace bitbot
             i2cData[0] = address >> 8	// address MSB
             i2cData[1] = address & 0xff	// address LSB
             i2cData[2] = data & 0xff
-            pins.i2cWriteBuffer(EEROM, i2cData, false);
+            pins.i2cWriteBuffer(EEROM, i2cData, false)
             basic.pause(3)		// needs a short pause. 3ms ok?
         }
 	// else do nothing
@@ -781,14 +781,14 @@ namespace bitbot
         {
             let i2cRead = pins.createBuffer(2);
 
-            i2cRead[0] = address >> 8;	// address MSB
-            i2cRead[1] = address & 0xff;	// address LSB
-            pins.i2cWriteBuffer(EEROM, i2cRead, false);
-            basic.pause(1);
-            return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE);
+            i2cRead[0] = address >> 8	// address MSB
+            i2cRead[1] = address & 0xff	// address LSB
+            pins.i2cWriteBuffer(EEROM, i2cRead, false)
+            basic.pause(1)
+            return pins.i2cReadNumber(EEROM, NumberFormat.Int8LE)
         }
         else
-            return 0;
+            return 0
     }
 
     /**
@@ -803,9 +803,9 @@ namespace bitbot
         if (getVersionCode() == 5)
         {
 	    for (let i=0; i<3; i++)
-                calibration[i] = rdEEROM(i);
+                calibration[i] = rdEEROM(i)
 	}
-        calibLoaded = true;
+        calibLoaded = true
     }
 
     /**
@@ -820,7 +820,7 @@ namespace bitbot
         if (getVersionCode() == 5)
         {
 	    for (let i=0; i<3; i++)
-                wrEEROM(calibration[i],i);
+                wrEEROM(calibration[i],i)
 	}
     }
 
@@ -835,24 +835,24 @@ namespace bitbot
     //% deprecated=true
     export function checkCalibration(side: BBMotor, speed: number): number
     {
-        let calibVal = 0;
-        leftCalib = 0;
-        rightCalib = 0;
+        let calibVal = 0
+        leftCalib = 0
+        rightCalib = 0
         if (getVersionCode() == 5)
         {
             if (speed < 60)
-                calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0]);
+                calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0])
             else
-                calibVal = calibration[2] - ((90 - speed)/30) * (calibration[2] - calibration[1]);
+                calibVal = calibration[2] - ((90 - speed)/30) * (calibration[2] - calibration[1])
             if (calibVal < 0)
-                leftCalib = Math.abs(calibVal);
+                leftCalib = Math.abs(calibVal)
             else
-                rightCalib = calibVal;
+                rightCalib = calibVal
 	}
         if (side == BBMotor.Left)
-            return leftCalib;
+            return leftCalib
         else
-            return rightCalib;
+            return rightCalib
     }
 
 // New Style Motor Blocks
@@ -862,11 +862,11 @@ namespace bitbot
 	if(!isPRO())
 	{
             if (speed < 200)
-                pins.analogSetPeriod(AnalogPin.P0, 60000);
+                pins.analogSetPeriod(AnalogPin.P0, 60000)
             else if (speed < 300)
-                pins.analogSetPeriod(AnalogPin.P0, 40000);
+                pins.analogSetPeriod(AnalogPin.P0, 40000)
             else
-                pins.analogSetPeriod(AnalogPin.P0, 30000);
+                pins.analogSetPeriod(AnalogPin.P0, 30000)
 	}
     }
 
@@ -894,7 +894,7 @@ namespace bitbot
 	    lastSpeed = speed
 	}
 	else
-            move(BBMotor.Both, direction, speed);
+            move(BBMotor.Both, direction, speed)
         lastCommand = cGO
     }
 
@@ -910,9 +910,9 @@ namespace bitbot
     //% subcategory=Motors
     export function goms(direction: BBDirection, speed: number, milliseconds: number): void
     {
-        go(direction, speed);
-        basic.pause(milliseconds);
-        stop(BBStopMode.Coast);
+        go(direction, speed)
+        basic.pause(milliseconds)
+        stop(BBStopMode.Coast)
     }
 
     /**
@@ -966,9 +966,9 @@ namespace bitbot
     //% subcategory=Motors
     export function rotatems(direction: BBRobotDirection, speed: number, milliseconds: number): void
     {
-        rotate(direction, speed);
-        basic.pause(milliseconds);
-        stop(BBStopMode.Coast);
+        rotate(direction, speed)
+        basic.pause(milliseconds)
+        stop(BBStopMode.Coast)
     }
 
     /**
@@ -989,35 +989,35 @@ namespace bitbot
 	    sendCommand2(STOP, 0)
 	    if((getVersionCode() == 26)	&& pidActive)	// First firmware release has bug in stop function that misses next command
 		gocm(BBDirection.Forward, 100, 1)	// this command is ignored
-	    pidActive = false
 	}
 	else
 	{
-            pins.digitalWritePin(lMotorD0, stopMode);
-            pins.digitalWritePin(lMotorD1, stopMode);
-            pins.digitalWritePin(rMotorD0, stopMode);
-            pins.digitalWritePin(rMotorD1, stopMode);
+            pins.digitalWritePin(lMotorD0, stopMode)
+            pins.digitalWritePin(lMotorD1, stopMode)
+            pins.digitalWritePin(rMotorD0, stopMode)
+            pins.digitalWritePin(rMotorD1, stopMode)
 	}
         lastCommand = cSTOP
+        pidActive = false
     }
 
     function createCalib(speed: number): void
     {
         if (getVersionCode() == 5)
         {        
-            let calibVal = 0;
+            let calibVal = 0
             if(calibLoaded == false)
-                loadCalibration();
+                loadCalibration()
             if (speed < 60)
-                calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0]);
+                calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0])
             else
-                calibVal = calibration[2] - ((90 - speed)/30) * (calibration[2] - calibration[1]);
-            leftCalib = 0;
-            rightCalib = 0;
+                calibVal = calibration[2] - ((90 - speed)/30) * (calibration[2] - calibration[1])
+            leftCalib = 0
+            rightCalib = 0
             if (calibVal < 0)
-                leftCalib = Math.abs(calibVal);
+                leftCalib = Math.abs(calibVal)
             else
-                rightCalib = calibVal;
+                rightCalib = calibVal
         }
     }
 
@@ -1033,10 +1033,10 @@ namespace bitbot
     //% subcategory=Motors
     export function move(motor: BBMotor, direction: BBDirection, speed: number): void
     {
-        let lSpeed = 0;
-        let rSpeed = 0;
-        getModel();
-        speed = clamp(speed, 0, 100);
+        let lSpeed = 0
+        let rSpeed = 0
+        getModel()
+        speed = clamp(speed, 0, 100)
 	createCalib(speed); // sets bias values for "DriveStraight" if available (versionCode == 5 only)
 	if(isPRO())
 	{
@@ -1045,42 +1045,42 @@ namespace bitbot
 	}
 	else
 	{
-            speed = speed * 10.23;  // Microbit analog write is 0 to 1023
-            setPWM(speed);
+            speed = speed * 10.23  // Microbit analog write is 0 to 1023
+            setPWM(speed)
             if (getVersionCode() == 5 && leftBias == 0 && rightBias == 0)
             {
-                lSpeed = Math.round(speed * (100 - leftCalib) / 100);
-                rSpeed = Math.round(speed * (100 - rightCalib) / 100);
+                lSpeed = Math.round(speed * (100 - leftCalib) / 100)
+                rSpeed = Math.round(speed * (100 - rightCalib) / 100)
             }
             else
             {
-                lSpeed = Math.round(speed * (100 - leftBias) / 100);
-                rSpeed = Math.round(speed * (100 - rightBias) / 100);
+                lSpeed = Math.round(speed * (100 - leftBias) / 100)
+                rSpeed = Math.round(speed * (100 - rightBias) / 100)
             }
             if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
             {
                 if (direction == BBDirection.Forward)
                 {
-                    pins.analogWritePin(lMotorA0, lSpeed);
-                    pins.analogWritePin(lMotorA1, 0);
+                    pins.analogWritePin(lMotorA0, lSpeed)
+                    pins.analogWritePin(lMotorA1, 0)
                 }
                 else
                 {
-                    pins.analogWritePin(lMotorA0, 0);
-                    pins.analogWritePin(lMotorA1, lSpeed);
+                    pins.analogWritePin(lMotorA0, 0)
+                    pins.analogWritePin(lMotorA1, lSpeed)
                 }
             }
             if ((motor == BBMotor.Right) || (motor == BBMotor.Both))
             {
                 if (direction == BBDirection.Forward)
                 {
-                    pins.analogWritePin(rMotorA0, rSpeed);
-                    pins.analogWritePin(rMotorA1, 0);
+                    pins.analogWritePin(rMotorA0, rSpeed)
+                    pins.analogWritePin(rMotorA1, 0)
                 }
                 else
                 {
-                    pins.analogWritePin(rMotorA0, 0);
-                    pins.analogWritePin(rMotorA1, rSpeed);
+                    pins.analogWritePin(rMotorA0, 0)
+                    pins.analogWritePin(rMotorA1, rSpeed)
                 }
             }
 	}
@@ -1098,16 +1098,16 @@ namespace bitbot
     //% subcategory=Motors
     export function BBBias(direction: BBRobotDirection, bias: number): void
     {
-        bias = clamp(bias, 0, 80);
+        bias = clamp(bias, 0, 80)
         if (direction == BBRobotDirection.Left)
         {
-            leftBias = bias;
-            rightBias = 0;
+            leftBias = bias
+            rightBias = 0
         }
         else
         {
-            leftBias = 0;
-            rightBias = bias;
+            leftBias = 0
+            rightBias = bias
         }
     }
 
@@ -1116,9 +1116,9 @@ namespace bitbot
 
     function waitForAck(): void
     {
-	basic.pause(10);
+	basic.pause(10)
 	while(pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE) != i2cACK)	// read register is always ACKNAK when waiting is required
-	    basic.pause(10);
+	    basic.pause(10)
     }
 
     /**
@@ -1589,31 +1589,31 @@ namespace bitbot
     //% deprecated=true
     export function motor(motor: BBMotor, speed: number): void
     {
-        speed = clamp(speed, -1023, 1023);
-        let speed0 = 0;
-        let speed1 = 0;
-        setPWM(Math.abs(speed));
+        speed = clamp(speed, -1023, 1023)
+        let speed0 = 0
+        let speed1 = 0
+        setPWM(Math.abs(speed))
         if (speed > 0)
         {
-            speed0 = speed;
-            speed1 = 0;
+            speed0 = speed
+            speed1 = 0
         }
         else
         {
-            speed0 = 0;
-            speed1 = 0 - speed;
+            speed0 = 0
+            speed1 = 0 - speed
         }
         if ((motor == BBMotor.Left) || (motor == BBMotor.Both))
         {
             if (getModel() == BBModel.Classic)
             {
-                pins.analogWritePin(AnalogPin.P0, speed0);
-                pins.analogWritePin(AnalogPin.P8, speed1);
+                pins.analogWritePin(AnalogPin.P0, speed0)
+                pins.analogWritePin(AnalogPin.P8, speed1)
             }
             else
             {
-                pins.analogWritePin(AnalogPin.P16, speed0);
-                pins.analogWritePin(AnalogPin.P8, speed1);
+                pins.analogWritePin(AnalogPin.P16, speed0)
+                pins.analogWritePin(AnalogPin.P8, speed1)
             }
         }
 
@@ -1621,13 +1621,13 @@ namespace bitbot
         {
             if (getModel() == BBModel.Classic)
             {
-                pins.analogWritePin(AnalogPin.P1, speed0);
-                pins.analogWritePin(AnalogPin.P12, speed1);
+                pins.analogWritePin(AnalogPin.P1, speed0)
+                pins.analogWritePin(AnalogPin.P12, speed1)
             }
             else
             {
-                pins.analogWritePin(AnalogPin.P14, speed0);
-                pins.analogWritePin(AnalogPin.P12, speed1);
+                pins.analogWritePin(AnalogPin.P14, speed0)
+                pins.analogWritePin(AnalogPin.P12, speed1)
             }
         }
     }
@@ -1645,7 +1645,7 @@ namespace bitbot
     //% deprecated=true
     export function drive(speed: number): void
     {
-        motor(BBMotor.Both, speed);
+        motor(BBMotor.Both, speed)
     }
 
     /**
@@ -1662,9 +1662,9 @@ namespace bitbot
     //% deprecated=true
     export function driveMilliseconds(speed: number, milliseconds: number): void
     {
-        drive(speed);
-        basic.pause(milliseconds);
-        stop(BBStopMode.Coast);
+        drive(speed)
+        basic.pause(milliseconds)
+        stop(BBStopMode.Coast)
     }
 
     /**
@@ -1682,16 +1682,16 @@ namespace bitbot
     export function driveTurn(direction: BBRobotDirection, speed: number): void
     {
         if (speed < 0)
-            speed = 0;
+            speed = 0
         if (direction == BBRobotDirection.Left)
         {
-            motor(BBMotor.Left, -speed);
-            motor(BBMotor.Right, speed);
+            motor(BBMotor.Left, -speed)
+            motor(BBMotor.Right, speed)
         }
         else if (direction == BBRobotDirection.Right)
         {
-            motor(BBMotor.Left, speed);
-            motor(BBMotor.Right, -speed);
+            motor(BBMotor.Left, speed)
+            motor(BBMotor.Right, -speed)
         }
     }
 
@@ -1712,7 +1712,7 @@ namespace bitbot
     {
         driveTurn(direction, speed)
         basic.pause(milliseconds)
-        stop(BBStopMode.Coast);
+        stop(BBStopMode.Coast)
     }
 
 
@@ -1723,8 +1723,8 @@ namespace bitbot
     {
         if ((!fireBand) && !isPRO())
         {
-            fireBand = fireled.newBand(DigitalPin.P13, NUMLEDS);
-            fireBand.setBrightness(40);
+            fireBand = fireled.newBand(DigitalPin.P13, NUMLEDS)
+            fireBand.setBrightness(40)
         }
         return fireBand;
     }
@@ -1733,7 +1733,7 @@ namespace bitbot
     function updateLEDs(): void
     {
         if ((_updateMode == BBMode.Auto) && !isPRO())
-            ledShow();
+            ledShow()
     }
 
     /**
@@ -1748,11 +1748,11 @@ namespace bitbot
     export function setLedColor(rgb: number)
     {
 	if(isPRO())
-	    sendCommand6(SETPIXEL, (_updateMode == BBMode.Auto) ? 1: 0, NUMLEDS, rgb >> 16, (rgb >> 8) & 0xff, rgb & 0xff);
+	    sendCommand6(SETPIXEL, (_updateMode == BBMode.Auto) ? 1: 0, NUMLEDS, rgb >> 16, (rgb >> 8) & 0xff, rgb & 0xff)
 	else
 	{
-            fire().setBand(rgb);
-            updateLEDs();
+            fire().setBand(rgb)
+            updateLEDs()
 	}
     }
 
@@ -1767,11 +1767,11 @@ namespace bitbot
     export function ledClear(): void
     {
 	if(isPRO())
-	    sendCommand6(SETPIXEL, (_updateMode == BBMode.Auto) ? 1: 0, NUMLEDS, 0, 0, 0);
+	    sendCommand6(SETPIXEL, (_updateMode == BBMode.Auto) ? 1: 0, NUMLEDS, 0, 0, 0)
 	else
 	{
-            fire().clearBand();
-            updateLEDs();
+            fire().clearBand()
+            updateLEDs()
 	}
     }
 
@@ -1789,11 +1789,11 @@ namespace bitbot
     export function setPixelColor(ledId: number, rgb: number): void
     {
 	if(isPRO())
-	    sendCommand6(SETPIXEL, (_updateMode == BBMode.Auto) ? 1: 0, ledId, rgb >> 16, (rgb >> 8) & 0xff, rgb & 0xff);
+	    sendCommand6(SETPIXEL, (_updateMode == BBMode.Auto) ? 1: 0, ledId, rgb >> 16, (rgb >> 8) & 0xff, rgb & 0xff)
 	else
 	{
-            fire().setPixel(ledId, rgb);
-            updateLEDs();
+            fire().setPixel(ledId, rgb)
+            updateLEDs()
 	}
     }
 
@@ -1878,10 +1878,10 @@ namespace bitbot
     export function ledBrightness(brightness: number): void
     {
 	if(isPRO())
-	    sendCommand2(FIREBRT, brightness);
+	    sendCommand2(FIREBRT, brightness)
 	else
 	{
-            fire().setBrightness(brightness);
+            fire().setBrightness(brightness)
             updateLEDs();
 	}
     }
@@ -1897,9 +1897,9 @@ namespace bitbot
     //% blockGap=8
     export function setUpdateMode(updateMode: BBMode): void
     {
-        _updateMode = updateMode;
+        _updateMode = updateMode
 	if(isPRO())
-	    sendCommand2(UPDATEMODE, updateMode);
+	    sendCommand2(UPDATEMODE, updateMode)
     }
 
     /**
@@ -1913,9 +1913,9 @@ namespace bitbot
     export function ledShow(): void
     {
 	if(isPRO())
-	    sendCommand2(FIREUPDT, 0);
+	    sendCommand2(FIREUPDT, 0)
 	else if (btDisabled)
-            fire().updateBand();
+            fire().updateBand()
     }
 
     /**
@@ -1953,7 +1953,7 @@ namespace bitbot
     //% blockGap=8
     export function convertRGB(r: number, g: number, b: number): number
     {
-        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF)
     }
 
 // Built-in Sensors - Inputs and Outputs
@@ -1968,11 +1968,11 @@ namespace bitbot
     //% subcategory="Inputs & Outputs"
     export function buzz(flag: boolean): void
     {
-        let buzz = flag ? 1 : 0;
+        let buzz = flag ? 1 : 0
         if (getModel() == BBModel.Classic)
-            pins.digitalWritePin(DigitalPin.P14, buzz);
+            pins.digitalWritePin(DigitalPin.P14, buzz)
         else if(! isPRO())
-            pins.digitalWritePin(DigitalPin.P0, buzz);
+            pins.digitalWritePin(DigitalPin.P0, buzz)
 	else
 	{
 	    if(flag)
@@ -2006,28 +2006,28 @@ namespace bitbot
     export function sonar(unit: BBPingUnit): number
     {
         // send pulse
-        let trig = DigitalPin.P15;
-        let echo = DigitalPin.P15;
-        let maxDistance = 2000*59; // 2m
-        let d=10;
-        pins.setPull(trig, PinPullMode.PullNone);
+        let trig = DigitalPin.P15
+        let echo = DigitalPin.P15
+        let maxDistance = 2000*59 // 2m
+        let d=10
+        pins.setPull(trig, PinPullMode.PullNone)
         for (let x=0; x<10; x++)
         {
-            pins.digitalWritePin(trig, 0);
-            control.waitMicros(2);
-            pins.digitalWritePin(trig, 1);
-            control.waitMicros(10);
-            pins.digitalWritePin(trig, 0);
+            pins.digitalWritePin(trig, 0)
+            control.waitMicros(2)
+            pins.digitalWritePin(trig, 1)
+            control.waitMicros(10)
+            pins.digitalWritePin(trig, 0)
             // read pulse
-            d = pins.pulseIn(echo, PulseValue.High, maxDistance);
+            d = pins.pulseIn(echo, PulseValue.High, maxDistance)
             if (d>0)
-                break;
+                break
         }
         switch (unit)
         {
-            case BBPingUnit.Centimeters: return Math.round(d / 59);
-            case BBPingUnit.Inches: return Math.round(d / 145);
-            default: return d;
+            case BBPingUnit.Centimeters: return Math.round(d / 59)
+            case BBPingUnit.Inches: return Math.round(d / 145)
+            default: return d
         }
     }
 
@@ -2045,17 +2045,17 @@ namespace bitbot
         else if (getModel() == BBModel.Classic)
         {
             if (sensor == BBLineSensor.Left)
-                return pins.digitalReadPin(DigitalPin.P11);
+                return pins.digitalReadPin(DigitalPin.P11)
             else
-                return pins.digitalReadPin(DigitalPin.P5);
+                return pins.digitalReadPin(DigitalPin.P5)
         }
         else
         {
             let value = pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false);
             if (sensor == BBLineSensor.Left)
-                return value & 0x01;
+                return value & 0x01
             else
-                return (value & 0x02) >> 1;
+                return (value & 0x02) >> 1
         }
     }
 
@@ -2074,21 +2074,21 @@ namespace bitbot
         {
             if (sensor == BBLightSensor.Left)
             {
-                pins.digitalWritePin(DigitalPin.P16, 0);
-                return pins.analogReadPin(AnalogPin.P2);
+                pins.digitalWritePin(DigitalPin.P16, 0)
+                return pins.analogReadPin(AnalogPin.P2)
             }
             else
             {
-                pins.digitalWritePin(DigitalPin.P16, 1);
-                return pins.analogReadPin(AnalogPin.P2);
+                pins.digitalWritePin(DigitalPin.P16, 1)
+                return pins.analogReadPin(AnalogPin.P2)
             }
         }
         else
         {
             if (sensor == BBLightSensor.Left)
-                return pins.analogReadPin(AnalogPin.P2);
+                return pins.analogReadPin(AnalogPin.P2)
             else
-                return pins.analogReadPin(AnalogPin.P1);
+                return pins.analogReadPin(AnalogPin.P1)
         }
     }
 
@@ -2102,11 +2102,11 @@ namespace bitbot
     //% subcategory="Inputs & Outputs"
     export function setTalon(degrees: number): void
     {
-        degrees = clamp(degrees, 0, 80);
+        degrees = clamp(degrees, 0, 80)
         if (getModel() == BBModel.Classic)
-            pins.servoWritePin(AnalogPin.P15, degrees);
+            pins.servoWritePin(AnalogPin.P15, degrees)
         else
-            pins.servoWritePin(AnalogPin.P2, degrees);
+            pins.servoWritePin(AnalogPin.P2, degrees)
     }
 
     /**
@@ -2120,13 +2120,13 @@ namespace bitbot
     //% subcategory="Inputs & Outputs"
     export function bbSetServo(servo: BBServos, degrees: number): void
     {
-        degrees = clamp(degrees, 0, 180);
+        degrees = clamp(degrees, 0, 180)
         if (getModel() == BBModel.XL)
         {
             if (servo == BBServos.P1)
-                pins.servoWritePin(AnalogPin.P1, degrees);
+                pins.servoWritePin(AnalogPin.P1, degrees)
             else
-                pins.servoWritePin(AnalogPin.P2, degrees);
+                pins.servoWritePin(AnalogPin.P2, degrees)
         }
     }
 
@@ -2149,19 +2149,19 @@ namespace bitbot
         {
             if (servo == BBServos.P1)
             {
-                degrees = clamp(degrees - _p1Trim, 0, 180);
+                degrees = clamp(degrees - _p1Trim, 0, 180)
                 if (speed <= _deadband)
-                    pins.digitalWritePin(DigitalPin.P1, 0);
+                    pins.digitalWritePin(DigitalPin.P1, 0)
                 else
-                    pins.servoWritePin(AnalogPin.P1, degrees);
+                    pins.servoWritePin(AnalogPin.P1, degrees)
             }
             else
             {
-                degrees = clamp(degrees - _p2Trim, 0, 180);
+                degrees = clamp(degrees - _p2Trim, 0, 180)
                 if (speed <= _deadband)
-                    pins.digitalWritePin(DigitalPin.P2, 0);
+                    pins.digitalWritePin(DigitalPin.P2, 0)
                 else
-                    pins.servoWritePin(AnalogPin.P2, degrees);
+                    pins.servoWritePin(AnalogPin.P2, degrees)
             }
         }
     }
@@ -2176,7 +2176,7 @@ namespace bitbot
     //% subcategory="Inputs & Outputs"
     export function bbServoDeadband(deadband: number)
     {
-        _deadband = clamp(deadband, 0, 5);
+        _deadband = clamp(deadband, 0, 5)
     }
 
     /**
@@ -2192,13 +2192,13 @@ namespace bitbot
     {
         if (servo == BBServos.P1)
         {
-            _p1Trim = clamp(trim, 0, 50);
-            _p2Trim = 0;
+            _p1Trim = clamp(trim, 0, 50)
+            _p2Trim = 0
         }
         else
         {
-            _p1Trim = 0;
-            _p2Trim = clamp(trim, 0, 50);
+            _p1Trim = 0
+            _p2Trim = clamp(trim, 0, 50)
         }
     }
 
@@ -2212,11 +2212,11 @@ namespace bitbot
     {
         if (getModel() == BBModel.XL)
         {
-            pins.digitalWritePin(DigitalPin.P1, 0);
-            pins.digitalWritePin(DigitalPin.P2, 0);
+            pins.digitalWritePin(DigitalPin.P1, 0)
+            pins.digitalWritePin(DigitalPin.P2, 0)
         }
         else
-            pins.digitalWritePin(DigitalPin.P15, 0);
+            pins.digitalWritePin(DigitalPin.P15, 0)
     }
 
 // Addon Boards
@@ -2284,10 +2284,10 @@ namespace bitbot
     {
         if (!matrix5)
         {
-            matrix5 = fireled.newBand(DigitalPin.P15, 25);
-            matrix5.setBrightness(40);
+            matrix5 = fireled.newBand(DigitalPin.P15, 25)
+            matrix5.setBrightness(40)
         }
-        return matrix5;
+        return matrix5
     }
 
     // update Matrix if _updateMode set to Auto
@@ -2307,8 +2307,8 @@ namespace bitbot
     //% blockGap=8
     export function matClear(): void
     {
-        mat5().clearBand();
-        matUpdate();
+        mat5().clearBand()
+        matUpdate()
     }
 
     /**
@@ -2322,13 +2322,13 @@ namespace bitbot
     //% blockGap=8
     export function setMatrix(rgb: number)
     {
-        rawSetMatrix(rgb);
-        matUpdate();
+        rawSetMatrix(rgb)
+        matUpdate()
     }
 
     function rawSetMatrix(rgb: number)
     {
-        mat5().setBand(rgb);
+        mat5().setBand(rgb)
     }
 
     /**
@@ -2344,10 +2344,10 @@ namespace bitbot
     export function setPixel(ledId: number, rgb: number): void
     {
         // need to map to match Microbit: top left is 0, bottom right is 24
-        let x = 4 - ledId % 5;
-        let y = 4 - Math.idiv(ledId, 5);
-        mat5().setPixel(x + y*5, rgb);
-        matUpdate();
+        let x = 4 - ledId % 5
+        let y = 4 - Math.idiv(ledId, 5)
+        mat5().setPixel(x + y*5, rgb)
+        matUpdate()
     }
 
     /**
@@ -2363,13 +2363,13 @@ namespace bitbot
     //% blockGap=8
     export function setArrayPixel(x: number, y: number, rgb: number): void
     {
-        rawArrayPixel(x, y, rgb);
-        matUpdate();
+        rawArrayPixel(x, y, rgb)
+        matUpdate()
     }
 
     function rawArrayPixel(x: number, y: number, rgb: number): void
     {
-        mat5().setPixel((4-x) + (4-y)*5, rgb);
+        mat5().setPixel((4-x) + (4-y)*5, rgb)
     }
 
     /**
@@ -2383,8 +2383,8 @@ namespace bitbot
     export function matRainbow(): void
     {
         // TODO Fix so it uses top left to bottom right
-        mat5().setRainbow();
-        matUpdate();
+        mat5().setRainbow()
+        matUpdate()
     }
 
     /**
@@ -2411,7 +2411,7 @@ namespace bitbot
             for (let y=y1; y <= y2; y++)
             {
                 if (inRange(x, y) && (x==x1 || x==x2 || y==y1 || y==y2 || fill))
-                    rawArrayPixel(x, y, rgb);
+                    rawArrayPixel(x, y, rgb)
             }
         }
         matUpdate();
@@ -2420,7 +2420,7 @@ namespace bitbot
     /* check x, y is within range */
     function inRange(x: number, y: number): boolean
     {
-        return (x>=0 && x<5 && y>=0 && y<5);
+        return (x>=0 && x<5 && y>=0 && y<5)
     }
 
     /**
@@ -2436,52 +2436,52 @@ namespace bitbot
     //% blockGap=8
     export function matShowEyeball(pos: eyePos, rgb: number, size: eyeSize): void
     {
-        rawSetMatrix(rgb);
+        rawSetMatrix(rgb)
         // Clear corners to make a circle-ish
-        rawArrayPixel(0, 0, 0);
-        rawArrayPixel(0, 4, 0);
-        rawArrayPixel(4, 0, 0);
-        rawArrayPixel(4, 4, 0);
+        rawArrayPixel(0, 0, 0)
+        rawArrayPixel(0, 4, 0)
+        rawArrayPixel(4, 0, 0)
+        rawArrayPixel(4, 4, 0)
         // draw pupil
         switch(pos)
         {
             case eyePos.Forward:
-                (size==eyeSize.Small) ? rawArrayPixel(2,2,0) : pupil5(2,2); break;
+                (size==eyeSize.Small) ? rawArrayPixel(2,2,0) : pupil5(2,2); break
             case eyePos.Down:
-                (size==eyeSize.Small) ? rawArrayPixel(2,3,0) : pupil5(2,3); break;
+                (size==eyeSize.Small) ? rawArrayPixel(2,3,0) : pupil5(2,3); break
             case eyePos.Up:
-                (size==eyeSize.Small) ? rawArrayPixel(2,1,0) : pupil5(2,1); break;
+                (size==eyeSize.Small) ? rawArrayPixel(2,1,0) : pupil5(2,1); break
             case eyePos.Left:
-                (size==eyeSize.Small) ? rawArrayPixel(3,2,0) : pupil5(3,2); break;
+                (size==eyeSize.Small) ? rawArrayPixel(3,2,0) : pupil5(3,2); break
             case eyePos.Right:
-                (size==eyeSize.Small) ? rawArrayPixel(1,2,0) : pupil5(1,2); break;
+                (size==eyeSize.Small) ? rawArrayPixel(1,2,0) : pupil5(1,2); break
             case eyePos.DownLeft:
-                (size==eyeSize.Small) ? rawArrayPixel(3,3,0) : pupil4(2,2); break;
+                (size==eyeSize.Small) ? rawArrayPixel(3,3,0) : pupil4(2,2); break
             case eyePos.DownRight:
-                (size==eyeSize.Small) ? rawArrayPixel(1,3,0) : pupil4(1,2); break;
+                (size==eyeSize.Small) ? rawArrayPixel(1,3,0) : pupil4(1,2); break
             case eyePos.UpLeft:
-                (size==eyeSize.Small) ? rawArrayPixel(3,1,0) : pupil4(2,1); break;
+                (size==eyeSize.Small) ? rawArrayPixel(3,1,0) : pupil4(2,1); break
             case eyePos.UpRight:
                 (size==eyeSize.Small) ? rawArrayPixel(1,1,0) : pupil4(1,1); break;
         }
-        matUpdate();
+        matUpdate()
     }
  
      function pupil5(x: number, y: number)
      {
-        rawArrayPixel(x, y, 0);
-        rawArrayPixel(x+1, y, 0);
-        rawArrayPixel(x-1, y, 0);
-        rawArrayPixel(x, y+1, 0);
-        rawArrayPixel(x, y-1, 0);
+        rawArrayPixel(x, y, 0)
+        rawArrayPixel(x+1, y, 0)
+        rawArrayPixel(x-1, y, 0)
+        rawArrayPixel(x, y+1, 0)
+        rawArrayPixel(x, y-1, 0)
     }
 
      function pupil4(x: number, y: number)
      {
-         rawArrayPixel(x, y, 0);
-         rawArrayPixel(x+1, y, 0);
-         rawArrayPixel(x, y+1, 0);
-         rawArrayPixel(x+1, y+1, 0);
+         rawArrayPixel(x, y, 0)
+         rawArrayPixel(x+1, y, 0)
+         rawArrayPixel(x, y+1, 0)
+         rawArrayPixel(x+1, y+1, 0)
      }
 
     /**
@@ -2496,13 +2496,13 @@ namespace bitbot
     //% blockGap=8
     export function matShowImage(myImage: Image, rgb: number): void
     {
-        //myImage.showImage(0);
+        //myImage.showImage(0)
         for (let i=0; i<5; i++)
         {
             for (let j=0; j<5; j++)
             {
                 if (myImage.pixel(i, j))
-                    rawArrayPixel(i, j, rgb);
+                    rawArrayPixel(i, j, rgb)
             }
         }
         matUpdate();
@@ -2520,7 +2520,7 @@ namespace bitbot
     export function matShow(): void
     {
         if (btDisabled)
-            mat5().updateBand();
+            mat5().updateBand()
     }
 
     /**
@@ -2535,8 +2535,8 @@ namespace bitbot
     //% blockGap=8
     export function matBrightness(brightness: number): void
     {
-        mat5().setBrightness(brightness);
-        matUpdate();
+        mat5().setBrightness(brightness)
+        matUpdate()
     }
 
 // BitFace Addon
@@ -2545,24 +2545,24 @@ namespace bitbot
     {
         if (!bitface)
         {
-            bitface = fireled.newBand(DigitalPin.P15, 17);
-            bitface.setBrightness(40);
+            bitface = fireled.newBand(DigitalPin.P15, 17)
+            bitface.setBrightness(40)
         }
-        return bitface;
+        return bitface
     }
 
     function bitfUpdate(): void
     {
         if (btDisabled)
-            bitf().updateBand();
+            bitf().updateBand()
     }
 
     function drawMouth(myList: number[], rgb: number)
     {
         for (let i=0; i<14; i++)
-            bitf().setPixel(i, 0);
+            bitf().setPixel(i, 0)
         for (let i=0; i<myList.length; i++)
-            bitf().setPixel(myList[i], rgb);
+            bitf().setPixel(myList[i], rgb)
     }
 
     /**
@@ -2577,8 +2577,8 @@ namespace bitbot
     //% blockGap=8
     export function setBitface(rgb: number)
     {
-        bitf().setBand(rgb);
-        bitfUpdate();
+        bitf().setBand(rgb)
+        bitfUpdate()
     }
 
     /**
@@ -2595,10 +2595,10 @@ namespace bitbot
     export function setBitEye(eye: bfEyes, rgb: number)
     {
         if (eye == bfEyes.Left || eye == bfEyes.Both)
-            bitf().setPixel(15, rgb);
+            bitf().setPixel(15, rgb)
         if (eye == bfEyes.Right || eye == bfEyes.Both)
-            bitf().setPixel(16, rgb);
-        bitfUpdate();
+            bitf().setPixel(16, rgb)
+        bitfUpdate()
     }
 
     /**
@@ -2613,8 +2613,8 @@ namespace bitbot
     //% blockGap=8
     export function setBitNose(rgb: number)
     {
-        bitf().setPixel(14, rgb);
-        bitfUpdate();
+        bitf().setPixel(14, rgb)
+        bitfUpdate()
     }
 
     /**
@@ -2632,13 +2632,13 @@ namespace bitbot
     {
         switch (mouth)
         {
-            case bfMouth.Smile: drawMouth(mouthSmile, rgb); break;
-            case bfMouth.Grin: drawMouth(mouthGrin, rgb); break;
-            case bfMouth.Sad: drawMouth(mouthSad, rgb); break;
-            case bfMouth.Frown: drawMouth(mouthFrown, rgb); break;
-            case bfMouth.Straight: drawMouth(mouthStraight, rgb); break;
-            case bfMouth.Oooh: drawMouth(mouthOooh, rgb); break;
-            case bfMouth.Eeeh: drawMouth(mouthEeeh, rgb); break;
+            case bfMouth.Smile: drawMouth(mouthSmile, rgb); break
+            case bfMouth.Grin: drawMouth(mouthGrin, rgb); break
+            case bfMouth.Sad: drawMouth(mouthSad, rgb); break
+            case bfMouth.Frown: drawMouth(mouthFrown, rgb); break
+            case bfMouth.Straight: drawMouth(mouthStraight, rgb); break
+            case bfMouth.Oooh: drawMouth(mouthOooh, rgb); break
+            case bfMouth.Eeeh: drawMouth(mouthEeeh, rgb); break
         }
         bitfUpdate();
     }
@@ -2655,8 +2655,8 @@ namespace bitbot
     //% blockGap=8
     export function bitBrightness(brightness: number): void
     {
-        bitf().setBrightness(brightness);
-        bitfUpdate();
+        bitf().setBrightness(brightness)
+        bitfUpdate()
     }
 
 // OLED 128x64 Addon
@@ -2666,9 +2666,9 @@ namespace bitbot
     {
         if (!oled)
         {
-            oled = firescreen.newScreen(0x3c);
+            oled = firescreen.newScreen(0x3c)
         }
-        return oled;
+        return oled
     }
 
     /**
@@ -2688,7 +2688,7 @@ namespace bitbot
     //% blockGap=8
     export function oledText(text: string, x: number, y: number, inv: boolean)
     {
-        oScreen().doText(text, x, y, inv);
+        oScreen().doText(text, x, y, inv)
     }
 
     /**
@@ -2708,7 +2708,7 @@ namespace bitbot
     //% blockGap=8
     export function oledNumber(num: number, x: number, y: number, inv: boolean)
     {
-        oScreen().doNumber(num, x, y, inv);
+        oScreen().doNumber(num, x, y, inv)
     }
 
     /**
@@ -2722,7 +2722,7 @@ namespace bitbot
     //% blockGap=8
     export function oledUpdate()
     {
-        oScreen().updateScreen();
+        oScreen().updateScreen()
     }
 
     /**
@@ -2738,7 +2738,7 @@ namespace bitbot
     //% blockGap=8
     export function oledSet(set: boolean)
     {
-        oScreen().setScreen(set);
+        oScreen().setScreen(set)
     }
 
     /**
@@ -2753,7 +2753,7 @@ namespace bitbot
     //% blockGap=8
     export function oledInvert(inv: boolean)
     {
-        oScreen().invertOled(inv);
+        oScreen().invertOled(inv)
     }
 
     /**
@@ -2768,7 +2768,7 @@ namespace bitbot
     //% blockGap=8
     export function oledZOOM(zoom: boolean)
     {
-        oScreen().zoomOled(zoom);
+        oScreen().zoomOled(zoom)
     }
 
     /**
@@ -2789,7 +2789,7 @@ namespace bitbot
     //% blockGap=8
     export function oledPlotPixel(x: number, y: number, doSet: boolean, update: boolean)
     {
-        oScreen().plotPixel(x, y, doSet, update);
+        oScreen().plotPixel(x, y, doSet, update)
     }
 
     /**
@@ -2812,7 +2812,7 @@ namespace bitbot
     //% blockGap=8
     export function oledLine(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
     {
-        oScreen().oledLine(x1, y1, x2, y2, doSet, update);
+        oScreen().oledLine(x1, y1, x2, y2, doSet, update)
     }
 
     /**
@@ -2835,7 +2835,7 @@ namespace bitbot
     //% blockGap=8
     export function oledRectangle(x1: number, y1: number, x2: number, y2: number, doSet: boolean, update: boolean)
     {
-        oScreen().oledRect(x1, y1, x2, y2, doSet, update);
+        oScreen().oledRect(x1, y1, x2, y2, doSet, update)
     }
 
     /**
@@ -2857,7 +2857,7 @@ namespace bitbot
     //% blockGap=8
     export function oledCircle (x: number, y: number, r: number, doSet: boolean, update: boolean)
     {
-        oScreen().oledCircle(x, y, r, doSet, update);
+        oScreen().oledCircle(x, y, r, doSet, update)
     }
 
 }
