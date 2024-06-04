@@ -450,7 +450,7 @@ namespace bitbot
     const ACKNAK   = 20
     const LPULSEL  = 21  // left pulse count low word
     const LPULSEH  = 22  // left pulse count high word
-    const RPULSE   = 23
+    const RPULSEL  = 23
     const RPULSEH  = 24
     const LASTERRL = 25
     const LASTERRR = 26
@@ -586,7 +586,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp119 Bluetooth"
+    //% block="%enable|bbp120 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1367,7 +1367,7 @@ namespace bitbot
     //% weight=25
     //% subcategory="BitBot PRO"
     //% group="PID Control"
-    export function lastEncoderError(encoder: BBPulseSensor): void
+    export function lastEncoderError(encoder: BBPulseSensor): number
     {
 	if(isPRO())
 	    return readSensor(encoder + LASTERRL)
