@@ -430,27 +430,30 @@ namespace bitbot
     const LINECALIB  = 32 // Start calibration. No parameter
     const RESETWHEEL = 33 // Left, Right, Both
     const SETTRIMS   = 34 // trimDistance and trimAngle. Both -100 to +100
+    const LASTERROR  = 35 // Error from last PID command. Left, Right
 
 // BitBot Pro IR constants
     const irPin = DigitalPin.P14
     const irEvent = 1995
 
 // Input Channels - BitBot Pro only
-    const VERREV = 0
-    const DLINEL = 1
-    const DLINER = 2
-    const DLINEC = 3
-    const ALINEL = 4
-    const ALINER = 5
-    const ALINEC = 6
-    const LIGHTL = 7
-    const LIGHTR = 8
-    const PSU    = 9
-    const ACKNAK = 20
-    const LPULSEL     = 21  // left pulse count low word
-    const LPULSEH     = 22  // left pulse count high word
-    const RPULSEL     = 23
-    const RPULSEH     = 24
+    const VERREV    = 0
+    const DLINEL    = 1
+    const DLINER    = 2
+    const DLINEC    = 3
+    const ALINEL    = 4
+    const ALINER    = 5
+    const ALINEC    = 6
+    const LIGHTL    = 7
+    const LIGHTR    = 8
+    const PSU       = 9
+    const ACKNAK   = 20
+    const LPULSEL  = 21  // left pulse count low word
+    const LPULSEH  = 22  // left pulse count high word
+    const RPULSE   = 23
+    const RPULSEH  = 24
+    const LASTERRL = 25
+    const LASTERRR = 26
 
 // Motor Command Tracking
     const cGO      = 1
@@ -583,7 +586,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp118 Bluetooth"
+    //% block="%enable|bbp119 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1284,7 +1287,7 @@ namespace bitbot
     //% enable.shadow="toggleOnOff"
     //% weight=50
     //% subcategory="BitBot PRO"
-    //% group=Motors
+    //% group="PID Control"
     export function enablePID(enable: boolean): void
     {
         let enPid = enable ? 1 : 0
@@ -1311,7 +1314,7 @@ namespace bitbot
     //% blockId="BBWheelSensor" block="%sensor|wheel sensor%unit"
     //% weight=50
     //% subcategory="BitBot PRO"
-    //% group=Motors
+    //% group="PID Control"
     export function wheelSensor(sensor: BBPulseSensor, unit: BBSensorUnit): number
     {
 	let longVal=0
@@ -1335,7 +1338,7 @@ namespace bitbot
     //% block="angle turned"
     //% weight=40
     //% subcategory="BitBot PRO"
-    //% group=Motors
+    //% group="PID Control"
     export function turnAngle(): number
     {
 	let lVal = readPulses(LPULSEL)
@@ -1350,10 +1353,26 @@ namespace bitbot
     //% blockId="BBResetWheelSensors" block="reset %sensor|wheel sensors"
     //% weight=30
     //% subcategory="BitBot PRO"
-    //% group=Motors
+    //% group="PID Control"
     export function resetWheelSensors(sensor: BBMotor): void
     {
 	sendCommand2(RESETWHEEL, sensor)
+    }
+
+    /**
+      * Check the last PID command encoder error value
+      * @param encoder left or right wheel encoder
+      */
+    //% blockId="BBPIDError" block="last %encoder|encoder error"
+    //% weight=25
+    //% subcategory="BitBot PRO"
+    //% group="PID Control"
+    export function lastEncoderError(encoder: BBPulseSensor): void
+    {
+	if(isPRO())
+	    return readSensor(encoder + LASTERRL)
+	else
+	    return 0
     }
 
     /**
@@ -1367,7 +1386,7 @@ namespace bitbot
     //% trimDistance.min=-100 trimDistance.max=100
     //% trimAngle.min=-100 trimAngle.max=100
     //% subcategory="BitBot PRO"
-    //% group=Motors
+    //% group="PID Control"
     export function motorTrim(trimDistance: number, trimAngle: number): void
     {
 	let dTrim = clamp(trimDistance, -100, 100)
@@ -1386,7 +1405,7 @@ namespace bitbot
     export function readLineAnalog(sensor: BBPLineSensor): number
     {
 	if(isPRO())
-	    return readSensor(sensor + ALINEL);	// Analog Line sensors are 4, 5 and 6 (Left, Right, Centre)
+	    return readSensor(sensor + ALINEL)	// Analog Line sensors are 4, 5 and 6 (Left, Right, Centre)
 	else
 	    return 0
     }
