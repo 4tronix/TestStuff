@@ -579,6 +579,12 @@ namespace bitbot
         return (pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE))
     }
 
+    function readSensorSigned(sensor: number): number
+    {
+        pins.i2cWriteNumber(i2cATMega, sensor, NumberFormat.Int8LE, false)
+        return (pins.i2cReadNumber(i2cATMega, NumberFormat.Int16LE))
+    }
+
 
 // Block to enable Bluetooth and disable FireLeds.
     /**
@@ -586,7 +592,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp120 Bluetooth"
+    //% block="%enable|bbp121 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1370,7 +1376,7 @@ namespace bitbot
     export function lastEncoderError(encoder: BBPulseSensor): number
     {
 	if(isPRO())
-	    return readSensor(encoder + LASTERRL)
+	    return readSensorSigned(encoder + LASTERRL)
 	else
 	    return 0
     }
