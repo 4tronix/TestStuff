@@ -495,6 +495,7 @@ namespace bitbot
 
     let _model = BBModel.Auto
     let versionCode = -1
+    let firmwareCode = -1
     let lMotorD0: DigitalPin
     let lMotorD1: DigitalPin
     let lMotorA0: AnalogPin
@@ -592,7 +593,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp121 Bluetooth"
+    //% block="%enable|bbp122 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -691,17 +692,40 @@ namespace bitbot
     {
 	// 0 = Classic, 1-15 = XL, 16+ = Pro
         if (versionCode == -1)	// first time requesting
+	    getCode()
+	return versionCode
+    }
+
+    function getCode()	// this always gets the codes
+    {
+	versionCode = pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff	// i2cATMega only valid for BitBot PRO
+	if(versionCode > 0) // BitBot PRO
 	{
-	    versionCode = pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff	// i2cATMega only valid for BitBot PRO
-	    if(versionCode > 0) // BitBot PRO
-	    {
-		sendCommand2(PIDENABLE, 1)  // first access to BitBot PRO, so ensure PID loop is enabled
-		versionCode = 16 + (pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE, false) >> 8) & 0xff	// use 16+ firmware version (so 26 or higher) for BitBot PRO versionCode
-	    }
-	    else // so must be XL or Classic. Classic returns zero from below
-            	versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f
+	    sendCommand2(PIDENABLE, 1)  // first access to BitBot PRO, so ensure PID loop is enabled
+	    let revision = pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE, false)
+	    versionCode = 16 + (revision >> 8) & 0xff	// use 16+ board version (so 26) for BitBot PRO versionCode
+	    firmwareCode = revision & 0xff		// firmware version only valid for BitBot PRO. First release was 06, second 07, etc.
+	}
+	else // so must be XL or Classic. Classic returns zero from below
+            versionCode = (pins.i2cReadNumber(i2caddr, NumberFormat.Int8LE, false) >> 4) & 0x0f
 	}
         return versionCode
+    }
+
+    /**
+      * Get firmwareCode
+      */
+    //% blockId="getFirmwareCode"
+    //% block="BitBot PRO firmware Code"
+    //% weight=75
+    //% subcategory=BitBot_Model
+    //% deprecated=true
+    export function getFirmwareCode(): number
+    {
+	firmwareCode = 0
+	if(isPro())
+	    getCode()
+        return firmwareCode
     }
 
 // "DRIVE STRAIGHT" and EEROM BLOCKS
@@ -1375,7 +1399,7 @@ namespace bitbot
     //% group="PID Control"
     export function lastEncoderError(encoder: BBPulseSensor): number
     {
-	if(isPRO())
+	if(isPRO() && (getVersionCode() > 26))	// first firmware release doesn't support this command
 	    return readSensorSigned(encoder + LASTERRL)
 	else
 	    return 0
