@@ -593,7 +593,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp124 Bluetooth"
+    //% block="%enable|bbp125 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -702,9 +702,9 @@ namespace bitbot
 	if(versionCode > 0) // BitBot PRO
 	{
 	    sendCommand2(PIDENABLE, 1)  // first access to BitBot PRO, so ensure PID loop is enabled
-	    let revision = pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE, false)
-	    versionCode = 16 + (revision >> 8) & 0xff	// use 16+ board version (so 26) for BitBot PRO versionCode
-	    firmwareCode = revision & 0xff		// firmware version only valid for BitBot PRO. First release was 06, second 07, etc.
+	    let revision = pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE, false)	/ low byte: Board rev, hi byte: Firmware rev
+	    versionCode = 10 + revision & 0xff		// use 10+ board version (so 16) for BitBot PRO versionCode
+	    firmwareCode = (revision >> 8) & 0xff	// firmware version only valid for BitBot PRO. First release was 10, second 11, etc.
 	}
 	else // so must be XL or Classic. Classic returns zero from below
 	{
@@ -920,7 +920,7 @@ namespace bitbot
 	{
 	    if(lastCommand!=cGO || lastDirection!=direction || lastSpeed!=speed)
 	    {
-		if((getVersionCode() == 26) && pidActive)
+		if((getFirmwareCode() == 10) && pidActive)	// first firmware release has bug
 		    stop(BBStopMode.Coast)
 		sendCommand2(DRIVE, (direction == BBDirection.Reverse) ? -speed : speed);
 	    }
@@ -965,7 +965,7 @@ namespace bitbot
 	{
 	    if(lastCommand!=cSPIN || lastSDirection!=direction || lastSpeed!=speed)
 	    {
-		if((getVersionCode() == 26) && pidActive)
+		if((getFirmwareCode() == 10) && pidActive)	// first firmware release has bug
 		    stop(BBStopMode.Coast)
 		sendCommand2(SPIN, (direction == BBRobotDirection.Right) ? -speed : speed)
 	    }
@@ -1020,7 +1020,7 @@ namespace bitbot
 	if(isPRO())
 	{
 	    sendCommand2(STOP, 0)
-	    if((getVersionCode() == 26)	&& pidActive)	// First firmware release has bug in stop function that misses next command
+	    if((getVersionCode() == 10)	&& pidActive)	// First firmware release has bug in stop function that misses next command
 	    {
 		pidActive = false
 		sendCommand4(DRIVEDIST, 100, 1, 0)	// this command is ignored in the firmware
@@ -1233,7 +1233,7 @@ namespace bitbot
 	{
 	    if(lastCommand!=cARC || lastADirection!=direction || lastSpeed!=speed || lastRadius!=radius)
 	    {
-	        if((getVersionCode() == 26) && pidActive)
+	        if((getVersionCode() == 10) && pidActive)	// first firmware release has bug
 		    stop(BBStopMode.Coast)
 		let aSpeed = ((direction == BBArcDirection.ReverseLeft) || (direction == BBArcDirection.ReverseRight)) ? -speed : speed
 		if((direction == BBArcDirection.ForwardRight) || (direction == BBArcDirection.ReverseRight))
@@ -1401,7 +1401,7 @@ namespace bitbot
     //% group="PID Control"
     export function lastEncoderError(encoder: BBPulseSensor): number
     {
-	if(isPRO() && (getVersionCode() > 26))	// first firmware release doesn't support this command
+	if(isPRO() && (getFirmwareCode() > 10))	// first firmware release doesn't support this command
 	    return readSensorSigned(encoder + LASTERRL)
 	else
 	    return 0
