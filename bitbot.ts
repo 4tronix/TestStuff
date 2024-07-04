@@ -593,7 +593,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp123 Bluetooth"
+    //% block="%enable|bbp124 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -725,7 +725,7 @@ namespace bitbot
     export function getFirmwareCode(): number
     {
 	firmwareCode = 0
-	if(isPro())
+	if(isPRO())
 	    getCode()
         return firmwareCode
     }
