@@ -430,7 +430,14 @@ namespace bitbot
     const LINECALIB  = 32 // Start calibration. No parameter
     const RESETWHEEL = 33 // Left, Right, Both
     const SETTRIMS   = 34 // trimDistance and trimAngle. Both -100 to +100
-    const LASTERROR  = 35 // Error from last PID command. Left, Right
+    
+    // new for v1.1
+    const SETPIDCON   = 35  // set the PID constants (used for debugging)
+    const SUMERRORS   = 36  // disable/enable carrying PID errors to next command
+    const CLRERRORS   = 37  // Clear the PID tracking error
+    const STOPTHRESH  = 38  // Set Stop threshold in mm
+    const BRAKETHRESH = 39  // Set Braking threshold in mm
+    const BRAKESPEED  = 40  // Set Braking Speed
 
 // BitBot Pro IR constants
     const irPin = DigitalPin.P14
@@ -454,6 +461,7 @@ namespace bitbot
     const RPULSEH  = 24
     const LASTERRL = 25
     const LASTERRR = 26
+
 
 // Motor Command Tracking
     const cGO      = 1
@@ -593,7 +601,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp126 Bluetooth"
+    //% block="%enable|bbp127 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1330,12 +1338,17 @@ namespace bitbot
 
     function readPulses(sensor: number): number
     {
-	let loVal=0
-	let hiVal=0
-	let longVal=0
-	loVal = readSensor(sensor)
-	hiVal = readSensor(sensor+1)
-	return loVal + (hiVal << 16)
+	if(isPRO())
+	{
+	    let loVal=0
+	    let hiVal=0
+	    let longVal=0
+	    loVal = readSensor(sensor)
+	    hiVal = readSensor(sensor+1)
+	    return loVal + (hiVal << 16)
+	}
+	else
+	    return 0
     }
 
     /**
@@ -1349,18 +1362,23 @@ namespace bitbot
     //% group="PID Control"
     export function wheelSensor(sensor: BBPulseSensor, unit: BBSensorUnit): number
     {
-	let longVal=0
-	if(sensor == BBPulseSensor.Left)
-	    longVal = readPulses(LPULSEL)
-	else
-	    longVal = readPulses(RPULSEL)
-	switch(unit)
+	if(isPRO())
 	{
-	    case BBSensorUnit.Millimeters: return Math.round(longVal / 10.36); break
-	    case BBSensorUnit.Centimeters: return Math.round(longVal / 103.6); break
-	    case BBSensorUnit.Inches: return Math.round(longVal / 263.14); break
-	    default: return longVal; break
+	    let longVal=0
+	    if(sensor == BBPulseSensor.Left)
+		longVal = readPulses(LPULSEL)
+	    else
+		longVal = readPulses(RPULSEL)
+	    switch(unit)
+	    {
+		case BBSensorUnit.Millimeters: return Math.round(longVal / 10.36); break
+		case BBSensorUnit.Centimeters: return Math.round(longVal / 103.6); break
+		case BBSensorUnit.Inches: return Math.round(longVal / 263.14); break
+		default: return longVal; break
+	    }
 	}
+	else
+	    return 0
     }
 
     /**
@@ -1373,9 +1391,14 @@ namespace bitbot
     //% group="PID Control"
     export function turnAngle(): number
     {
-	let lVal = readPulses(LPULSEL)
-	let rVal = readPulses(RPULSEL)
-	return Math.round((rVal - lVal) / 19.1)	// pulses per degree * 2
+	if(isPRO())
+	{
+	    let lVal = readPulses(LPULSEL)
+	    let rVal = readPulses(RPULSEL)
+	    return Math.round((rVal - lVal) / 19.1)	// pulses per degree * 2
+	}
+	else
+	    return 0
     }
 
     /**
@@ -1388,7 +1411,8 @@ namespace bitbot
     //% group="PID Control"
     export function resetWheelSensors(sensor: BBMotor): void
     {
-	sendCommand2(RESETWHEEL, sensor)
+	if(isPRO())
+	    sendCommand2(RESETWHEEL, sensor)
     }
 
     /**
@@ -1414,18 +1438,117 @@ namespace bitbot
       */
     //% blockId="BBMotorTrim"
     //% block="trim distance%trimDistance|angle%ytrimAngle"
-    //% weight=20
+    //% weight=100
     //% trimDistance.min=-100 trimDistance.max=100
     //% trimAngle.min=-100 trimAngle.max=100
     //% subcategory="BitBot PRO"
-    //% group="PID Control"
+    //% group=Advanced
     export function motorTrim(trimDistance: number, trimAngle: number): void
     {
-	let dTrim = clamp(trimDistance, -100, 100)
-	let aTrim = clamp(trimAngle, -100, 100)
-	sendCommand3(SETTRIMS, dTrim, aTrim)
+	if(isPRO())
+	{
+	    let dTrim = clamp(trimDistance, -100, 100)
+	    let aTrim = clamp(trimAngle, -100, 100)
+	    sendCommand3(SETTRIMS, dTrim, aTrim)
+	}
     }
 
+    /**
+      * Set PID constants
+      * @param kP proportional constant eg: 5
+      * @param kI integral constant eg: 0
+      * @param kD differential constant eg: 1
+      * @param kC comparison constant eg: 7
+      */
+    //% blockId="BBPidConstants"
+    //% block="PID constants kP%kP|kI%kI|kD%kD|kC%kC"
+    //% weight=90
+    //% subcategory="BitBot PRO"
+    //% group=Advanced
+    export function pidConstants(kP: number, kI: number, kD: number, kC: number): void
+    {
+	if(isPRO())
+	    sendCommand5(SETPIDCON, kP, kI, kD, kC)
+    }
+
+    /**
+      * Carry forward pulse counting errors to next movement
+      * @param flag turn the running total on or off
+      */
+    //% blockId="BBCarryForwardErrors"
+    //% block="carry forward errors%flag"
+    //% flag.shadow="toggleOnOff"
+    //% weight=80
+    //% subcategory="BitBot PRO"
+    //% group=Advanced
+    export function carryForwardErrors(flag: boolean): void
+    {
+	if(isPRO())
+	{
+            let sum = flag ? 1 : 0
+	    sendCommand2(SUMERRORS, sum)
+	}
+    }
+ 
+    /**
+      * Clear the carry forward pulse counting errors
+      */
+    //% blockId="BBClearPidErrors"
+    //% block="clear PID errors"
+    //% weight=70
+    //% subcategory="BitBot PRO"
+    //% group=Advanced
+    export function clearPidErrors(): void
+    {
+	if(isPRO())
+	    sendCommand2(CLRERRORS, 0)
+    }
+
+    /**
+      * Set the stopping threshold in mm
+      * @param distance distance from target to begin stopping eg: 4
+      */
+    //% blockId="BBStopThreshold"
+    //% block="begin stopping with%distance|mm to go"
+    //% weight=60
+    //% subcategory="BitBot PRO"
+    //% group=Advanced
+    export function stopThreshold(distance: number): void
+    {
+	if(isPRO())
+	    sendCommand2(STOPTHRESH, distance)
+    }
+ 
+    /**
+      * Set the braking threshold in mm
+      * @param distance distance from target to begin braking eg: 20
+      */
+    //% blockId="BBBrakeThreshold"
+    //% block="begin braking with%distance|mm to go"
+    //% weight=50
+    //% subcategory="BitBot PRO"
+    //% group=Advanced
+    export function brakeThreshold(distance: number): void
+    {
+	if(isPRO())
+	    sendCommand2(BRAKETHRESH, distance)
+    }
+ 
+    /**
+      * Set the braking speed in pulses per loop
+      * @param speed target speed during braking eg: 20
+      */
+    //% blockId="BBBrakeSpeed"
+    //% block="braking speed at end of command%speed|pulses"
+    //% weight=40
+    //% subcategory="BitBot PRO"
+    //% group=Advanced
+    export function brakeSpeed(speed: number): void
+    {
+	if(isPRO())
+	    sendCommand2(BRAKESPEED, speed)
+    }
+ 
     /**
       * Read the line sensors in analog mode. Values 0 (Black) to 1023 (White)
       * @param sensor left, right or centre line sensor
