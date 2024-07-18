@@ -435,9 +435,8 @@ namespace bitbot
     const SETPIDCON   = 35  // set the PID constants (used for debugging)
     const SUMERRORS   = 36  // disable/enable carrying PID errors to next command
     const CLRERRORS   = 37  // Clear the PID tracking error
-    const STOPTHRESH  = 38  // Set Stop threshold in mm
-    const BRAKETHRESH = 39  // Set Braking threshold in mm
-    const BRAKESPEED  = 40  // Set Braking Speed
+    const STOPBRAKE   = 38  // Set Stop and braking thresholds in mm and speed in pulses
+    const STARTPWM    = 39  // Set the starting PWM minimum and maximum values
 
 // BitBot Pro IR constants
     const irPin = DigitalPin.P14
@@ -601,7 +600,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp127 Bluetooth"
+    //% block="%enable|bbp128 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1463,6 +1462,7 @@ namespace bitbot
     //% blockId="BBPidConstants"
     //% block="PID constants kP%kP|kI%kI|kD%kD|kC%kC"
     //% weight=90
+    //% inlineInputMode=inline
     //% subcategory="BitBot PRO"
     //% group=Advanced
     export function pidConstants(kP: number, kI: number, kD: number, kC: number): void
@@ -1505,48 +1505,39 @@ namespace bitbot
     }
 
     /**
-      * Set the stopping threshold in mm
-      * @param distance distance from target to begin stopping eg: 4
+      * Set the stopping and braking thresholds in mm, and braking target speed
+      * @param sDistance distance from target to begin stopping eg: 4
+      * @param bDistance distance from target to begin braking eg: 20
+      * @param bSpeed target speed during braking eg: 20
       */
     //% blockId="BBStopThreshold"
-    //% block="begin stopping with%distance|mm to go"
+    //% block="stop in%sDistance|mm, brake in%bDistance|mm at speed%bSpeed"
     //% weight=60
     //% subcategory="BitBot PRO"
     //% group=Advanced
-    export function stopThreshold(distance: number): void
+    export function stopThreshold(sDistance: number, bDistance: number, bSpeed: number): void
     {
 	if(isPRO())
-	    sendCommand2(STOPTHRESH, distance)
+	    sendCommand4(STOPBRAKE, sDistance, bDistance, bSpeed)
     }
  
     /**
-      * Set the braking threshold in mm
-      * @param distance distance from target to begin braking eg: 20
+      * Set the starting PWM minimum and maximum values
+      * @param pwmMin minimum starting PWM value eg: 60
+      * @param pwmMax maximum starting PWM value eg: 100
       */
-    //% blockId="BBBrakeThreshold"
-    //% block="begin braking with%distance|mm to go"
+    //% blockId="BBStartPWM"
+    //% block="starting PWM minimum%pwmMin|, maximum%pwmMax"
     //% weight=50
     //% subcategory="BitBot PRO"
     //% group=Advanced
-    export function brakeThreshold(distance: number): void
+    export function stopThreshold(pwmMin: number, pwmMax: number): void
     {
 	if(isPRO())
-	    sendCommand2(BRAKETHRESH, distance)
-    }
- 
-    /**
-      * Set the braking speed in pulses per loop
-      * @param speed target speed during braking eg: 20
-      */
-    //% blockId="BBBrakeSpeed"
-    //% block="braking speed at end of command%speed|pulses"
-    //% weight=40
-    //% subcategory="BitBot PRO"
-    //% group=Advanced
-    export function brakeSpeed(speed: number): void
-    {
-	if(isPRO())
-	    sendCommand2(BRAKESPEED, speed)
+	{
+	    pwmMin = clamp(pwmMin, 0 , 255)
+	    pwmMax = clamp(pwmMax, 0 , 255)
+	    sendCommand3(STARTPWM, pwmMin, pwmMax)
     }
  
     /**
