@@ -600,7 +600,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp129 Bluetooth"
+    //% block="%enable|bbp130 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1531,7 +1531,7 @@ namespace bitbot
     //% weight=50
     //% subcategory="BitBot PRO"
     //% group=Advanced
-    export function stopThreshold(pwmMin: number, pwmMax: number): void
+    export function setStartPWM(pwmMin: number, pwmMax: number): void
     {
 	if(isPRO())
 	{
