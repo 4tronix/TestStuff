@@ -600,7 +600,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp128 Bluetooth"
+    //% block="%enable|bbp129 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1538,6 +1538,7 @@ namespace bitbot
 	    pwmMin = clamp(pwmMin, 0 , 255)
 	    pwmMax = clamp(pwmMax, 0 , 255)
 	    sendCommand3(STARTPWM, pwmMin, pwmMax)
+	}
     }
  
     /**
