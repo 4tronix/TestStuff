@@ -200,7 +200,7 @@ enum BBPulseSensor
 }
 
 /**
- * Ping unit for sensor.
+ * Distance unit for ultrasonic sensor.
  */
 enum BBPingUnit
 {
@@ -600,7 +600,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp130 Bluetooth"
+    //% block="%enable|bbp131 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -649,7 +649,7 @@ namespace bitbot
     }
 
     /**
-      * get Model of BitBot (Classic or XL)
+      * get Model of BitBot (Classic, XL or PRO)
       */
     //% blockId="bb_model" block="BitBot model"
     //% weight=90
@@ -699,7 +699,10 @@ namespace bitbot
     {
 	// 0 = Classic, 1-15 = XL, 16+ = Pro
         if (versionCode == -1)	// first time requesting
+	{
 	    getCode()
+	    sendCommand2(PIDENABLE, 1)  // first access to BitBot PRO, so ensure PID loop is enabled
+	}
 	return versionCode
     }
 
@@ -708,7 +711,6 @@ namespace bitbot
 	versionCode = pins.i2cReadNumber(i2cATMega, NumberFormat.Int8LE, false) & 0xff	// i2cATMega only valid for BitBot PRO
 	if(versionCode > 0) // BitBot PRO
 	{
-	    sendCommand2(PIDENABLE, 1)  // first access to BitBot PRO, so ensure PID loop is enabled
 	    let revision = pins.i2cReadNumber(i2cATMega, NumberFormat.UInt16LE, false)	// low byte: Board rev, hi byte: Firmware rev
 	    versionCode = 10 + revision & 0xff		// use 10+ board version (so 16) for BitBot PRO versionCode
 	    firmwareCode = (revision >> 8) & 0xff	// firmware version only valid for BitBot PRO. First release was 10, second 11, etc.
@@ -722,13 +724,12 @@ namespace bitbot
     }
 
     /**
-      * Get firmwareCode
+      * Get firmware revision
       */
     //% blockId="getFirmwareCode"
-    //% block="BitBot PRO firmware Code"
+    //% block="BitBot PRO firmware revision"
     //% weight=75
-    //% subcategory=BitBot_Model
-    //% deprecated=true
+    //% subcategory=Advanced
     export function getFirmwareCode(): number
     {
 	firmwareCode = 0
@@ -1022,16 +1023,17 @@ namespace bitbot
     //% subcategory=Motors
     export function stop(mode: BBStopMode): void
     {
-        //getModel()
         let stopMode = (mode == BBStopMode.Brake) ? 1 : 0
 	if(isPRO())
 	{
-	    sendCommand2(STOP, 0)
-	    if((getVersionCode() == 10)	&& pidActive)	// First firmware release has bug in stop function that misses next command
+	    if(lastCommand != cStop)
 	    {
-		pidActive = false
-		sendCommand4(DRIVEDIST, 100, 1, 0)	// this command is ignored in the firmware
-		//gocm(BBDirection.Forward, 100, 1)	// this command is ignored in the firmware
+		sendCommand2(STOP, 0)
+		if((getVersionCode() == 10)	&& pidActive)	// First firmware release has bug in stop function that misses next command
+		{
+		    pidActive = false
+		    sendCommand4(DRIVEDIST, 100, 1, 0)	// this command is ignored in the firmware
+		}
 	    }
 	}
 	else
@@ -1129,6 +1131,28 @@ namespace bitbot
             }
 	}
         lastCommand = cDIRECT
+    }
+
+    /**
+      * Move individual motors forward or reverse for milliseconds
+      * @param motor motor to drive
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param duration duration in milliseconds to drive forward for, then stop. eg: 400
+      */
+    //% blockId="Movems"
+    //% block="move%motor|motor(s)%direction|at speed%speed|for%duration|ms"
+    //% inlineInputMode=inline
+    //% duration.shadow=timePicker
+    //% speed.min=0 speed.max=100
+    //% weight=45
+    //% subcategory=Motors
+    //% blockGap=8
+    export function movems(motor: BBMotor, direction: BBDirection, speed: number, duration: number): void
+    {
+        move(motor, direction, speed)
+        basic.pause(duration)
+        robotStop(BBStopMode.Coast)
     }
 
     /**
@@ -1238,6 +1262,7 @@ namespace bitbot
     {
 	if(isPRO() && !pidActive)
 	{
+	    radius = Math.max(radius, 7)
 	    if(lastCommand!=cARC || lastADirection!=direction || lastSpeed!=speed || lastRadius!=radius)
 	    {
 	        if((getVersionCode() == 10) && pidActive)	// first firmware release has bug
@@ -1282,6 +1307,7 @@ namespace bitbot
     {
 	if(isPRO() && !pidActive)
 	{
+	    radius = Math.max(radius, 7)
 	    let aSpeed = ((direction == BBArcDirection.ReverseLeft) || (direction == BBArcDirection.ReverseRight)) ? -speed : speed
 	    let aAngle = ((direction == BBArcDirection.ForwardRight) || (direction == BBArcDirection.ReverseRight)) ? -angle : angle
 	    sendCommand6(ARCANGLE, aSpeed, radius & 0xff, radius >> 8, aAngle & 0xff, aAngle >>8)
@@ -1665,7 +1691,7 @@ namespace bitbot
     //% block="set buzzer volume%volume"
     //% weight=90
     //% subcategory="BitBot PRO"
-    //% group="General"
+    //% group=General
     export function setVolume(volume: BBBuzzVolume): void
     {
 	if(isPRO())
@@ -2283,7 +2309,7 @@ namespace bitbot
     }
 
     /**
-      * Position Servos on P1 and P2 (XL Only)
+      * Position Servos on P1 and P2 (XL or PRO Only)
       * @param servo servo to control. P1 or P2
       * @param degrees Degrees to turn servo (0 to 180). eg: 90
       */
@@ -2294,7 +2320,7 @@ namespace bitbot
     export function bbSetServo(servo: BBServos, degrees: number): void
     {
         degrees = clamp(degrees, 0, 180)
-        if (getModel() == BBModel.XL)
+        if (getModel() == BBModel.XL || isPRO())
         {
             if (servo == BBServos.P1)
                 pins.servoWritePin(AnalogPin.P1, degrees)
@@ -2304,7 +2330,7 @@ namespace bitbot
     }
 
     /**
-      * Set speed and direction for continuous rotation Servos on P1 and P2 (XL Only)
+      * Set speed and direction for continuous rotation Servos on P1 and P2 (XL or PRO Only)
       * @param servo servo to control. P1 or P2
       * @param direction rotate Forward or Reverse
       * @param speed rotational speed  (0 to 100). eg: 50
@@ -2318,7 +2344,7 @@ namespace bitbot
         speed = clamp(speed, 0, 100);
         let dir = (direction == BBDirection.Forward) ? 1 : -1;
         let degrees = 90 + dir * speed * 90 / 100
-        if (getModel() == BBModel.XL)
+        if (getModel() == BBModel.XL || isPRO())
         {
             if (servo == BBServos.P1)
             {
@@ -2376,14 +2402,14 @@ namespace bitbot
     }
 
     /**
-      * Disable servos (Talon for both Classic & XL, P1 and P2 for XL only)
+      * Disable servos (Talon for both Classic & XL, P1 and P2 for XL or PRO only)
       */
     //% blockId="BBStopServos" block="disable all servos"
     //% weight=20
     //% subcategory="Inputs & Outputs"
     export function bbStopServos(): void
     {
-        if (getModel() == BBModel.XL)
+        if (getModel() == BBModel.XL || isPRO())
         {
             pins.digitalWritePin(DigitalPin.P1, 0)
             pins.digitalWritePin(DigitalPin.P2, 0)
