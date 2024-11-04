@@ -600,7 +600,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp136 Bluetooth"
+    //% block="%enable|bbp137 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1032,7 +1032,7 @@ namespace bitbot
 	    //if(lastCommand != cSTOP)
 	    {
 		sendCommand2(STOP, 0)
-		if((getVersionCode() == 10)	&& pidActive)	// First firmware release has bug in stop function that misses next command
+		if((getFirmwareCode() == 10) && pidActive)	// First firmware release has bug in stop function that misses next command
 		{
 		    pidActive = false
 		    sendCommand4(DRIVEDIST, 100, 1, 0)	// this command is ignored in the firmware
