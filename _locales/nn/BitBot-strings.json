@@ -145,7 +145,7 @@
   "bitbot.mergeLinePosition|block": "linjeposisjon",
   "bitbot.motorTrim|block": "trim avstand%trimDistance|vinkel%ytrimAngle",
   "bitbot.motor|block": "køyr %motor|motor(ar) med fart %speed",
-  "bitbot.movems|block": "flytt%motor|motor(ar)%direction|med fart%speed|i%duration|ms",
+  "bitbot.movems|block": "køyr%motor|motor(ar)%direction|med fart%speed|i%duration|ms",
   "bitbot.move|block": "køyr %motor|motor(ar) %direction|med fart %speed|\\%",
   "bitbot.oledCircle|block": "OLED sirkel i posisjon x,y%x|,%y|radius%r|sett%doSet|oppdater%update",
   "bitbot.oledInvert|block": "OLED inverter tekst%inv",
