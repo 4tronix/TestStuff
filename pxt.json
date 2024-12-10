@@ -9,8 +9,8 @@
     },
     "files": [
         "README.md",
-	"ircore.ts",
-        "rover.ts"
+        "rover.ts",
+	"ircore.ts"
     ],
     "testFiles": [
         "test.ts"
