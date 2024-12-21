@@ -600,7 +600,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp01 Bluetooth"
+    //% block="%enable|bbp02 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1318,7 +1318,7 @@ namespace bitbot
 	if(isPRO() && !pidActive)
 	{
 	    radius = Math.max(radius, 7)
-	    if((getFirmwareCode() == 11) // v11 firmware incorrectly limits max speed, so do it here
+	    if(getFirmwareCode() == 11) // v11 firmware incorrectly limits max speed, so do it here
 		speed = speed * 0.8
 	    // fudge the angle to correct for speed and radius variances
 	    angle = angle * (1.0 + (speed-20)/(Math.max(radius/35.0, 1.0) * 1000.0))
@@ -1332,8 +1332,6 @@ namespace bitbot
 	    pidActive = false
 	}
     }
-  double dRadius = max(1.0, ((double)radius)/35.0);
-  double dAngle = angle * (1.0 + double(speed-20)/(dRadius * 1000.0));
 
     /**
       * Drive robot left or right depending on direction parameter. 
