@@ -1318,7 +1318,7 @@ namespace bitbot
 	if(isPRO() && !pidActive)
 	{
 	    radius = Math.max(radius, 7)
-	    // if(getFirmwareCode() == 11) // v11 firmware incorrectly limits max speed, so do it here for all versions
+	    // if(getFirmwareCode() == 11) // v11 firmware incorrectly limited max speed, so do it here for all versions
 	    {
 		let spdMin = (30 * radius)/(radius - 5.38)	// 30 is minimum speed before clamping, 5.38 is half width between wheels
 		let spdMax = (100 * radius)/(radius + 5.38)
