@@ -600,7 +600,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp03 Bluetooth"
+    //% block="%enable|bbp04 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1322,7 +1322,7 @@ namespace bitbot
 	    {
 		let spdMin = (20 * radius)/(radius - 5.38)
 		let spdMax = (100 * radius)/(radius + 5.38)
-		speed = constrain(speed, spdMin, spdMax)
+		speed = clamp(speed, spdMin, spdMax)
 	    }
 
 	    // fudge the angle to correct for speed and radius variances
