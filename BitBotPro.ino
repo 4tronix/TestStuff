@@ -15,7 +15,7 @@
 #define CORRECT true
 
 #define BOARD_REV     6   // Board ID for BitBot Pro is 6
-#define FIRMWARE_REV  11  // Firmware Revision. First release was 10
+#define FIRMWARE_REV  12  // Firmware Revision. First release was 10
 
 // Motors
 #define M1A 5
@@ -1061,7 +1061,7 @@ void driveDirect(byte speed, byte direction, byte motor)  // provided for compat
 {
   // speed is given as 0-100
   speed = map(speed, 0, 100, 0, 255);
-  targetL = targetR = 0;  // switch of PID end of run
+  targetL = targetR = 0;  // switch off PID end of run
   if(motor == mLeft || motor == mBoth)
   {
     if(direction > 0)
@@ -1234,17 +1234,20 @@ void pidLoop(int spdL, int spdR, bool fwdL, bool fwdR)
   byte cmd;
   pwmL = pwmR = startPWMmin;
   if(spdL >= 40)
-    pwmL = map(spdL, 40, 100, startPWMmin, startPWMmax);
+    pwmL = map(spdL, 40, 100, startPWMmin, 2*startPWMmax);
   if(spdR >= 40)
-    pwmR = map(spdR, 40, 100, startPWMmin, startPWMmax);
+    pwmR = map(spdR, 40, 100, startPWMmin, 2*startPWMmax);
   speedRatio = ((double)spdL) / ((double)spdR);
   if(DEBUG)
     Serial.println("PID Initialise:" + String(pwmL) + "/" + String(pwmR));
   lastTime = millis();
   targetSpeedL = (maxSpeed * spdL) / 100.0;
   targetSpeedR = (maxSpeed * spdR) / 100.0;
-  targetSpeedL = constrain(targetSpeedL, minSpeed, maxSpeed);
-  targetSpeedR = constrain(targetSpeedR, minSpeed, maxSpeed);
+  if(spdL == spdR)  // only constrain if not an arc
+  {
+    targetSpeedL = constrain(targetSpeedL, minSpeed, maxSpeed);
+    targetSpeedR = constrain(targetSpeedR, minSpeed, maxSpeed);
+  }
   DpwmL = pwmL;
   DpwmR = pwmR;
   totalCountL = totalCountR = 0;
@@ -1253,10 +1256,6 @@ void pidLoop(int spdL, int spdR, bool fwdL, bool fwdR)
   maxDiff = maxCountDiff = 0.0;
   doneL = doneR = targetFlagL = targetFlagR = false;
 
-  lastSpdL = spdL;
-  lastSpdR = spdR;
-  lastFwdL = fwdL;
-  lastFwdR = fwdR;
   for(;;)
   {
     go(fwdL ? pwmL : -pwmL, fwdR ? pwmR : -pwmR);
