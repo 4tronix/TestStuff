@@ -600,7 +600,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp02 Bluetooth"
+    //% block="%enable|bbp03 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1319,9 +1319,15 @@ namespace bitbot
 	{
 	    radius = Math.max(radius, 7)
 	    if(getFirmwareCode() == 11) // v11 firmware incorrectly limits max speed, so do it here
-		speed = speed * 0.8
+	    {
+		let spdMin = (20 * radius)/(radius - 5.38)
+		let spdMax = (100 * radius)/(radius + 5.38)
+		speed = constrain(speed, spdMin, spdMax)
+	    }
+
 	    // fudge the angle to correct for speed and radius variances
 	    angle = angle * (1.0 + (speed-20)/(Math.max(radius/35.0, 1.0) * 1000.0))
+
 	    let aSpeed = ((direction == BBArcDirection.ReverseLeft) || (direction == BBArcDirection.ReverseRight)) ? -speed : speed
 	    let aAngle = ((direction == BBArcDirection.ForwardRight) || (direction == BBArcDirection.ReverseRight)) ? -angle : angle
 	    sendCommand6(ARCANGLE, aSpeed, radius & 0xff, radius >> 8, aAngle & 0xff, aAngle >>8)
