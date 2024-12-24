@@ -600,7 +600,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp04 Bluetooth"
+    //% block="%enable|bbp05 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -1320,7 +1320,7 @@ namespace bitbot
 	    radius = Math.max(radius, 7)
 	    if(getFirmwareCode() == 11) // v11 firmware incorrectly limits max speed, so do it here
 	    {
-		let spdMin = (20 * radius)/(radius - 5.38)
+		let spdMin = (30 * radius)/(radius - 5.38)	// 30 is minimum speed before clamping
 		let spdMax = (100 * radius)/(radius + 5.38)
 		speed = clamp(speed, spdMin, spdMax)
 	    }
