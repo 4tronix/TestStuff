@@ -600,7 +600,7 @@ namespace bitbot
       * @param enable enable or disable Blueetoth
     */
     //% blockId="BBEnableBluetooth"
-    //% block="%enable|bbp07 Bluetooth"
+    //% block="%enable|bbp08 Bluetooth"
     //% blockGap=8
     export function bbEnableBluetooth(enable: BBBluetooth)
     {
@@ -702,6 +702,7 @@ namespace bitbot
 	{
 	    getCode()
 	    sendCommand2(PIDENABLE, 1)  // first access to BitBot PRO, so ensure PID loop is enabled
+	    sendCommand3(STARTPWM, 35, 18)	// set m+start PWM values to lowest sensible. NB pwmMax is always doubled before use
 	}
 	return versionCode
     }
@@ -1243,7 +1244,7 @@ namespace bitbot
 	{
 	    if(angle < 0)
 	    {
-		angle = -angle
+		angle = -angle + 2	// Always seems to lose a couple of degrees at the start. Slipping?
 		speed = -speed
 	    }
 	    sendCommand4(SPINANGLE, (direction == BBRobotDirection.Right) ? -speed : speed, angle & 0xff, angle >> 8)
@@ -1578,6 +1579,7 @@ namespace bitbot
     //% weight=50
     //% subcategory="BitBot PRO"
     //% group=Advanced
+    //% deprecated=true
     export function setStartPWM(pwmMin: number, pwmMax: number): void
     {
 	if(isPRO())
